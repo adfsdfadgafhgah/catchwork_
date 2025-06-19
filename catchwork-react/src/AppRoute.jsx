@@ -8,7 +8,7 @@ import SignUpPage from './pages/member/SignUpPage'
 
 import RecruitPage from './pages/major/RecruitListPage'
 import CompanyPage from './pages/major/CompanyListPage'
-// import BoardPage from './pages/major/BoardListPage'
+import BoardPage from './pages/major/BoardListPage'
 import CvPage from './pages/major/CVListPage'
 
 function AppRoute() {
@@ -24,7 +24,7 @@ function AppRoute() {
 
           <Route path="/recruit" element={<RecruitPage />} />
           <Route path="/company" element={<CompanyPage />} />
-          {/* <Route path="/board" element={<BoardPage />} /> */}
+          <Route path="/board" element={<BoardPage />} />
           <Route path="/cv" element={<CvPage />} />
         </Routes>
       </main>
