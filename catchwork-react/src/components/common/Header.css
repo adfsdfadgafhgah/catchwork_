@@ -19,7 +19,7 @@
     gap: 0.5rem;
   }
   
-  .search-box input {
+  .search-box {
     width: 300px;
     padding: 0.5rem 1rem;
     border-radius: 9999px;

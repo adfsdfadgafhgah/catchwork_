@@ -1,5 +1,6 @@
 import React from 'react';
 import './Footer.css';
+import icon from '../../assets/icon.png'
 
 const Footer = () => {
   return (
@@ -13,12 +14,11 @@ const Footer = () => {
       </div>
       <div className="footer-bottom">
         <div className="footer-logo">
-          <img src="/logo.png" alt="CatchWork Logo" />
-          <span>Catch Work</span>
+            <img src={icon} height="150px"/>
+            <p className="footer-text">
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+            </p>
         </div>
-        <p className="footer-text">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p>
       </div>
     </footer>
   );
