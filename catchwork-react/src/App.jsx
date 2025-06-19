@@ -1,13 +1,11 @@
-import WriteSupportPage from "./pages/support/WriteSupportPage";
-import logo from "./assets/logo.png"; // 실제 logo.png 경로
+import { useState } from "react";
+import reactLogo from "./assets/favicon.png";
+import viteLogo from "./assets/logo.png";
 import "./App.css";
+import SubmitCVPage from "./pages/major/SubmitCVPage";
 
-function App() {
-  return (
-    <div>
-      <WriteSupportPage logo={logo} />
-    </div>
-  );
-}
+const App = () => {
+  return <SubmitCVPage />;
+};
 
 export default App;
