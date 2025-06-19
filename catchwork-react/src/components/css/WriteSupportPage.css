@@ -1,0 +1,351 @@
+:root {
+  --main-color: #46b5ab;
+  --border: #ccc;
+  --text: #333;
+  --footer-bg: #e0e0e0;
+  --background: #f8f9fa;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background-color: var(--background);
+  min-height: 100vh;
+  margin: 0; /* body의 기본 마진 제거 */
+  width: 100vw; /* body도 화면 전체 너비로 설정 */
+}
+
+.write-support-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100vw; /* 컨테이너도 화면 전체 너비 */
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fff;
+  border-bottom: 1px solid var(--border);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+  width: 100vw; /* 헤더를 화면 전체 너비로 설정 */
+  box-sizing: border-box; /* 패딩 포함 계산 */
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0; /* 로고 크기 유지 */
+}
+
+.logo img {
+  height: 36px;
+}
+
+.logo-text {
+  color: var(--main-color);
+  font-weight: bold;
+  font-size: 22px;
+}
+
+.search-box {
+  display: flex;
+  flex: 1; /* 남는 공간을 차지하되, 내부 크기 유지 */
+  justify-content: center;
+  margin: 0 40px;
+  position: relative;
+  max-width: 400px; /* 검색창 최대 너비 유지 */
+}
+
+.search-box input {
+  padding: 12px 16px;
+  border: 2px solid var(--main-color);
+  border-radius: 25px;
+  width: 100%; /* 입력 필드 크기 유지 */
+  font-size: 14px;
+  outline: none;
+}
+
+.search-box input:focus {
+  border-color: #3a9a91;
+  box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.1);
+}
+
+.search-box button {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+  flex-shrink: 0; /* 사용자 정보 크기 유지 */
+}
+
+.logout {
+  padding: 8px 16px;
+  background: var(--main-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.logout:hover {
+  background: #3a9a91;
+}
+
+/* Navigation */
+.nav {
+  display: flex;
+  justify-content: flex-start;
+  gap: 40px;
+  padding: 16px 24px;
+  background-color: #fff;
+  border-bottom: 1px solid var(--border);
+  width: 100vw; /* 네비게이션도 화면 전체 너비 */
+  box-sizing: border-box; /* 패딩 포함 계산 */
+  overflow-x: auto; /* 내용이 길 경우 스크롤 */
+}
+
+.nav a {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 500;
+  font-size: 16px;
+  padding: 8px 0;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+}
+
+.nav a:hover {
+  color: var(--main-color);
+  border-bottom-color: var(--main-color);
+}
+
+/* Main */
+.main {
+  flex: 1;
+  width: 100%; /* 메인도 화면 전체 너비로 설정 */
+  padding: 40px 24px;
+  background-color: var(--background);
+  /* max-width 제거하여 화면 전체 사용 */
+}
+
+.page-title {
+  font-size: 24px;
+  margin-bottom: 32px;
+  font-weight: bold;
+  color: var(--text);
+  text-align: center;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+  width: 100%; /* 폼 요소도 화면 너비에 맞춤 */
+  max-width: 800px; /* 가독성을 위한 최대 너비 제한 (선택적) */
+  margin-left: auto;
+  margin-right: auto; /* 중앙 정렬 유지 */
+}
+
+/* 라벨은 텍스트로, 아래 인풋은 밑줄만 */
+.form-group label {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: block;
+  color: var(--text);
+}
+
+.form-group input[type="text"] {
+  border: none;
+  border-bottom: 2px solid var(--main-color);
+  padding: 12px 0;
+  font-size: 16px;
+  outline: none;
+  width: 100%;
+  background-color: transparent;
+  color: var(--text);
+  transition: border-bottom-color 0.2s;
+}
+
+.form-group input[type="text"]:focus {
+  border-bottom-color: #2a7f7a;
+}
+
+.form-group input[type="text"]::placeholder {
+  color: #999;
+}
+
+.form-group select {
+  padding: 12px;
+  border: 2px solid var(--main-color);
+  border-radius: 4px;
+  font-size: 15px;
+  background-color: white;
+  color: var(--text);
+  outline: none;
+  cursor: pointer;
+  width: 100%; /* 셀렉트도 화면 너비에 맞춤 */
+  max-width: 300px; /* 너무 넓지 않도록 제한 (선택적) */
+}
+
+.form-group select:focus {
+  border-color: #3a9a91;
+  box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.1);
+}
+
+.form-group textarea {
+  padding: 16px;
+  border: 2px solid var(--main-color);
+  border-radius: 4px;
+  font-size: 15px;
+  background-color: white;
+  color: var(--text);
+  outline: none;
+  width: 100%; /* 텍스트 영역도 화면 너비에 맞춤 */
+  min-height: 300px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.form-group textarea:focus {
+  border-color: #3a9a91;
+  box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.1);
+}
+
+.form-group textarea::placeholder {
+  color: #999;
+}
+
+/* Buttons */
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+  width: 100%; /* 버튼 그룹도 화면 너비에 맞춤 */
+  max-width: 800px; /* 가독성을 위한 최대 너비 제한 (선택적) */
+  margin-left: auto;
+  margin-right: auto; /* 중앙 정렬 */
+}
+
+.cancel,
+.submit {
+  padding: 12px 24px;
+  border-radius: 4px;
+  border: 2px solid var(--main-color);
+  background-color: white;
+  color: var(--main-color);
+  font-size: 15px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cancel:hover {
+  background-color: #f8f9fa;
+}
+
+.submit {
+  background-color: var(--main-color);
+  color: white;
+}
+
+.submit:hover {
+  background-color: #3a9a91;
+}
+
+/* Footer */
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 24px;
+  background-color: var(--footer-bg);
+  padding: 24px;
+  font-size: 14px;
+  flex-wrap: wrap;
+  width: 100%; /* 푸터도 화면 너비에 맞춤 */
+  max-width: 1200px; /* 가독성을 위한 최대 너비 제한 (선택적) */
+  margin: 0 auto; /* 중앙 정렬 */
+}
+
+.footer a,
+.footer span {
+  text-decoration: none;
+  color: var(--text);
+}
+
+.footer a:hover {
+  color: var(--main-color);
+}
+
+.footer .highlight {
+  color: var(--main-color) !important;
+  font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .search-box {
+    width: 100%;
+    margin: 0;
+  }
+
+  .nav {
+    padding: 0 16px;
+    gap: 20px;
+    overflow-x: auto;
+  }
+
+  .main {
+    padding: 20px 16px;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .cancel,
+  .submit {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .footer {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}
