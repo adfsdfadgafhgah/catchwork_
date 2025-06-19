@@ -3,23 +3,14 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
-/* 변수 */
-:root {
-  --main-color: #46b5ab;
-  --border: #ccc;
-  --text: #333;
-  --footer-bg: #e0e0e0;
-  --background: #f8f9fa;
-}
-
 /* 기본 설정 */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-
   font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui,
     Roboto, sans-serif;
+
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 html,
