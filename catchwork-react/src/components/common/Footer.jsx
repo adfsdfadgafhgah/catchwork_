@@ -9,7 +9,7 @@ const Footer = () => {
         <a href="#">개인정보처리방침</a>
         <a href="#">이용약관</a>
         <span>Copyright © CATCH. All rights reserved.</span>
-        <a href="#">문의하기</a>
+        <a href="/supportlist" className="highlight">문의하기</a>
         <a href="#">기업제휴</a>
       </div>
       <div className="footer-bottom">

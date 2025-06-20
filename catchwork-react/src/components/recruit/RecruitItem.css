@@ -1,0 +1,144 @@
+.recruit-item {
+  background: linear-gradient(135deg, #4ecdc4, #96ceb4);
+  border-radius: 12px;
+  padding: 20px;
+  color: white;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--box-shadow);
+}
+
+.recruit-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(78, 205, 196, 0.3);
+}
+
+.recruit-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 15px;
+}
+
+.company-logo {
+  width: 50px;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.company-logo img {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+}
+
+.new-badge {
+  background-color: #ff6b6b;
+  color: white;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.recruit-item-content {
+  flex-grow: 1;
+  margin-bottom: 15px;
+}
+
+.recruit-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+
+.company-name {
+  font-size: 14px;
+  margin: 0 0 8px 0;
+  opacity: 0.9;
+  font-weight: 500;
+}
+
+.recruit-meta {
+  font-size: 12px;
+  opacity: 0.8;
+  line-height: 1.4;
+}
+
+.recruit-meta span {
+  margin-right: 8px;
+}
+
+.category {
+  font-weight: 500;
+}
+
+.field {
+  font-style: italic;
+}
+
+.date {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.recruit-item-footer {
+  margin-top: auto;
+}
+
+.stats {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.stat-item i {
+  width: 14px;
+  height: 14px;
+}
+
+/* 아이콘 대체 텍스트 */
+.icon-eye::before {
+  content: "👁";
+}
+.icon-comment::before {
+  content: "💬";
+}
+.icon-heart::before {
+  content: "❤";
+}
+
+@media (max-width: 768px) {
+  .recruit-item {
+    padding: 15px;
+    min-height: 180px;
+  }
+
+  .recruit-title {
+    font-size: 15px;
+  }
+
+  .company-name {
+    font-size: 13px;
+  }
+}

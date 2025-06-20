@@ -1,0 +1,67 @@
+/* ✅ BoardListPage.module.css */
+
+.boardListPage {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  min-height: 100vh;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+}
+
+.sectionHeader h2 {
+  font-size: 24px;
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 20px;
+  padding-top: 20px;
+}
+
+.sortSelect {
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  border: 1px solid #46b5ab;
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.searchBox input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  padding: 4px;
+}
+
+.searchBox button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #46b5ab;
+  padding-left: 4px;
+}
