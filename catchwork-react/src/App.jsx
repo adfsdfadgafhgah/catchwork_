@@ -16,11 +16,13 @@ import SignUpPage from "./pages/member/SignUpPage";
 import RecruitPage from "./pages/major/RecruitListPage";
 import CompanyPage from "./pages/major/CompanyListPage";
 import BoardPage from "./pages/major/BoardListPage";
-import CvPage from "./pages/major/CVListPage";
+import CVPage from "./pages/major/CVListPage";
+
 
 // 마이페이지용용
 import MyPage from "./pages/myPage/MyPage";
 import MyInfo from "./pages/myPage/MyInfoPage";
+import MyRecruitPage from "./pages/myPage/MyRecruitPage";
 
 const router = createBrowserRouter([
   {
@@ -33,13 +35,15 @@ const router = createBrowserRouter([
       { path: "recruit", element: <RecruitPage /> },
       { path: "company", element: <CompanyPage /> },
       { path: "/board", element: <BoardPage /> },
-      { path: "cv", element: <CvPage /> },
+      { path: "cv", element: <CVPage /> },
 
       {
         path: "/mypage",
-        element: <MyPage />, // 공통 wrapper 컴포넌트
+        element: <MyPage />,
         children: [
-          { path: "home", element: <MyInfo /> }, // 로컬호스트/mypage/home
+          { index: true, element: <MyInfo /> },
+          { path: "home", element: <MyInfo /> },
+          { path: "myrecruit", element: <MyRecruitPage /> },
         ],
       },
       { path: "*", element: <NotFound /> },
