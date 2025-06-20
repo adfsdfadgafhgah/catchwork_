@@ -1,5 +1,5 @@
-import React from 'react';
-import './MainPage.css';
+import React from "react";
+import "./MainPage.css";
 
 const MainPage = () => {
   return (
@@ -67,7 +67,7 @@ const MainPage = () => {
           ))}
         </div>
       </section>
-      
+
       <section className="section">
         <h2 className="section-title">인기 후기글</h2>
         <div className="card-grid">

@@ -1,0 +1,86 @@
+/* 전체 컨테이너 */
+.detailWrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px 20px;
+  background-color: white;
+  min-height: 100vh;
+  font-family: sans-serif;
+  position: relative;
+}
+
+/* ✅ 제목 + 수정/삭제 버튼 묶음 */
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-top: 32px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #222;
+}
+
+/* 수정/삭제 버튼 그룹 */
+.actionButtons {
+  display: flex;
+  gap: 10px;
+}
+
+.actionBtn {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 6px 12px;
+  background-color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.actionBtn:hover {
+  background-color: #f5f5f5;
+}
+
+/* ✅ 작성자 정보 + 우측 메타 정보 */
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.writerInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #444;
+}
+
+.writerInfo img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* 조회수, 좋아요, 신고 */
+.metaInfo {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* ✅ 본문 내용 박스 */
+.contentBox {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  font-size: 15px;
+  color: #333;
+  min-height: 180px;
+}

@@ -15,7 +15,9 @@ import SignUpPage from "./pages/member/SignUpPage";
 // 네비게이션
 import RecruitPage from "./pages/major/RecruitListPage";
 import CompanyPage from "./pages/major/CompanyListPage";
-import BoardPage from "./pages/major/BoardListPage";
+import BoardPage from "./pages/major/BoardPage";
+import BoardListPage from "./pages/major/BoardListPage";
+import BoardDetailPage from "./pages/major/BoardDetailPage";
 import CVPage from "./pages/major/CVListPage";
 
 // 마이페이지용
@@ -48,13 +50,17 @@ const router = createBrowserRouter([
       { index: true, element: <MainPage /> },
       { path: "signin", element: <SignInPage /> },
       { path: "signup", element: <SignUpPage /> },
-  
-  
       { path: "recruit", element: <RecruitPage /> },
       { path: "company", element: <CompanyPage /> },
       { path: "company/:corpNo", element: <CompanyDetailPage /> },
-      { path: "/board", element: <BoardPage /> },
-      { path: "cv", element: <CVPage /> },
+      {
+        path: "/board",
+        element: <BoardPage />,
+        children: [
+          { index: true, element: <BoardListPage /> },
+          { path: ":id", element: <BoardDetailPage /> },
+        ],
+      },      { path: "cv", element: <CVPage /> },
       { path: "submitcv", element: <SubmitCVPage /> },
       { path: 'supportlist', element: <SupportListPage/>, },
       { path: 'writesupport', element: <WriteSupportPage/>, },
