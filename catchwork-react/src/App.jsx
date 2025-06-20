@@ -18,11 +18,16 @@ import CompanyPage from "./pages/major/CompanyListPage";
 import BoardPage from "./pages/major/BoardListPage";
 import CVPage from "./pages/major/CVListPage";
 
-
-// 마이페이지용용
+// 마이페이지용
 import MyPage from "./pages/myPage/MyPage";
 import MyInfo from "./pages/myPage/MyInfoPage";
 import MyRecruitPage from "./pages/myPage/MyRecruitPage";
+
+//이력서 제출
+import SubmitCVPage from "./pages/major/SubmitCVPage";
+
+// 기업상세
+import CompanyDetailPage from "./pages/major/CompanyDetailPage";
 
 const router = createBrowserRouter([
   {
@@ -34,9 +39,10 @@ const router = createBrowserRouter([
       { path: "signup", element: <SignUpPage /> },
       { path: "recruit", element: <RecruitPage /> },
       { path: "company", element: <CompanyPage /> },
+      { path: "company/:corpNo", element: <CompanyDetailPage /> },
       { path: "/board", element: <BoardPage /> },
       { path: "cv", element: <CVPage /> },
-
+      { path: "submitcv", element: <SubmitCVPage /> },
       {
         path: "/mypage",
         element: <MyPage />,
@@ -44,6 +50,7 @@ const router = createBrowserRouter([
           { index: true, element: <MyInfo /> },
           { path: "home", element: <MyInfo /> },
           { path: "myrecruit", element: <MyRecruitPage /> },
+
         ],
       },
       { path: "*", element: <NotFound /> },

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 import SectionHeader from "../../components/common/SectionHeader";
-import CompanyCard from "../../components/common/CompanyCard";
+import CompanyItem from "../../components/company/CompanyItem";
 import "./CompanyListPage.css";
 
 const CompanyListPage = () => {
@@ -13,6 +13,7 @@ const CompanyListPage = () => {
       corpName: "KH 정보교육원 종로",
       corpType: "중소기업",
       corpLogo: "/src/assets/icon.png",
+      recruitCount: 1,
       views: 120,
       favs: 70,
     },
@@ -21,6 +22,7 @@ const CompanyListPage = () => {
       corpName: "KH 정보교육원 강남",
       corpType: "중소기업",
       corpLogo: "/src/assets/icon.png",
+      recruitCount: 2,
       views: 120,
       favs: 70,
     },
@@ -29,6 +31,7 @@ const CompanyListPage = () => {
       corpName: "KH 정보교육원 의정부",
       corpType: "중소기업",
       corpLogo: "/src/assets/icon.png",
+      recruitCount: 3,
       views: 120,
       favs: 70,
     },
@@ -37,6 +40,7 @@ const CompanyListPage = () => {
       corpName: "KH 정보교육원 인천",
       corpType: "중소기업",
       corpLogo: "/src/assets/icon.png",
+      recruitCount: 4,
       views: 120,
       favs: 70,
     },
@@ -45,6 +49,7 @@ const CompanyListPage = () => {
       corpName: "KH 정보교육원 신촌",
       corpType: "중소기업",
       corpLogo: "/src/assets/icon.png",
+      recruitCount: 5,
       views: 120,
       favs: 70,
     },
@@ -53,6 +58,7 @@ const CompanyListPage = () => {
       corpName: "KH 정보교육원 노원",
       corpType: "중소기업",
       corpLogo: "/src/assets/icon.png",
+      recruitCount: 6,
       views: 120,
       favs: 70,
     },
@@ -74,7 +80,7 @@ const CompanyListPage = () => {
         {/* 기업 카드 리스트 */}
         <div className="company-grid">
           {companyList.map((company) => (
-            <CompanyCard key={company.corpRegNo} company={company} />
+            <CompanyItem key={company.corpRegNo} company={company} />
           ))}
         </div>
       </main>
