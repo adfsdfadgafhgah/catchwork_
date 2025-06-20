@@ -1,6 +1,7 @@
+/* 근데 아직 적용이 안되는듯??? */
 .resume-title {
   font-size: 20px;
   font-weight: bold;
-  color: var(--deep-gray);
+  color: var(--deep-gray) !important;
   margin-bottom: 16px;
 }

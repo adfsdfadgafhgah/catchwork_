@@ -27,7 +27,7 @@
 }
 
 .resume-item:hover {
-  background-color: var(--stroke--color2);
+  background-color: var(--stroke-color2);
 }
 
 /* 라디오 버튼 */
@@ -42,6 +42,7 @@
   display: flex;
   align-items: center;
   gap: 6px; /* 뱃지와 글자 사이 간격 */
+  color: var(--deep-gray);
 }
 
 /* 대표 이력서 뱃지 */
@@ -57,7 +58,7 @@
 
 /* 날짜 */
 .resume-date {
-  color: var(--stroke--color2);
+  color: var(--stroke-color2);
   font-size: 14px;
 }
 
@@ -66,7 +67,7 @@
   margin-top: 30px;
   padding: 6px 16px;
   background-color: var(--input-color);
-  border: 1px solid var(--stroke--color2);
+  border: 1px solid var(--stroke-color2);
   border-radius: 8px;
   cursor: pointer;
   font-size: 14px;
@@ -75,5 +76,5 @@
 }
 
 .submit-btn:hover {
-  color: var(--main-color--dark);
+  color: var(--main-color-dark);
 }
