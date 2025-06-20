@@ -29,6 +29,17 @@ import SubmitCVPage from "./pages/major/SubmitCVPage";
 // 기업상세
 import CompanyDetailPage from "./pages/major/CompanyDetailPage";
 
+// 문의
+import SupportListPage from './pages/support/SupportListPage';
+import WriteSupportPage from "./pages/support/WriteSupportPage";
+import SupportDetailPage from './pages/support/SupportDetailPage';
+
+// 기업 마이페이지
+import CorpMyPage from './pages/corpMypage/CorpMyPage';
+
+// 신고하기
+import ReportModalPage from './pages/support/ReportModalPage';
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -37,12 +48,27 @@ const router = createBrowserRouter([
       { index: true, element: <MainPage /> },
       { path: "signin", element: <SignInPage /> },
       { path: "signup", element: <SignUpPage /> },
+  
+  
       { path: "recruit", element: <RecruitPage /> },
       { path: "company", element: <CompanyPage /> },
       { path: "company/:corpNo", element: <CompanyDetailPage /> },
       { path: "/board", element: <BoardPage /> },
       { path: "cv", element: <CVPage /> },
       { path: "submitcv", element: <SubmitCVPage /> },
+      { path: 'supportlist', element: <SupportListPage/>, },
+      { path: 'writesupport', element: <WriteSupportPage/>, },
+      { path: 'corpmypage', element: <CorpMyPage/>, },
+      { path: 'reportmodal', element: <ReportModalPage/>, },
+      
+      {
+        path: '/supportdetail',
+        element: <SupportDetailPage />,
+        children: [
+          { path: ':id', element: <SupportDetailPage /> },
+        ]
+      },
+
       {
         path: "/mypage",
         element: <MyPage />,

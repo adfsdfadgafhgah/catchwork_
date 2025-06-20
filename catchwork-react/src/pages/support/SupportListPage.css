@@ -1,0 +1,108 @@
+.support-list-container {
+  padding: 40px 24px;
+  max-width: 1080px; /* 너비는 1080px로 유지 */
+  margin: 0 auto;
+  font-family: 'Noto Sans KR', sans-serif;
+  color: var(--text); /* 변수 사용 유지 */
+}
+
+.support-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* 공통 버튼 스타일 */
+.button-common {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  background-color: #fff;
+  border: 1.5px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.button-common:hover {
+  background-color: #f5f5f5;
+  border-color: #bbb;
+}
+
+.support-table {
+  width: 100%; /* 테이블은 컨테이너의 100%를 차지 */
+  border-collapse: collapse;
+  margin-bottom: 24px;
+}
+
+.support-table th,
+.support-table td {
+  border-bottom: 1px solid #ccc;
+  padding: 12px;
+  text-align: center;
+}
+
+.support-table th {
+  background-color: #f8f8f8;
+  font-weight: 600;
+}
+
+.support-table .title {
+  color: var(--text, #333);
+  cursor: pointer;
+  text-align: center;
+  width: 40%; /* "제목" 열의 너비를 40%로 설정 (약 432px) */
+  min-width: 400px; /* 최소 너비를 400px로 설정하여 너무 좁아지지 않도록 */
+}
+
+.support-table .title:hover {
+  text-decoration: underline;
+  color: var(--main-color);
+}
+
+.status-done {
+  color: var(--main-color, #46b5ab);
+  font-weight: bold;
+}
+
+.status-pending {
+  color: #999;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.pagination .arrow,
+.pagination .page-number {
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.pagination .page-number:hover,
+.pagination .arrow:hover {
+  color: var(--main-color, #46b5ab);
+}
+
+.title-underline {
+  height: 2px;
+  background-color: var(--border, #ccc); /* 색상 변수 사용 */
+  width: 100%; /* support-header의 100%를 따름 */
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 24px;
+}
+
+.no-answer {
+  color: #999;
+  font-style: italic;
+}
