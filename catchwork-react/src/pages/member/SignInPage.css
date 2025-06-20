@@ -1,0 +1,120 @@
+.signin-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 80px;
+    padding: 50px;
+    font-family: sans-serif;
+  }
+  
+  .signin-image-box {
+    text-align: center;
+  }
+  
+  .signin-image-box img {
+    width: 300px;
+    height: auto;
+    background-color: #b6f0f0;
+    padding: 40px;
+    border-radius: 8px;
+  }
+  
+  .signup-button {
+    margin-top: 20px;
+    padding: 8px 20px;
+    background-color: #48b7af;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .signin-form-box {
+    width: 320px;
+  }
+  
+  .tab-buttons {
+    display: flex;
+    margin-bottom: 20px;
+  }
+  
+  .tab-buttons button {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    background: white;
+    cursor: pointer;
+  }
+  
+  .tab-buttons .active {
+    background-color: #48b7af;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .input-group input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 8px;
+    border: none;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .remember-me {
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+  }
+  
+  .signin-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #48b7af;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 13px;
+    color: #666;
+  }
+  
+  .social-signin {
+    margin-top: 20px;
+  }
+  
+  .social-signin .line {
+    text-align: center;
+    border-top: 1px solid #999;
+    margin: 20px 0;
+    position: relative;
+  }
+  
+  .social-signin .line span {
+    background: white;
+    padding: 0 10px;
+    position: relative;
+    top: -12px;
+  }
+  
+  .social-buttons {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .social-buttons button {
+    flex: 1;
+    margin: 0 4px;
+    padding: 10px 0;
+    border: 1px solid #ccc;
+    background: white;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
