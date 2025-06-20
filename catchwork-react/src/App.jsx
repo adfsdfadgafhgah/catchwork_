@@ -1,33 +1,40 @@
 import { createBrowserRouter } from "react-router-dom";
 import "./App.css";
 
- // 레이아웃
-import Layout from './Layout';
+// 레이아웃
+import Layout from "./Layout";
 
 // 오류 및 메인
-import NotFound from './pages/error/NotFound'
-import MainPage from './pages/major/MainPage'
+import NotFound from "./pages/error/NotFound";
+import MainPage from "./pages/major/MainPage";
 
 // 회원
-import SignInPage from './pages/member/SignInPage'
-import SignUpPage from './pages/member/SignUpPage'
+import SignInPage from "./pages/member/SignInPage";
+import SignUpPage from "./pages/member/SignUpPage";
 
 // 네비게이션
-import RecruitPage from './pages/major/RecruitListPage'
-import CompanyPage from './pages/major/CompanyListPage'
-import BoardPage from './pages/major/BoardListPage'
-import CvPage from './pages/major/CVListPage'
+import RecruitPage from "./pages/major/RecruitListPage";
+import CompanyPage from "./pages/major/CompanyListPage";
+import BoardPage from "./pages/major/BoardListPage";
+import CVPage from "./pages/major/CVListPage";
 
 // 마이페이지용
-import MyPage from './pages/myPage/MyPage'
+import MyPage from "./pages/myPage/MyPage";
 import MyInfo from "./pages/myPage/MyInfoPage";
+import MyRecruitPage from "./pages/myPage/MyRecruitPage";
+
+//이력서 제출
+import SubmitCVPage from "./pages/major/SubmitCVPage";
+
+// 기업상세
+import CompanyDetailPage from "./pages/major/CompanyDetailPage";
 
 // 문의
 import SupportListPage from './pages/support/SupportListPage';
 import WriteSupportPage from "./pages/support/WriteSupportPage";
 import SupportDetailPage from './pages/support/SupportDetailPage';
 
-// 기업용 마이페이지
+// 기업 마이페이지
 import CorpMyPage from './pages/corpMypage/CorpMyPage';
 
 // 신고하기
@@ -35,16 +42,20 @@ import ReportModalPage from './pages/support/ReportModalPage';
 
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: "/",
     element: <Layout />,
     children: [
       { index: true, element: <MainPage /> },
-      { path: 'signin', element: <SignInPage /> },
-      { path: 'signup', element: <SignUpPage /> },
-      { path: 'recruit', element: <RecruitPage /> },
-      { path: 'company', element: <CompanyPage /> },
-      { path: '/board', element: <BoardPage /> },
-      { path: 'cv', element: <CvPage />, },
+      { path: "signin", element: <SignInPage /> },
+      { path: "signup", element: <SignUpPage /> },
+  
+  
+      { path: "recruit", element: <RecruitPage /> },
+      { path: "company", element: <CompanyPage /> },
+      { path: "company/:corpNo", element: <CompanyDetailPage /> },
+      { path: "/board", element: <BoardPage /> },
+      { path: "cv", element: <CVPage /> },
+      { path: "submitcv", element: <SubmitCVPage /> },
       { path: 'supportlist', element: <SupportListPage/>, },
       { path: 'writesupport', element: <WriteSupportPage/>, },
       { path: 'corpmypage', element: <CorpMyPage/>, },
@@ -52,21 +63,23 @@ const router = createBrowserRouter([
       
       {
         path: '/supportdetail',
-        element: <SupportDetailPage />, // 공통 wrapper 컴포넌트
+        element: <SupportDetailPage />,
         children: [
-          { path: ':id', element: <SupportDetailPage /> }, // 로컬호스트/supportdetail/id
+          { path: ':id', element: <SupportDetailPage /> },
         ]
       },
-
 
       {
-        path: '/mypage',
-        element: <MyPage />, // 공통 wrapper 컴포넌트
+        path: "/mypage",
+        element: <MyPage />,
         children: [
-          { path: 'home', element: <MyInfo /> }, // 로컬호스트/mypage/home
-        ]
+          { index: true, element: <MyInfo /> },
+          { path: "home", element: <MyInfo /> },
+          { path: "myrecruit", element: <MyRecruitPage /> },
+
+        ],
       },
-      { path: '*', element: <NotFound /> },
+      { path: "*", element: <NotFound /> },
     ],
   },
 ]);
