@@ -5,21 +5,23 @@
   width: 100vw; /* 컨테이너도 화면 전체 너비 */
 }
 
-/* Main */
+/* 메인 */
 .main {
   flex: 1;
   width: 100%; /* 메인도 화면 전체 너비로 설정 */
   padding: 40px 24px;
   background-color: var(--background);
-  /* max-width 제거하여 화면 전체 사용 */
 }
 
 .page-title {
   font-size: 24px;
-  margin-bottom: 32px;
+  margin-bottom: 8px;
   font-weight: bold;
   color: var(--text);
-  text-align: center;
+  text-align: left; /* ✅ 왼쪽 정렬 */
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .form-group {
@@ -102,7 +104,7 @@
   color: #999;
 }
 
-/* Buttons */
+/* 버튼 */
 .button-group {
   display: flex;
   justify-content: flex-end;
@@ -143,35 +145,7 @@
   background-color: #3a9a91;
 }
 
-/* Footer */
-.footer {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 24px;
-  background-color: var(--footer-bg);
-  padding: 24px;
-  font-size: 14px;
-  flex-wrap: wrap;
-  width: 100%; /* 푸터도 화면 너비에 맞춤 */
-  max-width: 1200px; /* 가독성을 위한 최대 너비 제한 (선택적) */
-  margin: 0 auto; /* 중앙 정렬 */
-}
 
-.footer a,
-.footer span {
-  text-decoration: none;
-  color: var(--text);
-}
-
-.footer a:hover {
-  color: var(--main-color);
-}
-
-.footer .highlight {
-  color: var(--main-color) !important;
-  font-weight: bold;
-}
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -206,9 +180,14 @@
     justify-content: center;
   }
 
-  .footer {
-    flex-direction: column;
-    gap: 12px;
-    text-align: center;
-  }
+}
+/* WriteSupportPage.css 하단에 추가 */
+.title-underline {
+  height: 2px;
+  background-color: #ccc;
+  width: 100%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 24px;
 }
