@@ -1,9 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
-import "./SubmitCvPage.css";
+import "./SubmitCVPage.css";
 import SectionHeader from "../../components/common/SectionHeader";
 
-const SubmitCvPage = () => {
+const SubmitCVPage = () => {
   // 더미 데이터 (임시 데이터)
   const [resumeList, setResumeList] = useState([
     {
@@ -76,4 +76,4 @@ const SubmitCvPage = () => {
   );
 };
 
-export default SubmitCvPage;
+export default SubmitCVPage;

@@ -1,18 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import "./SideBar.css";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const SideBar = () => {
-  const [activeTab, setActiveTab] = useState("myinfo");
-
-  useEffect(() => {
-    setActiveTab();
-  }, [activeTab]);
+  // 주소값
+  const location = useLocation();
 
   // 열린 메뉴
   const [expandedMenu, setExpandedMenu] = useState({
-    interest: false,
-    myPosts: false,
+    fav: false,
+    myContents: false,
     account: false,
   });
 
@@ -32,16 +29,21 @@ const SideBar = () => {
         <nav className="sidebar-nav">
           <NavLink
             to="/mypage/home"
-            onClick={() => setActiveTab("myinfo")}
-            className={`nav-item ${activeTab === "myinfo" ? "active" : ""}`}
+            className={`nav-item ${
+              location.pathname === "/mypage/home" ||
+              location.pathname === "/mypage"
+                ? "active"
+                : ""
+            }`}
           >
             내정보
           </NavLink>
 
           <NavLink
             to="/mypage/myrecruit"
-            onClick={() => setActiveTab("myrecruit")}
-            className={`nav-item ${activeTab === "myrecruit" ? "active" : ""}`}
+            className={`nav-item ${
+              location.pathname === "/mypage/myrecruit" ? "active" : ""
+            }`}
           >
             지원한 공고
           </NavLink>
@@ -49,7 +51,7 @@ const SideBar = () => {
           {/* 관심 목록 */}
           <div>
             <button
-              onClick={() => toggleMenu("interest")}
+              onClick={() => toggleMenu("fav")}
               className="nav-item nav-item-expandable"
             >
               <span>관심 목록</span>
@@ -61,28 +63,25 @@ const SideBar = () => {
                 chevron_right
               </i>
             </button>
-            {expandedMenu.interest && (
+            {expandedMenu.fav && (
               <div className="sub-nav">
                 <button
-                  onClick={() => setActiveTab("관심공고")}
                   className={`sub-nav-item ${
-                    activeTab === "관심공고" ? "active" : ""
+                    location.pathname === "/mypage/favrecruit" ? "active" : ""
                   }`}
                 >
                   관심 공고
                 </button>
                 <button
-                  onClick={() => setActiveTab("관심기업")}
                   className={`sub-nav-item ${
-                    activeTab === "관심기업" ? "active" : ""
+                    location.pathname === "/mypage/favcompany" ? "active" : ""
                   }`}
                 >
                   관심 기업
                 </button>
                 <button
-                  onClick={() => setActiveTab("관심후기")}
                   className={`sub-nav-item ${
-                    activeTab === "관심후기" ? "active" : ""
+                    location.pathname === "/mypage/favboard" ? "active" : ""
                   }`}
                 >
                   관심 후기
@@ -100,26 +99,24 @@ const SideBar = () => {
               <span>내가 쓴 목록</span>
               <i
                 className={`material-icons ${
-                  expandedMenu.myPosts ? "rotate-90" : ""
+                  expandedMenu.myContents ? "rotate-90" : ""
                 }`}
               >
                 chevron_right
               </i>
             </button>
-            {expandedMenu.myPosts && (
+            {expandedMenu.myContents && (
               <div className="sub-nav">
                 <button
-                  onClick={() => setActiveTab("내가쓴게시글")}
                   className={`sub-nav-item ${
-                    activeTab === "내가쓴게시글" ? "active" : ""
+                    location.pathname === "/mypage/myboard" ? "active" : ""
                   }`}
                 >
                   내가 쓴 게시글
                 </button>
                 <button
-                  onClick={() => setActiveTab("내가쓴댓글")}
                   className={`sub-nav-item ${
-                    activeTab === "내가쓴댓글" ? "active" : ""
+                    location.pathname === "/mypage/mycomment" ? "active" : ""
                   }`}
                 >
                   내가 쓴 댓글
@@ -129,8 +126,9 @@ const SideBar = () => {
           </div>
 
           <button
-            onClick={() => setActiveTab("멤버쉽")}
-            className={`nav-item ${activeTab === "멤버쉽" ? "active" : ""}`}
+            className={`nav-item ${
+              location.pathname === "/mypage/membership" ? "active" : ""
+            }`}
           >
             멤버쉽
           </button>
@@ -153,25 +151,22 @@ const SideBar = () => {
             {expandedMenu.account && (
               <div className="sub-nav">
                 <button
-                  onClick={() => setActiveTab("내정보변경")}
                   className={`sub-nav-item ${
-                    activeTab === "내정보변경" ? "active" : ""
+                    location.pathname === "/mypage/eitmyinfo" ? "active" : ""
                   }`}
                 >
                   내 정보 변경
                 </button>
                 <button
-                  onClick={() => setActiveTab("비밀번호변경")}
                   className={`sub-nav-item ${
-                    activeTab === "비밀번호변경" ? "active" : ""
+                    location.pathname === "/mypage/changepw" ? "active" : ""
                   }`}
                 >
                   비밀번호 변경
                 </button>
                 <button
-                  onClick={() => setActiveTab("회원탈퇴")}
                   className={`sub-nav-item ${
-                    activeTab === "회원탈퇴" ? "active" : ""
+                    location.pathname === "/mypage/withdraw" ? "active" : ""
                   }`}
                 >
                   회원 탈퇴

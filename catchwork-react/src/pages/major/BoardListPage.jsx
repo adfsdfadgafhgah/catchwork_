@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
-import BoardCard from "./BoardCard";
-import "./BoardListPage.css";
+import BoardList from "../../components/board/BoardList";
+import BoardCss from "./BoardListPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
 
 export default function BoardListPage() {
@@ -12,6 +12,19 @@ export default function BoardListPage() {
   // 깡 데이터
   const dummyBoards = [
     {
+      boardNo: 1,
+      boardTitle: "첫 번째 글은 들어가짐",
+      boardContent: "디테일로 왔음",
+      boardWriteDate: "1일 전",
+      boardReadCount: 1,
+      commentCount: 2,
+      likeCount: 3,
+      member: {
+        memNickname: "으후루꾸꾸루후으으후",
+      },
+    },
+    {
+      boardNo: 2,
       boardTitle: "취업도전 100번 째... 실패만 한다면?",
       boardContent: "그냥 포기하고 행복한 백수로 살아보세요",
       boardWriteDate: "1일 전",
@@ -23,17 +36,7 @@ export default function BoardListPage() {
       },
     },
     {
-      boardTitle: "취업도전 100번 째... 실패만 한다면?",
-      boardContent: "그냥 포기하고 행복한 백수로 살아보세요",
-      boardWriteDate: "1일 전",
-      boardReadCount: 100,
-      commentCount: 23,
-      likeCount: 14,
-      member: {
-        memNickname: "으후루꾸꾸루후으으후",
-      },
-    },
-    {
+      boardNo: 3,
       boardTitle: "취업도전 100번 째... 실패만 한다면?",
       boardContent: "그냥 포기하고 행복한 백수로 살아보세요",
       boardWriteDate: "1일 전",
@@ -65,7 +68,7 @@ export default function BoardListPage() {
     // setTimeout으로 비동기 시뮬레이션
     setTimeout(() => {
       setBoards(dummyBoards);
-    }, 1000); // 1초 후 로딩 끝
+    }); // 1초 후 로딩 끝
 
     // 언마운트 시 cleanup
     return () => setBoards([]);
@@ -106,14 +109,14 @@ export default function BoardListPage() {
   };
 
   return (
-    <div className="board-list">
+    <div className={BoardCss.boardListPage}>
       {/* 섹션 헤더 */}
       <SectionHeader title="취준진담" />
 
       {/* 정렬 및 검색창 컨테이너 */}
-      <div className="controls">
+      <div className={BoardCss.controls}>
         <select
-          className="sort-select"
+          className={BoardCss.sortSelect}
           onChange={(e) => console.log("정렬 선택:", e.target.value)}
         >
           <option value="latest">최신순</option>
@@ -122,8 +125,8 @@ export default function BoardListPage() {
           <option value="comments">댓글순</option>
         </select>
 
-        <div className="search-box">
-          <button onClick={handleSearch}>검색</button> {/* 머지하고 바꾸기 */}
+        <div className={BoardCss.searchBox}>
+          <i className="fa-solid fa-magnifying-glass"></i>
           <input
             type="text"
             placeholder="진중한 취업이야기, 취준진담"
@@ -134,12 +137,8 @@ export default function BoardListPage() {
         </div>
       </div>
 
-      {/* 게시글 리스트 */}
-      {boards.length === 0 ? (
-        <p>게시글이 없습니다.</p>
-      ) : (
-        boards.map((board, index) => <BoardCard key={index} board={board} />)
-      )}
+      {/* BoardList 넘겨주기 */}
+      <BoardList boards={boards} />
     </div>
   );
 }
