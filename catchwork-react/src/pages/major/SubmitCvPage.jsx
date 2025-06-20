@@ -1,5 +1,6 @@
 import { useState } from "react";
-
+import axios from "axios";
+import "./SubmitCvPage.css";
 import SectionHeader from "../../components/common/SectionHeader";
 
 const SubmitCvPage = () => {
@@ -7,19 +8,19 @@ const SubmitCvPage = () => {
   const [resumeList, setResumeList] = useState([
     {
       cvNo: 1,
-      cvAlias: "이윤진 JAVA 개발자 이력서",
+      cvTitle: "이윤진 JAVA 개발자 이력서",
       cvMainFl: "Y",
       createdDate: "2025.06.17",
     },
     {
       cvNo: 2,
-      cvAlias: "이윤진 이력서 최근 경력사항 수정본",
+      cvTitle: "이윤진 이력서 최근 경력사항 수정본",
       cvMainFl: "N",
       createdDate: "2025.06.15",
     },
     {
       cvNo: 3,
-      cvAlias: "이윤진 포트폴리오 수정본",
+      cvTitle: "이윤진 포트폴리오 수정본",
       cvMainFl: "N",
       createdDate: "2025.06.14",
     },
@@ -52,10 +53,13 @@ const SubmitCvPage = () => {
                   checked={selectedResume === resume.cvNo}
                   onChange={() => setSelectedResume(resume.cvNo)}
                 />
-                <div className="resume-name">{resume.cvAlias}</div>
-                {resume.cvMainFl === "Y" && (
-                  <span className="resume-badge">대표 이력서</span>
-                )}
+                <div className="resume-name">
+                  {resume.cvMainFl === "Y" && (
+                    <span className="resume-badge">대표 이력서</span>
+                  )}
+                  {resume.cvTitle}
+                </div>
+
                 <div className="resume-date">{resume.createdDate}</div>
               </label>
             ))
