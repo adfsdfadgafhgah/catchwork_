@@ -30,9 +30,9 @@
   width: 100%;
   text-align: left;
   padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
   transition: all 0.2s;
   border: none;
+  border-bottom: 1px solid var(--main-color);
   background: none;
   cursor: pointer;
   color: #374151;
@@ -44,8 +44,10 @@
 }
 
 .nav-item.active {
-  background-color: #14b8a6;
+  background-color: var(--main-color);
   color: white;
+  border: none;
+  border-radius: 4px;
 }
 
 .nav-item-expandable {
@@ -74,7 +76,6 @@
   width: 100%;
   text-align: left;
   padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
   transition: all 0.2s;
   border: none;
   background: none;
@@ -87,6 +88,6 @@
 }
 
 .sub-nav-item.active {
-  background-color: #14b8a6;
+  background-color: var(--main-color);
   color: white;
 }
