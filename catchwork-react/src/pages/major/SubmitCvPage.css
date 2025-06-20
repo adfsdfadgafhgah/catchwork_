@@ -1,0 +1,80 @@
+/* 전체 컨테이너 */
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* 이력서 리스트 */
+.resume-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+}
+
+/* 각 이력서 항목 */
+.resume-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 16px;
+  /* border: 1px solid #e0e0e0; */
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.resume-item:hover {
+  background-color: #f9f9f9;
+}
+
+/* 라디오 버튼 */
+.resume-item input[type="radio"] {
+  transform: scale(1.2);
+  accent-color: #4dc3c6; /* 메인컬러 */
+}
+
+.resume-name {
+  font-weight: 600;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px; /* 뱃지와 글자 사이 간격 */
+}
+
+/* 대표 이력서 뱃지 */
+.resume-badge {
+  display: inline-block;
+  background-color: white;
+  border: 1px solid #4dc3c6;
+  color: #4dc3c6;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+/* 날짜 */
+.resume-date {
+  color: #888;
+  font-size: 14px;
+}
+
+.submit-btn {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 6px 16px;
+  background-color: white;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  float: right;
+}
+
+.submit-btn:hover {
+  color: #4dc3c6;
+}
