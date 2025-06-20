@@ -18,6 +18,7 @@ import CompanyPage from "./pages/major/CompanyListPage";
 import BoardPage from "./pages/major/BoardListPage";
 import CVPage from "./pages/major/CVListPage";
 
+
 // 마이페이지용용
 import MyPage from "./pages/myPage/MyPage";
 import MyInfo from "./pages/myPage/MyInfoPage";
