@@ -1,5 +1,7 @@
+import RecruitList from "../../components/recruit/RecruitList";
+
 function MyRecruitPage() {
-  return <></>;
+  return <RecruitList />;
 }
 
 export default MyRecruitPage;

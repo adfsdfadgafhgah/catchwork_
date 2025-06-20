@@ -7,6 +7,8 @@
 :root {
   --main-color: #46b5ab;
   --main-color-dark: #2a7f7a;
+  --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
   --border: #ccc;
   --text: #333;
   --footer-bg: #e0e0e0;
