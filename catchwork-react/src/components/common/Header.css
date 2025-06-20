@@ -19,12 +19,30 @@
   gap: 0.5rem;
 }
 
+/* 검색창 */
 .search-box {
+  display: flex;
+  align-items: center;
+  border: 1px solid #46b5ab;
+  border-radius: 999px;
+  padding: 4px 10px;
   width: 300px;
-  padding: 0.5rem 1rem;
-  border-radius: 9999px;
-  border: 1px solid #d1d5db;
-  background-color: #f9fafb;
+}
+
+.search-box input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+  padding: 4px;
+}
+
+.search-box button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  color: #46b5ab;
+  padding-left: 4px;
 }
 
 .user-info span {
