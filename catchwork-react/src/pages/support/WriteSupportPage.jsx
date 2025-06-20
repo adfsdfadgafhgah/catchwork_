@@ -31,10 +31,10 @@ export default function WriteSupportPage({ logo }) {
           <textarea id="content" placeholder="내용을 입력하세요."/>
         </div>
 
-        <div className="button-group">
-          <button className="cancel">✕ 취소하기</button>
-          <button className="submit">✏️ 작성하기</button>
-        </div>
+    <div className="button-group">
+      <button className="button-common cancel-button">✕ 취소하기</button>
+      <button className="button-common submit-button">✏️ 작성하기</button>
+    </div>
       </main>
     </div>
   );
