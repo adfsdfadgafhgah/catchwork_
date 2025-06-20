@@ -1,42 +1,19 @@
-import React from "react";
-import { Link, useLocation, NavLink } from "react-router-dom";
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 
 const HeaderNav = () => {
-  const { pathname } = useLocation();
-
-  const isActive = (path) =>
-    pathname === path || pathname.startsWith(path + "/");
-
+    const navigate = useNavigate();
   return (
     <div className="header-nav">
-      <nav className="nav">
-        <NavLink
-          to="/recruit"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          채용공고
-        </NavLink>
-        <NavLink
-          to="/company"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          기업정보
-        </NavLink>
-        <NavLink
-          to="/board"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          취준진담
-        </NavLink>
-        <NavLink
-          to="/cv"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          내 이력서
-        </NavLink>
-      </nav>
+        <nav className="nav">
+        <Link to="/recruit">채용공고</Link>
+        <Link to="/company">기업정보</Link>
+        <Link to="/board">취준진담</Link>
+        <Link to="/cv">내 이력서</Link>
+        </nav>
     </div>
   );
 };
 
 export default HeaderNav;
+

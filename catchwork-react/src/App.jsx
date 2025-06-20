@@ -1,20 +1,16 @@
 import { createBrowserRouter } from "react-router-dom";
 import "./App.css";
 
-// 레이아웃
-import Layout from "./Layout";
+ // 레이아웃
+import Layout from './Layout';
 
 // 오류 및 메인
-import NotFound from "./pages/error/NotFound";
-import MainPage from "./pages/major/MainPage";
+import NotFound from './pages/error/NotFound'
+import MainPage from './pages/major/MainPage'
 
-// 로그인/회원가입
-import SignInPage from "./pages/member/SignInPage";
-import SignUpPage from "./pages/member/SignUpPage";
-
-// Id,PW 찾기
-import FindIdPage from "./pages/member/FindIdPage";
-import FindPWPage from "./pages/member/FindPWPage";
+// 회원
+import SignInPage from './pages/member/SignInPage'
+import SignUpPage from './pages/member/SignUpPage'
 
 // 네비게이션
 import RecruitPage from "./pages/major/RecruitListPage";
@@ -24,8 +20,8 @@ import BoardListPage from "./pages/major/BoardListPage";
 import BoardDetailPage from "./pages/major/BoardDetailPage";
 import CVPage from "./pages/major/CVListPage";
 
-// 마이페이지용
-import MyPage from "./pages/myPage/MyPage";
+// 마이페이지용용
+import MyPage from './pages/myPage/MyPage'
 import MyInfo from "./pages/myPage/MyInfoPage";
 import MyRecruitPage from "./pages/myPage/MyRecruitPage";
 
@@ -48,10 +44,16 @@ import ReportModalPage from './pages/support/ReportModalPage';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Layout />,
     children: [
       { index: true, element: <MainPage /> },
+      { path: 'signin', element: <SignInPage /> },
+      { path: 'signup', element: <SignUpPage /> },
+      { path: 'recruit', element: <RecruitPage /> },
+      { path: 'company', element: <CompanyPage /> },
+      { path: '/board', element: <BoardPage /> },
+      { path: 'cv', element: <CvPage />, },
 
       // 로그인/회원가입
       { path: "signin", element: <SignInPage /> },
