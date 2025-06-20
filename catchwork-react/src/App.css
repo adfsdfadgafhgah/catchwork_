@@ -13,6 +13,12 @@
   box-sizing: border-box;
 }
 
+:root {
+  --main-color: #46b5ab;
+  --sub-color: #b8f0f1;
+  --stroke-color: #d0d0d0;
+}
+
 html,
 body,
 #root {
