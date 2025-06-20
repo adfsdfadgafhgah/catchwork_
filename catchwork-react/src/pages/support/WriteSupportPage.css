@@ -1,0 +1,193 @@
+.write-support-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  width: 100vw; /* 컨테이너도 화면 전체 너비 */
+}
+
+/* 메인 */
+.main {
+  flex: 1;
+  width: 100%; /* 메인도 화면 전체 너비로 설정 */
+  padding: 40px 24px;
+  background-color: var(--background);
+}
+
+.page-title {
+  font-size: 24px;
+  margin-bottom: 8px;
+  font-weight: bold;
+  color: var(--text);
+  text-align: left; /* ✅ 왼쪽 정렬 */
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 24px;
+  width: 100%; /* 폼 요소도 화면 너비에 맞춤 */
+  max-width: 800px; /* 가독성을 위한 최대 너비 제한 (선택적) */
+  margin-left: auto;
+  margin-right: auto; /* 중앙 정렬 유지 */
+}
+
+/* 라벨은 텍스트로, 아래 인풋은 밑줄만 */
+.form-group label {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  display: block;
+  color: var(--text);
+}
+
+.form-group input[type="text"] {
+  border: none;
+  border-bottom: 2px solid var(--main-color);
+  padding: 12px 0;
+  font-size: 16px;
+  outline: none;
+  width: 100%;
+  background-color: transparent;
+  color: var(--text);
+  transition: border-bottom-color 0.2s;
+}
+
+.form-group input[type="text"]:focus {
+  border-bottom-color: #2a7f7a;
+}
+
+.form-group input[type="text"]::placeholder {
+  color: #999;
+}
+
+.form-group select {
+  padding: 12px;
+  border: 2px solid var(--main-color);
+  border-radius: 4px;
+  font-size: 15px;
+  background-color: white;
+  color: var(--text);
+  outline: none;
+  cursor: pointer;
+  width: 100%; /* 셀렉트도 화면 너비에 맞춤 */
+  max-width: 300px; /* 너무 넓지 않도록 제한 (선택적) */
+}
+
+.form-group select:focus {
+  border-color: #3a9a91;
+  box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.1);
+}
+
+.form-group textarea {
+  padding: 16px;
+  border: 2px solid var(--main-color);
+  border-radius: 4px;
+  font-size: 15px;
+  background-color: white;
+  color: var(--text);
+  outline: none;
+  width: 100%; /* 텍스트 영역도 화면 너비에 맞춤 */
+  min-height: 300px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.form-group textarea:focus {
+  border-color: #3a9a91;
+  box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.1);
+}
+
+.form-group textarea::placeholder {
+  color: #999;
+}
+
+/* 버튼 */
+.button-group {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
+  width: 100%; /* 버튼 그룹도 화면 너비에 맞춤 */
+  max-width: 800px; /* 가독성을 위한 최대 너비 제한 (선택적) */
+  margin-left: auto;
+  margin-right: auto; /* 중앙 정렬 */
+}
+
+.cancel,
+.submit {
+  padding: 12px 24px;
+  border-radius: 4px;
+  border: 2px solid var(--main-color);
+  background-color: white;
+  color: var(--main-color);
+  font-size: 15px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cancel:hover {
+  background-color: #f8f9fa;
+}
+
+.submit {
+  background-color: var(--main-color);
+  color: white;
+}
+
+.submit:hover {
+  background-color: #3a9a91;
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .search-box {
+    width: 100%;
+    margin: 0;
+  }
+
+  .nav {
+    padding: 0 16px;
+    gap: 20px;
+    overflow-x: auto;
+  }
+
+  .main {
+    padding: 20px 16px;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .cancel,
+  .submit {
+    width: 100%;
+    justify-content: center;
+  }
+
+}
+/* WriteSupportPage.css 하단에 추가 */
+.title-underline {
+  height: 2px;
+  background-color: #ccc;
+  width: 100%;
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 24px;
+}
