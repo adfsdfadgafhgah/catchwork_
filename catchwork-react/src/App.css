@@ -5,12 +5,15 @@
 
 /* 변수 */
 :root {
-  --main-color: #46b5ab;
-  --main-color-dark: #2a7f7a;
-  --border: #ccc;
-  --text: #333;
-  --footer-bg: #e0e0e0;
-  --input-bg: #f0fdfa;
+  --main-color: #46b5ab; /*메인컬러*/
+  --sub-color: #b8f0f1; /*배경컬러*/
+  --main-color-dark: #2a7f7a; /*호버시 사용*/
+  --gray01: #868686; /*문의하기페이지 사용*/
+  --deep-gray: #4d4d4d; /*이력서제목.공고제목.등 검정색 대신 사용*/
+  --input-color: #f5f5f5;
+  --img-color: #dddddd;
+  --stroke-color1: #d9d9d9; /*개인회원footer bg,메뉴,섹션헤더 border*/
+  --stroke-color2: #d0d0d0; /*기업회원footer bg,이력서 등 상세항목 border*/
 }
 
 /* 기본 설정 */
@@ -21,12 +24,6 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
-}
-
-:root {
-  --main-color: #46b5ab;
-  --sub-color: #b8f0f1;
-  --stroke-color: #d0d0d0;
 }
 
 html,
