@@ -8,9 +8,13 @@ import Layout from "./Layout";
 import NotFound from "./pages/error/NotFound";
 import MainPage from "./pages/major/MainPage";
 
-// 회원
+// 로그인/회원가입
 import SignInPage from "./pages/member/SignInPage";
 import SignUpPage from "./pages/member/SignUpPage";
+
+// Id,PW 찾기
+import FindIdPage from "./pages/member/FindIdPage";
+import FindPWPage from "./pages/member/FindPWPage";
 
 // 네비게이션
 import RecruitPage from "./pages/major/RecruitListPage";
@@ -48,8 +52,16 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <MainPage /> },
+
+      // 로그인/회원가입
       { path: "signin", element: <SignInPage /> },
       { path: "signup", element: <SignUpPage /> },
+
+      // Id,PW 찾기
+      { path: "findid", element: <FindIdPage /> },
+      { path: "findpw", element: <FindPWPage /> },
+                   
+                   
       { path: "recruit", element: <RecruitPage /> },
       { path: "company", element: <CompanyPage /> },
       { path: "company/:corpNo", element: <CompanyDetailPage /> },
@@ -85,6 +97,8 @@ const router = createBrowserRouter([
 
         ],
       },
+        
+      // 등록된 주소 외 모든 주소 예외 처리
       { path: "*", element: <NotFound /> },
     ],
   },
