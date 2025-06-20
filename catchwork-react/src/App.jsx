@@ -18,9 +18,10 @@ import CompanyPage from "./pages/major/CompanyListPage";
 import BoardPage from "./pages/major/BoardListPage";
 import CVPage from "./pages/major/CVListPage";
 
-// 마이페이지용용
+// 마이페이지용
 import MyPage from "./pages/myPage/MyPage";
 import MyInfo from "./pages/myPage/MyInfoPage";
+import MyRecruitPage from "./pages/myPage/MyRecruitPage";
 
 //이력서 제출
 import SubmitCVPage from "./pages/major/SubmitCVPage";
@@ -42,12 +43,14 @@ const router = createBrowserRouter([
       { path: "/board", element: <BoardPage /> },
       { path: "cv", element: <CVPage /> },
       { path: "submitcv", element: <SubmitCVPage /> },
-
       {
         path: "/mypage",
-        element: <MyPage />, // 공통 wrapper 컴포넌트
+        element: <MyPage />,
         children: [
-          { path: "home", element: <MyInfo /> }, // 로컬호스트/mypage/home
+          { index: true, element: <MyInfo /> },
+          { path: "home", element: <MyInfo /> },
+          { path: "myrecruit", element: <MyRecruitPage /> },
+
         ],
       },
       { path: "*", element: <NotFound /> },
