@@ -18,7 +18,17 @@ import CorpMyPage  from './pages/corpMypage/CorpMyPage' // 명하 기업 마이�
 import WriteSupportPage from './pages/support/WriteSupportPage' // 명하 문의 작성
 
 
+
 function AppRoute() {
+  const myPageRoutes = {
+    path: "/mypage",
+    element: <MyPage />,
+    children: [
+      { path: "", element: <MyInfoPage /> },
+      { path: "myrecruit", element: <MyRecruitPage /> },
+    ],
+  };
+
   return (
     <>
       <main>
@@ -36,6 +46,7 @@ function AppRoute() {
 
           <Route path="/cv" element={<CvPage />} />
 
+
           <Route path="/mypage" element={<MyPage />} />
 
           {/*윤진*/}
@@ -43,7 +54,6 @@ function AppRoute() {
        
           <Route path="/corpmypage" element={<CorpMyPage />} />  {/* 명하 */}
           <Route path="/writesupport" element={<WriteSupportPage />} />  {/* 명하 */}
-
 
         </Routes>
       </main>

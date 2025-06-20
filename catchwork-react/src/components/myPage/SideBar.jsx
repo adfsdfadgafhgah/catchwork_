@@ -1,13 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./SideBar.css";
+import { NavLink } from "react-router-dom";
 
-const SideBar = ({ activeTab, setActiveTab }) => {
+const SideBar = () => {
+  const [activeTab, setActiveTab] = useState("myinfo");
+
+  useEffect(() => {
+    setActiveTab();
+  }, [activeTab]);
+
+  // 열린 메뉴
   const [expandedMenu, setExpandedMenu] = useState({
     interest: false,
     myPosts: false,
     account: false,
   });
 
+  // 사이드바 세부 목록 토글
   const toggleMenu = (menu) => {
     setExpandedMenu((prev) => ({
       ...prev,
@@ -21,19 +30,21 @@ const SideBar = ({ activeTab, setActiveTab }) => {
         <h2 className="sidebar-title">마이 페이지</h2>
 
         <nav className="sidebar-nav">
-          <button
-            onClick={() => setActiveTab("내정보")}
-            className={`nav-item ${activeTab === "내정보" ? "active" : ""}`}
+          <NavLink
+            to="/mypage/home"
+            onClick={() => setActiveTab("myinfo")}
+            className={`nav-item ${activeTab === "myinfo" ? "active" : ""}`}
           >
             내정보
-          </button>
+          </NavLink>
 
-          <button
-            onClick={() => setActiveTab("지원한공고")}
-            className={`nav-item ${activeTab === "지원한공고" ? "active" : ""}`}
+          <NavLink
+            to="/mypage/myrecruit"
+            onClick={() => setActiveTab("myrecruit")}
+            className={`nav-item ${activeTab === "myrecruit" ? "active" : ""}`}
           >
             지원한 공고
-          </button>
+          </NavLink>
 
           {/* 관심 목록 */}
           <div>
