@@ -6,12 +6,29 @@ import MainPage from "./pages/major/MainPage";
 import SignInPage from "./pages/member/SignInPage";
 import SignUpPage from "./pages/member/SignUpPage";
 
-import RecruitPage from "./pages/major/RecruitListPage";
-import CompanyPage from "./pages/major/CompanyListPage";
-import BoardPage from "./pages/major/BoardListPage";
-import CvPage from "./pages/major/CVListPage";
+
+import SubmitCvPage from "./pages/major/SubmitCvPage";
+
+import RecruitPage from './pages/major/RecruitListPage'
+import CompanyPage from './pages/major/CompanyListPage'
+import BoardPage from './pages/major/BoardListPage'
+import MyPage from './pages/myPage/MyPage'
+import CvPage from './pages/major/CVListPage'
+import CorpMyPage  from './pages/corpMypage/CorpMyPage' // 명하 기업 마이페이지 작성
+import WriteSupportPage from './pages/support/WriteSupportPage' // 명하 문의 작성
+
+
 
 function AppRoute() {
+  const myPageRoutes = {
+    path: "/mypage",
+    element: <MyPage />,
+    children: [
+      { path: "", element: <MyInfoPage /> },
+      { path: "myrecruit", element: <MyRecruitPage /> },
+    ],
+  };
+
   return (
     <>
       <main>
@@ -25,7 +42,19 @@ function AppRoute() {
           <Route path="/recruit" element={<RecruitPage />} />
           <Route path="/company" element={<CompanyPage />} />
           <Route path="/board" element={<BoardPage />} />
+          <Route path="/mypage" element={<MyPage />} />
+
           <Route path="/cv" element={<CvPage />} />
+
+
+          <Route path="/mypage" element={<MyPage />} />
+
+          {/*윤진*/}
+          <Route path="/submitcvpage" element={<SubmitCvPage />} />
+       
+          <Route path="/corpmypage" element={<CorpMyPage />} />  {/* 명하 */}
+          <Route path="/writesupport" element={<WriteSupportPage />} />  {/* 명하 */}
+
         </Routes>
       </main>
     </>
