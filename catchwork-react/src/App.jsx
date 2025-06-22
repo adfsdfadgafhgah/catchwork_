@@ -20,8 +20,6 @@ import FindPWPage from "./pages/member/FindPWPage";
 import RecruitPage from "./pages/major/RecruitListPage";
 import CompanyPage from "./pages/major/CompanyListPage";
 import BoardPage from "./pages/major/BoardPage";
-import BoardListPage from "./pages/major/BoardListPage";
-import BoardDetailPage from "./pages/major/BoardDetailPage";
 import CVPage from "./pages/major/CVListPage";
 
 // 마이페이지
@@ -31,6 +29,10 @@ import MyRecruitPage from "./pages/myPage/MyRecruitPage";
 
 //이력서 제출
 import SubmitCVPage from "./pages/major/SubmitCVPage";
+
+// 게시글
+import BoardListPage from "./pages/major/BoardListPage";
+import BoardDetailPage from "./pages/major/BoardDetailPage";
 
 // 기업상세
 import CompanyDetailPage from "./pages/major/CompanyDetailPage";
@@ -70,14 +72,17 @@ const router = createBrowserRouter([
       { path: "recruit", element: <RecruitPage /> },
       { path: "company", element: <CompanyPage /> },
       { path: "company/:corpNo", element: <CompanyDetailPage /> },
+
+      // 게시글
       {
         path: "/board",
         element: <BoardPage />,
         children: [
           { index: true, element: <BoardListPage /> },
-          { path: ":id", element: <BoardDetailPage /> },
+          { path: ":boardNo", element: <BoardDetailPage /> },
         ],
       },
+
       { path: "cv", element: <CVPage /> },
       { path: "submitcv", element: <SubmitCVPage /> },
       { path: "supportlist", element: <SupportListPage /> },

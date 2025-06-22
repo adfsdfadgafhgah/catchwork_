@@ -8,6 +8,10 @@
   padding: 24px 20px;
 }
 
+.boardItem:hover {
+  background-color: #fafafa;
+}
+
 .boardItemLeft {
   display: flex;
   align-items: flex-start;
@@ -58,6 +62,10 @@
   color: #666;
   font-size: 14px;
   margin-bottom: 16px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /*  2줄 제한 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .meta {
@@ -65,6 +73,10 @@
   color: #999;
   display: flex;
   gap: 12px;
+}
+
+.meta i {
+  margin-right: -7px;
 }
 
 .logo {
@@ -86,4 +98,32 @@
   text-decoration: none; /* ✅ 밑줄 제거 */
   color: inherit; /* ✅ 텍스트 색상 유지 */
   display: block; /* ✅ 전체 박스 클릭 가능하게 */
+}
+
+.fas.red {
+  color: red;
+  cursor: pointer;
+}
+
+.far {
+  color: gray;
+  cursor: pointer;
+}
+
+/* 반응형 */
+@media (max-width: 600px) {
+  .boardItem {
+    flex-direction: column;
+    padding: 16px;
+  }
+
+  .boardItemLeft {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .logo {
+    align-self: flex-end;
+    margin-top: 12px;
+  }
 }

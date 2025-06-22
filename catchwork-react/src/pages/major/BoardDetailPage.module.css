@@ -13,7 +13,9 @@
 .headerRow {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center; /* ← 위아래 정렬 */
+  flex-wrap: nowrap; /* ← 줄바꿈 방지 */
+  gap: 16px; /* 간격 약간 주기 */
   padding-top: 32px;
 }
 
@@ -21,6 +23,10 @@
   font-size: 22px;
   font-weight: 600;
   color: #222;
+  white-space: nowrap; /* 줄바꿈 방지 */
+  overflow: hidden; /* 넘치는 글자 숨김 */
+  text-overflow: ellipsis; /* 말줄임(...) 처리 */
+  max-width: 700px; /* 버튼과 겹치지 않도록 제한 */
 }
 
 /* 수정/삭제 버튼 그룹 */
@@ -69,9 +75,19 @@
 .metaInfo {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 4px;
   font-size: 14px;
   color: #666;
+}
+
+.fas.red {
+  color: red;
+  cursor: pointer;
+}
+
+.far {
+  color: gray;
+  cursor: pointer;
 }
 
 /* ✅ 본문 내용 박스 */
@@ -84,3 +100,51 @@
   color: #333;
   min-height: 180px;
 }
+
+/* 반응형 */
+@media (max-width: 600px) {
+  .headerRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .metaRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .title {
+    max-width: 100%;
+    white-space: normal; /* 모바일에선 줄바꿈 허용 */
+  }
+
+  .actionButtons {
+    align-self: flex-end;
+    margin-top: 8px;
+  }
+}
+
+/* 제목이 너무 길어질 때 제목을 전부 표기할까 말까?? */
+/* .headerRow {
+  display: grid;
+  grid-template-columns: 1fr auto; /* 제목: 왼쪽 / 버튼: 오른쪽 
+  align-items: start;
+  gap: 16px;
+  margin-bottom: 20px;
+} */
+
+/* .title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #222;
+  line-height: 1.5;
+  word-break: break-word; /* 너무 긴 단어 줄바꿈 허용 
+} */
+
+/* .actionButtons {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+} */
