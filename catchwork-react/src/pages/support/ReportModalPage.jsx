@@ -8,7 +8,7 @@ const ReportModalPage = ({ target, onClose }) => {
         <h2 className="modal-title">신고하기</h2>
         <div className="title-underline" />
 
-        {/* 신고 대상 (읽기 전용 텍스트) */}
+        {/* 신고 대상 (읽기 전용 텍스트)  수상한 점검*/}
         <div className="form-group">
           <label>신고 대상</label>
           <div className="readonly-display">{target}</div>
