@@ -3,14 +3,14 @@
   width: 1080px;
   margin: 0 auto;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: #f8f9fa;
+  background-color: var(--input-color);
   min-height: 100vh;
 }
 
 /* 이력서 폼 영역: 여백 및 배경 흰색 처리 */
 .resume-form {
   margin-top: 20px;
-  background: white;
+  background: var(--input-color);
   padding: 40px;
 }
 
@@ -18,10 +18,10 @@
 .form-title {
   font-size: 28px;
   font-weight: 600;
-  color: #333;
+  color: var(--deep-gray);
   margin-bottom: 40px;
   text-align: left;
-  border-bottom: 2px solid #868686;
+  border-bottom: 2px solid var(--gray01);
   padding-bottom: 20px;
 }
 
@@ -32,11 +32,11 @@
 
 /* 섹션 제목 (ex. 병역, 자기소개서 등) */
 .section-title {
-  color: #333;
+  color: var(--deep-gray);
   display: flex;
   margin-bottom: 20px;
   padding-left: 10px;
-  border-left: 4px solid #46b5ab;
+  border-left: 4px solid var(--main-color);
   font-size: 18px;
   font-weight: 500;
 }
@@ -57,8 +57,8 @@
 .photo-placeholder {
   width: 150px;
   height: 200px;
-  background-color: #e8e9ff;
-  border: 2px dashed #46b5ab;
+  background-color: var(--sub-color);
+  border: 1px solid var(--stroke-color2);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -69,7 +69,7 @@
 
 /* 사진 영역 hover 시 배경색 변경 */
 .photo-placeholder:hover {
-  background-color: #d8d9ef;
+  background-color: var(--main-color);
 }
 
 /* 기본 정보 영역 (이름, 성별 등) */
@@ -96,7 +96,7 @@
 /* 항목 라벨 (예: 이름, 연락처) */
 .info-label {
   font-size: 16px;
-  color: #333;
+  color: var(--deep-gray);
   font-weight: 500;
   min-width: 60px;
 }
@@ -106,7 +106,7 @@
   flex: 1;
   padding: 8px 12px;
   border: none;
-  border-bottom: 1px solid #46b5ab;
+  border-bottom: 1px solid var(--main-color);
   background: transparent;
   font-size: 16px;
   outline: none;
@@ -115,18 +115,18 @@
 
 /* 포커스 시 하단 선 색상 변경 */
 .info-input:focus {
-  border-bottom-color: #3a9d94;
+  border-bottom-color: var(--main-color-dark);
 }
 
 /* placeholder 글자색 설정 */
 .info-input::placeholder {
-  color: #868686;
+  color: var(--gray01);
 }
 
 /* 고정 텍스트 스타일 (수정 불가 표시용) */
 .info-text {
   font-size: 16px;
-  color: #333;
+  color: var(--deep-gray);
   padding: 6px 12px;
 }
 
@@ -152,8 +152,8 @@
 /* 주소 검색 버튼 스타일 */
 .address-search-btn {
   padding: 8px 16px;
-  background-color: #46b5ab;
-  color: white;
+  background-color: var(--main-color);
+  color: var(--input-color);
   border: none;
   border-radius: 6px;
   font-size: 14px;
@@ -165,7 +165,7 @@
 
 /* 버튼 hover 시 배경색 변경 */
 .address-search-btn:hover {
-  background-color: #3a9d94;
+  background-color: var(--main-color-dark);
 }
 
 /* 병역 구분, 군별 select 묶음 */
@@ -180,24 +180,24 @@
 .military-select {
   padding: 8px 12px;
   border: none;
-  border-bottom: 1px solid #46b5ab;
+  border-bottom: 1px solid var(--main-color);
   background: transparent;
   font-size: 16px;
   outline: none;
   cursor: pointer;
-  color: #333;
+  color: var(--deep-gray);
   min-width: 100px;
 }
 
 /* 포커스 시 병역 select 하단선 색상 변경 */
 .military-select:focus {
-  border-bottom-color: #3a9d94;
+  border-bottom-color: var(--main-color-dark);
 }
 
 /* select option 스타일 */
 .military-select option {
-  background: white;
-  color: #333;
+  background: var(--input-color);
+  color: var(--deep-gray);
 }
 
 /* 병역 날짜 YYYY-MM 표시 영역 */
@@ -209,7 +209,7 @@
 
 /* 날짜 구분자 (-) 스타일 */
 .date-separator {
-  color: #868686;
+  color: var(--gray01);
   font-size: 16px;
   font-weight: 500;
 }
@@ -219,7 +219,7 @@
   width: 100%;
   height: 800px;
   padding: 16px;
-  border: 1px solid #46b5ab;
+  border: 1px solid var(--main-color);
   border-radius: 8px;
   font-size: 16px;
   font-family: inherit;
@@ -234,5 +234,5 @@
 
 /* placeholder 색상 지정 */
 .self-introduction::placeholder {
-  color: #868686;
+  color: var(--gray01);
 }
