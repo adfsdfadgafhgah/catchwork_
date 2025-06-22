@@ -1,14 +1,26 @@
-import React, { useState, useEffect } from "react";
-// 아이콘 컴포넌트
+import React, { useState, useEffect } from "react"; // React 및 상태/생명주기 훅
+
+// 아이콘 컴포넌트 (사진 아이콘으로 사용)
 import { Camera } from "lucide-react";
-// 날짜 입력 컴포넌트
+
+// 사용자 정의 날짜 선택 컴포넌트 (YYYY-MM 형식)
 import YearMonthPicker from "../../components/cv/YearMonthPicker";
-// 이력서 페이지 전용 CSS
+
+// 공통 버튼 컴포넌트 (+, x)
+import FormAddButton from "../../components/cv/FormAddButton";
+
+// 학력 입력 컴포넌트
+import CVEducation from "../../components/cv/CVEducation";
+
+// 이력서 작성 페이지 전용 CSS 스타일
 import "./WriteCVPage.css";
 
-// import axios from "axios"; // 백엔드 연동 시 사용 예정
+// import axios from "axios"; // 백엔드 연동 예정 (사용자 정보 불러오기 등)
 
 const WriteCVPage = () => {
+  // 페이지 모드: write(작성), edit(수정), view(상세 보기)
+  const [mode, setMode] = useState("write"); // "write", "edit", "view"
+
   // 이력서 입력 데이터 상태
   const [formData, setFormData] = useState({
     resumeName: "",
@@ -43,6 +55,38 @@ const WriteCVPage = () => {
   }, []);
   */
 
+  // 반복 입력 항목 상태
+  const [components, setComponents] = useState({
+    education: [{}],
+    experience: [{}],
+    qualify: [{}],
+    language: [{}],
+    award: [{}],
+    training: [{}],
+    outer: [{}],
+    portfolio: [{}],
+  });
+
+  // 항목 추가
+  const addComponent = (type) => {
+    setComponents((prev) => ({
+      ...prev,
+      [type]: [...prev[type], {}],
+    }));
+  };
+
+  // 항목 제거
+  const removeComponent = (type, index) => {
+    setComponents((prev) => {
+      const updated = [...prev[type]];
+      updated.splice(index, 1);
+      return {
+        ...prev,
+        [type]: updated,
+      };
+    });
+  };
+
   // 입력값 변경 핸들러
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({
@@ -75,7 +119,7 @@ const WriteCVPage = () => {
           </div>
         </div>
 
-        {/* 사진 + 기본 정보 섹션 */}
+        {/* 사진 / 회원기본정보 자동입력 섹션 */}
         <div className="section">
           <div className="photo-and-basic-info">
             {/* 사진 입력 영역 (현재는 아이콘만 표시됨) */}
@@ -206,24 +250,22 @@ const WriteCVPage = () => {
           </div>
         </div>
 
-        {/* 학력 섹션*/}
+        {/* 학력 섹션 */}
         <div className="section">
           <h2 className="section-title">학력</h2>
-          {/* {components.education.map((_, index) => (
-            <CVEdu
+          {components.education.map((edu, index) => (
+            <CVEducation
               key={index}
               index={index}
+              data={edu}
+              mode={mode}
               onRemove={() => removeComponent("education", index)}
               showRemove={components.education.length > 1}
             />
-          ))} */}
-          <button
-            type="button"
-            className="add-btn"
-            onClick={() => addComponent("education")}
-          >
-            +
-          </button>
+          ))}
+          {/* 수정/작성 모드일 때만 추가 버튼 보이게 */}
+          {/* {mode !== "view" && <FormAddButton onClick={() => addComponent("education")} />} */}
+          <FormAddButton onClick={() => addComponent("education")} />
         </div>
 
         {/* 자기소개서 섹션 */}
