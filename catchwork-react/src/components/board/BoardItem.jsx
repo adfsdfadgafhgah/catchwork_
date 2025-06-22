@@ -74,7 +74,7 @@ export default function BoardItem({ board, isLoggedIn, currentUser }) {
   );
 }
 
-// // board.memProfilePath가 undefined일 경우 대비
+// // board.memProfilePath가 undefined일 경우 대비!
 // <img
 //   src={board.memProfilePath || "/default-profile.png"}
 //   alt="프로필 이미지"
