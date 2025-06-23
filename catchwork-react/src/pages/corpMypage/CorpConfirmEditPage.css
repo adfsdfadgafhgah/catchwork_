@@ -1,0 +1,202 @@
+.mypage-container {
+  display: flex;
+  min-height: 100vh;
+  font-family: "Noto Sans KR", sans-serif;
+}
+
+.main-content {
+  flex: 1;
+  padding: 80px 24px;
+  overflow-y: auto;
+}
+
+.content-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.content-title {
+  font-size: 1.875rem; /* 30px */
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.title-divider {
+  border: 0;
+  height: 1px;
+  background: #e5e7eb;
+  margin-bottom: 2rem;
+}
+
+.profile-section {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  margin-top: 1rem;
+}
+
+.profile-img {
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  height: 200px;
+  background-color: #dbeafe;
+  border-radius: 50%;
+  font-size: 3rem;
+  color: #46b5ab;
+}
+
+.confirm-edit-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  height: 100%;
+  flex-grow: 1;
+}
+
+.confirm-edit-box {
+  max-width: 500px;
+  width: 100%;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.confirm-edit-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+}
+
+.form-label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.form-input {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 4px;
+  font-size: 1rem;
+  outline: none;
+  width: 100%;
+  transition: border-color 0.3s ease;
+}
+
+.form-input:focus {
+  border-color: #46b5ab;
+  box-shadow: 0 0 5px rgba(70, 181, 171, 0.3);
+}
+
+.error-text {
+  color: #dc3545;
+  font-size: 0.875rem; /* 14px */
+  margin-top: -0.5rem;
+  text-align: left;
+}
+
+.button-group {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.confirm-button {
+  background-color: #46b5ab;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  flex: 1;
+}
+
+.confirm-button:hover {
+  background-color: #3a9a91;
+}
+
+.cancel-button {
+  background-color: #e5e7eb;
+  color: #374151;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+  flex: 1;
+}
+
+.cancel-button:hover {
+  background-color: #d1d5db;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 40px 12px;
+  }
+
+  .content-title {
+    font-size: 1.5rem; /* 24px */
+  }
+
+  .profile-section {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .profile-img {
+    width: 150px;
+    height: 150px;
+  }
+
+  .confirm-edit-box {
+    padding: 1.5rem;
+  }
+
+  .button-group {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .confirm-button,
+  .cancel-button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .content-title {
+    font-size: 1.25rem; /* 20px */
+  }
+
+  .profile-img {
+    width: 120px;
+    height: 120px;
+  }
+
+  .form-input {
+    padding: 0.5rem 0.75rem;
+  }
+}
