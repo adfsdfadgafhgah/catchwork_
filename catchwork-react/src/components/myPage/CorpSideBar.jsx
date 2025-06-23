@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import "./SideBar.css";
+import { useNavigate } from "react-router-dom";
+import "./CorpSideBar.css";
 
-const SideBar = ({ activeTab, setActiveTab }) => {
+const CorpSideBar = ({ activeTab, setActiveTab }) => {
+  const navigate = useNavigate();
   const [expandedMenu, setExpandedMenu] = useState({
     interest: false,
     myPosts: false,
@@ -15,6 +17,11 @@ const SideBar = ({ activeTab, setActiveTab }) => {
     }));
   };
 
+  const handleNavigation = (tab, path) => {
+    setActiveTab(tab);
+    navigate(path);
+  };
+
   return (
     <div className="sidebar">
       <div className="sidebar-content">
@@ -22,11 +29,11 @@ const SideBar = ({ activeTab, setActiveTab }) => {
 
         <nav className="sidebar-nav">
           <button
-            onClick={() => setActiveTab("내정보")}
+            onClick={() => handleNavigation("내정보", "/corpmypage")}
             className={`nav-item ${activeTab === "내정보" ? "active" : ""}`}
           >
             내정보
-          </button>          
+          </button>
 
           {/* 계정 관리 */}
           <div>
@@ -46,7 +53,7 @@ const SideBar = ({ activeTab, setActiveTab }) => {
             {expandedMenu.account && (
               <div className="sub-nav">
                 <button
-                  onClick={() => setActiveTab("내정보변경")}
+                  onClick={() => handleNavigation("내정보변경", "/corpconfirmedit")}
                   className={`sub-nav-item ${
                     activeTab === "내정보변경" ? "active" : ""
                   }`}
@@ -54,7 +61,7 @@ const SideBar = ({ activeTab, setActiveTab }) => {
                   내 정보 변경
                 </button>
                 <button
-                  onClick={() => setActiveTab("비밀번호변경")}
+                  onClick={() => handleNavigation("비밀번호변경", "/corpchangepw")}
                   className={`sub-nav-item ${
                     activeTab === "비밀번호변경" ? "active" : ""
                   }`}
@@ -62,7 +69,7 @@ const SideBar = ({ activeTab, setActiveTab }) => {
                   비밀번호 변경
                 </button>
                 <button
-                  onClick={() => setActiveTab("회원탈퇴")}
+                  onClick={() => handleNavigation("회원탈퇴", "/corpwithdraw")}
                   className={`sub-nav-item ${
                     activeTab === "회원탈퇴" ? "active" : ""
                   }`}
@@ -78,4 +85,4 @@ const SideBar = ({ activeTab, setActiveTab }) => {
   );
 };
 
-export default SideBar;
+export default CorpSideBar;

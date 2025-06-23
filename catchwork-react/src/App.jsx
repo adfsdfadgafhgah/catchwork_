@@ -43,6 +43,10 @@ import SupportDetailPage from "./pages/support/SupportDetailPage";
 
 // 기업 마이페이지
 import CorpMyPage from "./pages/corpMypage/CorpMyPage";
+import CorpEditMyInfoPage from "./pages/corpMypage/CorpEditMyInfoPage"; 
+import CorpConfirmEditPage from "./pages/corpMypage/CorpConfirmEditPage"; 
+import CorpChangePwPage from "./pages/corpMypage/CorpChangePwPage"; 
+import CorpWithdrawPage from "./pages/corpMypage/CorpWithdrawPage"; 
 
 //기업 제출된 이력서 목록
 import CorpCVListPage from "./pages/corpMajor/CorpCVListPage";
@@ -94,16 +98,18 @@ const router = createBrowserRouter([
       { path: "submitcv", element: <SubmitCVPage /> },
       { path: "supportlist", element: <SupportListPage /> },
       { path: "writesupport", element: <WriteSupportPage /> },
-      { path: "corpmypage", element: <CorpMyPage /> },
       { path: "reportmodal", element: <ReportModalPage /> },
+       
       { path: "corpcvlist", element: <CorpCVListPage /> },
       { path: "corpcompanydetail/:corpNo", element: <CorpCompanyDetailPage /> },
       // { path: "editcompany", element: <EditCompanyPage /> },
+
       {
         path: "/supportdetail",
         element: <SupportDetailPage />,
         children: [{ path: ":id", element: <SupportDetailPage /> }],
       },
+      { path: "corpmypage", element: <CorpMyPage /> },
 
       {
         path: "/mypage",
@@ -117,6 +123,12 @@ const router = createBrowserRouter([
 
       // 등록된 주소 외 모든 주소 예외 처리
       { path: "*", element: <NotFound /> },
+
+      // 기업 페이지
+      { path: "corpeditmyinfo", element: <CorpEditMyInfoPage /> },
+      { path: "corpconfirmedit", element: <CorpConfirmEditPage /> },
+      { path: "corpchangepw", element: <CorpChangePwPage /> },
+      { path: "corpwithdraw", element: <CorpWithdrawPage /> },
     ],
   },
 ]);

@@ -8,7 +8,6 @@ export default function WriteSupportPage({ logo }) {
       {/* Main */}
       <main className="main">
         <h2 className="page-title">문의 작성</h2>
-          <div className="title-underline" />
 
         <div className="form-group">
           <input type="text" id="title" placeholder="제목"/>
