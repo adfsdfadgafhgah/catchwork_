@@ -3,7 +3,7 @@ import "./SupportListPage.css";
 import { useNavigate } from "react-router-dom";
 
 const dummyData = [
-  { id: 10, category: "카테고리", title: "제목", date: "2025-08-09", status: "답변 완료" },
+  { id: 10, category: "카테고리", title: "ㅋㅋ", date: "2025-08-09", status: "답변 완료" },
   { id: 9, category: "카테고리", title: "제목", date: "2025-08-09", status: "답변 완료" },
   { id: 8, category: "카테고리", title: "제목", date: "2025-08-09", status: "답변 대기" },
   { id: 7, category: "카테고리", title: "제목", date: "2025-08-09", status: "답변 대기" },

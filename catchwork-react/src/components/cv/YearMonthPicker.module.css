@@ -2,7 +2,7 @@
 .input {
   padding: 8px 12px;
   border: none;
-  border-bottom: 1px solid #46b5ab;
+  border-bottom: 1px solid var(--main-color);
   background: transparent;
   font-size: 16px;
   outline: none;
@@ -11,10 +11,10 @@
 
 /* 포커스 시 */
 .input:focus {
-  border-bottom-color: #3a9d94;
+  border-bottom-color: var(--main-color-dark);
 }
 
 /* placeholder 스타일 */
 .input::placeholder {
-  color: #868686;
+  color: var(--gray01);
 }

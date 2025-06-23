@@ -1,0 +1,60 @@
+.photoAndBasicInfo {
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+}
+
+.photoSection {
+  flex-shrink: 0;
+}
+
+.photoPlaceholder {
+  width: 150px;
+  height: 200px;
+  background-color: var(--sub-color);
+  border: 1px solid var(--stroke-color2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.photoPlaceholder:hover {
+  background-color: var(--main-color);
+}
+
+.basicInfo {
+  flex: 1;
+}
+
+.infoRow {
+  display: flex;
+  gap: 40px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 10px;
+}
+
+.infoLabel {
+  font-size: 16px;
+  color: var(--deep-gray);
+  font-weight: 500;
+  min-width: 60px;
+  padding: 10px 20px 10px 0px;
+  border-right: 1px solid var(--stroke-color2);
+  text-align: right;
+}
+
+.infoText {
+  font-size: 16px;
+  color: var(--deep-gray);
+  padding: 6px 12px;
+}

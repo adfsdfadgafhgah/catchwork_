@@ -1,0 +1,19 @@
+.selfIntroduction {
+  width: 100%;
+  height: 800px;
+  padding: 16px;
+  border: 1px solid var(--main-color);
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  resize: none;
+  transition: border-color 0.3s ease;
+}
+
+.selfIntroduction:focus {
+  outline: none;
+}
+
+.selfIntroduction::placeholder {
+  color: var(--gray01);
+}

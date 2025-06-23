@@ -35,6 +35,7 @@ const Header = () => {
   };
 
   const isCorpUser = user?.type === "corporate"; // 기업회원 여부 (예시)
+  // const isCorpUser = user?.memType === 1; // 기업회원 여부 (0: 개인회원, 1: 기업회원)
 
   return (
     <header className="header">
