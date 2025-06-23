@@ -1,39 +1,33 @@
-import React, { useState, useEffect } from "react"; // React 및 상태/생명주기 훅
+// React 및 상태 훅 import
+import React, { useState } from "react";
 
-// 아이콘 컴포넌트 (사진 아이콘으로 사용)
-import { Camera } from "lucide-react";
+// 아이콘
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 
-// 사용자 정의 날짜 선택 컴포넌트 (YYYY-MM 형식)
-import YearMonthPicker from "../../components/cv/YearMonthPicker";
+import axios from "axios";
 
-// 공통 버튼 컴포넌트 (+, x)
+// 기본 컴포넌트 import
+import CVTitle from "../../components/cv/CVTitle";
+import CVBasic from "../../components/cv/CVBasic";
+import CVAddress from "../../components/cv/CVAddress";
+import CVResume from "../../components/cv/CVResume";
+import CVMilitary from "../../components/cv/CVMilitary";
+
+// 커스텀 컴포넌트 import
 import FormAddButton from "../../components/cv/FormAddButton";
-
-// 학력 입력 컴포넌트
 import CVEducation from "../../components/cv/CVEducation";
+import CVForm01 from "../../components/cv/CVForm01";
+import CVForm02 from "../../components/cv/CVForm02";
+import CVLanguage from "../../components/cv/CVLanguage";
 
-// 이력서 작성 페이지 전용 CSS 스타일
+// 페이지 전용 CSS import
 import "./WriteCVPage.css";
 
-// import axios from "axios"; // 백엔드 연동 예정 (사용자 정보 불러오기 등)
-
+// 이력서 작성 페이지 컴포넌트
 const WriteCVPage = () => {
-  // 페이지 모드: write(작성), edit(수정), view(상세 보기)
-  const [mode, setMode] = useState("write"); // "write", "edit", "view"
+  const [mode, setMode] = useState("write"); // 작성/보기 모드 상태
 
-  // 이력서 입력 데이터 상태
-  const [formData, setFormData] = useState({
-    resumeName: "",
-    mainAddress: "",
-    detailAddress: "",
-    militaryStatus: "",
-    militaryBranch: "",
-    militaryStartDate: "0000-00",
-    militaryEndDate: "0000-00",
-    selfIntroduction: "",
-  });
-
-  // 사용자 정보 상태 (가데이터로 초기화)
+  // 사용자 기본 정보 (출력용)
   const [userInfo, setUserInfo] = useState({
     name: "조민장",
     phone: "01087948442",
@@ -42,243 +36,233 @@ const WriteCVPage = () => {
     birth: "2000-12-13",
   });
 
-  // 사용자 정보 불러오기 (현재는 주석 처리)
-  /*
-  useEffect(() => {
-    axios.get("/api/user/info")
-      .then((res) => {
-        setUserInfo(res.data);
-      })
-      .catch((err) => {
-        console.error("사용자 정보 불러오기 실패:", err);
-      });
-  }, []);
-  */
-
-  // 반복 입력 항목 상태
-  const [components, setComponents] = useState({
-    education: [{}],
-    experience: [{}],
-    qualify: [{}],
-    language: [{}],
-    award: [{}],
-    training: [{}],
-    outer: [{}],
-    portfolio: [{}],
+  // 이력서 입력 데이터 상태
+  const [formData, setFormData] = useState({
+    resumeName: "", // 이력서 제목
+    mainAddress: "", // 기본 주소
+    detailAddress: "", // 상세 주소
+    militaryStatus: "", // 병역 구분
+    militaryBranch: "", // 군별
+    militaryStartDate: "0000-00", // 입대일
+    militaryEndDate: "0000-00", // 전역일
+    selfIntroduction: "", // 자기소개서
   });
 
-  // 항목 추가
-  const addComponent = (type) => {
-    setComponents((prev) => ({
-      ...prev,
-      [type]: [...prev[type], {}],
-    }));
+  // 동적 섹션 항목 상태
+  const [components, setComponents] = useState({
+    education: [{ id: Date.now() }],
+    experience: [{ id: Date.now() + 1 }],
+    qualify: [{ id: Date.now() + 2 }],
+    award: [{ id: Date.now() + 3 }],
+    language: [{ id: Date.now() + 4 }],
+    training: [{ id: Date.now() + 5 }],
+    outer: [{ id: Date.now() + 6 }],
+    portfolio: [{ id: Date.now() + 7 }],
+  });
+
+  // formData 변경 핸들러
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
-  // 항목 제거
+  // 동적 컴포넌트 항목 값 변경 핸들러
+  const handleComponentChange = (type, index, field, value) => {
+    setComponents((prev) => {
+      const updated = [...prev[type]];
+      updated[index] = { ...updated[index], [field]: value, type };
+      return { ...prev, [type]: updated };
+    });
+  };
+
+  // 폼 추가
+  const addComponent = (type) => {
+    const newItem = { id: Date.now() };
+    setComponents((prev) => ({ ...prev, [type]: [...prev[type], newItem] }));
+  };
+
+  // 폼 제거
   const removeComponent = (type, index) => {
     setComponents((prev) => {
       const updated = [...prev[type]];
       updated.splice(index, 1);
-      return {
-        ...prev,
-        [type]: updated,
-      };
+      return { ...prev, [type]: updated };
     });
   };
-
-  // 입력값 변경 핸들러
-  const handleInputChange = (field, value) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+  
+  // CVForm01 섹션 정보 (자격증, 수상이력)
+  const sectionMetaForm01 = {
+    qualify: { title: "자격증" },
+    award: { title: "수상이력" },
   };
-
-  // 주소 검색 버튼 동작
-  const handleAddressSearch = () => {
-    alert("주소 검색 기능");
+  
+  // CVForm02 섹션 정보 (경력, 교육이수, 외부활동, 포트폴리오)
+  const sectionMetaForm02 = {
+    experience: { title: "경력", name: "회사명", description: "직무 및 담당업무" },
+    training: { title: "교육이수", name: "교육명", description: "교육 내용" },
+    outer: { title: "대외활동", name: "활동명", description: "활동 설명" },
+    portfolio: { title: "포트폴리오", name: "프로젝트명", description: "링크 또는 설명" },
   };
+  
+    // 이력서 저장 요청
+    const handleSubmit = () => {
+      const payload = { ...formData, ...components };
+      axios
+        .post("/api/resume/submit", payload)
+        .then(() => alert("이력서 저장 완료"))
+        .catch(() => alert("저장 중 오류가 발생했습니다"));
+    };
 
   return (
     <div className="resume-container">
       <div className="resume-form">
-        {/* 페이지 제목 */}
         <h1 className="form-title">내 이력서 작성하기</h1>
 
-        {/* 이력서 이름 입력 */}
-        <div className="section">
-          <div className="info-item full-width">
-            <input
-              type="text"
-              className="info-input"
-              placeholder="이력서 이름"
-              value={formData.resumeName}
-              onChange={(e) => handleInputChange("resumeName", e.target.value)}
-            />
-          </div>
+        {/* 이력서 제목 입력 */}
+        <div className="writeCVSection">
+          <CVTitle
+            value={formData.resumeName}
+            onChange={(val) => handleInputChange("resumeName", val)}
+          />
         </div>
 
-        {/* 사진 / 회원기본정보 자동입력 섹션 */}
-        <div className="section">
-          <div className="photo-and-basic-info">
-            {/* 사진 입력 영역 (현재는 아이콘만 표시됨) */}
-            <div className="photo-section">
-              <div className="photo-placeholder">
-                <Camera size={40} color="#000000" />
-              </div>
-            </div>
-
-            {/* 이름, 연락처, 성별, 이메일, 생일 정보 표시 */}
-            <div className="basic-info">
-              <div className="info-row">
-                <div className="info-item">
-                  <span className="info-label">이름</span>
-                  <span className="info-text">{userInfo.name}</span>
-                </div>
-                <div className="info-item">
-                  <span className="info-label">연락처</span>
-                  <span className="info-text">{userInfo.phone}</span>
-                </div>
-              </div>
-
-              <div className="info-row">
-                <div className="info-item">
-                  <span className="info-label">성별</span>
-                  <span className="info-text">{userInfo.gender}</span>
-                </div>
-                <div className="info-item">
-                  <span className="info-label">이메일</span>
-                  <span className="info-text">{userInfo.email}</span>
-                </div>
-              </div>
-
-              <div className="info-row">
-                <div className="info-item birth-item">
-                  <span className="info-label">생일</span>
-                  <span className="info-text">{userInfo.birth}</span>
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* 기본 정보 표시 */}
+        <div className="writeCVSection">
+          <CVBasic 
+            userInfo={userInfo} 
+          />
         </div>
 
-        {/* 주소 입력 섹션 */}
-        <div className="section">
-          <div className="info-row">
-            <div className="info-item address-item">
-              <span className="info-label">주소</span>
-              <div className="address-inputs">
-                <input
-                  type="text"
-                  className="info-input"
-                  placeholder="도로명/지번 주소"
-                  value={formData.mainAddress}
-                  onChange={(e) =>
-                    handleInputChange("mainAddress", e.target.value)
-                  }
-                />
-                <button
-                  type="button"
-                  className="address-search-btn"
-                  onClick={handleAddressSearch}
-                >
-                  주소찾기
-                </button>
-              </div>
-            </div>
-          </div>
-          <div className="info-row">
-            <div className="info-item address-item">
-              <input
-                type="text"
-                className="info-input"
-                placeholder="상세주소"
-                value={formData.detailAddress}
-                onChange={(e) =>
-                  handleInputChange("detailAddress", e.target.value)
-                }
-              />
-            </div>
-          </div>
+        {/* 주소 입력 */}
+        <div className="writeCVSection">
+          <CVAddress
+            formData={formData}
+            onChange={handleInputChange}
+            onSearch={() => alert("주소 검색 기능")}
+          />
         </div>
 
-        {/* 병역사항 섹션 */}
-        <div className="section">
-          <h2 className="section-title">병역</h2>
-          <div className="military-row">
-            {/* 병역 구분 선택 */}
-            <select
-              className="military-select"
-              value={formData.militaryStatus}
-              onChange={(e) =>
-                handleInputChange("militaryStatus", e.target.value)
-              }
-            >
-              <option value="">구분</option>
-              <option value="군필">군필</option>
-              <option value="미필">미필</option>
-              <option value="면제">면제</option>
-            </select>
-
-            {/* 군별 선택 */}
-            <select
-              className="military-select"
-              value={formData.militaryBranch}
-              onChange={(e) =>
-                handleInputChange("militaryBranch", e.target.value)
-              }
-            >
-              <option value="">군별</option>
-              <option value="육군">육군</option>
-              <option value="해군">해군</option>
-              <option value="공군">공군</option>
-            </select>
-          </div>
-
-          {/* 복무 시작/종료일 입력 */}
-          <div className="military-dates">
-            <YearMonthPicker
-              value={formData.militaryStartDate}
-              onChange={(val) => handleInputChange("militaryStartDate", val)}
-            />
-            <span className="date-separator">-</span>
-            <YearMonthPicker
-              value={formData.militaryEndDate}
-              onChange={(val) => handleInputChange("militaryEndDate", val)}
-            />
-          </div>
+        {/* 병역 입력 */}
+        <div className="writeCVSection">
+          <CVMilitary 
+            formData={formData} 
+            onChange={handleInputChange} 
+          />
         </div>
 
-        {/* 학력 섹션 */}
-        <div className="section">
-          <h2 className="section-title">학력</h2>
-          {components.education.map((edu, index) => (
+        {/* 학력 입력 */}
+        <div className="writeCVSection">
+          <h2 className="writeCVSection-title">학력</h2>
+          {components.education.length === 0 && (
+            <div className="empty-message">입력된 학력 항목이 없습니다.</div>
+          )}
+          {components.education.map((item, index) => (
             <CVEducation
-              key={index}
+              key={item.id}
               index={index}
-              data={edu}
+              data={item}
               mode={mode}
               onRemove={() => removeComponent("education", index)}
               showRemove={components.education.length > 1}
             />
           ))}
-          {/* 수정/작성 모드일 때만 추가 버튼 보이게 */}
-          {/* {mode !== "view" && <FormAddButton onClick={() => addComponent("education")} />} */}
           <FormAddButton onClick={() => addComponent("education")} />
         </div>
 
-        {/* 자기소개서 섹션 */}
-        <div className="section">
-          <h2 className="section-title">자기소개서</h2>
-          <textarea
-            className="self-introduction"
-            placeholder="자기소개서 내용"
+        {/* 공통 Form01 영역 */}
+        {Object.entries(sectionMetaForm01).map(([type, { title }]) => (
+          <div className="writeCVSection" key={type}>
+            <h2 className="writeCVSection-title">{title}</h2>
+            {components[type].length === 0 && (
+              <div className="empty-message">
+                입력된 {title} 항목이 없습니다.
+              </div>
+            )}
+            {components[type].map((item, index) => (
+              <CVForm01
+                key={item.id}
+                index={index}
+                data={item}
+                mode={mode}
+                type={type}
+                onRemove={() => removeComponent(type, index)}
+                onChange={handleComponentChange}
+                showRemove={components[type].length > 1}
+              />
+            ))}
+            <FormAddButton onClick={() => addComponent(type)} />
+          </div>
+        ))}
+
+        {/* 어학 */}
+        <div className="writeCVSection">
+          <h2 className="writeCVSection-title">어학</h2>
+          {components.language.length === 0 && (
+            <div className="empty-message">입력된 어학 항목이 없습니다.</div>
+          )}
+          {components.language.map((item, index) => (
+            <CVLanguage
+              key={item.id}
+              index={index}
+              data={item}
+              mode={mode}
+              onRemove={() => removeComponent("language", index)}
+              onChange={handleComponentChange}
+              showRemove={components.language.length > 1}
+            />
+          ))}
+          <FormAddButton onClick={() => addComponent("language")} />
+        </div>
+
+        {/* 공통 Form02 영역 */}
+        {/* 경력, 교육이수, 대외활동, 포트폴리오 섹션 추가 */}
+        {Object.entries(sectionMetaForm02).map(([type, labels]) => (
+          <div className="writeCVSection" key={type}>
+            <h2 className="writeCVSection-title">{labels.title}</h2>
+            {components[type].length === 0 && (
+              <div className="empty-message">
+                입력된 {labels.title}이 없습니다.
+              </div>
+            )}
+            {components[type].map((item, index) => (
+              <CVForm02
+                key={item.id}
+                index={index}
+                type={type}
+                data={item}
+                mode={mode}
+                labels={labels}
+                onRemove={() => removeComponent(type, index)}
+                onChange={handleComponentChange}
+                showRemove={components[type].length > 1}
+              />
+            ))}
+            <FormAddButton onClick={() => addComponent(type)} />
+          </div>
+        ))}
+
+        {/* 자기소개서 */}
+        <div className="writeCVSection">
+          <CVResume
             value={formData.selfIntroduction}
-            onChange={(e) =>
-              handleInputChange("selfIntroduction", e.target.value)
-            }
+            onChange={(val) => handleInputChange("selfIntroduction", val)}
           />
+        </div>
+      </div>
+
+      {/* 제출 버튼 */}
+      <div className="writeCVSticky">
+        <div className="writeCVStickyCenter">
+          <button className="writeCVStickyBtn writeCVSubmitBtn" onClick={handleSubmit}>
+            작성 완료
+          </button>
+          <button className="writeCVStickyBtn writeCVCancleBtn" onClick={() => history.back()}>
+            취소
+          </button>
+        </div>
+        <div className="writeCVStickyRight">
+          <button className="writeCVStickyBtn writeCVUpBtn" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+            ▲
+          </button>
         </div>
       </div>
     </div>

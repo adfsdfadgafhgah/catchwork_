@@ -1,10 +1,9 @@
-// src/components/cv/CVEducation.jsx
 import React from "react"; // React 기본
 import YearMonthPicker from "./YearMonthPicker"; // 연-월 전용 date picker
 import FormRemoveButton from "./FormRemoveButton"; // x 버튼
 import styles from "./CVEducation.module.css"; // 교육 항목 전용 스타일
 
-const CVEducation = ({ index, onRemove, showRemove, mode, data }) => {
+const CVEducation = ({ index, onRemove, mode, data }) => {
   return (
     <div className={styles.eduSection}>
       <div className={styles.eduInner}>
@@ -28,23 +27,21 @@ const CVEducation = ({ index, onRemove, showRemove, mode, data }) => {
 
         <div className={styles.eduRow}>
           <label className={styles.eduLabel}>입학일</label>
-          <YearMonthPicker
-            value={data?.startDate}
-            onChange={() => {}}
-          />
+          <YearMonthPicker value={data?.startDate} onChange={() => {}} />
         </div>
 
         <div className={styles.eduRow}>
           <label className={styles.eduLabel}>졸업일</label>
-          <YearMonthPicker
-            value={data?.endDate}
-            onChange={() => {}}
-          />
+          <YearMonthPicker value={data?.endDate} onChange={() => {}} />
         </div>
 
         <div className={styles.eduRow}>
           <label className={styles.eduLabel}>학교 구분</label>
-          <select className="info-input" defaultValue={data?.schoolType || ""} disabled={mode === "view"}>
+          <select
+            className="info-input"
+            defaultValue={data?.schoolType || ""}
+            disabled={mode === "view"}
+          >
             <option value="">선택</option>
             <option value="초등학교">초등학교</option>
             <option value="중학교">중학교</option>
@@ -56,7 +53,11 @@ const CVEducation = ({ index, onRemove, showRemove, mode, data }) => {
 
         <div className={styles.eduRow}>
           <label className={styles.eduLabel}>졸업 상태</label>
-          <select className="info-input" defaultValue={data?.status || ""} disabled={mode === "view"}>
+          <select
+            className="info-input"
+            defaultValue={data?.status || ""}
+            disabled={mode === "view"}
+          >
             <option value="">선택</option>
             <option value="재학">재학</option>
             <option value="졸업예정">졸업예정</option>
@@ -65,8 +66,6 @@ const CVEducation = ({ index, onRemove, showRemove, mode, data }) => {
           </select>
         </div>
 
-        {/* 수정/작성 모드일 때만 삭제 버튼 보이게 */}
-        {/* {mode !== "view" && showRemove && <FormRemoveButton onClick={onRemove} />} */}
         <FormRemoveButton onClick={onRemove} />
       </div>
     </div>
