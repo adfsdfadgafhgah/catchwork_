@@ -50,7 +50,7 @@ const Header = () => {
         {/* 검색창: 로그인/회원가입/기업회원 페이지에서는 미노출 */}
         {!isAuthPage && !isCorpUser && (
           <div className="search-box">
-            <button onClick={handleSearch}>검색</button>
+            <i className="fa-solid fa-magnifying-glass"></i>
             <input
               type="text"
               placeholder="진중한 취업이야기, 취준진담"
