@@ -34,6 +34,26 @@ const HeaderNav = () => {
         >
           내 이력서
         </NavLink>
+
+        {/* 기업 회원 조건 넣기전에 NAV에서 7개 다 보여주려고  */}
+        <NavLink
+          to="/corprecruit"
+          className={({ isActive }) => (isActive ? "active" : "")}
+        >
+          채용공고
+        </NavLink>
+        <NavLink
+          to="/corpcompanydetail"
+          className={({ isActive }) => (isActive ? "active" : "")}
+        >
+          기업정보
+        </NavLink>
+        <NavLink
+          to="/corpcvlist"
+          className={({ isActive }) => (isActive ? "active" : "")}
+        >
+          이력서 목록
+        </NavLink>
       </nav>
     </div>
   );

@@ -15,6 +15,11 @@
   --stroke-color1: #d9d9d9; /*개인회원footer bg,메뉴,섹션헤더 border*/
   --stroke-color2: #d0d0d0; /*기업회원footer bg,이력서 등 상세항목 border*/  
   --box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
+  --text: #32302c;
+
+  /*되도록이면 white나 black 사용 지양하기*/
+  --white: #fff;
+  --black: #000;
 }
 
 /* 기본 설정 */
@@ -25,6 +30,7 @@
   padding: 0;
   margin: 0;
   box-sizing: border-box;
+  color: var(--text);
 }
 
 html,

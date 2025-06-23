@@ -106,3 +106,29 @@
   text-align: center;
   color: var(--gray01);
 }
+.company-footer-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.btn-edit,
+.btn-withdraw {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 6px 16px;
+  color: var(--black);
+  border: 1px solid var(--stroke-color2);
+  background-color: var(--white);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: var(--box-shadow);
+  float: right;
+}
+
+.btn-edit:hover,
+.btn-withdraw:hover {
+  color: var(--main-color-dark);
+}

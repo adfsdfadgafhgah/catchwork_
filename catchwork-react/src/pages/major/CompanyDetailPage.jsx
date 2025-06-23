@@ -41,13 +41,13 @@ const dummyCompanyList = [
     corpName: "KH 정보교육원 의정부",
     corpLogo: "/src/assets/icon.png",
     corpType: "중소기업",
-    corpCeoName: "양진선",
-    corpAddr: "서울특별시 강남구 테헤란로 212 4F",
+    corpCeoName: "허배령",
+    corpAddr: "경기도 의정부시 어룡역 근처 부근 민락동",
     corpOpenDate: "2018-02-15",
     corpHomeLink: "http://khacademy-uijeongbu.co.kr",
-    corpBm: "IT 교육, 디자인 교육",
+    corpBm: "게시판 crud",
     corpDetail:
-      "KH정보교육원 강남지점은 강남 중심지에서 IT 전문 교육을 제공하고 있습니다...",
+      "KH정보교육원 의정부는 의정부 유일한 KH정보 교육원이며 어룡역에서 경전철로 환승후 회룡역에서 1호선으로 갈아탄 후 와야합니다",
     corpBenefit: "자기개발비 지원/도서 구매 지원/교육비 지원",
     corpBenefitDetail:
       "헬스장 지원/중식 제공/생일자 상품권/연차 제도/경조사비 지원",
@@ -57,13 +57,12 @@ const dummyCompanyList = [
     corpName: "KH 정보교육원 인천",
     corpLogo: "/src/assets/icon.png",
     corpType: "중소기업",
-    corpCeoName: "양진선",
-    corpAddr: "서울특별시 강남구 테헤란로 212 4F",
+    corpCeoName: "허재호",
+    corpAddr: "인천광역시 옥련동",
     corpOpenDate: "2018-02-15",
     corpHomeLink: "http://khacademy-inchon.co.kr",
-    corpBm: "IT 교육, 디자인 교육",
-    corpDetail:
-      "KH정보교육원 강남지점은 강남 중심지에서 IT 전문 교육을 제공하고 있습니다...",
+    corpBm: "IT 교육, 디자인 교육,디자인 CSS, 이구아나 밥주기",
+    corpDetail: "재호는 요즘 여자친구 선물 걱정에 잠을 못이룹니다 ",
     corpBenefit: "자기개발비 지원/도서 구매 지원/교육비 지원",
     corpBenefitDetail:
       "헬스장 지원/중식 제공/생일자 상품권/연차 제도/경조사비 지원",
@@ -73,13 +72,12 @@ const dummyCompanyList = [
     corpName: "KH 정보교육원 신촌",
     corpLogo: "/src/assets/icon.png",
     corpType: "중소기업",
-    corpCeoName: "양진선",
-    corpAddr: "서울특별시 강남구 테헤란로 212 4F",
+    corpCeoName: "신명하",
+    corpAddr: "서울특별시 신촌어쩌구 저쩌구",
     corpOpenDate: "2018-02-15",
     corpHomeLink: "http://khacademy-shinchon.co.kr",
     corpBm: "IT 교육, 디자인 교육",
-    corpDetail:
-      "KH정보교육원 강남지점은 강남 중심지에서 IT 전문 교육을 제공하고 있습니다...",
+    corpDetail: "신명하는 맨날 새벽 다섯시까지 잠안자고 웹툰본대요...",
     corpBenefit: "자기개발비 지원/도서 구매 지원/교육비 지원",
     corpBenefitDetail:
       "헬스장 지원/중식 제공/생일자 상품권/연차 제도/경조사비 지원",
@@ -89,13 +87,13 @@ const dummyCompanyList = [
     corpName: "KH 정보교육원 노원",
     corpLogo: "/src/assets/icon.png",
     corpType: "중소기업",
-    corpCeoName: "양진선",
+    corpCeoName: "이윤진",
     corpAddr: "서울특별시 노원구 테헤란로 212 4F",
     corpOpenDate: "2018-02-15",
     corpHomeLink: "http://khacademy-nowon.co.kr",
     corpBm: "IT 교육, 디자인 교육",
     corpDetail:
-      "KH정보교육원 강남지점은 강남 중심지에서 IT 전문 교육을 제공하고 있습니다...",
+      "KH정보교육원 노원점은 노도강에 위치하여 근처 학생들에게 인기가 좋다.",
     corpBenefit: "자기개발비 지원/도서 구매 지원/교육비 지원",
     corpBenefitDetail:
       "헬스장 지원/중식 제공/생일자 상품권/연차 제도/경조사비 지원",
@@ -111,9 +109,7 @@ const CompanyDetailPage = () => {
     return (
       <main className="container">
         <SectionHeader title="기업정보" />
-        <p style={{ padding: "40px", textAlign: "center", color: "#999" }}>
-          존재하지 않는 기업입니다.
-        </p>
+        <p className="company-not-found">존재하지 않는 기업입니다.</p>
       </main>
     );
   }
@@ -137,24 +133,30 @@ const CompanyDetailPage = () => {
           </div>
 
           <div className="company-basic-info">
-            <p>
-              <strong>기업 형태 |</strong> {company.corpType}
-            </p>
-            <p>
-              <strong>대표명 |</strong> {company.corpCeoName}
-            </p>
-            <p>
-              <strong>주소 |</strong> {company.corpAddr}
-            </p>
-            <p>
-              <strong>개업일자 |</strong> {company.corpOpenDate}
-            </p>
-            <p>
-              <strong>홈페이지 |</strong>{" "}
-              <a href={company.corpHomeLink} target="_blank" rel="noreferrer">
-                {company.corpHomeLink}
-              </a>
-            </p>
+            <div className="info-row">
+              <div className="info-label">기업 형태</div>
+              <div className="info-value">{company.corpType}</div>
+            </div>
+            <div className="info-row">
+              <div className="info-label">대표명</div>
+              <div className="info-value">{company.corpCeoName}</div>
+            </div>
+            <div className="info-row">
+              <div className="info-label">주소</div>
+              <div className="info-value">{company.corpAddr}</div>
+            </div>
+            <div className="info-row">
+              <div className="info-label">개업일자</div>
+              <div className="info-value">{company.corpOpenDate}</div>
+            </div>
+            <div className="info-row">
+              <div className="info-label">홈페이지</div>
+              <div className="info-value">
+                <a href={company.corpHomeLink} target="_blank" rel="noreferrer">
+                  {company.corpHomeLink}
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
