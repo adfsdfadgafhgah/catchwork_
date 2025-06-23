@@ -1,5 +1,12 @@
-/* 입력창 스타일 */
-.input {
+.infoItem {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 10px;
+}
+
+.infoInput {
+  flex: 1;
   padding: 8px 12px;
   border: none;
   border-bottom: 1px solid var(--main-color);
@@ -9,12 +16,14 @@
   transition: border-bottom-color 0.3s ease;
 }
 
-/* 포커스 시 */
-.input:focus {
+.infoInput:focus {
   border-bottom-color: var(--main-color-dark);
 }
 
-/* placeholder 스타일 */
-.input::placeholder {
+.infoInput::placeholder {
   color: var(--gray01);
+}
+
+.fullWidth {
+  width: 100%;
 }
