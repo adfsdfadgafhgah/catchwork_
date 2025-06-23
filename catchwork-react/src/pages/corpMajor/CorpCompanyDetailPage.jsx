@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams, Outlet } from "react-router-dom";
 import SectionHeader from "../../components/common/SectionHeader";
 import "./CorpCompanyDetailPage.css";
 
@@ -21,14 +21,101 @@ const dummyCompanyList = [
     corpBenefitDetail:
       "헬스장 지원/중식 제공/사내 동호회/생일자 상품권/연차 제도/정기 워크숍/퇴직연금/경조사비 지원",
   },
-  // 👉 나머지 데이터 생략
+
+  {
+    corpNo: "2",
+    corpName: "KH 정보교육원 강남",
+    corpLogo: "/src/assets/icon.png",
+    corpType: "중소기업",
+    corpRegNo: "123-45-67890", // ✅ 사업자번호 추가
+    corpCeoName: "양진선",
+    corpAddr: "서울특별시 강남구 테헤란로 212 4F",
+    corpOpenDate: "2018-02-15",
+    corpHomeLink: "http://khacademy-gangnam.co.kr",
+    corpBm: "IT 교육, 디자인 교육",
+    corpDetail:
+      "KH정보교육원 강남지점은 강남 중심지에서 IT 전문 교육을 제공하고 있습니다...",
+    corpBenefit: "자기개발비 지원/도서 구매 지원/교육비 지원",
+    corpBenefitDetail:
+      "헬스장 지원/중식 제공/생일자 상품권/연차 제도/경조사비 지원",
+  },
+  {
+    corpNo: "3",
+    corpName: "KH 정보교육원 의정부",
+    corpLogo: "/src/assets/icon.png",
+    corpType: "중소기업",
+    corpRegNo: "123-45-67890", // ✅ 사업자번호 추가
+    corpCeoName: "허배령",
+    corpAddr: "경기도 의정부시 어룡역 근처 부근 민락동",
+    corpOpenDate: "2018-02-15",
+    corpHomeLink: "http://khacademy-uijeongbu.co.kr",
+    corpBm: "게시판 crud",
+    corpDetail:
+      "KH정보교육원 의정부는 의정부 유일한 KH정보 교육원이며 어룡역에서 경전철로 환승후 회룡역에서 1호선으로 갈아탄 후 와야합니다",
+    corpBenefit: "자기개발비 지원/도서 구매 지원/교육비 지원",
+    corpBenefitDetail:
+      "헬스장 지원/중식 제공/생일자 상품권/연차 제도/경조사비 지원",
+  },
+  {
+    corpNo: "4",
+    corpName: "KH 정보교육원 인천",
+    corpLogo: "/src/assets/icon.png",
+    corpType: "중소기업",
+    corpRegNo: "123-45-67890", // ✅ 사업자번호 추가
+    corpCeoName: "허재호",
+    corpAddr: "인천광역시 옥련동",
+    corpOpenDate: "2018-02-15",
+    corpHomeLink: "http://khacademy-inchon.co.kr",
+    corpBm: "IT 교육, 디자인 교육,디자인 CSS, 이구아나 밥주기",
+    corpDetail: "재호는 요즘 여자친구 선물 걱정에 잠을 못이룹니다 ",
+    corpBenefit: "자기개발비 지원/도서 구매 지원/교육비 지원",
+    corpBenefitDetail:
+      "헬스장 지원/중식 제공/생일자 상품권/연차 제도/경조사비 지원",
+  },
+  {
+    corpNo: "5",
+    corpName: "KH 정보교육원 신촌",
+    corpLogo: "/src/assets/icon.png",
+    corpType: "중소기업",
+    corpRegNo: "123-45-67890", // ✅ 사업자번호 추가
+    corpCeoName: "신명하",
+    corpAddr: "서울특별시 신촌어쩌구 저쩌구",
+    corpOpenDate: "2018-02-15",
+    corpHomeLink: "http://khacademy-shinchon.co.kr",
+    corpBm: "IT 교육, 디자인 교육",
+    corpDetail: "신명하는 맨날 새벽 다섯시까지 잠안자고 웹툰본대요...",
+    corpBenefit: "자기개발비 지원/도서 구매 지원/교육비 지원",
+    corpBenefitDetail:
+      "헬스장 지원/중식 제공/생일자 상품권/연차 제도/경조사비 지원",
+  },
+  {
+    corpNo: "6",
+    corpName: "KH 정보교육원 노원",
+    corpLogo: "/src/assets/icon.png",
+    corpType: "중소기업",
+    corpRegNo: "123-45-67890", // ✅ 사업자번호 추가
+    corpCeoName: "이윤진",
+    corpAddr: "서울특별시 노원구 테헤란로 212 4F",
+    corpOpenDate: "2018-02-15",
+    corpHomeLink: "http://khacademy-nowon.co.kr",
+    corpBm: "IT 교육, 디자인 교육",
+    corpDetail:
+      "KH정보교육원 노원점은 노도강에 위치하여 근처 학생들에게 인기가 좋다.",
+    corpBenefit: "자기개발비 지원/도서 구매 지원/교육비 지원",
+    corpBenefitDetail:
+      "헬스장 지원/중식 제공/생일자 상품권/연차 제도/경조사비 지원",
+  },
 ];
 
 const CorpCompanyDetailPage = () => {
   const { corpNo } = useParams();
+  const navigate = useNavigate();
 
   const company = dummyCompanyList.find((item) => item.corpNo === corpNo);
 
+  const handleEdit = () => {
+    navigate(`/corpcompanydetail/${corpNo}/edit`);
+  };
   if (!company) {
     return (
       <main className="container">
@@ -103,8 +190,11 @@ const CorpCompanyDetailPage = () => {
 
       <div className="company-footer-buttons">
         <button className="btn-withdraw">기업 탈퇴하기</button>
-        <button className="btn-edit">수정하기</button>
+        <button className="btn-edit" onClick={handleEdit}>
+          수정하기
+        </button>
       </div>
+      <Outlet />
     </main>
   );
 };
