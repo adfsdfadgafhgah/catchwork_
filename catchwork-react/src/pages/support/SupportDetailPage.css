@@ -60,6 +60,15 @@
   min-height: 150px;
 }
 
+/* readonly 텍스트 스타일 */
+.readonly-text {
+  font-size: 16px;
+  margin-bottom: 8px;
+  word-break: break-word;
+  color: #333;
+}
+
+/* 답변이 없을 때 메시지 */
 .no-answer-message {
   color: #d84315;
   font-weight: 600;
@@ -71,12 +80,13 @@
   text-align: center;
 }
 
-/* 카테고리 + 작성일 한 줄에 표시 */
+/* 카테고리 + 작성일 한 줄 표시 */
 .meta-row {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   max-width: 800px;
-  margin: -16px auto 24px auto; /* 위 공간 줄이고 아래 공간 추가 */
+  margin: -12px auto 24px auto;
   padding: 0 4px;
   font-size: 14px;
   color: #666;
@@ -84,8 +94,15 @@
 
 .meta-row .category {
   font-weight: 500;
+  flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
 
 .meta-row .date {
+  flex-shrink: 0;
+  padding-left: 8px;
+  color: #666;
   text-align: right;
 }

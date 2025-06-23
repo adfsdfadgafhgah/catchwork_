@@ -53,7 +53,7 @@
 }
 
 .support-table .title {
-  color: var(--text, #333);
+  color: var(--text, #333); 
   cursor: pointer;
   text-align: center;
   width: 40%; /* "제목" 열의 너비를 40%로 설정 (약 432px) */

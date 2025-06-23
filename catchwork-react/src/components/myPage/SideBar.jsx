@@ -1,6 +1,4 @@
-import React, { useState } from "react";
 import "./SideBar.css";
-import { NavLink, useLocation } from "react-router-dom";
 
 const SideBar = () => {
   // 주소값

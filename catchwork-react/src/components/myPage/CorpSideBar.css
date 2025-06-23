@@ -1,41 +1,44 @@
 /* 사이드바 */
 .sidebar {
-  width: 16rem;
-  background-color: white;
-  border-right: 1px solid #e5e7eb;
+  width: 12rem; /* 16rem → 12rem으로 축소 */
   min-height: 100%;
-
-  position: absolute;
-  z-index: 1;
+  z-index: 10; /* z-index를 1에서 10으로 증가시켜 .main-content 위로 우선순위 */
+  flex-shrink: 0; /* 사이드바 크기 고정 */
+  padding-top: 0; /* 상단 여백 제거 */
+  margin-top: 0; /* 상단 마진 제거 */
+  margin-left: 0; /* 왼쪽 마진을 0으로 설정, 자연스럽게 붙임 */
+  border-right: 1px solid #e5e7eb; /* 오른쪽 경계선 유지 */
+  position: relative; /* z-index가 적용되도록 position 속성 추가 */
 }
 
+/* 사이드바 콘텐츠 */
 .sidebar-content {
-  padding: 1.5rem;
+  padding: 1rem 1rem 0; /* 상단 패딩을 0으로 조정, 나머지는 유지 */
 }
 
 .sidebar-title {
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.125rem; /* 1.25rem → 1.125rem으로 축소 */
+  font-weight: 600; /* 700 → 600으로 축소 */
   color: #1f2937;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem; /* 1.5rem → 1rem으로 축소 */
 }
 
 .sidebar-nav {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.125rem; /* 0.25rem → 0.125rem으로 축소 */
 }
 
 .nav-item {
   width: 100%;
   text-align: left;
-  padding: 0.75rem 1rem;
-  border-radius: 0.5rem;
+  padding: 0.5rem 0.75rem; /* 0.75rem 1rem → 0.5rem 0.75rem으로 축소 */
   transition: all 0.2s;
   border: none;
   background: none;
   cursor: pointer;
   color: #374151;
+  font-size: 0.875rem; /* 폰트 크기 축소 */
 }
 
 .nav-item:hover {
@@ -54,7 +57,7 @@
 }
 
 .nav-item-expandable i {
-  font-size: 0.875rem;
+  font-size: 0.75rem; /* 0.875rem → 0.75rem으로 축소 */
   transition: transform 0.2s;
 }
 
@@ -63,22 +66,23 @@
 }
 
 .sub-nav {
-  margin-left: 1rem;
+  margin-left: 0.75rem; /* 1rem → 0.75rem으로 축소 */
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.125rem; /* 0.25rem → 0.125rem으로 축소 */
 }
 
 .sub-nav-item {
   width: 100%;
   text-align: left;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
+  padding: 0.375rem 0.75rem; /* 0.5rem 1rem → 0.375rem 0.75rem으로 축소 */
+  border-radius: 0.375rem; /* 0.5rem → 0.375rem으로 축소 */
   transition: all 0.2s;
   border: none;
   background: none;
   cursor: pointer;
   color: #6b7280;
+  font-size: 0.8125rem; /* 서브메뉴 폰트 크기 축소 */
 }
 
 .sub-nav-item:hover {
