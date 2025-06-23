@@ -18,7 +18,7 @@ import FindPWPage from "./pages/member/FindPWPage";
 
 // 네비게이션
 import RecruitPage from "./pages/major/RecruitListPage";
-import CompanyPage from "./pages/major/CompanyListPage";
+import CompanyListPage from "./pages/major/CompanyListPage";
 import BoardPage from "./pages/major/BoardPage";
 import BoardListPage from "./pages/major/BoardListPage";
 import BoardDetailPage from "./pages/major/BoardDetailPage";
@@ -33,6 +33,7 @@ import MyRecruitPage from "./pages/myPage/MyRecruitPage";
 import SubmitCVPage from "./pages/major/SubmitCVPage";
 
 // 기업상세
+import CompanyPage from "./pages/major/CompanyPage";
 import CompanyDetailPage from "./pages/major/CompanyDetailPage";
 
 // 문의
@@ -42,6 +43,13 @@ import SupportDetailPage from "./pages/support/SupportDetailPage";
 
 // 기업 마이페이지
 import CorpMyPage from "./pages/corpMypage/CorpMyPage";
+
+//기업 제출된 이력서 목록
+import CorpCVListPage from "./pages/corpMajor/CorpCVListPage";
+
+//기업 정보, 기업 정보 수정
+import CorpCompanyDetailPage from "./pages/corpMajor/CorpCompanyDetailPage";
+// import EditCompanyPage from "./pages/corpMajor/EditCompanyPage";
 
 // 신고하기
 import ReportModalPage from "./pages/support/ReportModalPage";
@@ -55,8 +63,8 @@ const router = createBrowserRouter([
       { path: "signin", element: <SignInPage /> },
       { path: "signup", element: <SignUpPage /> },
       { path: "recruit", element: <RecruitPage /> },
-      { path: "company", element: <CompanyPage /> },
-      { path: "/board", element: <BoardPage /> },
+
+      { path: "board", element: <BoardPage /> },
       { path: "cv", element: <CVPage /> },
 
       // 로그인/회원가입
@@ -66,10 +74,14 @@ const router = createBrowserRouter([
       // Id,PW 찾기
       { path: "findid", element: <FindIdPage /> },
       { path: "findpw", element: <FindPWPage /> },
-
-      { path: "recruit", element: <RecruitPage /> },
-      { path: "company", element: <CompanyPage /> },
-      { path: "company/:corpNo", element: <CompanyDetailPage /> },
+      {
+        path: "company",
+        element: <CompanyPage />,
+        children: [
+          { index: true, element: <CompanyListPage /> },
+          { path: ":corpNo", element: <CompanyDetailPage /> },
+        ],
+      },
       {
         path: "/board",
         element: <BoardPage />,
@@ -84,7 +96,9 @@ const router = createBrowserRouter([
       { path: "writesupport", element: <WriteSupportPage /> },
       { path: "corpmypage", element: <CorpMyPage /> },
       { path: "reportmodal", element: <ReportModalPage /> },
-
+      { path: "corpcvlist", element: <CorpCVListPage /> },
+      { path: "corpcompanydetail/:corpNo", element: <CorpCompanyDetailPage /> },
+      // { path: "editcompany", element: <EditCompanyPage /> },
       {
         path: "/supportdetail",
         element: <SupportDetailPage />,

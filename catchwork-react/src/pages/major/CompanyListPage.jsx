@@ -9,7 +9,7 @@ const CompanyListPage = () => {
   const [companyList, setCompanyList] = useState([
     {
       // 가데이터 넣어서 확인하는중임
-      corpRegNo: 1,
+      corpNo: 1,
       corpName: "KH 정보교육원 종로",
       corpType: "중소기업",
       corpLogo: "/src/assets/icon.png",
@@ -18,7 +18,7 @@ const CompanyListPage = () => {
       favs: 70,
     },
     {
-      corpRegNo: 2,
+      corpNo: 2,
       corpName: "KH 정보교육원 강남",
       corpType: "중소기업",
       corpLogo: "/src/assets/icon.png",
@@ -27,7 +27,7 @@ const CompanyListPage = () => {
       favs: 70,
     },
     {
-      corpRegNo: 3,
+      corpNo: 3,
       corpName: "KH 정보교육원 의정부",
       corpType: "중소기업",
       corpLogo: "/src/assets/icon.png",
@@ -36,7 +36,7 @@ const CompanyListPage = () => {
       favs: 70,
     },
     {
-      corpRegNo: 4,
+      corpNo: 4,
       corpName: "KH 정보교육원 인천",
       corpType: "중소기업",
       corpLogo: "/src/assets/icon.png",
@@ -45,7 +45,7 @@ const CompanyListPage = () => {
       favs: 70,
     },
     {
-      corpRegNo: 5,
+      corpNo: 5,
       corpName: "KH 정보교육원 신촌",
       corpType: "중소기업",
       corpLogo: "/src/assets/icon.png",
@@ -54,7 +54,7 @@ const CompanyListPage = () => {
       favs: 70,
     },
     {
-      corpRegNo: 6,
+      corpNo: 6,
       corpName: "KH 정보교육원 노원",
       corpType: "중소기업",
       corpLogo: "/src/assets/icon.png",
@@ -80,7 +80,7 @@ const CompanyListPage = () => {
         {/* 기업 카드 리스트 */}
         <div className="company-grid">
           {companyList.map((company) => (
-            <CompanyItem key={company.corpRegNo} company={company} />
+            <CompanyItem key={company.corpNo} company={company} />
           ))}
         </div>
       </main>
