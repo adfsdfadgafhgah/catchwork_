@@ -5,6 +5,8 @@ import BoardCss from "./BoardDetailPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
 // import { useContext } from "react";
 // import { AuthContext } from "../../contexts/AuthContext";
+// import { useNavigate } from "react-router-dom"; // 페이지 이동용
+import CommentList from "../../components/board/CommentList";
 
 // 서버 구현 전 깡데이터용 ㅋㅋ
 const dummyBoards = [
@@ -75,7 +77,10 @@ export default function BoardDetailPage() {
           <i className="fa-regular fa-eye"></i>1 &nbsp;&nbsp;{" "}
           <i className="fa-regular fa-heart"></i>3 &nbsp;&nbsp;{" "}
           <button className={BoardCss.actionBtn}>
-            <i className="fa-regular fa-paper-plane"></i> 신고하기
+            <span className={`material-symbols-outlined ${BoardCss.iconSmall}`}>
+              siren
+            </span>
+            신고하기
           </button>
         </div>
       </div>
@@ -95,6 +100,8 @@ export default function BoardDetailPage() {
         내용이 오지게 길다면?? 내용이 오지게 길다면?? 내용이 오지게 길다면??
         내용이 오지게 길다면??{" "}
       </div>
+      {/* 댓글 컴포넌트 */}
+      <CommentList boardNo={1} loginUser={{ memNo: 100 }} />
     </div>
   );
 }
@@ -106,6 +113,7 @@ export default function BoardDetailPage() {
 //   const { loginUser } = useContext(AuthContext); // 로그인 받아오기
 //   const [liked, setLiked] = useState(false); // 좋아요 기능
 //   const [likeCount, setLikeCount] = useState(0); // 좋아요 기능
+//   const navigate = useNavigate(); // ← 페이지 이동을 위해 추가
 
 //   useEffect(() => {
 //     // 게시글 상세 조회 API
@@ -123,6 +131,27 @@ export default function BoardDetailPage() {
 
 //     fetchDetail();
 //   }, [boardNo]);
+
+// // 게시글 삭제 함수
+//   const handleDelete = async () => {
+//     if (!window.confirm("정말 삭제하시겠습니까?")) return;
+
+//     try {
+//       const resp = await axiosApi.delete(`/board/delete/${boardNo}`, {
+//         data: { memNo: loginUser.memNo },
+//       });
+
+//       if (resp.data.success) {
+//         alert("삭제되었습니다.");
+//         navigate("/board"); // 삭제 후 목록으로 이동
+//       } else {
+//         alert("삭제에 실패했습니다.");
+//       }
+//     } catch (err) {
+//       console.error("삭제 실패:", err);
+//       alert("오류가 발생했습니다.");
+//     }
+//   };
 
 // // 좋아요 토글 함수 추가
 // const toggleLike = async () => {
@@ -175,7 +204,7 @@ export default function BoardDetailPage() {
 //         <button className={BoardCss.actionBtn}>
 //           <i className="fa-regular fa-pen-to-square"></i> 수정하기
 //         </button>
-//         <button className={BoardCss.actionBtn}>
+//         <button className={BoardCss.actionBtn} onClick={handleDelete}>
 //           <i className="fa-regular fa-trash-can"></i> 삭제하기
 //         </button>
 //       </div>
@@ -201,9 +230,12 @@ export default function BoardDetailPage() {
   /* 신고하기 버튼 조건 렌더링 */
 }
 // {(!loginUser || loginUser.memNo !== board.member.memNo) && (
-//   <button className={BoardCss.actionBtn} onClick={handleReportClick}>
-//     <i className="fa-regular fa-paper-plane"></i> 신고하기
-//   </button>
+//          <button className={BoardCss.actionBtn}>
+//            <span className={`material-symbols-outlined ${BoardCss.iconSmall}`}>
+//              siren
+//            </span>
+//            신고하기
+//          </button>
 // )}
 //       </div>
 //     </div>
@@ -211,9 +243,14 @@ export default function BoardDetailPage() {
 //     {/* 본문 */}
 //     <div className={BoardCss.contentBox}>{board.boardContent}</div>
 //   </div>
+//     {/* 댓글 컴포넌트 */}
+//     <CommentList boardNo={board.boardNo} loginUser={loginUser} />
 // );
 // }
 
 // // 날짜 형식 바꾸기
 // import dayjs from "dayjs";
 // <span>{dayjs(board.boardWriteDate).format("YYYY-MM-DD")}</span>
+
+// board가 null일 때 board.boardNo를 사용할 수 없을 때 쓸 조건부 렌더링
+// {board && <CommentList boardNo={board.boardNo} loginUser={loginUser} />}

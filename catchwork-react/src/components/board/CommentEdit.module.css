@@ -1,0 +1,98 @@
+.contentWrapper {
+  margin-left: 40px; /* 프로필 이미지 공간만큼 들여쓰기 */
+}
+
+.commentBox {
+  background-color: #fafafa;
+  border-radius: 10px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: var(--deep-gray);
+}
+
+.writerInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profileImg {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.nickname {
+  font-weight: 600;
+}
+
+.date {
+  font-size: 13px;
+  color: #999;
+}
+
+.textarea {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--main-color);
+  outline: none;
+  font-size: 15px;
+  color: var(--deep-gray);
+  background-color: transparent;
+  resize: none;
+  padding-bottom: 6px;
+  margin-top: 8px;
+}
+
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.cancelBtn {
+  background-color: white;
+  border: 1px solid var(--stroke-color1);
+  padding: 6px 12px;
+  font-size: 14px;
+  color: var(--deep-gray);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.cancelBtn:hover {
+  border-color: var(--main-color-dark);
+  color: var(--main-color-dark);
+}
+
+.submitBtn {
+  background-color: white;
+  border: 1px solid var(--stroke-color1);
+  padding: 6px 12px;
+  font-size: 14px;
+  color: var(--deep-gray);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.submitBtn:hover {
+  border-color: var(--main-color-dark);
+  color: var(--main-color-dark);
+}

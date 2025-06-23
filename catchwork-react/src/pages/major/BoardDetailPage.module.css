@@ -32,16 +32,31 @@
 /* 수정/삭제 버튼 그룹 */
 .actionButtons {
   display: flex;
-  gap: 10px;
+  gap: 4px;
 }
 
 .actionBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px; /* 아이콘-글자 간격 */
   border: 1px solid #ccc;
   border-radius: 6px;
   padding: 6px 12px;
+  min-width: 100px; /* 버튼 너비 일정하게 */
+  height: 36px; /* 버튼 높이 일정하게 */
   background-color: #fff;
   cursor: pointer;
   font-size: 14px;
+  line-height: 1;
+  box-sizing: border-box;
+}
+
+.actionBtn i,
+.actionBtn .material-symbol-outlined,
+.iconSmall {
+  font-size: 16px; /* 기본은 24px이라 줄임 */
+  margin-right: 2px; /* 신고하기 글자랑 간격 */
 }
 
 .actionBtn:hover {

@@ -1,0 +1,43 @@
+.writeWrapper {
+  margin-top: 20px;
+}
+
+.textarea {
+  width: 100%;
+  border: none;
+  border-bottom: 1px solid var(--main-color);
+  outline: none;
+  font-size: 15px;
+  color: var(--deep-gray);
+  background-color: transparent;
+  resize: none;
+  padding-bottom: 6px;
+}
+
+.textarea::placeholder {
+  color: var(--gray01);
+}
+
+.submitWrapper {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.submitBtn {
+  background-color: white;
+  border: 1px solid var(--stroke-color1);
+  padding: 6px 12px;
+  font-size: 14px;
+  color: var(--deep-gray);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.submitBtn:hover {
+  border-color: var(--main-color-dark);
+  color: var(--main-color-dark);
+}
