@@ -53,7 +53,7 @@ const router = createBrowserRouter([
       { path: 'recruit', element: <RecruitPage /> },
       { path: 'company', element: <CompanyPage /> },
       { path: '/board', element: <BoardPage /> },
-      { path: 'cv', element: <CvPage />, },
+      { path: 'cv', element: <CVPage />, },
 
       // 로그인/회원가입
       { path: "signin", element: <SignInPage /> },
@@ -74,7 +74,7 @@ const router = createBrowserRouter([
           { index: true, element: <BoardListPage /> },
           { path: ":id", element: <BoardDetailPage /> },
         ],
-      },      { path: "cv", element: <CVPage /> },
+      },
       { path: "submitcv", element: <SubmitCVPage /> },
       { path: 'supportlist', element: <SupportListPage/>, },
       { path: 'writesupport', element: <WriteSupportPage/>, },
