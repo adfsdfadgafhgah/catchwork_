@@ -14,7 +14,7 @@
 .signin-image-box img {
   width: 300px;
   height: auto;
-  background-color: #b6f0f0;
+  background-color: var(--sub-color);
   padding: 40px;
   border-radius: 8px;
 }
@@ -22,7 +22,7 @@
 .signup-button {
   margin-top: 20px;
   padding: 8px 20px;
-  background-color: #48b7af;
+  background-color: var(--main-color);
   color: white;
   border: none;
   border-radius: 5px;
@@ -41,13 +41,13 @@
 .tab-buttons button {
   flex: 1;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--stroke-color1);
   background: white;
   cursor: pointer;
 }
 
 .tab-buttons .active {
-  background-color: #48b7af;
+  background-color: var(--main-color);
   color: white;
   font-weight: bold;
 }
@@ -57,7 +57,7 @@
   padding: 10px;
   margin-bottom: 8px;
   border: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--stroke-color1);
 }
 
 .remember-me {
@@ -70,7 +70,7 @@
 .signin-button {
   width: 100%;
   padding: 12px;
-  background-color: #48b7af;
+  background-color: var(--main-color);
   color: white;
   border: none;
   border-radius: 5px;
@@ -82,7 +82,7 @@
   justify-content: space-between;
   margin-top: 10px;
   font-size: 13px;
-  color: #666;
+  color: var(--gray01);
 }
 
 .social-signin {
@@ -91,7 +91,7 @@
 
 .social-signin .line {
   text-align: center;
-  border-top: 1px solid #999;
+  border-top: 1px solid var(--gray01);
   margin: 20px 0;
   position: relative;
 }
@@ -112,7 +112,7 @@
   flex: 1;
   margin: 0 4px;
   padding: 10px 0;
-  border: 1px solid #ccc;
+  border: 1px solid var(--stroke-color1);
   background: white;
   border-radius: 5px;
   cursor: pointer;
