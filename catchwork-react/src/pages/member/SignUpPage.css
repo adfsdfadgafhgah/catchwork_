@@ -38,7 +38,7 @@
   margin-top: 6px;
   width: fit-content;
   padding: 6px 12px;
-  background-color: #45b7ae;
+  background-color: var(--main-color);
   color: white;
   border: none;
   border-radius: 4px;
@@ -60,18 +60,18 @@
 }
 
 .error-text {
-  color: #d34f4f;
+  color: red;
   font-size: 12px;
   margin-top: 2px;
 }
 
 .success-text {
-  color: #3cb371;
+  color: var(--main-color);
   font-size: 12px;
 }
 
 .timer {
   font-size: 12px;
-  color: #ff6600;
+  color: red;
   margin-top: 2px;
 }
