@@ -1,159 +1,204 @@
 .mypage-container {
   display: flex;
   min-height: 100vh;
-  background-color: #ffffff;
-  font-family: "Noto Sans KR", sans-serif;
+  background-color: #f8f9fa;
 }
 
 .main-content {
   flex: 1;
-  padding: 80px 24px;
-  overflow-y: auto;
+  padding: 40px;
+  background-color: #f8f9fa;
 }
 
 .content-container {
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
+  background: white;
+  border-radius: 8px;
+  padding: 50px 40px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .content-title {
-  font-size: 1.875rem; /* 30px */
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 2rem;
-  text-align: left;
-}
-
-.confirm-edit-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  height: 100%;
-}
-
-.confirm-edit-box {
-  max-width: 500px;
-  width: 100%;
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-  padding: 2rem;
-  border-radius: 8px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 20px;
   text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-.confirm-edit-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+.title-divider {
+  border: none;
+  height: 1px;
+  background-color: #e9ecef;
+  margin-bottom: 50px;
+}
+
+.password-form {
+  width: 100%;
+}
+
+.form-section {
+  margin-bottom: 40px;
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  text-align: left;
+  margin-bottom: 35px;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
 }
 
 .form-label {
-  font-size: 1rem;
-  font-weight: 500;
-  color: #374151;
+  display: block;
+  font-size: 16px;
+  color: #333;
+  margin-bottom: 15px;
+  font-weight: 600;
 }
 
 .form-input {
-  padding: 0.75rem 1rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 4px;
-  font-size: 1rem;
-  outline: none;
   width: 100%;
-  transition: border-color 0.3s ease;
+  padding: 15px 20px;
+  border: 2px solid #4ecdc4;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  background: white;
+  font-family: inherit;
+  margin-bottom: 0;
 }
 
 .form-input:focus {
-  border-color: #46b5ab;
-  box-shadow: 0 0 5px rgba(70, 181, 171, 0.3);
+  outline: none;
+  border-color: #4ecdc4;
+  box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.15);
 }
 
-.error-text {
+.form-input::placeholder {
+  color: #b0b0b0;
+  font-size: 14px;
+}
+
+.confirm-input {
+  margin-top: 15px;
+}
+
+.error-message {
   color: #dc3545;
-  font-size: 0.875rem; /* 14px */
-  margin-top: -0.5rem;
+  font-size: 13px;
+  margin-top: 10px;
+  font-weight: 500;
   text-align: left;
 }
 
-.button-group {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
+.button-container {
+  text-align: center;
+  margin-top: 40px;
 }
 
-.confirm-button {
-  background-color: #46b5ab;
+.submit-btn {
+  background: #5fb3d4;
   color: white;
-  padding: 0.75rem 1.5rem;
   border: none;
-  border-radius: 4px;
-  font-weight: 500;
+  padding: 15px 50px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-  flex: 1;
+  transition: all 0.3s ease;
+  min-width: 140px;
 }
 
-.confirm-button:hover {
-  background-color: #3a9a91;
+.submit-btn:hover {
+  background: #4a9bc1;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(95, 179, 212, 0.3);
 }
 
-.cancel-button {
-  background-color: #e5e7eb;
-  color: #374151;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-  flex: 1;
+.submit-btn:active {
+  transform: translateY(0);
 }
 
-.cancel-button:hover {
-  background-color: #d1d5db;
+/* 개발 중 페이지 스타일 */
+.development-page {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.development-page p {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.sub-text {
+  font-size: 14px !important;
+  color: #999 !important;
 }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
-  .main-content {
-    padding: 40px 12px;
-  }
-
-  .content-title {
-    font-size: 1.5rem; /* 24px */
-  }
-
-  .confirm-edit-box {
-    padding: 1.5rem;
-  }
-
-  .button-group {
+  .mypage-container {
     flex-direction: column;
-    gap: 0.75rem;
   }
-
-  .confirm-button,
-  .cancel-button {
+  
+  .main-content {
+    padding: 20px;
+  }
+  
+  .content-container {
+    padding: 30px 20px;
+    max-width: 100%;
+  }
+  
+  .content-title {
+    font-size: 20px;
+  }
+  
+  .form-label {
+    font-size: 15px;
+  }
+  
+  .form-input {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  
+  .submit-btn {
     width: 100%;
+    padding: 14px 20px;
   }
 }
 
 @media (max-width: 480px) {
-  .content-title {
-    font-size: 1.25rem; /* 20px */
+  .content-container {
+    padding: 25px 15px;
   }
-
+  
+  .main-content {
+    padding: 15px;
+  }
+  
+  .content-title {
+    font-size: 18px;
+  }
+  
   .form-input {
-    padding: 0.5rem 0.75rem;
+    padding: 10px 14px;
+  }
+  
+  .form-label {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  
+  .form-group {
+    margin-bottom: 25px;
+  }
+  
+  .confirm-input {
+    margin-top: 10px;
   }
 }

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import "./CorpSideBar.css";
 
-const CorpSideBar = ({ activeTab, setActiveTab }) => {
+const CorpSideBar = ({ activeTab, setActiveTab = () => {} }) => { // 기본값 설정
   const navigate = useNavigate();
+  const location = useLocation();
   const [expandedMenu, setExpandedMenu] = useState({
     interest: false,
     myPosts: false,
@@ -18,15 +19,18 @@ const CorpSideBar = ({ activeTab, setActiveTab }) => {
   };
 
   const handleNavigation = (tab, path) => {
-    setActiveTab(tab);
-    navigate(path);
+    if (location.pathname !== path) {
+      setActiveTab(tab);
+      navigate(path);
+    } else {
+      setActiveTab(tab); // 동일 경로일 경우 탭만 업데이트
+    }
   };
 
   return (
     <div className="sidebar">
       <div className="sidebar-content">
         <h2 className="sidebar-title">마이 페이지</h2>
-
         <nav className="sidebar-nav">
           <button
             onClick={() => handleNavigation("내정보", "/corpmypage")}
@@ -34,8 +38,6 @@ const CorpSideBar = ({ activeTab, setActiveTab }) => {
           >
             내정보
           </button>
-
-          {/* 계정 관리 */}
           <div>
             <button
               onClick={() => toggleMenu("account")}
