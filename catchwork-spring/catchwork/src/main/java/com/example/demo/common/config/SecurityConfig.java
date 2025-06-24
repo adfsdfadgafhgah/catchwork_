@@ -20,7 +20,6 @@ import com.example.demo.test.jwt.util.JWTUtil;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final UserDetailsService userDetailsService;
 	private final JWTUtil jwtUtil;
@@ -65,6 +64,9 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
+    // cors
+    http.cors((cors) -> {});
+    
 		// csrf disable
 		http.csrf((auth) -> auth.disable());
 
@@ -75,7 +77,7 @@ public class SecurityConfig {
 		http.httpBasic((auth) -> auth.disable());
 
 		// 경로별 인가 작업
-		http.authorizeHttpRequests((auth) -> auth.requestMatchers("/", "/signup").permitAll().requestMatchers("/admin")
+		http.authorizeHttpRequests((auth) -> auth.requestMatchers("/**", "/signup").permitAll().requestMatchers("/admin")
 				.hasRole("ADMIN").anyRequest().authenticated());
 		
 

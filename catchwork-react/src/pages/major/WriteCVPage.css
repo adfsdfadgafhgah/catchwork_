@@ -1,3 +1,6 @@
+input, select {
+  height: 40px;
+}
 /* 전체 컨테이너: 너비 고정, 중앙 정렬, 배경색, 최소 높이 지정 */
 .resume-container {
   width: 1080px;
@@ -8,12 +11,16 @@
 
 /* 이력서 폼 영역: 여백 및 배경 흰색 처리 */
 .resume-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-top: 20px;
   padding: 40px;
 }
 
 /* 상단 제목 스타일 */
 .form-title {
+  width: 100%;
   font-size: 28px;
   font-weight: 600;
   color: var(--deep-gray);
@@ -23,8 +30,13 @@
   padding-bottom: 20px;
 }
 
+.writeCVInfo {
+  width: 80%;
+}
+
 /* 섹션별 간격 설정 */
 .writeCVSection {
+  width: 100%;
   margin-bottom: 40px;
 }
 

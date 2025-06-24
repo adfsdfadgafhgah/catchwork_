@@ -4,11 +4,17 @@ import styles from "./CVAddress.module.css";
 
 const CVAddress = ({ formData, onChange, onSearch }) => {
   return (
-    <>
-      {/* 도로명/지번 주소 */}
-      <div className={styles.infoRow}>
+    <div className={styles.infoSection}>
+      {/* 제목 */}
+      <div className={`${styles.infoRow} ${styles.infoTitle}`}>
         <div className={`${styles.infoItem} ${styles.addressItem}`}>
-          <span className={styles.infoLabel}>주소</span>
+          <div className={styles.infoLabel}>주소</div>  
+        </div>
+      </div>
+
+      {/* 도로명/지번 주소 */}
+      <div className={`${styles.infoRow} ${styles.infoContent}`}>
+        <div className={`${styles.infoItem} ${styles.addressItem}`}>
           <div className={styles.addressInputs}>
             <input
               type="text"
@@ -25,12 +31,7 @@ const CVAddress = ({ formData, onChange, onSearch }) => {
               주소찾기
             </button>
           </div>
-        </div>
-      </div>
-
-      {/* 상세주소 */}
-      <div className={styles.infoRow}>
-        <div className={`${styles.infoItem} ${styles.addressItem}`}>
+          {/* 상세주소 */}
           <input
             type="text"
             className={styles.infoInput}
@@ -40,7 +41,8 @@ const CVAddress = ({ formData, onChange, onSearch }) => {
           />
         </div>
       </div>
-    </>
+
+    </div>
   );
 };
 

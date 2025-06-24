@@ -50,14 +50,14 @@ const WriteCVPage = () => {
 
   // 동적 섹션 항목 상태
   const [components, setComponents] = useState({
-    education: [{ id: Date.now() }],
-    experience: [{ id: Date.now() + 1 }],
-    qualify: [{ id: Date.now() + 2 }],
-    award: [{ id: Date.now() + 3 }],
-    language: [{ id: Date.now() + 4 }],
-    training: [{ id: Date.now() + 5 }],
-    outer: [{ id: Date.now() + 6 }],
-    portfolio: [{ id: Date.now() + 7 }],
+    education: [{ id: "education" + Date.now() }],
+    experience: [{ id: "experience" + Date.now() }],
+    qualify: [{ id: "qualify" + Date.now() }],
+    award: [{ id: "award" + Date.now() }],
+    language: [{ id: "language" + Date.now() }],
+    training: [{ id: "training" + Date.now() }],
+    outer: [{ id: "outer" + Date.now() }],
+    portfolio: [{ id: "portfolio" + Date.now() }],
   });
 
   // formData 변경 핸들러
@@ -76,7 +76,7 @@ const WriteCVPage = () => {
 
   // 폼 추가
   const addComponent = (type) => {
-    const newItem = { id: Date.now() };
+    const newItem = { id: type + Date.now() };
     setComponents((prev) => ({ ...prev, [type]: [...prev[type], newItem] }));
   };
 
@@ -104,10 +104,10 @@ const WriteCVPage = () => {
   };
   
     // 이력서 저장 요청
-    const handleSubmit = () => {
-      const payload = { ...formData, ...components };
-      axios
-        .post("/api/resume/submit", payload)
+    const handleSubmit = async() => {
+      const payload = { ...userInfo, ...formData, ...components };
+      await axios
+        .post("http://localhost:8080/cv/add", payload)
         .then(() => alert("이력서 저장 완료"))
         .catch(() => alert("저장 중 오류가 발생했습니다"));
     };
@@ -125,127 +125,129 @@ const WriteCVPage = () => {
           />
         </div>
 
-        {/* 기본 정보 표시 */}
-        <div className="writeCVSection">
-          <CVBasic 
-            userInfo={userInfo} 
-          />
-        </div>
-
-        {/* 주소 입력 */}
-        <div className="writeCVSection">
-          <CVAddress
-            formData={formData}
-            onChange={handleInputChange}
-            onSearch={() => alert("주소 검색 기능")}
-          />
-        </div>
-
-        {/* 병역 입력 */}
-        <div className="writeCVSection">
-          <CVMilitary 
-            formData={formData} 
-            onChange={handleInputChange} 
-          />
-        </div>
-
-        {/* 학력 입력 */}
-        <div className="writeCVSection">
-          <h2 className="writeCVSection-title">학력</h2>
-          {components.education.length === 0 && (
-            <div className="empty-message">입력된 학력 항목이 없습니다.</div>
-          )}
-          {components.education.map((item, index) => (
-            <CVEducation
-              key={item.id}
-              index={index}
-              data={item}
-              mode={mode}
-              onRemove={() => removeComponent("education", index)}
-              showRemove={components.education.length > 1}
+        <div className="writeCVInfo">    
+          {/* 기본 정보 표시 */}
+          <div className="writeCVSection">
+            <CVBasic 
+              userInfo={userInfo} 
             />
-          ))}
-          <FormAddButton onClick={() => addComponent("education")} />
-        </div>
+          </div>
 
-        {/* 공통 Form01 영역 */}
-        {Object.entries(sectionMetaForm01).map(([type, { title }]) => (
-          <div className="writeCVSection" key={type}>
-            <h2 className="writeCVSection-title">{title}</h2>
-            {components[type].length === 0 && (
-              <div className="empty-message">
-                입력된 {title} 항목이 없습니다.
-              </div>
+          {/* 주소 입력 */}
+          <div className="writeCVSection">
+            <CVAddress
+              formData={formData}
+              onChange={handleInputChange}
+              onSearch={() => alert("주소 검색 기능")}
+            />
+          </div>
+
+          {/* 병역 입력 */}
+          <div className="writeCVSection">
+            <CVMilitary 
+              formData={formData} 
+              onChange={handleInputChange} 
+            />
+          </div>
+
+          {/* 학력 입력 */}
+          <div className="writeCVSection">
+            <h2 className="writeCVSection-title">학력</h2>
+            {components.education.length === 0 && (
+              <div className="empty-message">입력된 학력이 없습니다.</div>
             )}
-            {components[type].map((item, index) => (
-              <CVForm01
+            {components.education.map((item, index) => (
+              <CVEducation
                 key={item.id}
                 index={index}
                 data={item}
                 mode={mode}
-                type={type}
-                onRemove={() => removeComponent(type, index)}
-                onChange={handleComponentChange}
-                showRemove={components[type].length > 1}
+                onRemove={() => removeComponent("education", index)}
+                showRemove={components.education.length > 1}
               />
             ))}
-            <FormAddButton onClick={() => addComponent(type)} />
+            <FormAddButton onClick={() => addComponent("education")} />
           </div>
-        ))}
 
-        {/* 어학 */}
-        <div className="writeCVSection">
-          <h2 className="writeCVSection-title">어학</h2>
-          {components.language.length === 0 && (
-            <div className="empty-message">입력된 어학 항목이 없습니다.</div>
-          )}
-          {components.language.map((item, index) => (
-            <CVLanguage
-              key={item.id}
-              index={index}
-              data={item}
-              mode={mode}
-              onRemove={() => removeComponent("language", index)}
-              onChange={handleComponentChange}
-              showRemove={components.language.length > 1}
-            />
+          {/* 공통 Form01 영역 */}
+          {Object.entries(sectionMetaForm01).map(([type, { title }]) => (
+            <div className="writeCVSection" key={type}>
+              <h2 className="writeCVSection-title">{title}</h2>
+              {components[type].length === 0 && (
+                <div className="empty-message">
+                  입력된 {title}이 없습니다.
+                </div>
+              )}
+              {components[type].map((item, index) => (
+                <CVForm01
+                  key={item.id}
+                  index={index}
+                  data={item}
+                  mode={mode}
+                  type={type}
+                  onRemove={() => removeComponent(type, index)}
+                  onChange={handleComponentChange}
+                  showRemove={components[type].length > 1}
+                />
+              ))}
+              <FormAddButton onClick={() => addComponent(type)} />
+            </div>
           ))}
-          <FormAddButton onClick={() => addComponent("language")} />
-        </div>
 
-        {/* 공통 Form02 영역 */}
-        {/* 경력, 교육이수, 대외활동, 포트폴리오 섹션 추가 */}
-        {Object.entries(sectionMetaForm02).map(([type, labels]) => (
-          <div className="writeCVSection" key={type}>
-            <h2 className="writeCVSection-title">{labels.title}</h2>
-            {components[type].length === 0 && (
-              <div className="empty-message">
-                입력된 {labels.title}이 없습니다.
-              </div>
+          {/* 어학 */}
+          <div className="writeCVSection">
+            <h2 className="writeCVSection-title">어학</h2>
+            {components.language.length === 0 && (
+              <div className="empty-message">입력된 어학이 없습니다.</div>
             )}
-            {components[type].map((item, index) => (
-              <CVForm02
+            {components.language.map((item, index) => (
+              <CVLanguage
                 key={item.id}
                 index={index}
-                type={type}
                 data={item}
                 mode={mode}
-                labels={labels}
-                onRemove={() => removeComponent(type, index)}
+                onRemove={() => removeComponent("language", index)}
                 onChange={handleComponentChange}
-                showRemove={components[type].length > 1}
+                showRemove={components.language.length > 1}
               />
             ))}
-            <FormAddButton onClick={() => addComponent(type)} />
+            <FormAddButton onClick={() => addComponent("language")} />
           </div>
-        ))}
 
-        {/* 자기소개서 */}
-        <div className="writeCVSection">
-          <CVResume
-            value={formData.selfIntroduction}
-            onChange={(val) => handleInputChange("selfIntroduction", val)}
-          />
+          {/* 공통 Form02 영역 */}
+          {/* 경력, 교육이수, 대외활동, 포트폴리오 섹션 추가 */}
+          {Object.entries(sectionMetaForm02).map(([type, labels]) => (
+            <div className="writeCVSection" key={type}>
+              <h2 className="writeCVSection-title">{labels.title}</h2>
+              {components[type].length === 0 && (
+                <div className="empty-message">
+                  입력된 {labels.title}이 없습니다.
+                </div>
+              )}
+              {components[type].map((item, index) => (
+                <CVForm02
+                  key={item.id}
+                  index={index}
+                  type={type}
+                  data={item}
+                  mode={mode}
+                  labels={labels}
+                  onRemove={() => removeComponent(type, index)}
+                  onChange={handleComponentChange}
+                  showRemove={components[type].length > 1}
+                />
+              ))}
+              <FormAddButton onClick={() => addComponent(type)} />
+            </div>
+          ))}
+
+          {/* 자기소개서 */}
+          <div className="writeCVSection">
+            <CVResume
+              value={formData.selfIntroduction}
+              onChange={(val) => handleInputChange("selfIntroduction", val)}
+            />
+          </div>
         </div>
       </div>
 
