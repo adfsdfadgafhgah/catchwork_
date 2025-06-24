@@ -1,5 +1,7 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import SectionHeader from "../../components/common/SectionHeader";
+import FloatButton from "../../components/common/FloatButton";
 import "./EditCompanyPage.css";
 
 const dummyCompanyList = [
@@ -108,6 +110,7 @@ const dummyCompanyList = [
 
 const EditCompanyPage = () => {
   const { corpNo } = useParams();
+  const navigate = useNavigate();
   const company = dummyCompanyList.find((item) => item.corpNo === corpNo);
 
   if (!company) {
@@ -118,6 +121,45 @@ const EditCompanyPage = () => {
       </main>
     );
   }
+
+  const [corpName, setCorpName] = useState(company?.corpName || "");
+  const [corpType, setCorpType] = useState(company?.corpType || "");
+  //corpNo는 위에서 선언함
+  const [corpCeoName, setCorpCeoName] = useState(company?.corpCeoName || "");
+  const [corpAddr, setCorpAddr] = useState(company?.corpAddr || "");
+  const [corpOpenDate, setCorpOpenDate] = useState(company?.corpOpenDate || "");
+  const [corpHomeLink, setCorpHomeLink] = useState(company?.corpHomeLink || "");
+  const [corpBm, setCorpBm] = useState(company?.corpBm || "");
+  const [corpDetail, setCorpDetail] = useState(company?.corpDetail || "");
+  const [corpBenefit, setCorpBenefit] = useState(company?.corpBenefit || "");
+  const [corpBenefitDetail, setCorpBenefitDetail] = useState(
+    company?.corpBenefitDetail || ""
+  );
+  const handleCancel = () => {
+    // 현재 corpNo 를 이용해 원래 디테일 페이지로 이동
+    navigate(`/corpcompanydetail/${corpNo}`);
+  };
+
+  const handleSubmit = () => {
+    // 서버 요청 대신 콘솔 출력 (나중에 fetch/post 연결 가능)
+    console.log("=== 수정된 기업정보 ===");
+    console.log({
+      corpName,
+      corpType,
+      corpNo,
+      corpCeoName,
+      corpAddr,
+      corpOpenDate,
+      corpHomeLink,
+      corpBm,
+      corpDetail,
+      corpBenefit,
+      corpBenefitDetail,
+    });
+
+    alert("수정이 성공되었습니다.");
+    navigate(`/corpcompanydetail/${corpNo}`);
+  };
 
   return (
     <main className="container">
@@ -182,10 +224,7 @@ const EditCompanyPage = () => {
         <textarea defaultValue={company.corpBenefitDetail}></textarea>
       </div>
 
-      <div className="company-footer-buttons">
-        <button className="btn-save">저장하기</button>
-        <button className="btn-cancel">취소하기</button>
-      </div>
+      <FloatButton onCancel={handleCancel} onSubmit={handleSubmit} />
     </main>
   );
 };

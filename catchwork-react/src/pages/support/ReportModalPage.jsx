@@ -16,7 +16,9 @@ const ReportModalPage = ({ target, onClose }) => {
 
         <div className="form-group">
           <select defaultValue="">
-            <option value="" disabled>신고 카테고리</option>
+            <option value="" disabled>
+              신고 카테고리
+            </option>
             <option>욕설</option>
             <option>도배</option>
             <option>부적절한 콘텐츠</option>
@@ -29,8 +31,10 @@ const ReportModalPage = ({ target, onClose }) => {
         </div>
 
         <div className="button-group">
-            <button className="button-common cancel-button">✕ 취소하기</button>
-            <button className="button-common submit-button">🚨 신고하기</button>
+          <button className="button-common cancel-button" onClick={onClose}>
+            ✕ 취소하기
+          </button>
+          <button className="button-common submit-button">🚨 신고하기</button>
         </div>
       </div>
     </div>
