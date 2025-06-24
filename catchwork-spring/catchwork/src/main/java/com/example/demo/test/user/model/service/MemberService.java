@@ -9,6 +9,6 @@ public interface MemberService {
 
 	Object signup(Member inputMember);
 
-	String signin(Member inputMember);
+//	String signin(Member inputMember); //LoginFilter에서 인증 처리?
 
 }

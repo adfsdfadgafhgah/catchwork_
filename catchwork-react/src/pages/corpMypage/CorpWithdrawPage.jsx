@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import SideBar from "../../components/myPage/CorpSideBar"; // 경로 맞게 수정하세요
+import SideBar from "../../components/myPage/CorpSideBar";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "./CorpWithdrawPage.css";
 
@@ -10,7 +10,7 @@ const CorpWithdrawPage = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [agree, setAgree] = useState(false);
   const [error, setError] = useState("");
-  const [activeTab, setActiveTab] = useState("회원 탈퇴"); // 활성 탭 상태 추가
+  const [activeTab, setActiveTab] = useState("회원 탈퇴");
 
   // 약관 데이터 (무한 스크롤용 더미 데이터)
   const [terms, setTerms] = useState([
@@ -65,11 +65,11 @@ const CorpWithdrawPage = () => {
     console.log("계정 탈퇴 요청:", { password });
     setError("");
     alert("계정이 성공적으로 탈퇴되었습니다.");
-    navigate("/login"); // 탈퇴 후 로그인 페이지로 이동
+    navigate("/login");
   };
 
   const fetchMoreData = () => {
-    if (terms.length >= 20) {
+    if (terms.length >= 30) {
       setHasMore(false);
       return;
     }
@@ -83,32 +83,29 @@ const CorpWithdrawPage = () => {
   };
 
   return (
-    <div className="mypage-container">
-      <SideBar activeTab={activeTab} setActiveTab={setActiveTab} navigate={navigate} />
-      <div className="main-content">
-        <div className="content-container">
-          <h2 className="content-title">회원 탈퇴</h2>
-          <hr className="title-divider" />
-             <div className="withdraw-container">
-            <p className="content-warning">
-              계정을 탈퇴하면 모든 데이터가 삭제되며 복구할 수 없습니다. 신중히 결정해 주세요.
-            </p>
-            <div className="terms-box">
-              <InfiniteScroll
-                dataLength={terms.length}
-                next={fetchMoreData}
-                hasMore={hasMore}
-                loader={<h4>약관 로딩 중...</h4>}
-                height={300} // 약관 박스에만 스크롤 적용
-                style={{ overflow: "auto" }}
-              >
-                {terms.map((item) => (
-                  <p key={item.id} className="terms-text">{item.text}</p>
-                ))}
-              </InfiniteScroll>
-            </div>
+    <div className="corp-page-container">
+      <SideBar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <div className="corp-edit-content">
+        <div className="form-container">
+          <h2 className="page-title">기업 회원 탈퇴</h2>
+          <p className="content-warning">
+            계정을 탈퇴하면 모든 데이터가 삭제되며 복구할 수 없습니다. 신중히 결정해 주세요.
+          </p>
+          <div className="terms-box">
+            <InfiniteScroll
+              dataLength={terms.length}
+              next={fetchMoreData}
+              hasMore={hasMore}
+              loader={<h4>약관 로딩 중...</h4>}
+              height={300}
+              style={{ overflow: "auto" }}
+            >
+              {terms.map((item) => (
+                <p key={item.id} className="terms-text">{item.text}</p>
+              ))}
+            </InfiniteScroll>
           </div>
-          <div className="withdraw-top-section">
+          <div className="form-group">
             <div className="checkbox-container">
               <input
                 type="checkbox"
@@ -118,51 +115,42 @@ const CorpWithdrawPage = () => {
               />
               <label htmlFor="agree">위 약관에 동의합니다.</label>
             </div>
-            <div className="password-group">
-              <div className="form-group">
-                <label htmlFor="memberPw" className="form-label">
-                  비밀번호
-                </label>
-                <input
-                  type="password"
-                  id="memberPw"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="비밀번호를 입력해주세요"
-                  className="form-input"
-                  required
-                />
-
-          
-                <label htmlFor="confirmPw" className="form-label">
-                </label>
-                <input
-                  type="password"
-                  id="confirmPw"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="비밀번호 확인"
-                  className="form-input"
-                  required
-                />
-              </div>
+          </div>
+          <div className="form-group">
+            <label htmlFor="memberPw" className="form-label">
+              비밀번호
+            </label>
+            <input
+              type="password"
+              id="memberPw"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="비밀번호를 입력해주세요"
+              className="form-input"
+              required
+            />
+            <input
+              type="password"
+              id="confirmPw"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="비밀번호 확인"
+              className="form-input"
+              required
+              />
             </div>
-            {error && <p className="error-text">{error}</p>}
           </div>
-       
-          <div className="button-container">
-            <button
-              type="submit"
-              onClick={handleSubmit}
-              className="confirm-button"
-              disabled={!agree || !password || !confirmPassword || password !== confirmPassword}
-            >
-              탈퇴하기
-            </button>
-          </div>
+          {error && <p className="error-message">{error}</p>}
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            className="submit-btn"
+            disabled={!agree || !password || !confirmPassword || password !== confirmPassword}
+          >
+            탈퇴하기
+          </button>
         </div>
       </div>
-    </div>
   );
 };
 
