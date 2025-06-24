@@ -172,45 +172,53 @@ const CorpCvListPage = () => {
 
       {/* 필터 영역 */}
       <div className="cv-filter-area">
-        <select
-          className="cv-filter"
-          value={selectedEdu}
-          onChange={(e) => setSelectedEdu(e.target.value)}
-        >
-          <option value="">학력 선택</option>
-          <option value="고졸">고졸</option>
-          <option value="전문학사">전문학사</option>
-          <option value="학사">학사</option>
-          <option value="석사">석사</option>
-          <option value="박사">박사</option>
-        </select>
+        <div className="cv-filter-top">
+          <div className="cv-filter-left">
+            <select
+              className="cv-filter"
+              value={selectedEdu}
+              onChange={(e) => setSelectedEdu(e.target.value)}
+            >
+              <option value="">학력 선택</option>
+              <option value="고졸">고졸</option>
+              <option value="전문학사">전문학사</option>
+              <option value="학사">학사</option>
+              <option value="석사">석사</option>
+              <option value="박사">박사</option>
+            </select>
 
-        <select
-          className="cv-filter"
-          value={selectedExp}
-          onChange={(e) => setSelectedExp(e.target.value)}
-        >
-          <option value="">경력 선택</option>
-          <option value="신입">신입</option>
-          <option value="1-3">경력(1~3년)</option>
-          <option value="4-6">경력(4~6년)</option>
-          <option value="7-9">경력(7~9년)</option>
-          <option value="10-15">경력(10~15년)</option>
-          <option value="16-20">경력(16~20년)</option>
-          <option value="21+">경력(21년 이상)</option>
-        </select>
+            <select
+              className="cv-filter"
+              value={selectedExp}
+              onChange={(e) => setSelectedExp(e.target.value)}
+            >
+              <option value="">경력 선택</option>
+              <option value="신입">신입</option>
+              <option value="1-3">경력(1~3년)</option>
+              <option value="4-6">경력(4~6년)</option>
+              <option value="7-9">경력(7~9년)</option>
+              <option value="10-15">경력(10~15년)</option>
+              <option value="16-20">경력(16~20년)</option>
+              <option value="21+">경력(21년 이상)</option>
+            </select>
+          </div>
 
-        <div className="cv-filter-right">
-          <button className="btn-apply" onClick={handleFilter}>
-            이력서 목록 분류 적용
-          </button>
-          <button
-            className="btn-select"
-            onClick={() => setShowCheckbox(!showCheckbox)}
-            style={{ marginLeft: "10px" }}
-          >
-            선택하기
-          </button>
+          <div className="cv-filter-right">
+            <button className="btn-apply" onClick={handleFilter}>
+              이력서 목록 분류
+            </button>
+          </div>
+        </div>
+
+        <div className="cv-filter-bottom">
+          <div className="cv-filter-bottom-right">
+            <button
+              className="btn-select"
+              onClick={() => setShowCheckbox(!showCheckbox)}
+            >
+              선택하기
+            </button>
+          </div>
         </div>
       </div>
 
@@ -291,12 +299,12 @@ const CorpCvListPage = () => {
         <button className="btn-cancel" onClick={handleCancel}>
           취소하기
         </button>
+        <button className="btn-delete">이력서 삭제하기</button>
         {showCheckbox && (
           <button className="btn-download" onClick={handleBulkDownload}>
             선택한 이력서 일괄 다운로드
           </button>
         )}
-        <button className="btn-delete">이력서 삭제하기</button>
       </div>
     </main>
   );
