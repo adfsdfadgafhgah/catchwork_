@@ -26,6 +26,12 @@ import CVPage from "./pages/major/CVListPage";
 import MyPage from "./pages/myPage/MyPage";
 import MyInfo from "./pages/myPage/MyInfoPage";
 import MyRecruitPage from "./pages/myPage/MyRecruitPage";
+import MembershipPage from "./pages/myPage/MembershipPage";
+
+// 멤버십
+import PaymentBilling from "./pages/myPage/membership/PaymentBilling";
+import PaymentSuccess from "./pages/myPage/membership/PaymentSuccess";
+import PaymentFail from "./pages/myPage/membership/PaymentFail";
 
 //이력서 제출
 import SubmitCVPage from "./pages/major/SubmitCVPage";
@@ -136,6 +142,18 @@ const router = createBrowserRouter([
           { index: true, element: <MyInfo /> },
           { path: "home", element: <MyInfo /> },
           { path: "myrecruit", element: <MyRecruitPage /> },
+          {
+            path: "membership",
+            element: <MembershipPage />,
+          },
+          {
+            path: "payment",
+            children: [
+              { path: "billing", element: <PaymentBilling /> },
+              { path: "success", element: <PaymentSuccess /> },
+              { path: "fail", element: <PaymentFail /> },
+            ],
+          },
         ],
       },
 
