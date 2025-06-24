@@ -54,6 +54,10 @@ export default function CommentItem({
         <div className={CommentCss.commentBox}>
           <div className={CommentCss.header}>
             <div className={CommentCss.writerInfo}>
+              {/* 대댓글이면 ㄴ자 선 보이게 */}
+              {comment.parentCommentNo !== null && (
+                <div className={CommentCss.replyLine}></div>
+              )}
               <img
                 src={comment.memProfilePath || "/profile.png"}
                 alt="프로필"
