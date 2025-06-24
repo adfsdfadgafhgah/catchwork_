@@ -26,6 +26,12 @@ import CVPage from "./pages/major/CVListPage";
 import MyPage from "./pages/myPage/MyPage";
 import MyInfo from "./pages/myPage/MyInfoPage";
 import MyRecruitPage from "./pages/myPage/MyRecruitPage";
+import MembershipPage from "./pages/myPage/MembershipPage";
+
+// 멤버십
+import PaymentBilling from "./pages/myPage/membership/PaymentBilling";
+import PaymentSuccess from "./pages/myPage/membership/PaymentSuccess";
+import PaymentFail from "./pages/myPage/membership/PaymentFail";
 
 //이력서 제출
 import SubmitCVPage from "./pages/major/SubmitCVPage";
@@ -45,10 +51,10 @@ import SupportDetailPage from "./pages/support/SupportDetailPage";
 
 // 기업 마이페이지
 import CorpMyPage from "./pages/corpMypage/CorpMyPage";
-import CorpEditMyInfoPage from "./pages/corpMypage/CorpEditMyInfoPage"; 
-import CorpConfirmEditPage from "./pages/corpMypage/CorpConfirmEditPage"; 
-import CorpChangePwPage from "./pages/corpMypage/CorpChangePwPage"; 
-import CorpWithdrawPage from "./pages/corpMypage/CorpWithdrawPage"; 
+import CorpEditMyInfoPage from "./pages/corpMypage/CorpEditMyInfoPage";
+import CorpConfirmEditPage from "./pages/corpMypage/CorpConfirmEditPage";
+import CorpChangePwPage from "./pages/corpMypage/CorpChangePwPage";
+import CorpWithdrawPage from "./pages/corpMypage/CorpWithdrawPage";
 
 //기업 제출된 이력서 목록
 import CorpCVListPage from "./pages/corpMajor/CorpCVListPage";
@@ -106,7 +112,7 @@ const router = createBrowserRouter([
       { path: "supportlist", element: <SupportListPage /> },
       { path: "writesupport", element: <WriteSupportPage /> },
       { path: "reportmodal", element: <ReportModalPage /> },
-       
+
       { path: "corpcvlist", element: <CorpCVListPage /> },
       { path: "corpcompanydetail/:corpNo", element: <CorpCompanyDetailPage /> },
       // { path: "editcompany", element: <EditCompanyPage /> },
@@ -125,6 +131,18 @@ const router = createBrowserRouter([
           { index: true, element: <MyInfo /> },
           { path: "home", element: <MyInfo /> },
           { path: "myrecruit", element: <MyRecruitPage /> },
+          {
+            path: "membership",
+            element: <MembershipPage />,
+          },
+          {
+            path: "payment",
+            children: [
+              { path: "billing", element: <PaymentBilling /> },
+              { path: "success", element: <PaymentSuccess /> },
+              { path: "fail", element: <PaymentFail /> },
+            ],
+          },
         ],
       },
 
