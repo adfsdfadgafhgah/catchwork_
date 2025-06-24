@@ -45,6 +45,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http, LoginFilter loginFilter) throws Exception {
         
+    	// cors
+    	http.cors((cors) -> {});
+    	
         // csrf disable
         http.csrf((auth) -> auth.disable());
         
@@ -57,6 +60,7 @@ public class SecurityConfig {
         // 경로별 인가 작업
         http.authorizeHttpRequests((auth) -> auth
                 .requestMatchers("/", "/signin", "/signup").permitAll()
+                .requestMatchers("/cv/**").permitAll() // 👈 이력서 API 허용
                 .requestMatchers("/admin").hasRole("ADMIN")
                 .anyRequest().authenticated());
         

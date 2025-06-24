@@ -1,3 +1,7 @@
+.infoSection {
+  display: flex;
+}
+
 .infoRow {
   display: flex;
   align-items: center;
@@ -7,13 +11,26 @@
 
 .infoItem {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  margin-left: 20px;
   flex: 1;
   gap: 10px;
 }
 
+.infoTitle {
+  border-right: 1px solid var(--stroke-color2);
+}
+
+.infoContent {
+  width: 100%;
+}
+
 .addressItem {
   flex: 1;
+  width: 100%;
+}
+
+.addressInputs {
   width: 100%;
 }
 
@@ -23,7 +40,6 @@
   font-weight: 500;
   min-width: 60px;
   padding: 10px 20px 10px 0px;
-  border-right: 1px solid var(--stroke-color2);
   text-align: right;
 }
 

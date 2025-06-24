@@ -29,6 +29,7 @@ import MyRecruitPage from "./pages/myPage/MyRecruitPage";
 
 //이력서 제출
 import SubmitCVPage from "./pages/major/SubmitCVPage";
+import WriteCVPage from "./pages/major/WriteCVPage";
 
 // 게시글
 import BoardListPage from "./pages/major/BoardListPage";
@@ -72,6 +73,9 @@ const router = createBrowserRouter([
 
       { path: "board", element: <BoardPage /> },
       { path: "cv", element: <CVPage /> },
+
+      /* 테스트 : 이력서 작성페이지*/
+      { path: "writecvpage", element: <WriteCVPage /> },
 
       // 로그인/회원가입
       { path: "signin", element: <SignInPage /> },

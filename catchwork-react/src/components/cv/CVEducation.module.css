@@ -1,0 +1,25 @@
+/* 텍스트 입력 input 공통 스타일 */
+.eduInfoInput {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  border-bottom: 1px solid var(--main-color);
+  font-size: 16px;
+  outline: none;
+}
+
+/* 포커스 시 하단 선 색상 변경 */
+.eduInfoInput:focus {
+  border-bottom-color: var(--main-color-dark);
+}
+
+/* placeholder 글자색 설정 */
+.eduInfoInput::placeholder {
+  color: var(--gray01);
+}
+
+.eduInfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
