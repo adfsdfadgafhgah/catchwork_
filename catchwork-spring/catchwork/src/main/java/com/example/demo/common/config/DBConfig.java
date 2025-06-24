@@ -21,11 +21,10 @@ import com.zaxxer.hikari.HikariDataSource;
 public class DBConfig {
 
 	// 필드
-	@Autowired // (DI, 의존성 주입)
+	@Autowired
 	private ApplicationContext applicationContext;
 
 	// 메서드
-	///////////////// HikariCP 설정 ////////////////////
 	@Bean
 	@ConfigurationProperties(prefix = "spring.datasource.hikari")
 	public HikariConfig hikariConfig() {
@@ -38,7 +37,6 @@ public class DBConfig {
 		return dataSource;
 	}
 
-	/////////////// Mybatis 설정 ///////////////////
 	@Bean
 	public SqlSessionFactory sessionFactory(DataSource dataSource) throws Exception{
 		SqlSessionFactoryBean sessionFactoryBean = new SqlSessionFactoryBean();

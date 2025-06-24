@@ -1,19 +1,51 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from "react";
+import { NavLink } from "react-router-dom";
+
+/* 
+기존에 location으로 주소 확인해서 active 넣던 그런 귀찮은 짓을 
+그냥 activeClassName 쓰면 한 줄로 가능함...
+이거 왜 아무도 안 알려줌?
+*/
 
 const HeaderNav = () => {
-    const navigate = useNavigate();
   return (
     <div className="header-nav">
-        <nav className="nav">
-        <Link to="/recruit">채용공고</Link>
-        <Link to="/company">기업정보</Link>
-        <Link to="/board">취준진담</Link>
-        <Link to="/cv">내 이력서</Link>
-        </nav>
+      <nav className="nav">
+        <NavLink to="/recruit" activeClassName="active">
+          채용공고
+        </NavLink>
+        <NavLink to="/company" activeClassName="active">
+          기업정보
+        </NavLink>
+        <NavLink to="/board" activeClassName="active">
+          취준진담
+        </NavLink>
+        <NavLink to="/cv" activeClassName="active">
+          내 이력서
+        </NavLink>
+
+        {/* 기업 회원 조건 넣기전에 NAV에서 7개 다 보여주려고  */}
+        <NavLink
+          to="/corprecruit"
+          className={({ isActive }) => (isActive ? "active" : "")}
+        >
+          채용공고
+        </NavLink>
+        <NavLink
+          to="/corpcompanydetail"
+          className={({ isActive }) => (isActive ? "active" : "")}
+        >
+          기업정보
+        </NavLink>
+        <NavLink
+          to="/corpcvlist"
+          className={({ isActive }) => (isActive ? "active" : "")}
+        >
+          이력서 목록
+        </NavLink>
+      </nav>
     </div>
   );
 };
 
 export default HeaderNav;
-

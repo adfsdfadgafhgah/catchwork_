@@ -9,15 +9,15 @@
   align-items: flex-start;
   gap: 24px;
   margin-bottom: 30px;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid var(--stroke-color2);
 }
 
 .company-header-left .company-logo {
-  width: 300px; /* 크기 조금 키움 */
+  width: 300px;
   height: 300px;
-  border-radius: 50%; /* 동그랗게 */
+  border-radius: 50%;
   object-fit: cover;
-  border: 1px solid #ddd;
+  border: 1px solid var(--stroke-color2);
 }
 
 .company-header-right {
@@ -44,30 +44,52 @@
 
 .btn-save,
 .btn-report {
-  border: 1px solid #ccc;
+  border: none;
   border-radius: 6px;
   padding: 6px 12px;
-  background-color: white;
+  background-color: var(--white);
+  box-shadow: var(--box-shadow);
   cursor: pointer;
   font-size: 14px;
+  transition: background-color 0.2s ease;
 }
 
-.btn-save:hover {
-  background-color: #f0f9f9;
-}
-
+.btn-save:hover,
 .btn-report:hover {
-  background-color: #fff0f0;
+  color: var(--main-color-dark);
 }
 
-.company-basic-info p {
-  margin: 6px 0;
+/* ✅ 회사 기본정보 세로 정렬 + 세로선 */
+.company-basic-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.info-label {
+  width: 140px;
+  color: var(--gray01);
+  font-weight: 500;
+  border-right: 1px solid var(--stroke-color1);
+  padding-right: 16px;
+}
+
+.info-value {
+  flex: 1;
+  padding-left: 16px;
+  color: var(--deep-gray);
 }
 
 .company-section {
   margin-top: 30px;
   padding-top: 10px;
-  border-top: 1px solid #eee;
+  border-top: 1px solid var(--stroke-color1);
 }
 
 .company-section h3 {
@@ -77,4 +99,10 @@
 
 .company-section p {
   line-height: 1.6;
+}
+
+.company-not-found {
+  padding: 40px;
+  text-align: center;
+  color: var(--gray01);
 }

@@ -1,6 +1,11 @@
-.resume-title {
+.section-header {
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--stroke-color1);
+}
+
+.section-header .title {
   font-size: 20px;
   font-weight: bold;
-  color: var(--deep-gray);
-  margin-bottom: 16px;
+  color: var(--deep-gray) !important;
 }

@@ -3,18 +3,24 @@ import { axiosApi } from "../../api/axiosAPI";
 import BoardList from "../../components/board/BoardList";
 import BoardCss from "./BoardListPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
+// import { useContext } from "react";
+// import { AuthContext } from "../../contexts/AuthContext"; // AuthContext 사용 시 loginUser 가져오기
 
 export default function BoardListPage() {
   const [boards, setBoards] = useState([]); // 게시글 목록 조회
   const [isloading, setIsLoading] = useState(true); // 로딩 상태
   const [searchTerm, setSearchTerm] = useState("");
+  // const { loginUser } = useContext(AuthContext); // AuthContext 사용 시 loginUser 가져오기
+  // const loginUser = JSON.parse(localStorage.getItem("loginUser")); // localStorage 또는 sessionStorage에서 꺼내는 경우
 
-  // 깡 데이터
+  // 더미 데이터
   const dummyBoards = [
     {
       boardNo: 1,
-      boardTitle: "첫 번째 글은 들어가짐",
-      boardContent: "디테일로 왔음",
+      boardTitle:
+        "제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? ",
+      boardContent:
+        "긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 ",
       boardWriteDate: "1일 전",
       boardReadCount: 1,
       commentCount: 2,
@@ -49,21 +55,7 @@ export default function BoardListPage() {
     },
   ];
 
-  // // 게시글 목록 조회용 함수
-  // const getBoardList = async () => {
-  //   try {
-  //     const resp = await axiosApi.get("/board/boardList");
-  //     console.log(resp.data);
-
-  //     if (resp.status === 200) {
-  //       setBoards(resp.data);
-  //     }
-  //   } catch (error) {
-  //     console.log("게시글 목록 조회 중 에러 발생 : ", error);
-  //   }
-  // };
-
-  // 깡데이터
+  // 더미데이터
   useEffect(() => {
     // setTimeout으로 비동기 시뮬레이션
     setTimeout(() => {
@@ -83,6 +75,20 @@ export default function BoardListPage() {
   if (isloading) {
     return <h1>Loading...</h1>;
   }
+
+  // // 게시글 목록 조회용 함수
+  // const getBoardList = async () => {
+  //   try {
+  //     const resp = await axiosApi.get("/board/boardList");
+  //     console.log(resp.data);
+
+  //     if (resp.status === 200) {
+  //       setBoards(resp.data);
+  //     }
+  //   } catch (error) {
+  //     console.log("게시글 목록 조회 중 에러 발생 : ", error);
+  //   }
+  // };
 
   // // 컴포넌트가 처음 렌더링 될 때 useEffect
   // useEffect(() => {
@@ -138,7 +144,7 @@ export default function BoardListPage() {
       </div>
 
       {/* BoardList 넘겨주기 */}
-      <BoardList boards={boards} />
+      <BoardList boards={boards} /* loginUser={loginUser} */ />
     </div>
   );
 }

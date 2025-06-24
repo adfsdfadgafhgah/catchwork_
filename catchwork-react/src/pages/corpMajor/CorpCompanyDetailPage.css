@@ -1,0 +1,134 @@
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.company-detail-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 30px;
+  border-top: 1px solid var(--stroke-color2);
+}
+
+.company-header-left .company-logo {
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--stroke-color2);
+}
+
+.company-header-right {
+  flex: 1;
+}
+
+.company-title-line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.company-name {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--main-color);
+}
+
+.company-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-save,
+.btn-report {
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  background-color: var(--white);
+  box-shadow: var(--box-shadow);
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.btn-save:hover,
+.btn-report:hover {
+  color: var(--main-color-dark);
+}
+
+/* ✅ 회사 기본정보 세로 정렬 + 세로선 */
+.company-basic-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.info-row {
+  display: flex;
+  align-items: flex-start;
+}
+
+.info-label {
+  width: 140px;
+  color: var(--gray01);
+  font-weight: 500;
+  border-right: 1px solid var(--stroke-color1);
+  padding-right: 16px;
+}
+
+.info-value {
+  flex: 1;
+  padding-left: 16px;
+  color: var(--deep-gray);
+}
+
+.company-section {
+  margin-top: 30px;
+  padding-top: 10px;
+  border-top: 1px solid var(--stroke-color1);
+}
+
+.company-section h3 {
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.company-section p {
+  line-height: 1.6;
+}
+
+.company-not-found {
+  padding: 40px;
+  text-align: center;
+  color: var(--gray01);
+}
+.company-footer-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.btn-edit,
+.btn-withdraw {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 6px 16px;
+  color: var(--black);
+  border: 1px solid var(--stroke-color2);
+  background-color: var(--white);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: var(--box-shadow);
+  float: right;
+}
+
+.btn-edit:hover,
+.btn-withdraw:hover {
+  color: var(--main-color-dark);
+}

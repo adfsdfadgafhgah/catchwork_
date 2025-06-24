@@ -1,0 +1,27 @@
+.commentSection {
+  margin-top: 40px;
+  border-top: 1px solid #ddd;
+  padding-top: 20px;
+}
+
+.writeWrapper {
+  margin-bottom: 20px;
+}
+
+.commentCount {
+  font-weight: bold;
+  font-size: 18px;
+  margin-left: 5px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.countNum {
+  color: var(--main-color);
+}
+
+.commentList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

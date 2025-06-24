@@ -1,5 +1,9 @@
 const SectionHeader = ({ title }) => {
-  return <h2 className="resume-title">{title}</h2>;
+  return (
+    <div className="section-header">
+      <h2 className="title">{title}</h2>
+    </div>
+  );
 };
 
 export default SectionHeader;
