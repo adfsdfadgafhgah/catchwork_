@@ -3,13 +3,14 @@
   padding: 16px;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 8px;
 }
 
 .commentBox {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  width: 100%;
 }
 
 .header {
@@ -18,12 +19,14 @@
   align-items: center;
   font-size: 14px;
   color: var(--deep-gray);
+  width: 100%;
 }
 
 .writerInfo {
   display: flex;
   align-items: center;
   gap: 8px;
+  position: relative; /* ✅ replyLine 절대 위치로 쓸 수 있게 */
 }
 
 .profileImg {
@@ -40,6 +43,7 @@
 .date {
   font-size: 13px;
   color: #999;
+  flex-shrink: 0; /* ✅ 날짜가 줄어들지 않게 */
 }
 
 .content {
@@ -86,6 +90,21 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-left: 40px;
   margin-top: 12px;
+  padding-left: 16px;
+}
+
+.commentWrapper {
+  padding-right: 0;
+}
+
+/* ㄴ자 선 */
+.replyLine {
+  position: absolute;
+  left: -16px; /* ← 필요에 따라 조절 */
+  top: 0;
+  width: 12px;
+  height: 12px;
+  border-left: 2px solid var(--stroke-color1); /* 원하는 선 색상 */
+  border-bottom: 2px solid var(--stroke-color1);
 }
