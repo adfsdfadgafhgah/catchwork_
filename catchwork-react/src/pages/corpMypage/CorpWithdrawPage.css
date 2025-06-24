@@ -1,57 +1,61 @@
-/* 메인 레이아웃 */
-.mypage-container {
+.corp-page-container {
   display: flex;
   min-height: 100vh;
-  font-family: "Noto Sans KR", sans-serif;
-  padding-top: 0; /* 상단 패딩 제거, .nav와 맞춤 */
-  margin-left: 0; /* 왼쪽 마진 제거 */
+  background-color: #f5f5f5;
 }
 
-/* 메인 콘텐츠 */
-.main-content {
+.corp-edit-content {
   flex: 1;
-  padding: 0 24px 24px; /* 상단 패딩 제거, 나머지 유지 */
-  overflow-y: auto;
-  position: relative;
-  z-index: 5; /* .sidebar (z-index: 10) 아래로 설정 */
-  display: flex;
-  justify-content: center;
-}
-
-.content-container {
-  max-width: 800px;
-  width: 100%;
+  padding: 80px;
+  background-color: #fff;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  z-index: 5; /* .sidebar 아래로 유지 */
+  justify-content: flex-start;
+  align-items: flex-start;
 }
 
-/* 제목 및 구분선 */
-.content-title {
-  font-size: 1.875rem; /* 30px */
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 1rem;
+.form-container {
+  width: 100%;
+  max-width: 550px;
+}
+
+.page-title {
+  font-size: 22px;
+  margin-bottom: 30px;
+  color: #333;
+  font-weight: 600;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 16px;
+  width: 100%;
+}
+
+.content-warning {
+  font-size: 1rem;
+  color: #dc3545;
+  line-height: 1.6;
   text-align: center;
+  margin-bottom: 20px;
 }
 
-.title-divider {
-  border: 0;
-  height: 1px;
-  background: #e5e7eb;
-  margin-bottom: 2rem;
-  width: 100%;
+.terms-box {
+  border: 1px solid #ddd;
+  padding: 1.5rem;
+  height: 300px;
+  overflow: hidden;
+  margin-bottom: 20px;
 }
 
-/* 상단 섹션 (체크박스와 비밀번호 입력) */
-.withdraw-top-section {
+.terms-text {
+  margin: 0.75rem 0;
+  color: #374151;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+.form-group {
+  margin-bottom: 24px;
   width: 100%;
-  max-width: 500px;
-  margin-bottom: 2rem;
-  text-align: left;
 }
 
 .checkbox-container {
@@ -64,7 +68,7 @@
 .checkbox-container input {
   margin-right: 12px;
   vertical-align: middle;
-  accent-color: #4f46e5;
+  accent-color: #46b5ab;
   width: 18px;
   height: 18px;
 }
@@ -74,191 +78,60 @@
   color: #374151;
 }
 
-.password-group {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-}
-
-.phone-group {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1rem;
-  align-items: flex-end;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  flex: 1;
-}
-
 .form-label {
-  font-size: 1rem;
+  display: block;
+  margin-bottom: 8px;
   font-weight: 500;
   color: #374151;
 }
 
 .form-input {
-  padding: 0.75rem 1rem;
-  border: 2px solid #e0e7ff;
-  border-radius: 8px;
-  font-size: 1rem;
-  outline: none;
   width: 100%;
-  transition: border-color 0.3s ease; /* 다른 속성에만 애니메이션 적용 */
+  padding: 10px;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  font-size: 16px;
+  outline: none;
 }
 
 .form-input:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 8px rgba(79, 70, 229, 0.3);
+  border-color: #46b5ab;
 }
 
-.verify-button {
-  background-color: #4f46e5;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
+.error-message {
+  color: red;
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.submit-btn {
+  padding: 12px 24px;
+  font-size: 16px;
+  background-color: white;
+  border: 1px solid #999;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out; /* 배경색만 애니메이션 */
-  height: 100%; /* 입력란과 높이 맞춤 */
-  width: auto;
+  margin-top: 20px;
 }
 
-.verify-button:hover {
-  background-color: #4338ca;
+.submit-btn:hover {
+  background-color: #f0f0f0;
 }
 
-.verify-button:disabled {
-  background-color: #e0e7ff;
-  color: #999999;
-  cursor: not-allowed;
-}
-
-.error-text {
-  color: #dc3545;
-  font-size: 0.875rem;
-  margin-top: -0.5rem;
-  text-align: left;
-}
-
-/* 약관 및 콘텐츠 */
-.withdraw-content {
-  width: 100%;
-  max-width: 600px;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  margin-bottom: auto;
-}
-
-.content-warning {
-  font-size: 1rem;
-  color: #dc3545;
-  line-height: 1.6;
-  text-align: center;
-}
-
-.terms-box {
-  border: 1px solid #e0e7ff;
-  border-radius: 12px;
-  padding: 1.5rem;
-  background-color: #ffffff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  height: 300px;
-  overflow: hidden;
-  width: 100%;
-}
-
-.terms-text {
-  margin: 0.75rem 0;
-  color: #374151;
-  font-size: 0.875rem;
-  line-height: 1.5;
-}
-
-/* 버튼 컨테이너 (오른쪽 아래 고정) */
-.button-container {
-  width: 100%;
-  max-width: 600px;
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 2rem;
-  padding-bottom: 2rem;
-}
-
-.confirm-button {
-  background-color: #4f46e5;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out; /* 배경색만 애니메이션 */
-  width: auto;
-}
-
-.confirm-button:hover {
-  background-color: #4338ca;
-}
-
-.confirm-button:disabled {
-  background-color: #e0e7ff;
-  color: #999999;
+.submit-btn:disabled {
+  background-color: #e9ecef;
+  color: #6c757d;
   cursor: not-allowed;
 }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
-  .main-content {
-    padding: 0 12px 12px; /* 상단 패딩 제거 */
+  .corp-edit-content {
+    padding: 40px 20px;
   }
 
-  .content-title {
-    font-size: 1.5rem;
-  }
-
-  .withdraw-top-section {
-    max-width: 100%;
-  }
-
-  .password-group {
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  .phone-group {
-    flex-direction: column;
-    gap: 1rem;
-    align-items: stretch;
-  }
-
-  .verify-button {
-    width: 100%;
-    height: auto;
-  }
-
-  .withdraw-content {
-    max-width: 100%;
-  }
-
-  .button-container {
-    justify-content: center;
-    margin-top: 1rem;
-  }
-
-  .confirm-button {
-    width: 100%;
-  }
-}
-
-@media (max-width: 480px) {
-  .content-title {
-    font-size: 1.25rem;
+  .page-title {
+    font-size: 20px;
   }
 
   .terms-box {
@@ -266,6 +139,29 @@
   }
 
   .form-input {
-    padding: 0.5rem 0.75rem;
+    padding: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .corp-edit-content {
+    padding: 20px 15px;
+  }
+
+  .page-title {
+    font-size: 18px;
+  }
+
+  .terms-box {
+    height: 150px;
+  }
+
+  .form-input {
+    padding: 6px;
+  }
+
+  .submit-btn {
+    width: 100%;
+    padding: 10px 16px;
   }
 }
