@@ -9,7 +9,6 @@
   align-items: flex-start;
   gap: 24px;
   margin-bottom: 30px;
-  border-top: 1px solid var(--stroke-color2);
 }
 
 .company-header-left .company-logo {
@@ -17,7 +16,6 @@
   height: 300px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid var(--stroke-color2);
 }
 
 .company-header-right {
@@ -89,7 +87,6 @@
 .company-section {
   margin-top: 30px;
   padding-top: 10px;
-  border-top: 1px solid var(--stroke-color1);
 }
 
 .company-section h3 {

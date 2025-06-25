@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import SectionHeader from "../../components/common/SectionHeader";
+import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 import "./CompanyDetailPage.css";
 
 //명하 신고하기모달창
@@ -132,80 +133,94 @@ const CompanyDetailPage = () => {
   };
 
   return (
-    <main className="container">
-      <SectionHeader title="기업정보" />
+    <>
+      <main className="container">
+        <SectionHeader title="기업정보" />
 
-      <div className="company-detail-header">
-        <div className="company-header-left">
-          <img src={company.corpLogo} alt="기업로고" className="company-logo" />
-        </div>
-
-        <div className="company-header-right">
-          <div className="company-title-line">
-            <h2 className="company-name">{company.corpName}</h2>
-            <div className="company-actions">
-              <button className="btn-save">🔖 저장</button>
-              <button className="btn-report" onClick={handleOpenReport}>
-                🚨 신고하기
-              </button>
-            </div>
+        <div className="company-detail-header">
+          <div className="company-header-left">
+            <img
+              src={company.corpLogo}
+              alt="기업로고"
+              className="company-logo"
+            />
           </div>
 
-          <div className="company-basic-info">
-            <div className="info-row">
-              <div className="info-label">기업 형태</div>
-              <div className="info-value">{company.corpType}</div>
+          <div className="company-header-right">
+            <div className="company-title-line">
+              <h2 className="company-name">{company.corpName}</h2>
+              <div className="company-actions">
+                <button className="btn-save">
+                  <span class="material-symbols-outlined">bookmark</span>{" "}
+                  저장하기
+                </button>
+                <button className="btn-report" onClick={handleOpenReport}>
+                  <span class="material-symbols-outlined">siren</span> 신고하기
+                </button>
+              </div>
             </div>
-            <div className="info-row">
-              <div className="info-label">대표명</div>
-              <div className="info-value">{company.corpCeoName}</div>
-            </div>
-            <div className="info-row">
-              <div className="info-label">주소</div>
-              <div className="info-value">{company.corpAddr}</div>
-            </div>
-            <div className="info-row">
-              <div className="info-label">개업일자</div>
-              <div className="info-value">{company.corpOpenDate}</div>
-            </div>
-            <div className="info-row">
-              <div className="info-label">홈페이지</div>
-              <div className="info-value">
-                <a href={company.corpHomeLink} target="_blank" rel="noreferrer">
-                  {company.corpHomeLink}
-                </a>
+
+            <div className="company-basic-info">
+              <div className="info-row">
+                <div className="info-label">기업 형태</div>
+                <div className="info-value">{company.corpType}</div>
+              </div>
+              <div className="info-row">
+                <div className="info-label">대표명</div>
+                <div className="info-value">{company.corpCeoName}</div>
+              </div>
+              <div className="info-row">
+                <div className="info-label">주소</div>
+                <div className="info-value">{company.corpAddr}</div>
+              </div>
+              <div className="info-row">
+                <div className="info-label">개업일자</div>
+                <div className="info-value">{company.corpOpenDate}</div>
+              </div>
+              <div className="info-row">
+                <div className="info-label">홈페이지</div>
+                <div className="info-value">
+                  <a
+                    href={company.corpHomeLink}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    {company.corpHomeLink}
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="company-section">
-        <h3>주요사업</h3>
-        <p>{company.corpBm}</p>
-      </div>
+        <div className="company-section">
+          <h3>주요사업</h3>
+          <p>{company.corpBm}</p>
+        </div>
 
-      <div className="company-section">
-        <h3>기업상세</h3>
-        <p>{company.corpDetail}</p>
-      </div>
+        <div className="company-section">
+          <h3>기업상세</h3>
+          <p>{company.corpDetail}</p>
+        </div>
 
-      <div className="company-section">
-        <h3>복리후생</h3>
-        <b>{company.corpBenefit}</b>
-        <p>{company.corpBenefitDetail}</p>
-      </div>
+        <div className="company-section">
+          <h3>복리후생</h3>
+          <b>{company.corpBenefit}</b>
+          <p>{company.corpBenefitDetail}</p>
+        </div>
 
-      {/* 명하 - 신고 모달 띄우기 */}
-      {showReportModal && (
-        <ReportModalPage
-          targetNo={corpNo}
-          targetType="company"
-          // memNo={loginMemberSeq}
-          onClose={handleCloseReport}
-        />
-      )}
-    </main>
+        {/* 명하 - 신고 모달 띄우기 */}
+        {showReportModal && (
+          <ReportModalPage
+            targetNo={corpNo}
+            targetType="company"
+            // memNo={loginMemberSeq}
+            onClose={handleCloseReport}
+          />
+        )}
+      </main>
+      <ScrollToTopButton />
+    </>
   );
 };
 

@@ -4,8 +4,15 @@ import "./Pagination.css";
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const renderPageNumbers = () => {
     const pages = [];
-    const startPage = Math.max(1, currentPage - 2);
-    const endPage = Math.min(totalPages, startPage + 4);
+    const pageLimit = 5; // 한 번에 보여줄 페이지 번호 개수
+    let startPage = Math.max(1, currentPage - Math.floor(pageLimit / 2));
+    let endPage = startPage + pageLimit - 1;
+
+    // 끝 페이지 보정
+    if (endPage > totalPages) {
+      endPage = totalPages;
+      startPage = Math.max(1, endPage - pageLimit + 1);
+    }
 
     for (let i = startPage; i <= endPage; i++) {
       pages.push(

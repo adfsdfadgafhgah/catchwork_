@@ -21,8 +21,12 @@ const CompanyItem = ({ company }) => {
 
         {/* 메타 정보 */}
         <div className="company-meta">
-          <span>👁 {company.views}</span>
-          <span>🔖{company.favs}</span>
+          <span class="material-symbols-outlined">visibility</span>
+          <span>{company.views}</span>
+          <span className="bookmark-icon material-symbols-outlined">
+            bookmark
+          </span>
+          <span>{company.favs}</span>
         </div>
       </div>
     </Link>

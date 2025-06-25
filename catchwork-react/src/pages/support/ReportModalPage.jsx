@@ -32,9 +32,11 @@ const ReportModalPage = ({ target, onClose }) => {
 
         <div className="button-group">
           <button className="button-common cancel-button" onClick={onClose}>
-            ✕ 취소하기
+            <span class="material-symbols-outlined">close</span> 취소하기
           </button>
-          <button className="button-common submit-button">🚨 신고하기</button>
+          <button className="button-common submit-button">
+            <span class="material-symbols-outlined">siren</span>신고하기
+          </button>
         </div>
       </div>
     </div>
