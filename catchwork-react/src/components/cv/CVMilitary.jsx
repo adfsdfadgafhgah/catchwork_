@@ -2,7 +2,7 @@ import React from "react";
 import YearMonthPicker from "./YearMonthPicker";
 import styles from "./CVMilitary.module.css";
 
-const CVMilitary = ({ formData, onChange }) => {
+const CVMilitary = ({ formData, onChange, mode }) => {
   return (
     <>
       <h2 className="writeCVSection-title">병역</h2>
@@ -12,8 +12,8 @@ const CVMilitary = ({ formData, onChange }) => {
         <div className={styles.militaryRow}>
           <select
             className={styles.militarySelect}
-            value={formData.militaryStatus}
-            onChange={(e) => onChange("militaryStatus", e.target.value)}
+            value={formData.cvMiliClass}
+            onChange={(e) => onChange("cvMiliClass", e.target.value)}
           >
             <option value="">구분</option>
             <option value="군필">군필</option>
@@ -23,8 +23,8 @@ const CVMilitary = ({ formData, onChange }) => {
 
           <select
             className={styles.militarySelect}
-            value={formData.militaryBranch}
-            onChange={(e) => onChange("militaryBranch", e.target.value)}
+            value={formData.cvMiliBranch}
+            onChange={(e) => onChange("cvMiliBranch", e.target.value)}
           >
             <option value="">군별</option>
             <option value="육군">육군</option>
@@ -34,15 +34,17 @@ const CVMilitary = ({ formData, onChange }) => {
         </div>
 
         {/* 입대일 ~ 전역일 */}
-        <div className={styles.militaryDates}>
+        <div className={styles.cvMiliStartDate}>
           <YearMonthPicker
+            mode={mode}
             value={formData.militaryStartDate}
-            onChange={(val) => onChange("militaryStartDate", val)}
+            onChange={(val) => onChange("cvMiliStartDate", val)}
           />
           <span className={styles.dateSeparator}>~</span>
           <YearMonthPicker
-            value={formData.militaryEndDate}
-            onChange={(val) => onChange("militaryEndDate", val)}
+            mode={mode}
+            value={formData.cvMiliEndDate}
+            onChange={(val) => onChange("cvMiliEndDate", val)}
           />
         </div>
       </div>

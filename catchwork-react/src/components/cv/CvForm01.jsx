@@ -3,7 +3,8 @@ import YearMonthPicker from "./YearMonthPicker";
 import FormRemoveButton from "./FormRemoveButton";
 import styles from "./CVForm01.module.css";
 
-const CVForm01 = ({ type, data, index, onRemove, showRemove, onChange, mode }) => {
+                //  번호  종류(수상) 값   제목    삭제버튼    변경
+const CVForm01 = ({ index, type, data, labels, onRemove, onChange, mode }) => {
   const handleChange = (field, value) => {
     onChange(type, index, field, value);
   };
@@ -15,18 +16,19 @@ const CVForm01 = ({ type, data, index, onRemove, showRemove, onChange, mode }) =
           <input
             className={styles.input}
             type="text"
-            placeholder="자격증/수상명"
+            placeholder={labels.title}
             value={data.title || ""}
             onChange={(e) => handleChange("title", e.target.value)}
           />
           <input
             className={styles.input}
             type="text"
-            placeholder="발급기관"
+            placeholder={labels.name}
             value={data.issuer || ""}
             onChange={(e) => handleChange("issuer", e.target.value)}
           />
           <YearMonthPicker
+            mode={mode}
             value={data.date || "0000-00"}
             onChange={(val) => handleChange("date", val)}
           />

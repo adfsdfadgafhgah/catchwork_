@@ -1,9 +1,7 @@
 // React 및 상태 훅 import
 import React, { useState } from "react";
-
-// 아이콘
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 
 // 기본 컴포넌트 import
@@ -23,9 +21,19 @@ import CVLanguage from "../../components/cv/CVLanguage";
 // 페이지 전용 CSS import
 import "./WriteCVPage.css";
 
-// 이력서 작성 페이지 컴포넌트
+// URL 쿼리 파싱용
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search);
+};
+
 const WriteCVPage = () => {
-  const [mode, setMode] = useState("write"); // 작성/보기 모드 상태
+  const query = useQuery();
+
+  const [mode, setMode] = useState(query.get("mode") || "view"); // 작성/보기/수정 모드 상태
+
+  useEffect(() => {
+    console.log("현재 mode =", mode);
+  }, [mode]);
 
   // 사용자 기본 정보 (출력용)
   const [userInfo, setUserInfo] = useState({
@@ -60,6 +68,21 @@ const WriteCVPage = () => {
     portfolio: [{ id: "portfolio" + Date.now() }],
   });
 
+  // 주소 찾기 핸들러
+  const handleSearchAddress = () => {
+    new window.daum.Postcode({
+      oncomplete: function (data) {
+        console.log("선택된 주소:", data);
+
+        // 도로명 주소 or 지번 주소
+        const fullAddress = data.roadAddress || data.jibunAddress;
+
+        // formData에 mainAddress 업데이트
+        handleInputChange("mainAddress", fullAddress);
+      },
+    }).open();
+  };
+
   // formData 변경 핸들러
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -88,49 +111,98 @@ const WriteCVPage = () => {
       return { ...prev, [type]: updated };
     });
   };
-  
+
   // CVForm01 섹션 정보 (자격증, 수상이력)
   const sectionMetaForm01 = {
-    qualify: { title: "자격증" },
-    award: { title: "수상이력" },
+    qualify: { title: "자격증명", name: "발급기관" },
+    award: { title: "수상명", name: "발급기관" },
   };
-  
+
   // CVForm02 섹션 정보 (경력, 교육이수, 외부활동, 포트폴리오)
   const sectionMetaForm02 = {
-    experience: { title: "경력", name: "회사명", description: "직무 및 담당업무" },
+    experience: {
+      title: "경력",
+      name: "회사명",
+      description: "직무 및 담당업무",
+    },
     training: { title: "교육이수", name: "교육명", description: "교육 내용" },
     outer: { title: "대외활동", name: "활동명", description: "활동 설명" },
-    portfolio: { title: "포트폴리오", name: "프로젝트명", description: "링크 또는 설명" },
+    portfolio: {
+      title: "포트폴리오",
+      name: "프로젝트명",
+      description: "링크 또는 설명",
+    },
   };
-  
-    // 이력서 저장 요청
-    const handleSubmit = async() => {
-      const payload = { ...userInfo, ...formData, ...components };
-      await axios
-        .post("http://localhost:8080/cv/add", payload)
-        .then(() => alert("이력서 저장 완료"))
-        .catch(() => alert("저장 중 오류가 발생했습니다"));
-    };
 
+  // 이력서 수정 요청
+  const handleUpdate = async () => {
+    const payload = {};
+    await axios
+      .post("http://localhost:8080/cv/update", payload)
+      .then(() => alert("성공"))
+      .catch(() => alert("실패"));
+  };
+
+  // 이력서 삭제 요청
+  const handleDelete = async () => {
+    const payload = {};
+    await axios
+      .post("http://localhost:8080/cv/delete", payload)
+      .then(() => alert("성공"))
+      .catch(() => alert("실패"));
+  };
+
+  // 이력서 저장 요청
+  const handleSubmit = async () => {
+    const payload = payloadRename;
+    await axios
+      .post("http://localhost:8080/cv/add", payload)
+      .then(() => alert("이력서 저장 완료"))
+      .catch(() => alert("저장 중 오류가 발생했습니다"));
+  };
+
+  // DTO 생각 안한 Bottle God의 작품
+  const payloadRename = () => {
+    return {
+      ...userInfo,
+      cvAlias: formData.resumeName,
+      cvAddress: `${formData.mainAddress} ${formData.detailAddress}`,
+      militaryStatus: formData.militaryStatus,
+      militaryBranch: formData.militaryBranch,
+      militaryStartDate: formData.militaryStartDate,
+      militaryEndDate: formData.militaryEndDate,
+      cvSelfIntroduction: formData.selfIntroduction,
+
+      // section 변환
+      education: components.education.map((item) => mapComponentId("education", item)),
+      experience: components.experience.map((item) => mapComponentId("experience", item)),
+      qualify: components.qualify.map((item) => mapComponentId("qualify", item)),
+      award: components.award.map((item) => mapComponentId("award", item)),
+      language: components.language.map((item) => mapComponentId("language", item)),
+      training: components.training.map((item) => mapComponentId("training", item)),
+      outer: components.outer.map((item) => mapComponentId("outer", item)),
+      portfolio: components.portfolio.map((item) => mapComponentId("portfolio", item)),
+    };
+  };
   return (
     <div className="resume-container">
-      <div className="resume-form">
+      <div
+        className={mode === "view" ? "resume-form view-mode" : "resume-form"}
+      >
         <h1 className="form-title">내 이력서 작성하기</h1>
 
         {/* 이력서 제목 입력 */}
         <div className="writeCVSection">
           <CVTitle
-            value={formData.resumeName}
-            onChange={(val) => handleInputChange("resumeName", val)}
+            value={formData.cvAlias}
+            onChange={(val) => handleInputChange("cvAlias", val)}
           />
         </div>
 
-        <div className="writeCVInfo">    
+        <div className="writeCVInfo">
           {/* 기본 정보 표시 */}
           <div className="writeCVSection">
-            <CVBasic 
-              userInfo={userInfo} 
-            />
+            <CVBasic userInfo={userInfo} />
           </div>
 
           {/* 주소 입력 */}
@@ -138,16 +210,13 @@ const WriteCVPage = () => {
             <CVAddress
               formData={formData}
               onChange={handleInputChange}
-              onSearch={() => alert("주소 검색 기능")}
+              onSearch={handleSearchAddress}
             />
           </div>
 
           {/* 병역 입력 */}
           <div className="writeCVSection">
-            <CVMilitary 
-              formData={formData} 
-              onChange={handleInputChange} 
-            />
+            <CVMilitary formData={formData} onChange={handleInputChange} />
           </div>
 
           {/* 학력 입력 */}
@@ -160,34 +229,35 @@ const WriteCVPage = () => {
               <CVEducation
                 key={item.id}
                 index={index}
+                type="education"
                 data={item}
                 mode={mode}
                 onRemove={() => removeComponent("education", index)}
-                showRemove={components.education.length > 1}
+                onChange={handleComponentChange}
               />
             ))}
             <FormAddButton onClick={() => addComponent("education")} />
           </div>
 
           {/* 공통 Form01 영역 */}
-          {Object.entries(sectionMetaForm01).map(([type, { title }]) => (
+          {Object.entries(sectionMetaForm01).map(([type, labels]) => (
             <div className="writeCVSection" key={type}>
-              <h2 className="writeCVSection-title">{title}</h2>
+              <h2 className="writeCVSection-title">{labels.title}</h2>
               {components[type].length === 0 && (
                 <div className="empty-message">
-                  입력된 {title}이 없습니다.
+                  입력된 {labels.title}이 없습니다.
                 </div>
               )}
               {components[type].map((item, index) => (
                 <CVForm01
                   key={item.id}
                   index={index}
+                  type={type}
                   data={item}
                   mode={mode}
-                  type={type}
+                  labels={labels}
                   onRemove={() => removeComponent(type, index)}
                   onChange={handleComponentChange}
-                  showRemove={components[type].length > 1}
                 />
               ))}
               <FormAddButton onClick={() => addComponent(type)} />
@@ -208,7 +278,6 @@ const WriteCVPage = () => {
                 mode={mode}
                 onRemove={() => removeComponent("language", index)}
                 onChange={handleComponentChange}
-                showRemove={components.language.length > 1}
               />
             ))}
             <FormAddButton onClick={() => addComponent("language")} />
@@ -234,7 +303,6 @@ const WriteCVPage = () => {
                   labels={labels}
                   onRemove={() => removeComponent(type, index)}
                   onChange={handleComponentChange}
-                  showRemove={components[type].length > 1}
                 />
               ))}
               <FormAddButton onClick={() => addComponent(type)} />
@@ -254,15 +322,43 @@ const WriteCVPage = () => {
       {/* 제출 버튼 */}
       <div className="writeCVSticky">
         <div className="writeCVStickyCenter">
-          <button className="writeCVStickyBtn writeCVSubmitBtn" onClick={handleSubmit}>
-            작성 완료
-          </button>
-          <button className="writeCVStickyBtn writeCVCancleBtn" onClick={() => history.back()}>
-            취소
-          </button>
+          {mode === "view" ? (
+            <>
+              <button
+                className="writeCVStickyBtn writeCVUpdateBtn"
+                onClick={handleUpdate}
+              >
+                수정하기
+              </button>
+              <button
+                className="writeCVStickyBtn writeCVDeleteBtn"
+                onClick={handleDelete}
+              >
+                삭제하기
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className="writeCVStickyBtn writeCVSubmitBtn"
+                onClick={handleSubmit}
+              >
+                작성완료
+              </button>
+              <button
+                className="writeCVStickyBtn writeCVCancleBtn"
+                onClick={() => history.back()}
+              >
+                취소하기
+              </button>
+            </>
+          )}
         </div>
         <div className="writeCVStickyRight">
-          <button className="writeCVStickyBtn writeCVUpBtn" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+          <button
+            className="writeCVStickyBtn writeCVUpBtn"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
             ▲
           </button>
         </div>

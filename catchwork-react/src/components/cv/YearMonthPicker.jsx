@@ -12,7 +12,7 @@ import styles from "./YearMonthPicker.module.css";
 
 registerLocale("ko", ko);
 
-const YearMonthPicker = ({ value, onChange }) => {
+const YearMonthPicker = ({ value, onChange, mode }) => {
   const parsedValue =
     value && /^\d{4}-\d{2}$/.test(value) && value !== "0000-00"
       ? new Date(value + "-01")
@@ -21,6 +21,7 @@ const YearMonthPicker = ({ value, onChange }) => {
   return (
     <DatePicker
       selected={parsedValue}
+      disabled={mode === "view"}
       onChange={(date) => {
         if (date) {
           const year = date.getFullYear();
