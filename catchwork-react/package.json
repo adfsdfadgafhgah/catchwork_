@@ -17,6 +17,7 @@
     "@tosspayments/tosspayments-sdk": "^2.3.5",
     "axios": "^1.10.0",
     "infinite-scroll-component": "^0.0.4",
+    "jwt-decode": "^4.0.0",
     "lucide-react": "^0.518.0",
     "react": "^19.1.0",
     "react-datepicker": "^8.4.0",

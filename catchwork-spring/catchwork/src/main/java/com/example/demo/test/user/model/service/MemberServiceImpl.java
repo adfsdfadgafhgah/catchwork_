@@ -1,12 +1,15 @@
 package com.example.demo.test.user.model.service;
 
 
+import java.util.Date;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.test.user.model.dto.Member;
 import com.example.demo.test.user.model.entity.MemberEntity;
+import com.example.demo.test.user.model.entity.MemberGradeEntity;
 import com.example.demo.test.user.model.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -135,11 +138,30 @@ public class MemberServiceImpl implements MemberService{
 	 */
 	private MemberEntity createMemberEntity(Member member) {
 	    MemberEntity entity = new MemberEntity();
+	    MemberGradeEntity gradeEntity = new MemberGradeEntity();
+	    gradeEntity.setMemGradeNo(member.getMemGrade()); // FK ID만 지정
+	    
 	    entity.setMemName(member.getMemName());
 	    entity.setMemId(member.getMemId());
 	    entity.setMemPw(bcrypt.encode(member.getMemPw()));
+	    entity.setMemNickname(member.getMemNickname());
+	    entity.setMemTel(member.getMemTel());
+	    entity.setMemEmail(member.getMemEmail());
+	    entity.setMemBirthday(member.getMemBirthday());
+	    entity.setMemGender(member.getMemGender());
+	    entity.setMemAddr(member.getMemAddr());
+	    entity.setMemEnrollDate(new Date());
+	    entity.setMemSmsFl(member.getMemSmsFl());
+	    entity.setMemType(member.getMemType());
+	    entity.setMemStatus(member.getMemStatus());
+	    entity.setMemStatusDate(member.getMemStatusDate());
+	    entity.setMemProfilePath(member.getMemProfilePath());
+	    entity.setMemGrade(gradeEntity);
+	    entity.setMembershipUpdate(member.getMembershipUpdate());
+
 	    return entity;
 	}
+
 	
 	/**
 	 * 저장 후 클라이언트에 응답할 Member 객체를 생성하는 메서드
