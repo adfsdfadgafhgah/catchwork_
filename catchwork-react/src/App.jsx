@@ -40,6 +40,8 @@ import WriteCVPage from "./pages/major/WriteCVPage";
 // 게시글
 import BoardListPage from "./pages/major/BoardListPage";
 import BoardDetailPage from "./pages/major/BoardDetailPage";
+import WriteBoardPage from "./pages/major/WriteBoardPage";
+import EditBoardPage from "./pages/major/EditBoardPage";
 
 // 기업상세
 import CompanyPage from "./pages/major/CompanyPage";
@@ -104,11 +106,13 @@ const router = createBrowserRouter([
 
       // 게시글
       {
-        path: "/board",
+        path: "board",
         element: <BoardPage />,
         children: [
           { index: true, element: <BoardListPage /> },
           { path: ":boardNo", element: <BoardDetailPage /> },
+          { path: "write", element: <WriteBoardPage /> },
+          { path: "edit/:boardNo", element: <EditBoardPage /> },
         ],
       },
 

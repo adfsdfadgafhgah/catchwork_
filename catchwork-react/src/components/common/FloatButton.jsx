@@ -1,22 +1,17 @@
-import React from "react";
 import "./FloatButton.css";
 
-const FloatButton = ({
-  onCancel,
-  onSubmit,
-  cancelText = "취소하기",
-  submitText = "수정하기",
-}) => {
+export default function FloatButton({ buttons = [] }) {
   return (
     <div className="float-button-container">
-      <button className="float-btn-cancel" onClick={onCancel}>
-        ✕ {cancelText}
-      </button>
-      <button className="float-btn-submit" onClick={onSubmit}>
-        ✏️ {submitText}
-      </button>
+      {buttons.map((btn, index) => (
+        <button
+          key={index}
+          className={`float-btn ${btn.className || ""}`}
+          onClick={btn.onClick}
+        >
+          {btn.icon && <i className={btn.icon}></i>} {btn.label}
+        </button>
+      ))}
     </div>
   );
-};
-
-export default FloatButton;
+}

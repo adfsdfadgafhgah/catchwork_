@@ -5,21 +5,54 @@ import BoardCss from "./BoardDetailPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
 // import { useContext } from "react";
 // import { AuthContext } from "../../contexts/AuthContext";
-// import { useNavigate } from "react-router-dom"; // 페이지 이동용
+import { useNavigate } from "react-router-dom"; // 페이지 이동용
 import CommentList from "../../components/board/CommentList";
+import { formatTimeAgo } from "../../components/common/formatTimeAgo";
+import ReportModalPage from "../support/ReportModalPage";
 
 // 서버 구현 전 깡데이터용 ㅋㅋ
-const dummyBoards = [
+export const dummyBoards = [
   {
     boardNo: 1,
-    boardTitle: "취업도전 100번 째... 실패만 한다면?",
+    boardTitle:
+      "제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면?? ",
+    boardContent:
+      "긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 긴글 ",
+    boardWriteDate: "2025-06-17",
+    boardReadCount: 1,
+    commentCount: 2,
+    likeCount: 3,
+    member: {
+      memNickname: "원기찬",
+      memNo: 100,
+    },
+  },
+
+  {
+    boardNo: 2,
+    boardTitle: "2번째 글취업도전 100번 째... 실패만 한다면?",
     boardContent: "그냥 포기하고 행복한 백수로 살아보세요",
-    boardWriteDate: "2025-08-09",
-    boardReadCount: 70,
-    commentCount: 23,
+    boardWriteDate: "2025-06-19",
+    boardReadCount: 3,
+    commentCount: 300,
     likeCount: 14,
     member: {
-      memNickname: "으후루꾸꾸루후으으후",
+      memNickname: "조민장",
+      memNo: 101,
+    },
+  },
+
+  {
+    boardNo: 3,
+    boardTitle: "세번째 글",
+    boardContent: "ㅇㅇ",
+    boardWriteDate: "2025-06-20",
+    boardReadCount: 22,
+    commentCount: 11,
+    likeCount: 1100,
+    member: {
+      memNickname: "허재호",
+      memNo: 102,
     },
   },
   // ... 추가 가능
@@ -28,6 +61,9 @@ const dummyBoards = [
 export default function BoardDetailPage() {
   const { boardNo } = useParams(); // URL에서 boardNo 추출
   const [board, setBoard] = useState(null);
+  const navigate = useNavigate(); // ✅ 선언
+  const loginUser = { memNo: 100 };
+  const [showReportModal, setShowReportModal] = useState(false);
 
   useEffect(() => {
     // 🔍 깡 데이터에서 찾아서 set
@@ -39,6 +75,34 @@ export default function BoardDetailPage() {
     }
   }, [boardNo]);
 
+  const handleEdit = () => {
+    navigate(`/board/edit/${boardNo}`); // ✅ 수정 페이지 이동
+  };
+
+  // 게시글 삭제 함수
+  const handleDelete = () => {
+    if (!window.confirm("정말 삭제하시겠습니까?")) return;
+
+    // 삭제 로직 예시
+    alert("게시글이 삭제되었습니다.");
+    navigate("/board"); // 목록으로 이동
+  };
+
+  // 신고하기 버튼 클릭 핸들러
+  const handleReportClick = () => {
+    if (!loginUser) {
+      alert("로그인 후 이용해주세요.");
+      return;
+    }
+
+    setShowReportModal(true);
+  };
+
+  // 신고하기 모달 취소하기 버튼
+  const handleCloseReport = () => {
+    setShowReportModal(false);
+  };
+
   if (!board) return <h2>Loading...</h2>;
 
   return (
@@ -47,61 +111,64 @@ export default function BoardDetailPage() {
       <SectionHeader title="취준진담" />
       {/* 제목 + 수정/삭제 */}
       <div className={BoardCss.headerRow}>
-        <h1 className={BoardCss.title}>
-          "제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면??
-          제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면??
-          제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면??
-          제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면??
-          제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면??
-          제목이 오지게 길다면?? 제목이 오지게 길다면?? 제목이 오지게 길다면??
-          제목이 오지게 길다면??{" "}
-        </h1>
-        <div className={BoardCss.actionButtons}>
-          <button className={BoardCss.actionBtn}>
-            <i className="fa-regular fa-pen-to-square"></i> 수정하기
-          </button>
-          <button className={BoardCss.actionBtn}>
-            <i className="fa-regular fa-trash-can"></i> 삭제하기
-          </button>
-        </div>
+        <h1 className={BoardCss.title}>{board.boardTitle}</h1>
+        {loginUser.memNo === board.member.memNo && (
+          <div className={BoardCss.actionButtons}>
+            <button className={BoardCss.actionBtn} onClick={handleEdit}>
+              <i className="fa-regular fa-pen-to-square"></i> 수정하기
+            </button>
+            <button className={BoardCss.actionBtn} onClick={handleDelete}>
+              <i className="fa-regular fa-trash-can"></i> 삭제하기
+            </button>
+          </div>
+        )}
       </div>
 
       {/* 작성자 정보 + 메타 정보 */}
       <div className={BoardCss.metaRow}>
         <div className={BoardCss.writerInfo}>
-          <img src="/profile.png" alt="프로필" />
-          <span>으후루꾸꾸루후으으후</span>
-          <span>2025-08-09</span>
+          <img
+            src={
+              board.memProfilePath
+                ? `http://localhost:8080/${board.memProfilePath}`
+                : "/default-profile.png"
+            }
+            alt="프로필 이미지"
+          />
+          <span>{board.member.memNickname}</span>
+          <span>{formatTimeAgo(board.boardWriteDate)}</span>
         </div>
         <div className={BoardCss.metaInfo}>
-          <i className="fa-regular fa-eye"></i>1 &nbsp;&nbsp;{" "}
-          <i className="fa-regular fa-heart"></i>3 &nbsp;&nbsp;{" "}
-          <button className={BoardCss.actionBtn}>
-            <span className={`material-symbols-outlined ${BoardCss.iconSmall}`}>
-              siren
-            </span>
-            신고하기
-          </button>
+          <i className="fa-regular fa-eye"></i>
+          {board.boardReadCount}
+          <i className="fa-regular fa-heart"></i>
+          {board.likeCount}
+          {(!loginUser || loginUser.memNo !== board.member.memNo) && (
+            <button className={BoardCss.actionBtn} onClick={handleReportClick}>
+              <span
+                className={`material-symbols-outlined ${BoardCss.iconSmall}`}
+              >
+                siren
+              </span>
+              신고하기
+            </button>
+          )}
         </div>
       </div>
 
       {/* 본문 */}
-      <div className={BoardCss.contentBox}>
-        내용이 오지게 길다면?? 내용이 오지게 길다면?? 내용이 오지게 길다면??
-        내용이 오지게 길다면?? 내용이 오지게 길다면?? 내용이 오지게 길다면??
-        내용이 오지게 길다면?? 내용이 오지게 길다면?? 내용이 오지게 길다면??
-        내용이 오지게 길다면?? 내용이 오지게 길다면?? 내용이 오지게 길다면??
-        내용이 오지게 길다면?? 내용이 오지게 길다면?? 내용이 오지게 길다면??
-        내용이 오지게 길다면?? 내용이 오지게 길다면?? 내용이 오지게 길다면??
-        내용이 오지게 길다면?? 내용이 오지게 길다면?? 내용이 오지게 길다면??
-        내용이 오지게 길다면?? 내용이 오지게 길다면?? 내용이 오지게 길다면??
-        내용이 오지게 길다면?? 내용이 오지게 길다면?? 내용이 오지게 길다면??
-        내용이 오지게 길다면?? 내용이 오지게 길다면?? 내용이 오지게 길다면??
-        내용이 오지게 길다면?? 내용이 오지게 길다면?? 내용이 오지게 길다면??
-        내용이 오지게 길다면??{" "}
-      </div>
+      <div className={BoardCss.contentBox}>{board.boardContent}</div>
       {/* 댓글 컴포넌트 */}
-      <CommentList boardNo={1} loginUser={{ memNo: 100 }} />
+      <CommentList boardNo={board.boardNo} loginUser={{ memNo: 100 }} />
+      {/* 신고하기 모달 */}
+      {showReportModal && (
+        <ReportModalPage
+          targetNo={boardNo}
+          targetType="board"
+          // memNo={loginMemberSeq}
+          onClose={handleCloseReport}
+        />
+      )}
     </div>
   );
 }
@@ -114,9 +181,10 @@ export default function BoardDetailPage() {
 //   const [liked, setLiked] = useState(false); // 좋아요 기능
 //   const [likeCount, setLikeCount] = useState(0); // 좋아요 기능
 //   const navigate = useNavigate(); // ← 페이지 이동을 위해 추가
+//   const [showReportModal, setShowReportModal] = useState(false);
 
+//   // 게시글 상세 조회 API
 //   useEffect(() => {
-//     // 게시글 상세 조회 API
 //     const fetchDetail = async () => {
 //       try {
 //         const resp = await axiosApi.get(`/board/detail/${boardNo}`);
@@ -131,6 +199,11 @@ export default function BoardDetailPage() {
 
 //     fetchDetail();
 //   }, [boardNo]);
+
+//  // 수정 페이지로!
+//  const handleEdit = () => {
+//     navigate(`/board/edit/${boardNo}`);
+//   };
 
 // // 게시글 삭제 함수
 //   const handleDelete = async () => {
@@ -185,8 +258,12 @@ export default function BoardDetailPage() {
 //     return;
 //   }
 
-//   // 여기에 신고 모달 열기나 서버 요청 추가
-//   alert("신고 처리 로직 실행 (예: 신고 모달 열기)");
+//   setShowReportModal(true);
+// };
+
+// // 신고하기 모달 취소하기 버튼
+// const handleCloseReport = () => {
+//   setShowReportModal(false);
 // };
 
 // if (!board) return <h2>Loading...</h2>;
@@ -201,7 +278,7 @@ export default function BoardDetailPage() {
 //       <h1 className={BoardCss.title}>{board.boardTitle}</h1>
 //       {loginUser && loginUser.memNo === board.member.memNo && (
 //       <div className={BoardCss.actionButtons}>
-//         <button className={BoardCss.actionBtn}>
+//         <button className={BoardCss.actionBtn} onClick={handleEdit}>
 //           <i className="fa-regular fa-pen-to-square"></i> 수정하기
 //         </button>
 //         <button className={BoardCss.actionBtn} onClick={handleDelete}>
@@ -214,9 +291,16 @@ export default function BoardDetailPage() {
 //     {/* 작성자 정보 + 메타 정보 */}
 //     <div className={BoardCss.metaRow}>
 //       <div className={BoardCss.writerInfo}>
-//         <img src="/profile.png" alt="프로필" />
+//         <img
+//            src={
+//               board.member.memProfilePath
+//                ? `http://localhost:8080/${board.member.memProfilePath}`
+//                : "/default-profile.png"
+//               }
+//              alt="프로필"
+//              />
 //         <span>{board.member.memNickname}</span>
-//         <span>{board.boardWriteDate}</span>
+//         <span>{formatTimeAgo(board.boardWriteDate)}</span>
 //       </div>
 //       <div className={BoardCss.metaInfo}>
 //         <i className="fa-regular fa-eye"></i> {board.boardReadCount}{" "}
@@ -230,7 +314,7 @@ export default function BoardDetailPage() {
   /* 신고하기 버튼 조건 렌더링 */
 }
 // {(!loginUser || loginUser.memNo !== board.member.memNo) && (
-//          <button className={BoardCss.actionBtn}>
+//          <button className={BoardCss.actionBtn} onClick={handleReportClick}>
 //            <span className={`material-symbols-outlined ${BoardCss.iconSmall}`}>
 //              siren
 //            </span>
@@ -245,6 +329,15 @@ export default function BoardDetailPage() {
 //   </div>
 //     {/* 댓글 컴포넌트 */}
 //     <CommentList boardNo={board.boardNo} loginUser={loginUser} />
+//     {/* 신고하기 모달 */}
+//     {showReportModal && (
+//      <ReportModalPage
+//         targetNo={boardNo}
+//         targetType="board"
+//        // memNo={loginMemberSeq}
+//        onClose={handleCloseReport}
+//       />
+// )}
 // );
 // }
 

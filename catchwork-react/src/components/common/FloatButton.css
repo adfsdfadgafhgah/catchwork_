@@ -14,8 +14,21 @@
   gap: 12px;
 }
 
-.float-button-container .float-btn-cancel,
-.float-button-container .float-btn-submit {
+/* 추가: 공통 버튼 스타일 */
+.float-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  color: var(--text-color);
+}
+
+/* .float-button-container .float-btn-cancel,
+.float-button-container .float-btn-edit {
   border: none;
   background: none;
   cursor: pointer;
@@ -32,6 +45,6 @@
 }
 
 .float-btn-cancel:hover,
-.float-btn-submit:hover {
+.float-btn-edit:hover {
   color: var(--main-color-dark);
-}
+} */
