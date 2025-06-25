@@ -4,7 +4,7 @@ import FormRemoveButton from "./FormRemoveButton"; // x 버튼
 import styles from "./CVLanguage.module.css"; // 스타일
 
 // 어학 입력 컴포넌트
-const CVLanguage = ({ index, onRemove, showRemove, data, mode, onChange }) => {
+const CVLanguage = ({ index, onRemove, showRemove, data, onChange, mode }) => {
   return (
     <div className={styles.section}>
       <div className={styles.inner}>
@@ -45,6 +45,7 @@ const CVLanguage = ({ index, onRemove, showRemove, data, mode, onChange }) => {
         {/* 취득 날짜 */}
         <div className={styles.row}>
           <YearMonthPicker
+            mode={mode}
             value={data.date || ""}
             onChange={(val) => onChange("language", index, "date", val)}
           />

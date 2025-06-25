@@ -13,15 +13,20 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class CV {
+	
+	private int cvNo; // 이력서 번호
+	
+	private String memNo; // 회원번호(작성자)
+	
 	// 기본 정보
-    private String name;
-    private String phone;
-    private String gender;
-    private String email;
-    private String birth;
+    private String memName;
+    private String memPhone;
+    private String memGender;
+    private String memEmail;
+    private String memBirth;
 
     // 이력서 정보
-    private String resumeName;
+    private String cvAlias;
     private String mainAddress;
     private String detailAddress;
     private String militaryStatus;
@@ -39,4 +44,6 @@ public class CV {
     private List<Map<String, Object>> training;
     private List<Map<String, Object>> outer;
     private List<Map<String, Object>> portfolio;
+    
+
 }
