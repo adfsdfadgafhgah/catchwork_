@@ -2,6 +2,9 @@ import { useState } from "react";
 import CommentWrite from "./CommentWrite";
 import CommentEdit from "./CommentEdit";
 import CommentCss from "./CommentItem.module.css";
+import { formatTimeAgo } from "./../common/formatTimeAgo";
+import ReportModalPage from "../../pages/support/ReportModalPage";
+import { useParams } from "react-router-dom";
 
 export default function CommentItem({
   comment,
@@ -11,6 +14,8 @@ export default function CommentItem({
 }) {
   const [isReplyOpen, setIsReplyOpen] = useState(false); // 대댓글 입력창 열림 여부
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
+  const [showReportModal, setShowReportModal] = useState(false);
+  const { commentNo } = useParams();
 
   const isWriter = loginUser && loginUser.memNo === comment.memNo;
 
@@ -25,7 +30,7 @@ export default function CommentItem({
     }
   };
 
-  // 댓글 신고
+  // 신고하기 버튼 클릭 핸들러
   const handleReport = () => {
     if (!loginUser) {
       alert("로그인 후 이용해주세요.");
@@ -34,8 +39,12 @@ export default function CommentItem({
 
     if (isWriter) return; // 작성자는 신고 불가
 
-    // 신고 모달 or API 연결
-    alert("신고 처리 로직 실행");
+    setShowReportModal(true);
+  };
+
+  // 신고하기 모달 취소하기 버튼
+  const handleCloseReport = () => {
+    setShowReportModal(false);
   };
 
   return (
@@ -59,13 +68,19 @@ export default function CommentItem({
                 <div className={CommentCss.replyLine}></div>
               )}
               <img
-                src={comment.memProfilePath || "/profile.png"}
+                src={
+                  comment.memProfilePath
+                    ? `http://localhost:8080/${comment.memProfilePath}`
+                    : "/profile.png"
+                }
                 alt="프로필"
                 className={CommentCss.profileImg}
               />
               <span className={CommentCss.nickname}>{comment.memNickname}</span>
             </div>
-            <span className={CommentCss.date}>{comment.commentWriteDate}</span>
+            <span className={CommentCss.date}>
+              {formatTimeAgo(comment.commentWriteDate)}
+            </span>
           </div>
 
           <div className={CommentCss.content}>{comment.commentContent}</div>
@@ -131,6 +146,14 @@ export default function CommentItem({
           />
         ))}
       </div>
+      {/* 신고하기 모달 */}
+      {showReportModal && (
+        <ReportModalPage
+          targetNo={commentNo}
+          targetType="comment"
+          onClose={handleCloseReport}
+        />
+      )}
     </div>
   );
 }
