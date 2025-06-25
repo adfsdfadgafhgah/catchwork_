@@ -1,15 +1,15 @@
 import "./MembershipItem.css";
 
-function MembershipItem({ plan, handleCheckout }) {
+function MembershipItem({ membership, handleCheckout }) {
   return (
     <>
       <div className="membership-item">
-        <h1>{plan.productName}</h1>
-        <h1>{plan.price}</h1>
-        <p>{plan.benefit}</p>
+        <h1>{membership.memGradeName}</h1>
+        <h1>{membership.memGradePrice}</h1>
+        <p>{membership.membershipBenefit}</p>
         <button
           className="membership-button"
-          onClick={() => handleCheckout(plan.productId)}
+          onClick={() => handleCheckout(membership.memGrade)}
         >
           결재하기
         </button>

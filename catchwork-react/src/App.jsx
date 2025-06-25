@@ -30,7 +30,7 @@ import MembershipPage from "./pages/myPage/MembershipPage";
 
 // 멤버십
 import PaymentBilling from "./pages/myPage/membership/PaymentBilling";
-import PaymentSuccess from "./pages/myPage/membership/PaymentSuccess";
+import PaymentCheckout from "./pages/myPage/membership/PaymentCheckout";
 import PaymentFail from "./pages/myPage/membership/PaymentFail";
 
 //이력서 제출
@@ -150,7 +150,7 @@ const router = createBrowserRouter([
             path: "payment",
             children: [
               { path: "billing", element: <PaymentBilling /> },
-              { path: "success", element: <PaymentSuccess /> },
+              { path: "checkout", element: <PaymentCheckout /> },
               { path: "fail", element: <PaymentFail /> },
             ],
           },

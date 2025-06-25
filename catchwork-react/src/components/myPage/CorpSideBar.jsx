@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import "./CorpSideBar.css";
 
-const CorpSideBar = ({ activeTab, setActiveTab = () => {} }) => { // 기본값 설정
+const CorpSideBar = ({ activeTab, setActiveTab = () => {} }) => {
+  // 기본값 설정
   const navigate = useNavigate();
   const location = useLocation();
   const [expandedMenu, setExpandedMenu] = useState({
@@ -55,7 +56,9 @@ const CorpSideBar = ({ activeTab, setActiveTab = () => {} }) => { // 기본값 �
             {expandedMenu.account && (
               <div className="sub-nav">
                 <button
-                  onClick={() => handleNavigation("내정보변경", "/corpconfirmedit")}
+                  onClick={() =>
+                    handleNavigation("내정보변경", "/corpconfirmedit")
+                  }
                   className={`sub-nav-item ${
                     activeTab === "내정보변경" ? "active" : ""
                   }`}
@@ -63,7 +66,9 @@ const CorpSideBar = ({ activeTab, setActiveTab = () => {} }) => { // 기본값 �
                   내 정보 변경
                 </button>
                 <button
-                  onClick={() => handleNavigation("비밀번호변경", "/corpchangepw")}
+                  onClick={() =>
+                    handleNavigation("비밀번호변경", "/corpchangepw")
+                  }
                   className={`sub-nav-item ${
                     activeTab === "비밀번호변경" ? "active" : ""
                   }`}
