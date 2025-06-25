@@ -17,7 +17,7 @@ const CorpMyPage = () => {
 
   return (
     <div className="corp-page-container">
-      <SideBar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <SideBar activeTab={activeTab}  />
       <div className="corp-edit-content">
         <div className="form-container">
           <h2 className="page-title">기업 회원 마이페이지</h2>

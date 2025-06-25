@@ -44,9 +44,8 @@
 .form-group textarea {
   padding: 12px;
   font-size: 15px;
-  border: 2px solid #46b5ab;
+  border: 2px solid var(--main-color);
   border-radius: 4px;
-  background-color: white;
   color: #333;
   font-family: inherit;
 }

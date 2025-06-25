@@ -1,160 +1,159 @@
-.mypage-container {
+/* 상단 컨테이너: 사이드바 + 메인 콘텐츠 */
+.corp-page-container {
   display: flex;
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background-color: #f5f5f5; /* 부드러운 배경색 */
 }
 
+/* 메인 콘텐츠 영역 */
 .main-content {
   flex: 1;
-  padding: 40px;
-  background-color: #f8f9fa;
+  padding: 80px; /* CorpEditMyInfoPage와 일치 */
+  background-color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
+/* 콘텐츠 컨테이너 (네모박스 스타일 제거) */
 .content-container {
-  max-width: 600px;
-  margin: 0 auto;
-  background: white;
-  border-radius: 8px;
-  padding: 50px 40px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px; /* CorpEditMyInfoPage와 일치 */
+  padding: 40px 0; /* 상하 여백만 유지, 좌우 패딩 제거 */
+  /* border, border-radius, box-shadow 제거 */
 }
 
-.content-title {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 20px;
-  text-align: center;
+/* 페이지 타이틀 */
+.page-title {
+  font-size: 1.875rem; /* 30px, CorpEditMyInfoPage와 일치 */
+  font-weight: 700;
+  color: #1f2937; /* CorpEditMyInfoPage와 일치 */
+  margin: 0 0 1rem 0; /* 간소화 */
+  text-align: left;
 }
 
+/* 타이틀 구분선 */
 .title-divider {
   border: none;
-  height: 1px;
-  background-color: #e9ecef;
-  margin-bottom: 50px;
+  height: 2px;
+  background: #e0e7ff; /* CorpEditMyInfoPage와 유사 */
+  margin: 20px 0 40px 0; /* 간소화 */
+  border-radius: 1px;
 }
 
+/* 폼 스타일 */
 .password-form {
   width: 100%;
 }
 
 .form-section {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
 }
 
 .form-group {
-  margin-bottom: 35px;
+  margin-bottom: 30px;
 }
 
 .form-group:last-child {
   margin-bottom: 0;
 }
 
+/* 폼 라벨 */
 .form-label {
   display: block;
   font-size: 16px;
-  color: #333;
-  margin-bottom: 15px;
-  font-weight: 600;
+  color: #374151; /* CorpEditMyInfoPage와 유사 */
+  margin-bottom: 12px;
+  font-weight: 500; /* CorpEditMyInfoPage와 유사 */
 }
 
+/* 폼 입력 필드 */
 .form-input {
   width: 100%;
-  padding: 15px 20px;
-  border: 2px solid #4ecdc4;
-  border-radius: 8px;
+  padding: 12px 16px; /* 간소화 */
+  border: 1px solid #e0e7ff; /* CorpEditMyInfoPage와 유사 */
+  border-radius: 8px; /* 둥근 모서리 유지 */
   font-size: 15px;
-  transition: all 0.3s ease;
-  background: white;
-  font-family: inherit;
-  margin-bottom: 0;
+  background: #fafbfc;
+  box-sizing: border-box;
+  color: #1f2937; /* CorpEditMyInfoPage와 유사 */
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .form-input:focus {
   outline: none;
-  border-color: #4ecdc4;
-  box-shadow: 0 0 0 3px rgba(78, 205, 196, 0.15);
+  border-color: #46b5ab; /* CorpEditMyInfoPage의 main-color */
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.2); /* 부드러운 포커스 효과 */
 }
 
 .form-input::placeholder {
-  color: #b0b0b0;
+  color: #9ca3af; /* CorpEditMyInfoPage와 유사 */
   font-size: 14px;
 }
 
-.confirm-input {
-  margin-top: 15px;
-}
-
+/* 에러 메시지 */
 .error-message {
-  color: #dc3545;
-  font-size: 13px;
-  margin-top: 10px;
+  color: #dc3545; /* CorpEditMyInfoPage와 유사 */
+  font-size: 14px;
+  margin-top: 8px;
   font-weight: 500;
-  text-align: left;
+  padding-left: 4px;
+  display: flex;
+  align-items: center;
 }
 
+.error-message::before {
+  content: "⚠";
+  margin-right: 6px;
+  font-size: 16px;
+}
+
+/* 버튼 컨테이너 */
 .button-container {
-  text-align: center;
+  text-align: center; /* 중앙 정렬 */
   margin-top: 40px;
 }
 
+/* 제출 버튼 */
 .submit-btn {
-  background: #5fb3d4;
-  color: white;
-  border: none;
-  padding: 15px 50px;
-  border-radius: 8px;
+  background: #ffffff;
+  color: #374151; /* CorpEditMyInfoPage와 유사 */
+  border: 1px solid #e0e7ff; /* CorpEditMyInfoPage와 유사 */
+  padding: 12px 40px; /* 간소화 */
+  border-radius: 8px; /* 둥근 모서리 */
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 140px;
+  min-width: 160px;
 }
 
 .submit-btn:hover {
-  background: #4a9bc1;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(95, 179, 212, 0.3);
+  background: #f0f4f8; /* 부드러운 호버 효과 */
+  color: #46b5ab; /* CorpEditMyInfoPage의 main-color-dark와 유사 */
+  border-color: #46b5ab;
 }
 
-.submit-btn:active {
-  transform: translateY(0);
-}
-
-/* 개발 중 페이지 스타일 */
-.development-page {
-  text-align: center;
-  padding: 60px 20px;
-  color: #666;
-}
-
-.development-page p {
-  font-size: 18px;
-  margin-bottom: 10px;
-}
-
-.sub-text {
-  font-size: 14px !important;
-  color: #999 !important;
+.submit-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
 }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
-  .mypage-container {
-    flex-direction: column;
-  }
-  
   .main-content {
-    padding: 20px;
+    padding: 40px 20px; /* CorpEditMyInfoPage와 일치 */
   }
   
   .content-container {
-    padding: 30px 20px;
+    padding: 30px 0; /* 상하 여백만 유지 */
     max-width: 100%;
+    margin: 0;
   }
   
-  .content-title {
-    font-size: 20px;
+  .page-title {
+    font-size: 1.5rem; /* CorpEditMyInfoPage와 일치 */
   }
   
   .form-label {
@@ -162,43 +161,53 @@
   }
   
   .form-input {
-    padding: 12px 16px;
+    padding: 10px 14px;
     font-size: 14px;
   }
   
   .submit-btn {
     width: 100%;
-    padding: 14px 20px;
-  }
-}
-
-@media (max-width: 480px) {
-  .content-container {
-    padding: 25px 15px;
-  }
-  
-  .main-content {
-    padding: 15px;
-  }
-  
-  .content-title {
-    font-size: 18px;
-  }
-  
-  .form-input {
-    padding: 10px 14px;
-  }
-  
-  .form-label {
-    font-size: 14px;
-    margin-bottom: 10px;
+    padding: 12px 20px;
+    font-size: 15px;
   }
   
   .form-group {
     margin-bottom: 25px;
   }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 20px 15px;
+  }
   
-  .confirm-input {
-    margin-top: 10px;
+  .content-container {
+    padding: 20px 0;
+  }
+  
+  .page-title {
+    font-size: 1.25rem; /* CorpEditMyInfoPage와 일치 */
+  }
+  
+  .form-input {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  
+  .form-label {
+    font-size: 14px;
+    margin-bottom: 8px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .button-container {
+    margin-top: 30px;
+  }
+  
+  .title-divider {
+    margin: 15px 0 30px 0;
   }
 }

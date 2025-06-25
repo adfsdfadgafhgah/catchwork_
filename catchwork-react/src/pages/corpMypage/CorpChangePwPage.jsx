@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import SideBar from "../../components/myPage/CorpSideBar";
+import CorpSideBar from "../../components/myPage/CorpSideBar";
 import "./CorpChangePwPage.css";
 
 const CorpChangePwPage = () => {
-  const [activeTab, setActiveTab] = useState("비밀번호 변경");
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -51,41 +50,60 @@ const CorpChangePwPage = () => {
 
   return (
     <div className="corp-page-container">
-      <SideBar activeTab={activeTab} setActiveTab={setActiveTab} />
-      <div className="corp-edit-content">
-        <div className="form-container">
+      <CorpSideBar />
+      <div className="main-content">
+        <div className="content-container">
           <h2 className="page-title">기업 회원 비밀번호 변경</h2>
-          <div className="form-group">
-            <label>기존 비밀번호</label>
-            <input
-              type="password"
-              placeholder="비밀번호를 입력해주세요"
-              value={currentPassword}
-              onChange={(e) => setCurrentPassword(e.target.value)}
-              required
-            />
-          </div>
-          <div className="form-group">
-            <label>새 비밀번호</label>
-            <input
-              type="password"
-              placeholder="비밀번호를 입력해주세요"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              required
-            />
-            <input
-              type="password"
-              placeholder="비밀번호를 확인해주세요"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
-            {passwordError && <p className="error-message">{passwordError}</p>}
-          </div>
-          <button className="submit-btn" onClick={handleSubmit}>
-            수정하기
-          </button>
+          <hr className="title-divider" />
+          
+          <form className="password-form" onSubmit={handleSubmit}>
+            <div className="form-section">
+              <div className="form-group">
+                <label className="form-label">기존 비밀번호</label>
+                <input
+                  type="password"
+                  className="form-input"
+                  placeholder="비밀번호를 입력해주세요"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">새 비밀번호</label>
+                <input
+                  type="password"
+                  className="form-input"
+                  placeholder="새 비밀번호를 입력해주세요"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">비밀번호 확인</label>
+                <input
+                  type="password"
+                  className="form-input"
+                  placeholder="비밀번호를 다시 입력해주세요"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  required
+                />
+                {passwordError && (
+                  <p className="error-message">{passwordError}</p>
+                )}
+              </div>
+            </div>
+
+            <div className="button-container">
+              <button type="submit" className="submit-btn">
+                수정하기
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
