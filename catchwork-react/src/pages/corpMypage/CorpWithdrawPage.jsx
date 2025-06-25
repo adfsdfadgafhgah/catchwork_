@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import SideBar from "../../components/myPage/CorpSideBar";
 import InfiniteScroll from "react-infinite-scroll-component";
 import "./CorpWithdrawPage.css";
+import CorpSideBar from "../../components/myPage/CorpSideBar";
 
 const CorpWithdrawPage = () => {
   const navigate = useNavigate();
@@ -84,7 +85,7 @@ const CorpWithdrawPage = () => {
 
   return (
     <div className="corp-page-container">
-      <SideBar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <CorpSideBar />
       <div className="corp-edit-content">
         <div className="form-container">
           <h2 className="page-title">기업 회원 탈퇴</h2>

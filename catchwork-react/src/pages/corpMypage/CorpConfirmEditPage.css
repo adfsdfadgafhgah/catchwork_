@@ -1,78 +1,131 @@
 .corp-page-container {
   display: flex;
   min-height: 100vh;
-  background-color: #f5f5f5;
-  position: relative; /* ✅ 필요 시 추가 */
-  z-index: 0;
+  background-color: #f8f9fa;
+  font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
 }
 
 .corp-edit-content {
   flex: 1;
-  padding: 80px;
-  background-color: #fff;
+  padding: 60px 80px; 
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start; /* ✅ 중앙 → 왼쪽 정렬로 변경 */ 
-  
+  align-items: flex-start;
 }
 
 .form-container {
   width: 100%;
-  max-width: 500px; /* 적당한 폼 너비 */
+  max-width: 500px;
 }
 
 .page-title {
-  font-size: 22px;
-  margin-bottom: 30px;
-  color: #333;
+  font-size: 24px;
+  margin-bottom: 40px;
   font-weight: 600;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 16px;
-  width: 100%;
+  text-align: left;
 }
 
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 30px;
   width: 100%;
 }
 
-.form-group label {
+.form-label {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
+  font-size: 14px;
 }
 
-.form-group input {
+.form-input {
   width: 100%;
-  padding: 10px;
+  padding: 12px 0;
   border: none;
-  border-bottom: 2px solid #ccc;
-  font-size: 16px;
+  font-size: 14px;
   outline: none;
+  background-color: transparent;
+  box-sizing: border-box;
 }
 
-.form-group input:focus {
-  border-color: #46b5ab;
+.form-input::placeholder {
+  font-size: 14px;
 }
 
 .error-message {
-  color: red;
-  font-size: 14px;
-  margin-top: 6px;
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 8px;
+  display: block;
+}
+
+.button-container {
+  margin-top: 30px;
+  text-align: right;
 }
 
 .submit-btn {
-  padding: 12px 24px;
-  font-size: 16px;
-  background-color: white;
-  border: 1px solid #999;
+  padding: 10px 20px;
+  font-size: 14px;
   border-radius: 4px;
   cursor: pointer;
-  margin-top: 20px;
+  transition: all 0.2s ease;
+  min-width: 80px;
 }
 
-.submit-btn:hover {
-  background-color: #f0f0f0;
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .corp-page-container {
+    flex-direction: column;
+  }
+  
+  .corp-edit-content {
+    padding: 40px 20px;
+  }
+
+  .page-title {
+    font-size: 20px;
+    margin-bottom: 30px;
+  }
+
+  .form-input {
+    padding: 10px 0;
+    font-size: 14px;
+  }
+  
+  .button-container {
+    text-align: center;
+  }
+  
+  .submit-btn {
+    width: 100%;
+    padding: 12px 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .corp-edit-content {
+    padding: 20px 15px;
+  }
+
+  .page-title {
+    font-size: 18px;
+    margin-bottom: 25px;
+  }
+
+  .form-group {
+    margin-bottom: 25px;
+  }
+
+  .form-input {
+    padding: 8px 0;
+    font-size: 13px;
+  }
+
+  .submit-btn {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
 }
