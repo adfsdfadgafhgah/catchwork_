@@ -27,26 +27,53 @@ public class JWTUtil {
 	}
 
 	public String getMemId(String token) {
-		return Jwts.parser().verifyWith(secretKey)
-			.build().parseSignedClaims(token)
-			.getPayload().get("memId", String.class);
+		return Jwts.parser()
+			.verifyWith(secretKey)
+			.build()
+			.parseSignedClaims(token)
+			.getPayload()
+			.get("memId", String.class);
 	}
+	
+    public String getMemType(String token) {
+        return Jwts.parser()
+        	.verifyWith(secretKey)
+    		.build()
+    		.parseSignedClaims(token)
+    		.getPayload()
+    		.get("memType", String.class);
+    }
 	
 //	public String getMemName(String token) {
 //		return Jwts.parser().verifyWith(secretKey)
 //			.build().parseSignedClaims(token)
 //			.getPayload().get("memName", String.class);
 //	}
+    public String getRole(String token) {
+        return Jwts.parser()
+            .verifyWith(secretKey)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload()
+            .get("memType", String.class);
+    }
 
+    
+    
 	public Boolean isExpired(String token) {
-		return Jwts.parser().verifyWith(secretKey)
-			.build().parseSignedClaims(token)
-			.getPayload().getExpiration().before(new Date());
+		return Jwts.parser()
+			.verifyWith(secretKey)
+			.build()
+			.parseSignedClaims(token)
+			.getPayload()
+			.getExpiration()
+			.before(new Date());
 	}
 
-	public String createJwt(String memId, String memName, Long expiredMs) {
+	public String createJwt(String memId, String memType, Long expiredMs) {
 		return Jwts.builder()
 			.claim("memId", memId)
+            .claim("memType", memType)
 //			.claim("memName", memName)
 			.issuedAt(new Date(System.currentTimeMillis()))
 			.expiration(new Date(System.currentTimeMillis() + expiredMs))

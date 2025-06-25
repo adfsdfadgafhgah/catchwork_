@@ -71,21 +71,20 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
 
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) {
-
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+                                            FilterChain chain, Authentication authentication) {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-
         String username = customUserDetails.getUsername();
 
-        // 권한 중 첫 번째 가져오기 (복수 권한 시 예외 처리 필요할 수 있음)
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        String role = authorities.stream()
-                                 .findFirst()
-                                 .map(GrantedAuthority::getAuthority)
-                                 .orElse("ROLE_USER");  // 권한 없을 때 기본값
+        // 권한 직접 추출 (memberEntity에서)
+        String role = customUserDetails.getAuthorities().stream()
+                                       .map(GrantedAuthority::getAuthority)
+                                       .findFirst()
+                                       .orElse("ROLE_USER"); // 기본값
 
-        // JWT 토큰 생성 (10시간 = 60*60*10*1000 초)
-        String token = jwtUtil.createJwt(username, role, 60 * 60 * 10 * 1000L);
+        // JWT 생성
+        String token = jwtUtil.createJwt(username, role, 60 * 60 * 10 * 1000L); // 10시간
+        System.out.println("JWT 생성 완료: " + token);
 
         response.addHeader("Authorization", "Bearer " + token);
     }

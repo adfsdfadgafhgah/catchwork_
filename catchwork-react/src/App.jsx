@@ -71,6 +71,9 @@ import WithdrawCompanyPage from "./pages/corpMajor/WithdrawCompanyPage";
 // 신고하기
 import ReportModalPage from "./pages/support/ReportModalPage";
 
+//test
+import AuthTest from "./pages/member/AuthTest";
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -90,6 +93,7 @@ const router = createBrowserRouter([
       // 로그인/회원가입
       { path: "signin", element: <SignInPage /> },
       { path: "signup", element: <SignUpPage /> },
+      { path: "auth", element: <AuthTest /> },
 
       // Id,PW 찾기
       { path: "findid", element: <FindIdPage /> },
