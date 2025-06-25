@@ -60,10 +60,11 @@ import CorpWithdrawPage from "./pages/corpMypage/CorpWithdrawPage";
 //기업 제출된 이력서 목록
 import CorpCVListPage from "./pages/corpMajor/CorpCVListPage";
 
-//기업 정보, 기업 정보 수정
+//기업 정보, 기업 정보 수정, 기업 탈퇴
 import CorpCompanyDetailPage from "./pages/corpMajor/CorpCompanyDetailPage";
 import EditCompanyPage from "./pages/corpMajor/EditCompanyPage";
 import CorpCompanyPage from "./pages/corpMajor/CorpCompanyPage";
+import WithdrawCompanyPage from "./pages/corpMajor/WithdrawCompanyPage";
 
 // 신고하기
 import ReportModalPage from "./pages/support/ReportModalPage";
@@ -117,7 +118,13 @@ const router = createBrowserRouter([
       { path: "supportlist", element: <SupportListPage /> },
       { path: "writesupport", element: <WriteSupportPage /> },
       { path: "reportmodal", element: <ReportModalPage /> },
+      {
+        path: "/supportdetail",
+        element: <SupportDetailPage />,
+        children: [{ path: ":id", element: <SupportDetailPage /> }],
+      },
 
+      // 기업 회원
       { path: "corpcvlist", element: <CorpCVListPage /> },
       {
         path: "corpcompanydetail",
@@ -125,15 +132,9 @@ const router = createBrowserRouter([
         children: [
           { path: ":corpNo", element: <CorpCompanyDetailPage /> },
           { path: ":corpNo/edit", element: <EditCompanyPage /> },
+          { path: ":corpNo/withdraw", element: <WithdrawCompanyPage /> },
         ],
       },
-
-      {
-        path: "/supportdetail",
-        element: <SupportDetailPage />,
-        children: [{ path: ":id", element: <SupportDetailPage /> }],
-      },
-      { path: "corpmypage", element: <CorpMyPage /> },
 
       {
         path: "/mypage",
@@ -156,15 +157,15 @@ const router = createBrowserRouter([
           },
         ],
       },
-
-      // 등록된 주소 외 모든 주소 예외 처리
-      { path: "*", element: <NotFound /> },
-
-      // 기업 페이지
+      // 기업 마이 페이지
+      { path: "corpmypage", element: <CorpMyPage /> },
       { path: "corpeditmyinfo", element: <CorpEditMyInfoPage /> },
       { path: "corpconfirmedit", element: <CorpConfirmEditPage /> },
       { path: "corpchangepw", element: <CorpChangePwPage /> },
       { path: "corpwithdraw", element: <CorpWithdrawPage /> },
+
+      // 등록된 주소 외 모든 주소 예외 처리
+      { path: "*", element: <NotFound /> },
     ],
   },
 ]);

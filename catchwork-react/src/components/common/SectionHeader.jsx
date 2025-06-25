@@ -1,10 +1,11 @@
-const SectionHeader = ({ title }) => {
+const SectionHeader = ({ title, noBorder = false }) => {
   return (
-    <div className="section-header-container">
-      <div className="section-header">
-        <h2 className="title">{title}</h2>
-      </div>
+    <div
+      className={`section-header-container ${noBorder ? "" : "with-border"}`}
+    >
+      <h2 className="title">{title}</h2>
     </div>
   );
 };
+
 export default SectionHeader;
