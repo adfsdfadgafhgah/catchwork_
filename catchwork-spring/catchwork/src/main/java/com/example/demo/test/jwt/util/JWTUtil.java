@@ -7,9 +7,9 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+
 
 import io.jsonwebtoken.Jwts;
 
@@ -26,36 +26,31 @@ public class JWTUtil {
 		);
 	}
 
-	public String getMemId(String token) {
-		return Jwts.parser()
-			.verifyWith(secretKey)
-			.build()
-			.parseSignedClaims(token)
-			.getPayload()
-			.get("memId", String.class);
-	}
-	
-    public String getMemType(String token) {
+    public String getMemId(String token) {
         return Jwts.parser()
-        	.verifyWith(secretKey)
-    		.build()
-    		.parseSignedClaims(token)
-    		.getPayload()
-    		.get("memType", String.class);
+        		.verifyWith(secretKey)
+        		.build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("memId", String.class);
     }
-	
-//	public String getMemName(String token) {
-//		return Jwts.parser().verifyWith(secretKey)
-//			.build().parseSignedClaims(token)
-//			.getPayload().get("memName", String.class);
-//	}
+
+    public int getMemType(String token) {
+        return Jwts.parser()
+        		.verifyWith(secretKey)
+        		.build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("memType", Integer.class);
+    }
+
     public String getRole(String token) {
         return Jwts.parser()
             .verifyWith(secretKey)
             .build()
             .parseSignedClaims(token)
             .getPayload()
-            .get("memType", String.class);
+            .get("role", String.class);
     }
 
     
@@ -69,15 +64,27 @@ public class JWTUtil {
 			.getExpiration()
 			.before(new Date());
 	}
+	
+	
 
-	public String createJwt(String memId, String memType, Long expiredMs) {
-		return Jwts.builder()
-			.claim("memId", memId)
-            .claim("memType", memType)
-//			.claim("memName", memName)
-			.issuedAt(new Date(System.currentTimeMillis()))
-			.expiration(new Date(System.currentTimeMillis() + expiredMs))
-			.signWith(secretKey)
-			.compact();
+	public String createJwt(String memId, int memType, String role, Long expiredMs) {
+	    return Jwts.builder()
+	        .claim("memId", memId)
+	        .claim("memType", memType)
+	        .claim("role", role)
+	        .issuedAt(new Date(System.currentTimeMillis()))
+	        .expiration(new Date(System.currentTimeMillis() + expiredMs))
+	        .signWith(secretKey)
+	        .compact();
 	}
+/*
+{
+  "memId": "MinJang",			// String
+  "memType": 1,					// int
+  "role": "ROLE_COMPANY",		// String
+  "iat": 1750842790,			// long
+  "exp": 1750878790				// long
+}
+ */
+	
 }

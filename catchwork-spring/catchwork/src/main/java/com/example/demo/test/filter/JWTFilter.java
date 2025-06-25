@@ -57,8 +57,7 @@ public class JWTFilter extends OncePerRequestFilter{
 
 
         String username = jwtUtil.getMemId(token);
-        String memTypeStr = jwtUtil.getRole(token); // "0" or "1"
-        int memType = Integer.parseInt(memTypeStr);
+        int memType = jwtUtil.getMemType(token); // "0" or "1"
         
         MemberEntity member = new MemberEntity();
         member.setMemId(username);
