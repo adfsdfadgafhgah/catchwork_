@@ -83,7 +83,8 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
         // memType (int) + role (String) 모두 전달
         String accessToken = jwtUtil.createJwt(username, memType, role, 15 * 60 * 1000L);		// 15분
-//        System.out.println("JWT 생성 완료: " + token);
+//        System.out.println("JWT 생성 완료: " + accessToken);
+//        System.out.println(username +" "+memType+" "+role);
         String refreshToken = jwtUtil.createRefreshToken(username, 7 * 24 * 60 * 60 * 1000L);	// 7일
         Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
         refreshCookie.setHttpOnly(true);			// JS에서 접근 불가

@@ -27,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         
-        // DB에서 사용자 조회
+        // DB에서 Id로 사용자 조회 (로그인 때 쓰임)
         MemberEntity memberEntity = memberRepository.findByMemId(username);
         
         if (memberEntity == null) {
