@@ -13,7 +13,7 @@ import com.example.demo.company.model.service.FavCorpService;
 @RestController
 public class FavCorpController {
 
-	 @Autowired
+	 	@Autowired
 	    private FavCorpService service;
 
 	    @PostMapping("/insert")

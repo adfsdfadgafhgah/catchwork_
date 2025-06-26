@@ -18,7 +18,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
-@MapperScan(basePackages = "com.example.demo.mypage.model.mapper")
+//@MapperScan(basePackages = "com.example.demo.mypage.model.mapper")
 @PropertySource("classpath:/config.properties")
 public class DBConfig {
 
