@@ -126,7 +126,10 @@ const CorpCompanyDetailPage = () => {
     );
   }
   const handleWithdraw = () => {
-    navigate(`/corpcompanydetail/${corpNo}/withdraw`);
+    const confirm = window.confirm("정말 회원 탈퇴하시겠습니까?");
+    if (confirm) {
+      navigate("/corpwithdraw");
+    }
   };
 
   return (

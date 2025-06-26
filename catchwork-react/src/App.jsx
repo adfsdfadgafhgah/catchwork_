@@ -62,11 +62,10 @@ import CorpWithdrawPage from "./pages/corpMypage/CorpWithdrawPage";
 //기업 제출된 이력서 목록
 import CorpCVListPage from "./pages/corpMajor/CorpCVListPage";
 
-//기업 정보, 기업 정보 수정, 기업 탈퇴
+//기업 정보, 기업 정보 수정
 import CorpCompanyDetailPage from "./pages/corpMajor/CorpCompanyDetailPage";
 import EditCompanyPage from "./pages/corpMajor/EditCompanyPage";
 import CorpCompanyPage from "./pages/corpMajor/CorpCompanyPage";
-import WithdrawCompanyPage from "./pages/corpMajor/WithdrawCompanyPage";
 
 // 신고하기
 import ReportModalPage from "./pages/support/ReportModalPage";
@@ -140,7 +139,6 @@ const router = createBrowserRouter([
         children: [
           { path: ":corpNo", element: <CorpCompanyDetailPage /> },
           { path: ":corpNo/edit", element: <EditCompanyPage /> },
-          { path: ":corpNo/withdraw", element: <WithdrawCompanyPage /> },
         ],
       },
 

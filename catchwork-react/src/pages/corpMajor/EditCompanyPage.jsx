@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import SectionHeader from "../../components/common/SectionHeader";
 import FloatButton from "../../components/common/FloatButton";
+import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import "./EditCompanyPage.css";
 
 const dummyCompanyList = [
@@ -140,7 +141,7 @@ const EditCompanyPage = () => {
     navigate(`/corpcompanydetail/${corpNo}`);
   };
 
-  const handleSubmit = () => {
+  const handleEdit = () => {
     // 서버 요청 대신 콘솔 출력 (나중에 fetch/post 연결 가능)
     console.log("=== 수정된 기업정보 ===");
     console.log({
@@ -223,8 +224,9 @@ const EditCompanyPage = () => {
         <textarea defaultValue={company.corpBenefit}></textarea>
         <textarea defaultValue={company.corpBenefitDetail}></textarea>
       </div>
-
-      <FloatButton onCancel={handleCancel} onSubmit={handleSubmit} />
+      <FloatButton
+        buttons={FLOAT_BUTTON_PRESETS.editAndCancel(handleEdit, handleCancel)}
+      />
     </main>
   );
 };

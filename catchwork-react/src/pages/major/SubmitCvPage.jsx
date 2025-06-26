@@ -8,19 +8,19 @@ const SubmitCVPage = () => {
   const [resumeList, setResumeList] = useState([
     {
       cvNo: 1,
-      cvTitle: "이윤진 JAVA 개발자 이력서",
+      cvAlias: "이윤진 JAVA 개발자 이력서",
       cvMainFl: "Y",
       createdDate: "2025.06.17",
     },
     {
       cvNo: 2,
-      cvTitle: "이윤진 이력서 최근 경력사항 수정본",
+      cvAlias: "이윤진 이력서 최근 경력사항 수정본",
       cvMainFl: "N",
       createdDate: "2025.06.15",
     },
     {
       cvNo: 3,
-      cvTitle: "이윤진 포트폴리오 수정본",
+      cvAlias: "이윤진 포트폴리오 수정본",
       cvMainFl: "N",
       createdDate: "2025.06.14",
     },
@@ -68,7 +68,7 @@ const SubmitCVPage = () => {
           )}
         </div>
 
-        <button className="submit-btn" onClick={handleSubmit}>
+        <button className="submitcv-btn" onClick={handleSubmit}>
           제출하기
         </button>
       </main>
