@@ -24,8 +24,12 @@ public class CVController {
 	
 	@PostMapping("add")
 	public String CVAdd(@RequestBody Map<String, Object> payload) {
-		
-		System.out.println(payload);
-		return "success";
+	    try {
+	        System.out.println("Payload 수신됨: " + payload);
+	        return "success";
+	    } catch (Exception e) {
+	        e.printStackTrace(); // 콘솔에 에러 전체 출력
+	        return "fail";
+	    }
 	}
 }
