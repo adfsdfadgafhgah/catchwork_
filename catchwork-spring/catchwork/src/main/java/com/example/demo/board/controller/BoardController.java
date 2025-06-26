@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("board")
 @RequiredArgsConstructor
@@ -31,8 +32,9 @@ public class BoardController {
      * @param query 검색어 (없을 경우 공백)
      */
     @GetMapping("boardList")
-    public ResponseEntity<?> getBoardList(@RequestParam String sort,
-                                          @RequestParam(value="query",required = false, defaultValue = "") String query) {
+    public ResponseEntity<?> getBoardList(
+            @RequestParam(name = "sort") String sort,
+            @RequestParam(name = "query", required = false, defaultValue = "") String query) {
     	System.out.println();
         try {
             List<Board> boards = boardService.selectBoardList(sort, query.trim());
