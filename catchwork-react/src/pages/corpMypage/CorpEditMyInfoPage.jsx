@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SideBar from "../../components/myPage/CorpSideBar";
+import CorpSideBar from "../../components/myPage/CorpSideBar";
 import "./CorpEditMyInfoPage.css";
 
 const CorpEditMyInfoPage = ({ onCancel }) => {
@@ -105,7 +105,7 @@ const CorpEditMyInfoPage = ({ onCancel }) => {
 
   return (
     <div className="corp-page-container">
-      <SideBar />
+      <CorpSideBar />
       <div className="corp-edit-content">
         <div className="form-container">
           <h2 className="page-title">기업 회원 정보 수정</h2>

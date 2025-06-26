@@ -10,7 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.demo.test.jwt.util.JWTUtil;
+import com.example.demo.test.util.JWTUtil;
 import com.example.demo.test.user.model.dto.CustomUserDetails;
 import com.example.demo.test.user.model.entity.MemberEntity;
 
@@ -57,8 +57,7 @@ public class JWTFilter extends OncePerRequestFilter{
 
 
         String username = jwtUtil.getMemId(token);
-        String memTypeStr = jwtUtil.getRole(token); // "0" or "1"
-        int memType = Integer.parseInt(memTypeStr);
+        int memType = jwtUtil.getMemType(token); // "0" or "1"
         
         MemberEntity member = new MemberEntity();
         member.setMemId(username);
@@ -67,7 +66,6 @@ public class JWTFilter extends OncePerRequestFilter{
         
         CustomUserDetails customUserDetails = new CustomUserDetails(member);
 
-        // CustomUserDetails가 권한 포함하므로 따로 authorities 설정 불필요
         Authentication authToken =
             new UsernamePasswordAuthenticationToken(
                 customUserDetails,

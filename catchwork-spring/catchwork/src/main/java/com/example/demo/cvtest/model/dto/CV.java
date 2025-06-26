@@ -1,7 +1,6 @@
 package com.example.demo.cvtest.model.dto;
 
 import java.util.List;
-import java.util.Map;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,41 +8,28 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class CV {
 	
-	private int cvNo; // 이력서 번호
+	private int cvNo;           				// 이력서 번호
+	private String cvAlias;      				// 이력서 별칭
+	private String cvResume;     				// 자기소개서 내용
+	private Boolean cvMainFl;    				// 대표 이력서 여부
+	private String memNo;          				// 회원 번호 (FK → MEMBER)
+	private String memAddress;   				// 주소 (mainAddress/detailAddress 형식으로 프론트에서 결합 전송)
 	
-	private String memNo; // 회원번호(작성자)
-	
-	// 기본 정보
-    private String memName;
-    private String memPhone;
-    private String memGender;
-    private String memEmail;
-    private String memBirth;
-
-    // 이력서 정보
-    private String cvAlias;
-    private String mainAddress;
-    private String detailAddress;
-    private String militaryStatus;
-    private String militaryBranch;
-    private String militaryStartDate;
-    private String militaryEndDate;
-    private String selfIntroduction;
-
-    // 동적 섹션 (key-value 구조로 받기 위해 Map 사용)
-    private List<Map<String, Object>> education;
-    private List<Map<String, Object>> experience;
-    private List<Map<String, Object>> qualify;
-    private List<Map<String, Object>> award;
-    private List<Map<String, Object>> language;
-    private List<Map<String, Object>> training;
-    private List<Map<String, Object>> outer;
-    private List<Map<String, Object>> portfolio;
+	// 연관 데이터
+	private List<CVExperience> experienceList;	// 경력 리스트
+	private List<CVAward> awardList;			// 수상 리스트
+	private List<CVQualify> qualifyList;		// 자격 리스트
+	private List<CVLanguage> languageList;		// 어학 리스트
+	private List<CVOuter> outerList;			// 대외 리스트
+	private List<CVTraining> trainingList;		// 교육 리스트
+	private List<CVPortfolio> portfolioList;	// 포폴 리스트
+	private CVEducation education; 				// 단일 학력
+	private CVMilitary military;   				// 단일 병역
     
 
 }
