@@ -82,6 +82,7 @@ import AuthTest from "./pages/member/AuthTest";
 
 const router = createBrowserRouter([
   {
+    // 전체 요청
     path: "/",
     element: <Layout />,
     children: [

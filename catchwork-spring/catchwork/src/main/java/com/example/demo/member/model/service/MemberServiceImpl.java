@@ -1,22 +1,23 @@
-package com.example.demo.test.user.model.service;
+package com.example.demo.member.model.service;
 
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.test.user.model.dto.Member;
-import com.example.demo.test.user.model.entity.MemberEntity;
-import com.example.demo.test.user.model.entity.MemberGradeEntity;
-import com.example.demo.test.user.model.repository.MemberRepository;
+import com.example.demo.member.model.dto.Member;
+import com.example.demo.member.model.entity.MemberEntity;
+import com.example.demo.member.model.entity.MemberGradeEntity;
+import com.example.demo.member.model.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 //@RequiredArgsConstructor
-//@Transactional(rollbackFor = Exception.class)
+@Transactional(rollbackFor = Exception.class)
 public class MemberServiceImpl implements MemberService{
 
 //	@Autowired
@@ -33,26 +34,41 @@ public class MemberServiceImpl implements MemberService{
 
 	@Override
 	public Object signup(Member inputMember) {
+		System.out.println("signup service");
+//		System.out.println("1 getMemNo : "+inputMember.getMemNo());	// 왜 UUID 자동 생성 안됨? 진짜 않이 익어 외않되
+    	inputMember.setMemNo(UUID.randomUUID().toString());
+//		System.out.println("getMemNo : "+inputMember.getMemNo());
+//		System.out.println("inputMember : "+inputMember);
 	    // 입력값 검증
 	    if (!isValidInput(inputMember)) {
 	        return "INVALID_INPUT";
 	    }
 	    
-	    // 중복 아이디 체크
+	    // 중복 MEM_NO 체크 // 근데 UUID가 겹칠 수 있나?
+//	    if (memberRepository.existsByMemNo(inputMember.getMemNo())) {
+//	        return "DUPLICATE_NO";
+//	    }
+	    // 중복 MEM_ID 체크
 	    if (memberRepository.existsByMemId(inputMember.getMemId())) {
 	        return "DUPLICATE_ID";
 	    }
+
 	    
 	    try {
 	        // 회원 정보 저장
 	        MemberEntity entity = createMemberEntity(inputMember);
-	        memberRepository.save(entity);
+	        MemberEntity saved = memberRepository.save(entity);
+	        System.out.println("saved entity = " + saved);
+
+//	        디버깅용
+//	        System.out.println(entity); 
 	        
 	        // 응답용 Member 객체 생성 (비밀번호 제외)
 	        return createResponseMember(inputMember);
 	        
 	    } catch (Exception e) {
 	        // 저장 중 오류 발생 시 예외 던지기
+	    	System.out.println(e);
 	        throw new RuntimeException("회원 정보 저장 중 오류가 발생했습니다.", e);
 	    }
 	}
@@ -139,12 +155,13 @@ public class MemberServiceImpl implements MemberService{
 	private MemberEntity createMemberEntity(Member member) {
 	    MemberEntity entity = new MemberEntity();
 	    MemberGradeEntity gradeEntity = new MemberGradeEntity();
-	    gradeEntity.setMemGradeNo(member.getMemGrade()); // FK ID만 지정
+	    gradeEntity.setMemGrade(member.getMemGrade()); // FK ID만 지정
 	    
-	    entity.setMemName(member.getMemName());
+	    entity.setMemNo(member.getMemNo());
 	    entity.setMemId(member.getMemId());
 	    entity.setMemPw(bcrypt.encode(member.getMemPw()));
 	    entity.setMemNickname(member.getMemNickname());
+	    entity.setMemName(member.getMemName());
 	    entity.setMemTel(member.getMemTel());
 	    entity.setMemEmail(member.getMemEmail());
 	    entity.setMemBirthday(member.getMemBirthday());
@@ -174,6 +191,7 @@ public class MemberServiceImpl implements MemberService{
 	private Member createResponseMember(Member member) {
 	    Member result = new Member();
 	    result.setMemName(member.getMemName());
+	    result.setMemNo(member.getMemNo());
 	    result.setMemId(member.getMemId());
 	    result.setMemPw(null); // 보안상 비밀번호는 응답에서 제외
 	    return result;

@@ -1,4 +1,4 @@
-package com.example.demo.test.util;
+package com.example.demo.util;
 
 import java.io.IOException;
 
@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.test.user.model.dto.CustomUserDetails;
+import com.example.demo.member.model.dto.CustomUserDetails;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

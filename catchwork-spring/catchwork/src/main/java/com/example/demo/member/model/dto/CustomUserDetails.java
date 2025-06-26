@@ -1,4 +1,4 @@
-package com.example.demo.test.user.model.dto;
+package com.example.demo.member.model.dto;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -6,7 +6,7 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.example.demo.test.user.model.entity.MemberEntity;
+import com.example.demo.member.model.entity.MemberEntity;
 
 public class CustomUserDetails implements UserDetails {
 
@@ -23,7 +23,7 @@ public class CustomUserDetails implements UserDetails {
         Collection<GrantedAuthority> authorities = new ArrayList<>();
 
         int memType = memberEntity.getMemType(); // 예: 0=개인, 1=기업, 2=관리자 등
-        System.out.println(memType);
+//        System.out.println(memType);
         String role = switch (memType) {
             case 0 -> "ROLE_USER";
             case 1 -> "ROLE_COMPANY";
@@ -42,7 +42,7 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return memberEntity.getMemId();
+        return memberEntity.getMemNo();
     }
 
     @Override

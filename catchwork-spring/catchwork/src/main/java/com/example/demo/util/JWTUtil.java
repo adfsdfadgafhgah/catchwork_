@@ -1,4 +1,4 @@
-package com.example.demo.test.util;
+package com.example.demo.util;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -26,6 +26,15 @@ public class JWTUtil {
 		);
 	}
 
+    public String getMemNo(String token) {
+        return Jwts.parser()
+        		.verifyWith(secretKey)
+        		.build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .get("memNo", String.class);
+    }
+    
     public String getMemId(String token) {
         return Jwts.parser()
         		.verifyWith(secretKey)
@@ -67,9 +76,9 @@ public class JWTUtil {
 	
 	
 
-	public String createJwt(String memId, int memType, String role, Long expiredMs) {
+	public String createJwt(String memNo, int memType, String role, Long expiredMs) {
 	    return Jwts.builder()
-	        .claim("memId", memId)
+	        .claim("memNo", memNo)
 	        .claim("memType", memType)
 	        .claim("role", role)
 	        .issuedAt(new Date(System.currentTimeMillis()))
@@ -78,10 +87,10 @@ public class JWTUtil {
 	        .compact();
 	}
 
-	public String createRefreshToken(String username,Long expiredMs) {
+	public String createRefreshToken(String memNo,Long expiredMs) {
 		System.out.println("RefreshToken created");
 	    return Jwts.builder()
-	        .claim("memId", username)
+	        .claim("memNo", memNo)
 	        .issuedAt(new Date(System.currentTimeMillis()))
 	        .expiration(new Date(System.currentTimeMillis() + expiredMs))
 	        .signWith(secretKey)
@@ -89,14 +98,23 @@ public class JWTUtil {
 	}
 
 /*
-토큰 payload 구조
+access 토큰 payload 구조
 {
-  "memId": "MinJang",			// String
+  "memNo": "MinJang",			// String
   "memType": 1,					// int
   "role": "ROLE_COMPANY",		// String
   "iat": 1750842790,			// long
   "exp": 1750878790				// long
 }
+
+refresh 토큰 payload 구조
+{
+  "memNo": "MinJang",			// String
+  "iat": 1750842790,			// long
+  "exp": 1750878790				// long
+}
+
+
  */
 	
 }

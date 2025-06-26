@@ -17,9 +17,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import com.example.demo.test.filter.JWTFilter;
-import com.example.demo.test.filter.LoginFilter;
-import com.example.demo.test.util.JWTUtil;
+import com.example.demo.filter.JWTFilter;
+import com.example.demo.filter.LoginFilter;
+import com.example.demo.util.JWTUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 
