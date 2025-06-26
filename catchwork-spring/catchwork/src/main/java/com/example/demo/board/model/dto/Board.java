@@ -23,6 +23,7 @@ public class Board {
 	
 	// MEMBER 테이블 조인
 	private String memNo;
+	private String memNickname;
 	
 	// 목록 조회 시 필요한 것
 	private int commentCount;
@@ -32,7 +33,7 @@ public class Board {
 	private String memProfilePath;
 	
 	// 게시글 목록 썸네일 이미지
-	private String thumbnail;
+	private String boardThumbnailUrl;
 	
 	// 좋아요 여부 확인
 	private int likeCheck;

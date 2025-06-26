@@ -5,10 +5,13 @@ import axios from "axios";
 import SectionHeader from "../../components/common/SectionHeader";
 import "./WriteBoardPage.css";
 import { useNavigate } from "react-router-dom";
+import ThumbnailUploader from "../../components/common/ThumbnailUploader";
 
 export default function WriteBoardPage() {
   const editorRef = useRef();
   const [title, setTitle] = useState("");
+  const [thumbnailFile, setThumbnailFile] = useState(null);
+  const [thumbnailUrl, setThumbnailUrl] = useState("");
 
   // Toast UI Editor가 완전히 로드된 후 placeholder 보이게 강제 refresh
   useEffect(() => {
@@ -20,13 +23,36 @@ export default function WriteBoardPage() {
     }
   }, []);
 
+  // 썸네일 업로드 핸들러
+  const handleThumbnailUpload = async (file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const res = await axios.post("/board/thumbnail", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setThumbnailUrl(res.data.url);
+      setThumbnailFile(file);
+    } catch (err) {
+      alert("썸네일 업로드 실패");
+    }
+  };
+
+  // 썸네일 삭제
+  const handleRemoveThumbnail = () => {
+    setThumbnailFile(null);
+    setThumbnailUrl("");
+  };
+
   // 글 등록 버튼 클릭 시
   const handleSubmit = async () => {
     const contentMarkdown = editorRef.current.getInstance().getMarkdown();
 
-    const res = await axios.post("/api/board", {
+    const res = await axios.post("/board/write", {
       boardTitle: title,
       boardContent: contentMarkdown,
+      boardThumbnailUrl: thumbnailUrl,
     });
 
     alert("게시글 등록 완료!");
@@ -49,6 +75,8 @@ export default function WriteBoardPage() {
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
+
+      {/* Toast UI 에디터 */}
       <div className="write-editor">
         <Editor
           ref={editorRef}
@@ -65,7 +93,7 @@ export default function WriteBoardPage() {
               formData.append("image", blob);
 
               try {
-                const res = await axios.post("/api/board/image", formData, {
+                const res = await axios.post("/board/image", formData, {
                   headers: { "Content-Type": "multipart/form-data" },
                 });
 
@@ -79,6 +107,13 @@ export default function WriteBoardPage() {
           }}
         />
       </div>
+
+      {/* 썸네일 업로더 */}
+      <ThumbnailUploader
+        thumbnailUrl={thumbnailUrl}
+        onUpload={handleThumbnailUpload}
+        onRemove={handleRemoveThumbnail}
+      />
       <div className="write-btn-area">
         <button className="write-btn-cancel" onClick={handleCancel}>
           <i className="fa-solid fa-xmark"></i> 취소하기

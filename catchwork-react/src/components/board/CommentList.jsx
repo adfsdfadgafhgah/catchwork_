@@ -83,8 +83,15 @@ export default function CommentList({ boardNo, loginUser }) {
     </div>
   );
 }
-
+//--------------------------------------------------------
 // 추후 서버구현 시 사용할 코드
+
+// import { useEffect, useState } from "react";
+// import axiosApi from "../../api/axiosAPI";
+// import CommentItem from "./CommentItem";
+// import CommentWrite from "./CommentWrite";
+// import CommentCss from "./CommentList.module.css";
+
 // export default function CommentList({ boardNo, loginUser }) {
 //   const [comments, setComments] = useState([]);
 
