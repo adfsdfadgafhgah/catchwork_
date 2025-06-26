@@ -7,9 +7,13 @@ import com.example.demo.company.model.dto.FavCorp;
 import com.example.demo.company.model.mapper.FavCorpMapper;
 
 @Service
-public class FavCorpServiceImpl {
-	//수정하는중
-	 @Autowired
+public class FavCorpServiceImpl implements FavCorpService{
+	// 수정 좀 해주세요
+	// 수정 좀 해주세요
+	// 수정 좀 해주세요
+	// 수정 좀 해주세요
+	// 수정 좀 해주세요
+		@Autowired
 	    private FavCorpMapper mapper;
 
 	    
@@ -30,4 +34,30 @@ public class FavCorpServiceImpl {
 	    public int totalFav(int corpNo) {
 	        return mapper.totalFav(corpNo);
 	    }
+	 // 수정 좀 해주세요
+	 // 수정 좀 해주세요
+	 // 수정 좀 해주세요
+	 // 수정 좀 해주세요
+	 // 수정 좀 해주세요
+
+
+@Override
+public int insertFav(FavCorp fav) {
+	// TODO Auto-generated method stub
+	return 0;
+}
+
+
+@Override
+public int deleteFav(FavCorp fav) {
+	// TODO Auto-generated method stub
+	return 0;
+}
+
+
+@Override
+public boolean isFav(FavCorp fav) {
+	// TODO Auto-generated method stub
+	return false;
+}
 }
