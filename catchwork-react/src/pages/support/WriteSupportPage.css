@@ -10,7 +10,6 @@
   flex: 1;
   width: 100%; /* 메인도 화면 전체 너비로 설정 */
   padding: 40px 24px;
-  background-color: var(--background);
 }
 
 .page-title {
@@ -76,8 +75,7 @@
 }
 
 .form-group select:focus {
-  border-color: #3a9a91;
-  box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.1);
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.25);
 }
 
 .form-group textarea {
@@ -85,7 +83,6 @@
   border: 2px solid var(--main-color);
   border-radius: 4px;
   font-size: 15px;
-  background-color: white;
   color: var(--text);
   outline: none;
   width: 100%; /* 텍스트 영역도 화면 너비에 맞춤 */
@@ -95,7 +92,6 @@
 }
 
 .form-group textarea:focus {
-  border-color: #3a9a91;
   box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.1);
 }
 
