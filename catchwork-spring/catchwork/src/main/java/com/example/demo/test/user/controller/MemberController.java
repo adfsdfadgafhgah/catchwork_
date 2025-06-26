@@ -63,6 +63,17 @@ public class MemberController {
 	                .body(Map.of("error", "회원가입 실패", "details", e.getMessage()));
 	    }
 	}
+	
+	@PostMapping("/signout")
+	public ResponseEntity<?> logout(HttpServletResponse response) {
+	    Cookie cookie = new Cookie("refreshToken", null);
+	    cookie.setMaxAge(0);
+	    cookie.setPath("/");
+	    cookie.setHttpOnly(true);
+	    cookie.setSecure(true);
+	    response.addCookie(cookie);
+	    return ResponseEntity.ok("로그아웃 성공");
+	}
 
 
 
