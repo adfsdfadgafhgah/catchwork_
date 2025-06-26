@@ -17,6 +17,8 @@ import com.example.demo.test.filter.JWTFilter;
 import com.example.demo.test.filter.LoginFilter;
 import com.example.demo.test.jwt.util.JWTUtil;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -64,9 +66,10 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-    // cors
-    http.cors((cors) -> {});
-    
+		// cors
+		http.cors((cors) -> {
+		});
+
 		// csrf disable
 		http.csrf((auth) -> auth.disable());
 
@@ -77,18 +80,37 @@ public class SecurityConfig {
 		http.httpBasic((auth) -> auth.disable());
 
 		// 경로별 인가 작업
-		http.authorizeHttpRequests((auth) -> auth.requestMatchers("/**", "/signup").permitAll().requestMatchers("/admin")
-				.hasRole("ADMIN").anyRequest().authenticated());
-		
+		http.authorizeHttpRequests((auth) -> auth
+				/* 오류 발생 시, JWTFilter의 개입 방지&&정적 자원에 대한 필터의 개입 방지 */
+				.requestMatchers("/error", "/favicon.ico", "/static/**", "/resources/**").permitAll()
+				/* 로그인 및 관리자 서비스 미구현으로 인해 일괄 허용중 */
+				.requestMatchers("/", "/signup", "/membership/**", "/tosspayment/**").permitAll()
+				.requestMatchers("/admin").hasRole("ADMIN").anyRequest().authenticated());
 
-		// LoginFilter 
+		// LoginFilter
 		http.addFilterAt(loginFilter(), UsernamePasswordAuthenticationFilter.class);
 		// JWT 검증 필터
-        http.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
-        
+		http.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
 
 		// 세션 설정
 		http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+		// 인증 및 권한 관련 예외 발생 시 JSON 형태로 응답을 반환하도록 설정
+		http.exceptionHandling((exceptions) -> exceptions
+
+				// 인증 실패 (예: JWT 없음, 만료 등) 시 401 Unauthorized 응답 처리
+				.authenticationEntryPoint((request, response, authException) -> {
+					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 코드 설정
+					response.setContentType("application/json"); // 응답 타입을 JSON으로 지정
+					response.getWriter().write("{\"error\": \"Unauthorized\"}"); // 간단한 JSON 에러 메시지 반환
+				})
+
+				// 접근 거부 (예: 권한 부족한 사용자가 ADMIN 경로 접근 등) 시 403 Forbidden 응답 처리
+				.accessDeniedHandler((request, response, accessDeniedException) -> {
+					response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 상태 코드 설정
+					response.setContentType("application/json"); // 응답 타입을 JSON으로 지정
+					response.getWriter().write("{\"error\": \"Forbidden\"}"); // 간단한 JSON 에러 메시지 반환
+				}));
 
 		return http.build();
 	}

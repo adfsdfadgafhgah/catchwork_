@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper	namespace="com.example.demo.myPageTest.payment.model.mapper.PaymentMapper">
+
+<!-- 유효한 빌링키 조회 : 없다면 신규 빌링키를 발급받도록 -->
+<select id="getBillingKey">
+SELECT BILLING_KEY
+FROM "BILLING"
+WHERE MEM_NO = #{memNo}
+</select>
+
+<!-- 발급받은 빌링키 저장 -->
+<insert id="insertBillingKey">
+INSERT INTO "BILLING" (
+    "BILLING_KEY",
+    "BILLING_METHOD",
+    "CARD_COMPANY",
+    "CARD_NUMBER",
+    "CARD_TYPE",
+    "OWNER_TYPE",
+    "ISSUER_CODE",
+    "ACQUIRER_CODE",
+    "AUTHENTICATED_AT",
+    "MEM_NO",
+    "MID"
+) VALUES (
+    #{billingKey},
+    #{billingMethod},
+    #{cardCompany},
+    #{cardNumber},
+    #{cardType},
+    #{ownerType},
+    #{issuerCode},
+    #{acquirerCode},
+    CAST(TO_TIMESTAMP_TZ(#{authenticatedAt}, 'YYYY-MM-DD"T"HH24:MI:SS TZH:TZM') AS DATE),
+    #{memNo},
+    #{mId}
+)
+</insert>
+
+<!-- 결제 내역 저장 -->
+<insert id="insertPayment">
+INSERT INTO PAYMENT (
+    ORDER_ID,
+    ORDER_NAME,
+    PAYMENT_KEY,
+    MEM_NO,
+    TOTAL_AMOUNT,
+    BALANCE_AMOUNT,
+    CURRENCY,
+    COUNTRY,
+    PAY_TYPE,
+    STATUS,
+    REQUESTED_AT,
+    APPROVED_AT,
+    CANCELS,
+    FAILURE
+) VALUES (
+    #{orderId},
+    #{orderName},
+    #{paymentKey},
+    #{memNo},
+    #{totalAmount},
+    #{balanceAmount},
+    #{currency},
+    #{country},
+    #{payType},
+    #{status},
+    CAST(TO_TIMESTAMP_TZ(#{requestedAt}, 'YYYY-MM-DD"T"HH24:MI:SSTZH:TZM') AS DATE),
+    CAST(TO_TIMESTAMP_TZ(#{approvedAt}, 'YYYY-MM-DD"T"HH24:MI:SSTZH:TZM') AS DATE),
+    #{cancels},
+    #{failure}
+)
+</insert>
+
+</mapper>

@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Member {
 
+	private String memNo;
 	private String memName;
 	private String memId;
 	private String memPw;
