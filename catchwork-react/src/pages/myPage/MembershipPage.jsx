@@ -1,29 +1,24 @@
 import { useEffect, useState } from "react";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
-import MembershipItem from "../../components/myPage/MembershipItem";
 
 import "./MembershipPage.css";
 import { axiosApi } from "../../api/axiosAPI";
 import { useNavigate } from "react-router-dom";
 import MembershipList from "../../components/myPage/MembershipList";
 
-// // ------  SDK 초기화 ------
-// // TODO: clientKey는 개발자센터의 API 개별 연동 키 > 결제창 연동에 사용하려할 MID > 클라이언트 키로 바꾸세요.
-// // TODO: server.js 의 secretKey 또한 결제위젯 연동 키가 아닌 API 개별 연동 키의 시크릿 키로 변경해야 합니다.
-// // TODO: 구매자의 고유 아이디를 불러와서 customerKey로 설정하세요. 이메일・전화번호와 같이 유추가 가능한 값은 안전하지 않습니다.
-// // @docs https://docs.tosspayments.com/sdk/v2/js#토스페이먼츠-초기화
+// ------  SDK 초기화 ------
+// TODO: clientKey는 개발자센터의 API 개별 연동 키 > 결제창 연동에 사용하려할 MID > 클라이언트 키로 바꾸세요.
+// TODO: server.js 의 secretKey 또한 결제위젯 연동 키가 아닌 API 개별 연동 키의 시크릿 키로 변경해야 합니다.
+// TODO: 구매자의 고유 아이디를 불러와서 customerKey로 설정하세요. 이메일・전화번호와 같이 유추가 가능한 값은 안전하지 않습니다.
+// @docs https://docs.tosspayments.com/sdk/v2/js#토스페이먼츠-초기화
 const clientKey = "test_ck_D5GePWvyJnrK0W0k6q8gLzN97Eoq";
-const customerKey = generateRandomString();
-
-function generateRandomString() {
-  return window.btoa(Math.random().toString()).slice(0, 20);
-}
+const customerKey = "95132b50-d360-400b-bfb2-5a1c51857f4c";
 
 const userInfo = {
   userId: "user01",
   userName: "홍길동",
   userEmail: "test@example.com",
-  customerKey: customerKey,
+  memNo: customerKey,
 };
 
 function MembershipPage() {
@@ -47,7 +42,7 @@ function MembershipPage() {
       }
     }
     fetchPayment();
-  }, [clientKey, userInfo.customerKey]);
+  }, [clientKey, userInfo.memNo]);
 
   // 결제 정보를 입력하고 빌링키를 요청하는 위젯 사용
   async function requestBillingAuth(productId) {
@@ -67,16 +62,17 @@ function MembershipPage() {
     try {
       // 유효한 빌링키 검사
       const response = await axiosApi.post("/tosspayment/getBillingKey", {
-        memId: userInfo.userId,
+        memNo: userInfo.memNo,
       });
 
-      //// 유효한 빌링키가 없다면 바로 결제 진행
-      if (response.status == 200 && response.data == true) {
+      // 유효한 빌링키가 있다면 바로 결제 진행
+      if (response.status == 200 && response.data) {
         navigate(`/mypage/payment/checkout?productId=${memGrade}`);
       }
       // 유효한 빌링키가 없다면 새로 발급
-      else if (response.status == 200 && response.data == false)
+      else if (response.status == 200 && !response.data) {
         requestBillingAuth(memGrade);
+      }
     } catch (error) {
       console.log(error);
     }
