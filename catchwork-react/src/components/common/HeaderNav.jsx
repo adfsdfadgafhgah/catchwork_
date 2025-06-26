@@ -1,48 +1,67 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-
-/* 
-기존에 location으로 주소 확인해서 active 넣던 그런 귀찮은 짓을 
-그냥 activeClassName 쓰면 한 줄로 가능함...
-이거 왜 아무도 안 알려줌?
-*/
+import { useAuthStore } from "../../stores/authStore"; // zustand 호출
 
 const HeaderNav = () => {
+  const { memType } = useAuthStore(); // memType: 0(개인), 1(기업)
+  const isCorp = memType === 1;
+
   return (
     <div className="header-nav">
       <nav className="nav">
-        <NavLink to="/recruit" activeClassName="active">
-          채용공고
-        </NavLink>
-        <NavLink to="/company" activeClassName="active">
-          기업정보
-        </NavLink>
-        <NavLink to="/board" activeClassName="active">
-          취준진담
-        </NavLink>
-        <NavLink to="/cv" activeClassName="active">
-          내 이력서
-        </NavLink>
+        {/* 개인 */}
+        {!isCorp && (
+          <>
+            <NavLink
+              to="/recruit"
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              채용공고
+            </NavLink>
+            <NavLink
+              to="/company"
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              기업정보
+            </NavLink>
+            <NavLink
+              to="/board"
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              취준진담
+            </NavLink>
+            <NavLink
+              to="/cv"
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              내 이력서
+            </NavLink>
+          </>
+        )}
 
-        {/* 기업 회원 조건 넣기전에 NAV에서 7개 다 보여주려고  */}
-        <NavLink
-          to="/corprecruit"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          채용공고
-        </NavLink>
-        <NavLink
-          to="/corpcompanydetail"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          기업정보
-        </NavLink>
-        <NavLink
-          to="/corpcvlist"
-          className={({ isActive }) => (isActive ? "active" : "")}
-        >
-          이력서 목록
-        </NavLink>
+        {/* 기업 */}
+        {isCorp && (
+          <>
+            <NavLink
+              to="/corprecruit"
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              채용공고
+            </NavLink>
+            <NavLink
+              to="/corpcompanydetail"
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              기업정보
+            </NavLink>
+            <NavLink
+              to="/corpcvlist"
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              이력서 목록
+            </NavLink>
+          </>
+        )}
       </nav>
     </div>
   );

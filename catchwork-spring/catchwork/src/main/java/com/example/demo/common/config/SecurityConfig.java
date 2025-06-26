@@ -1,5 +1,7 @@
 package com.example.demo.common.config;
 
+import java.util.Collections;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -12,10 +14,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.example.demo.test.filter.JWTFilter;
 import com.example.demo.test.filter.LoginFilter;
-import com.example.demo.test.jwt.util.JWTUtil;
+import com.example.demo.test.util.JWTUtil;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -54,21 +60,32 @@ public class SecurityConfig {
 		return configuration.getAuthenticationManager();
 	}
 
-	// LoginFilter Bean (AuthenticationManager 주입)
-	@Bean
-	public LoginFilter loginFilter() throws Exception {
-		LoginFilter filter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil);
-		// 로그인 성공/실패 URL 설정 (필요한 경우)
-		return filter;
-	}
+
 
 	// 필터 체인
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-		// cors
-		http.cors((cors) -> {
-		});
+    // cors
+		http
+        .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+
+            @Override
+            public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+
+                CorsConfiguration configuration = new CorsConfiguration();
+
+                configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
+                configuration.setAllowedMethods(Collections.singletonList("*"));
+                configuration.setAllowCredentials(true);
+                configuration.setAllowedHeaders(Collections.singletonList("*"));
+                configuration.setMaxAge(3600L);
+
+				configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+
+                return configuration;
+            }
+        })));
 
 		// csrf disable
 		http.csrf((auth) -> auth.disable());
@@ -81,17 +98,17 @@ public class SecurityConfig {
 
 		// 경로별 인가 작업
 		http.authorizeHttpRequests((auth) -> auth
-				/* 오류 발생 시, JWTFilter의 개입 방지&&정적 자원에 대한 필터의 개입 방지 */
-				.requestMatchers("/error", "/favicon.ico", "/static/**", "/resources/**").permitAll()
-				/* 로그인 및 관리자 서비스 미구현으로 인해 일괄 허용중 */
-				.requestMatchers("/", "/signup", "/membership/**", "/tosspayment/**").permitAll()
+// 				.requestMatchers("/", "/signup","signout").permitAll()
+				.requestMatchers("/**").permitAll()
 				.requestMatchers("/admin").hasRole("ADMIN").anyRequest().authenticated());
 
-		// LoginFilter
-		http.addFilterAt(loginFilter(), UsernamePasswordAuthenticationFilter.class);
-		// JWT 검증 필터
-		http.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
-
+		// LoginFilter 
+        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil);
+        http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
+        
+        // JWT 검증 필터
+        http.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
+        
 		// 세션 설정
 		http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 

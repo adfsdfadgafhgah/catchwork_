@@ -1,9 +1,7 @@
 // React 및 상태 훅 import
 import React, { useState } from "react";
-
-// 아이콘
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import axios from "axios";
 
 // 기본 컴포넌트 import
@@ -22,35 +20,76 @@ import CVLanguage from "../../components/cv/CVLanguage";
 
 // 페이지 전용 CSS import
 import "./WriteCVPage.css";
+import { axiosApi } from "./../../api/axiosAPI";
 
-// 이력서 작성 페이지 컴포넌트
+// URL 쿼리 파싱용
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search);
+};
+
 const WriteCVPage = () => {
-  const [mode, setMode] = useState("write"); // 작성/보기 모드 상태
+  const query = useQuery();
+
+  const [mode, setMode] = useState(query.get("mode") || "view"); // 작성/보기/수정 모드 상태
+
+  useEffect(() => {
+    console.log("현재 mode =", mode);
+  }, [mode]);
+
+  /* 가져오기 */
+  // useEffect(() => {
+  //   axios.get("/cv/detail?id=123").then((res) => {
+  //     const data = res.data;
+  //     const newComponents = {};
+
+  //     Object.keys(clientKeyMap).forEach((type) => {
+  //       const sectionList = data[type] || [];
+  //       newComponents[type] = sectionList.map((item) =>
+  //         convertToClient(type, item)  // type 주입 포함
+  //       );
+  //     });
+
+  //     setComponents(newComponents);
+
+  //     // 주소 복원 처리
+  //     const [mainAddress, detailAddress] = (data.memAddress || "").split("/");
+  //     setFormData({
+  //       ...data,
+  //       mainAddress: mainAddress?.trim() || "",
+  //       detailAddress: detailAddress?.trim() || "",
+  //     });
+  //   });
+  // }, []);
 
   // 사용자 기본 정보 (출력용)
   const [userInfo, setUserInfo] = useState({
-    name: "조민장",
-    phone: "01087948442",
-    gender: "남성",
-    email: "whalswkd1213@gmail.com",
-    birth: "2000-12-13",
+    memName: "조민장",
+    memTel: "01087948442",
+    memGender: "남성",
+    memEmail: "whalswkd1213@gmail.com",
+    memBirthday: "2000-12-13",
   });
 
   // 이력서 입력 데이터 상태
   const [formData, setFormData] = useState({
-    resumeName: "", // 이력서 제목
-    mainAddress: "", // 기본 주소
-    detailAddress: "", // 상세 주소
-    militaryStatus: "", // 병역 구분
-    militaryBranch: "", // 군별
-    militaryStartDate: "0000-00", // 입대일
-    militaryEndDate: "0000-00", // 전역일
-    selfIntroduction: "", // 자기소개서
+    cvAlias: "",
+    mainAddress: "",
+    detailAddress: "",
+    eduName: "",
+    eduMajor: "",
+    eduCodeNo: "",
+    eduStatusCodeNo: "",
+    eduStartDate: "",
+    eduEndDate: "",
+    cvMiliClass: "",
+    cvMiliBranch: "",
+    cvMiliStartDate: "0000-00",
+    cvMiliEndDate: "0000-00",
+    cvResume: "",
   });
 
   // 동적 섹션 항목 상태
   const [components, setComponents] = useState({
-    education: [{ id: "education" + Date.now() }],
     experience: [{ id: "experience" + Date.now() }],
     qualify: [{ id: "qualify" + Date.now() }],
     award: [{ id: "award" + Date.now() }],
@@ -59,6 +98,119 @@ const WriteCVPage = () => {
     outer: [{ id: "outer" + Date.now() }],
     portfolio: [{ id: "portfolio" + Date.now() }],
   });
+
+  // CVForm01 섹션 정보 (자격증, 수상이력)
+  const sectionMetaForm01 = {
+    qualify: { title: "자격증명", name: "발급기관" },
+    award: { title: "수상명", name: "발급기관" },
+  };
+
+  // CVForm02 섹션 정보 (경력, 교육이수, 외부활동, 포트폴리오)
+  const sectionMetaForm02 = {
+    experience: {
+      title: "경력",
+      name: "회사명",
+      description: "직무 및 담당업무",
+      org: "부서",
+    },
+    training: {
+      title: "교육이수",
+      name: "교육명",
+      description: "교육 내용",
+      org: "교육기관",
+    },
+    outer: {
+      title: "대외활동",
+      name: "활동명",
+      description: "활동 설명",
+      org: "소속기관",
+    },
+    portfolio: {
+      title: "포트폴리오",
+      name: "프로젝트명",
+      description: "링크 또는 설명",
+    },
+  };
+
+  // 서버로 업로드 시 key 이름을 서버 DTO용으로 바꿀때 필요한 객체
+  // 클라이언트 키맵
+  const clientKeyMap = {
+    qualify: {
+      id: "qualifyId",
+      title: "qualifyName",
+      issuer: "qualifyOrg",
+      date: "qualifyDate",
+    },
+    award: {
+      id: "awardId",
+      title: "awardName",
+      issuer: "awardOrg",
+      date: "awardDate",
+    },
+    experience: {
+      id: "expId",
+      name: "expName",
+      org: "expDept",
+      description: "expContent",
+      startDate: "expStartDate",
+      endDate: "expEndDate",
+    },
+    language: {
+      id: "langId",
+      language: "langType",
+      exam: "langName",
+      score: "langScore",
+      date: "langDate",
+    },
+    training: {
+      id: "trainId",
+      name: "trainName",
+      org: "trainOrganization",
+      description: "trainContent",
+      startDate: "trainStartDate",
+      endDate: "trainEndDate",
+    },
+    outer: {
+      id: "outerId",
+      name: "outerName",
+      org: "outerOrganization",
+      description: "outerContent",
+      startDate: "outerStartDate",
+      endDate: "outerEndDate",
+    },
+    portfolio: {
+      id: "portId",
+      name: "portName",
+      description: "portContent",
+      startDate: "portStartDate",
+      endDate: "portEndDate",
+    },
+  };
+
+  // clientKeyMap을 역으로 변환
+  // 서버 키맵
+  const serverKeyMap = Object.fromEntries(
+    // 클라 키맵 가져오기      각 항목 순회  key, value(map) 
+    Object.entries(clientKeyMap).map(([type, mapping]) => [
+      type,            // value 내부의 k, v를 역으로 변환 ("id": "expId" -> "expId": "id",)
+      Object.fromEntries(Object.entries(mapping).map(([k, v]) => [v, k])),
+    ])
+  );
+
+  // 주소 찾기 핸들러
+  const handleSearchAddress = () => {
+    new window.daum.Postcode({
+      oncomplete: function (data) {
+        console.log("선택된 주소:", data);
+
+        // 도로명 주소 or 지번 주소
+        const fullAddress = data.roadAddress || data.jibunAddress;
+
+        // formData에 memAddress 업데이트
+        handleInputChange("mainAddress", fullAddress);
+      },
+    }).open();
+  };
 
   // formData 변경 핸들러
   const handleInputChange = (field, value) => {
@@ -88,49 +240,113 @@ const WriteCVPage = () => {
       return { ...prev, [type]: updated };
     });
   };
-  
-  // CVForm01 섹션 정보 (자격증, 수상이력)
-  const sectionMetaForm01 = {
-    qualify: { title: "자격증" },
-    award: { title: "수상이력" },
+
+  // 이력서 수정 요청
+  const handleUpdate = async () => {
+    const payload = {};
+    await axiosApi
+      .post("/cv/update", payload)
+      .then(() => alert("성공"))
+      .catch(() => alert("실패"));
   };
-  
-  // CVForm02 섹션 정보 (경력, 교육이수, 외부활동, 포트폴리오)
-  const sectionMetaForm02 = {
-    experience: { title: "경력", name: "회사명", description: "직무 및 담당업무" },
-    training: { title: "교육이수", name: "교육명", description: "교육 내용" },
-    outer: { title: "대외활동", name: "활동명", description: "활동 설명" },
-    portfolio: { title: "포트폴리오", name: "프로젝트명", description: "링크 또는 설명" },
+
+  // 이력서 삭제 요청
+  const handleDelete = async () => {
+    const payload = {};
+    await axiosApi
+      .post("/cv/delete", payload)
+      .then(() => alert("성공"))
+      .catch(() => alert("실패"));
   };
-  
-    // 이력서 저장 요청
-    const handleSubmit = async() => {
-      const payload = { ...userInfo, ...formData, ...components };
-      await axios
-        .post("http://localhost:8080/cv/add", payload)
-        .then(() => alert("이력서 저장 완료"))
-        .catch(() => alert("저장 중 오류가 발생했습니다"));
+
+  // 이력서 저장 요청
+  const handleSubmit = async () => {
+    const payload = payloadRename();
+    await axiosApi
+      .post("/cv/add", payload, { withCredentials: true })
+      .then(() => alert("이력서 저장 완료"))
+      .catch((err) => {
+        console.error("저장 실패", err.response?.data || err.message);
+        alert("저장 중 오류가 발생했습니다") ;
+      });
+  };
+
+
+  // DTO 생각 안한 Bottle God의 작품
+  const payloadRename = () => {
+    const convertedSections = {};
+
+    Object.keys(components).forEach((type) => {
+      convertedSections[type] = components[type].map((item) =>
+        convertToServer(type, item)
+      );
+    });
+
+    const { mainAddress, detailAddress, ...restFormData } = formData;
+
+    return {
+      ...userInfo,
+      ...restFormData, // 나머지 formData 필드 그대로
+      memAddress: `${mainAddress}/${detailAddress}`, // 주소만 커스텀 처리
+      ...convertedSections,
     };
+  };
+
+  // 클라이언트 형식 -> DTO 형식 변환
+                    // 클라 키맵, 서버에서 받아온 맵 
+  const convertToServer = (type, data) => {
+    // 클라 키맵의 종류 가져오기(award, exp 등)
+    const map = clientKeyMap[type];
+    const result = {};
+    // 서버에서 받은 맵의 키 순회
+    for (const key in data) {
+      // type 제거
+      if (key === "type") continue;
+      // 클라 키맴에 서버의 키 있는지 확인
+      if (map[key]) {
+        // result에 클라 키 이름, 서버의 값 저장
+        result[map[key]] = data[key];
+      } else {
+        result[key] = data[key]; 
+      }
+    }
+    return result;
+  };
+
+  // DTO 형식 -> 클라이언트 형식 변환
+  const convertToClient = (type, data) => {
+    const map = serverKeyMap[type];
+    // type 주입
+    const result = { type };
+    for (const key in data) {
+      if (map[key]) {
+        result[map[key]] = data[key];
+      } else {
+        result[key] = data[key];
+      }
+    }
+    return result;
+  };
 
   return (
     <div className="resume-container">
-      <div className="resume-form">
+      <div
+        className={mode === "view" ? "resume-form view-mode" : "resume-form"}
+      >
         <h1 className="form-title">내 이력서 작성하기</h1>
 
         {/* 이력서 제목 입력 */}
         <div className="writeCVSection">
           <CVTitle
-            value={formData.resumeName}
-            onChange={(val) => handleInputChange("resumeName", val)}
+            value={formData.cvAlias}
+            onChange={(val) => handleInputChange("cvAlias", val)}
           />
         </div>
 
-        <div className="writeCVInfo">    
+        <div className="writeCVInfo">
           {/* 기본 정보 표시 */}
           <div className="writeCVSection">
-            <CVBasic 
-              userInfo={userInfo} 
-            />
+            <CVBasic userInfo={userInfo} />
           </div>
 
           {/* 주소 입력 */}
@@ -138,56 +354,49 @@ const WriteCVPage = () => {
             <CVAddress
               formData={formData}
               onChange={handleInputChange}
-              onSearch={() => alert("주소 검색 기능")}
+              onSearch={handleSearchAddress}
+              mode={mode}
             />
           </div>
 
           {/* 병역 입력 */}
           <div className="writeCVSection">
-            <CVMilitary 
-              formData={formData} 
-              onChange={handleInputChange} 
+            <CVMilitary
+              formData={formData}
+              onChange={handleInputChange}
+              mode={mode}
             />
           </div>
 
           {/* 학력 입력 */}
           <div className="writeCVSection">
             <h2 className="writeCVSection-title">학력</h2>
-            {components.education.length === 0 && (
-              <div className="empty-message">입력된 학력이 없습니다.</div>
-            )}
-            {components.education.map((item, index) => (
-              <CVEducation
-                key={item.id}
-                index={index}
-                data={item}
-                mode={mode}
-                onRemove={() => removeComponent("education", index)}
-                showRemove={components.education.length > 1}
-              />
-            ))}
-            <FormAddButton onClick={() => addComponent("education")} />
+            <CVEducation
+              formData={formData}
+              onChange={handleInputChange}
+              mode={mode}
+            />
           </div>
 
           {/* 공통 Form01 영역 */}
-          {Object.entries(sectionMetaForm01).map(([type, { title }]) => (
+          {Object.entries(sectionMetaForm01).map(([type, labels]) => (
             <div className="writeCVSection" key={type}>
-              <h2 className="writeCVSection-title">{title}</h2>
+              <h2 className="writeCVSection-title">{labels.title}</h2>
               {components[type].length === 0 && (
                 <div className="empty-message">
-                  입력된 {title}이 없습니다.
+                  입력된 {labels.title}이 없습니다.
                 </div>
               )}
               {components[type].map((item, index) => (
                 <CVForm01
                   key={item.id}
                   index={index}
+                  type={type}
                   data={item}
                   mode={mode}
-                  type={type}
+                  labels={labels}
                   onRemove={() => removeComponent(type, index)}
                   onChange={handleComponentChange}
-                  showRemove={components[type].length > 1}
                 />
               ))}
               <FormAddButton onClick={() => addComponent(type)} />
@@ -208,7 +417,6 @@ const WriteCVPage = () => {
                 mode={mode}
                 onRemove={() => removeComponent("language", index)}
                 onChange={handleComponentChange}
-                showRemove={components.language.length > 1}
               />
             ))}
             <FormAddButton onClick={() => addComponent("language")} />
@@ -219,6 +427,12 @@ const WriteCVPage = () => {
           {Object.entries(sectionMetaForm02).map(([type, labels]) => (
             <div className="writeCVSection" key={type}>
               <h2 className="writeCVSection-title">{labels.title}</h2>
+              {/* 경력 섹션일 때만 렌더링되는 (최종 경력)*/}
+              {type === "experience" && (
+                <div>
+                  최종경력 : ㅗ
+                </div>
+              )}
               {components[type].length === 0 && (
                 <div className="empty-message">
                   입력된 {labels.title}이 없습니다.
@@ -234,7 +448,6 @@ const WriteCVPage = () => {
                   labels={labels}
                   onRemove={() => removeComponent(type, index)}
                   onChange={handleComponentChange}
-                  showRemove={components[type].length > 1}
                 />
               ))}
               <FormAddButton onClick={() => addComponent(type)} />
@@ -244,8 +457,9 @@ const WriteCVPage = () => {
           {/* 자기소개서 */}
           <div className="writeCVSection">
             <CVResume
-              value={formData.selfIntroduction}
-              onChange={(val) => handleInputChange("selfIntroduction", val)}
+              formData={formData}
+              onChange={handleInputChange}
+              mode={mode}
             />
           </div>
         </div>
@@ -254,15 +468,43 @@ const WriteCVPage = () => {
       {/* 제출 버튼 */}
       <div className="writeCVSticky">
         <div className="writeCVStickyCenter">
-          <button className="writeCVStickyBtn writeCVSubmitBtn" onClick={handleSubmit}>
-            작성 완료
-          </button>
-          <button className="writeCVStickyBtn writeCVCancleBtn" onClick={() => history.back()}>
-            취소
-          </button>
+          {mode === "view" ? (
+            <>
+              <button
+                className="writeCVStickyBtn writeCVUpdateBtn"
+                onClick={handleUpdate}
+              >
+                수정하기
+              </button>
+              <button
+                className="writeCVStickyBtn writeCVDeleteBtn"
+                onClick={handleDelete}
+              >
+                삭제하기
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className="writeCVStickyBtn writeCVSubmitBtn"
+                onClick={handleSubmit}
+              >
+                작성완료
+              </button>
+              <button
+                className="writeCVStickyBtn writeCVCancleBtn"
+                onClick={() => history.back()}
+              >
+                취소하기
+              </button>
+            </>
+          )}
         </div>
         <div className="writeCVStickyRight">
-          <button className="writeCVStickyBtn writeCVUpBtn" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>
+          <button
+            className="writeCVStickyBtn writeCVUpBtn"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          >
             ▲
           </button>
         </div>

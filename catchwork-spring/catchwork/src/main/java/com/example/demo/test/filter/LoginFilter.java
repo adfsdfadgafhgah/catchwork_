@@ -13,12 +13,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.example.demo.test.jwt.util.JWTUtil;
+import com.example.demo.test.util.JWTUtil;
 import com.example.demo.test.user.model.dto.CustomUserDetails;
 import com.example.demo.test.user.model.dto.Member;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -70,27 +71,44 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 	@Override
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
 			Authentication authentication) {
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+                                            FilterChain chain, Authentication authentication) {
 
-		CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+        String username = customUserDetails.getUsername();
+        
+        int memType = customUserDetails.getMemberEntity().getMemType(); // memType 0 : 개인 / 1 : 기업
+        String role = customUserDetails.getAuthorities().stream()
+                                       .map(GrantedAuthority::getAuthority)
+                                       .findFirst()
+                                       .orElse("ROLE_USER");
 
-		String username = customUserDetails.getUsername();
+        // memType (int) + role (String) 모두 전달
+        String accessToken = jwtUtil.createJwt(username, memType, role, 15 * 60 * 1000L);		// 15분
+//        System.out.println("JWT 생성 완료: " + token);
+        String refreshToken = jwtUtil.createRefreshToken(username, 7 * 24 * 60 * 60 * 1000L);	// 7일
+        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+        refreshCookie.setHttpOnly(true);			// JS에서 접근 불가
+//		나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	
+        refreshCookie.setSecure(false);				// HTTPS에서만 전송
+//		나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	
+        refreshCookie.setPath("/");					// 전체 경로 유효
+        refreshCookie.setMaxAge(7 * 24 * 60 * 60);	// 7일
 
-		// 권한 중 첫 번째 가져오기 (복수 권한 시 예외 처리 필요할 수 있음)
-		Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-		String role = authorities.stream().findFirst().map(GrantedAuthority::getAuthority).orElse("ROLE_USER"); // 권한 없을
-																												// 때 기본값
+        response.addCookie(refreshCookie); // addCookie를 반드시 사용
+        
+        response.addHeader("Authorization", "Bearer " + accessToken);
+    }
 
-		// JWT 토큰 생성 (10시간 = 60*60*10*1000 초)
-		String token = jwtUtil.createJwt(username, role, 60 * 60 * 10 * 1000L);
 
-		response.addHeader("Authorization", "Bearer " + token);
-	}
+    
 
-	@Override
-	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-			AuthenticationException failed) throws IOException {
-
-		// 로그인 실패시 401 응답 코드 반환
-		response.setStatus(401);
-	}
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+            AuthenticationException failed) throws IOException {
+    	
+		//로그인 실패시 401 응답 코드 반환
+        response.setStatus(401);
+    }
 }

@@ -8,7 +8,7 @@
   align-items: flex-start;
   gap: 24px;
   margin-bottom: 30px;
-  border-top: 1px solid var(--stroke-color2);
+  /* border-top: 1px solid var(--stroke-color2); */
 }
 
 .company-header-left .company-logo {
@@ -124,7 +124,6 @@
   cursor: pointer;
   font-size: 14px;
   box-shadow: var(--box-shadow);
-  float: right;
 }
 
 .btn-edit:hover,

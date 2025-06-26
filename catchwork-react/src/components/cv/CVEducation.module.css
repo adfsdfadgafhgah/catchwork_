@@ -1,4 +1,9 @@
 /* 텍스트 입력 input 공통 스타일 */
+.eduInfo{
+  display: flex;
+  gap: 8px;
+}
+
 .eduInfoInput {
   flex: 1;
   padding: 8px 12px;

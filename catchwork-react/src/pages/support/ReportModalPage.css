@@ -44,9 +44,8 @@
 .form-group textarea {
   padding: 12px;
   font-size: 15px;
-  border: 2px solid #46b5ab;
+  border: 2px solid var(--main-color);
   border-radius: 4px;
-  background-color: white;
   color: #333;
   font-family: inherit;
 }
@@ -59,25 +58,24 @@
 .button-group {
   display: flex;
   justify-content: flex-end;
-  gap: 10px;
+  gap: 12px;
+  margin-top: 20px;
 }
-
-.cancel,
-.submit {
-  padding: 12px 24px;
-  font-size: 15px;
+.button-common {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 16px;
   border: none;
-  border-radius: 4px;
-  font-weight: 500;
+  border-radius: 8px;
+  background-color: var(--white);
+  box-shadow: var(--box-shadow);
+  font-size: 14px;
+  color: var(--deep-gray);
   cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
-
-.cancel {
-  background-color: #f1f1f1;
-  color: #555;
-}
-
-.submit {
-  background-color: #e53935;
-  color: white;
+.button-common:hover {
+  color: var(--main-color-dark);
 }

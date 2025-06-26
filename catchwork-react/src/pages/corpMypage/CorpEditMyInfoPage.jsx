@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import SideBar from "../../components/myPage/CorpSideBar";
+import CorpSideBar from "../../components/myPage/CorpSideBar";
 import "./CorpEditMyInfoPage.css";
 
 const CorpEditMyInfoPage = ({ onCancel }) => {
@@ -105,13 +105,13 @@ const CorpEditMyInfoPage = ({ onCancel }) => {
 
   return (
     <div className="corp-page-container">
-      <SideBar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <CorpSideBar />
       <div className="corp-edit-content">
         <div className="form-container">
           <h2 className="page-title">기업 회원 정보 수정</h2>
           <div className="profile-content">
             <div className="profile-img-container">
-              <img src={formData.profileImage} alt="Profile" className="profile-img" />
+              <img src={formData.profileImage} className="profile-img" />
               <label htmlFor="image-upload" className="image-upload-label">
                 <input
                   id="image-upload"
@@ -173,29 +173,31 @@ const CorpEditMyInfoPage = ({ onCancel }) => {
               </div>
               <div className="info-item">
                 <span className="info-label">인증번호</span>
-                <div className="verification-section">
-                  <input
-                    type="text"
-                    className="info-value-input"
-                    value={formData.verificationCode}
-                    onChange={(e) => handleInputChange('verificationCode', e.target.value)}
-                    placeholder="인증번호를 입력해주세요"
-                    disabled={!verificationSent && !phoneVerified}
-                  />
-                  <button
-                    type="button"
-                    className="custom-btn verify-btn"
-                    onClick={handleVerifyCode}
-                    disabled={!verificationSent}
-                  >
-                    인증하기
-                  </button>
+                <div className="verification-wrapper">
+                  <div className="verification-section">
+                    <input
+                      type="text"
+                      className="info-value-input"
+                      value={formData.verificationCode}
+                      onChange={(e) => handleInputChange('verificationCode', e.target.value)}
+                      placeholder="인증번호를 입력해주세요"
+                      disabled={!verificationSent && !phoneVerified}
+                    />
+                    <button
+                      type="button"
+                      className="custom-btn verify-btn"
+                      onClick={handleVerifyCode}
+                      disabled={!verificationSent}
+                    >
+                      인증하기
+                    </button>
+                  </div>
+                  {verificationSent && !phoneVerified && (
+                    <span className="verification-timer">
+                      {formatTimer(timer)}
+                    </span>
+                  )}
                 </div>
-                {verificationSent && !phoneVerified && (
-                  <span className="verification-timer" style={{ marginTop: '5px' }}>
-                    {formatTimer(timer)}
-                  </span>
-                )}
               </div>
               <div className="info-item">
                 <span className="info-label">이름</span>
@@ -217,16 +219,16 @@ const CorpEditMyInfoPage = ({ onCancel }) => {
                   placeholder="부서명을 입력해주세요"
                 />
               </div>
+              <div className="info-item button-group">
+                <button
+                  type="button"
+                  className="custom-btn main-btn"
+                  onClick={handleSubmit}
+                >
+                  수정하기
+                </button>
+              </div>
             </div>
-          </div>
-          <div className="button-group">
-            <button
-              type="button"
-              className="custom-btn main-btn"
-              onClick={handleSubmit}
-            >
-              수정하기
-            </button>
           </div>
         </div>
       </div>

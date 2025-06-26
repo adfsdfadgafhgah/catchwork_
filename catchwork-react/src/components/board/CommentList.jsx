@@ -13,8 +13,8 @@ export default function CommentList({ boardNo, loginUser }) {
       {
         commentNo: 1,
         commentContent: "첫 번째 댓글입니다.",
-        commentWriteDate: "2025-06-23",
-        boardNo: boardNo,
+        commentWriteDate: "2025-06-22",
+        boardNo: 1,
         parentCommentNo: null,
         memNo: 100,
         memNickname: "작성자1",
@@ -23,7 +23,7 @@ export default function CommentList({ boardNo, loginUser }) {
         commentNo: 2,
         commentContent: "두 번째 댓글입니다.",
         commentWriteDate: "2025-06-24",
-        boardNo: boardNo,
+        boardNo: 1,
         parentCommentNo: null,
         memNo: 101,
         memNickname: "작성자2",
@@ -32,7 +32,7 @@ export default function CommentList({ boardNo, loginUser }) {
         commentNo: 3,
         commentContent: "대댓글입니다.",
         commentWriteDate: "2025-06-24",
-        boardNo: boardNo,
+        boardNo: 1,
         parentCommentNo: 1,
         memNo: 102,
         memNickname: "대댓글러",
@@ -83,8 +83,15 @@ export default function CommentList({ boardNo, loginUser }) {
     </div>
   );
 }
-
+//--------------------------------------------------------
 // 추후 서버구현 시 사용할 코드
+
+// import { useEffect, useState } from "react";
+// import axiosApi from "../../api/axiosAPI";
+// import CommentItem from "./CommentItem";
+// import CommentWrite from "./CommentWrite";
+// import CommentCss from "./CommentList.module.css";
+
 // export default function CommentList({ boardNo, loginUser }) {
 //   const [comments, setComments] = useState([]);
 

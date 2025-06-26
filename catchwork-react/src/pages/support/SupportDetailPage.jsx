@@ -4,6 +4,97 @@ import "./SupportDetailPage.css";
 
 const dummyData = [
   {
+    id: 20,
+    title: "아버지",
+    category: "카테고리",
+    content: "풀어주세요ㅠㅠ",
+    date: "2025-01-09",
+    answer: "ㄴㄴ",
+    answerDate: "2025-08-09"
+  },
+  {
+    id: 19,
+    title: "왜 안되죠?",
+    category: "카스테라",
+    content: "지금도 안됩니다",
+    date: "2025-01-09",
+    answer: "되는데요?",
+    answerDate: null
+  },
+  {
+    id: 18,
+    title: "왜 안되죠?",
+    category: "서비스 이용 문의",
+    content: "지금도 안됩니다",
+    date: "2025-1-09",
+    answer: null,
+    answerDate: null
+  },
+  // 7~1번까지 답변 없음 처리
+  {
+    id: 17,
+    title: "깡데이터 넣었어요",
+    category: "개발 문의",
+    content: "살려주세요",
+    date: "2025-05-08",
+    answer: null,
+    answerDate: null
+  },
+  {
+    id: 16,
+    title: "지금은 깡데이터임다",
+    category: "코드 문의",
+    content: "나중에는 바꿔야겠죠?",
+    date: "2025-04-08",
+    answer: null,
+    answerDate: null
+  },
+  {
+    id: 15,
+    title: "키키",
+    category: "안녕하세요?",
+    content: "키키",
+    date: "2025-03-08",
+    answer: null,
+    answerDate: null
+  },
+  {
+    id: 14,
+    title: "나중에 바꿀거",
+    category: "기타 문의",
+    content: "바꿔야함",
+    date: "2025-07-08",
+    answer: null,
+    answerDate: null
+  },
+  {
+    id: 13,
+    title: "문의하기",
+    category: "의의제기 문의",
+    content: "문의 입니다",
+    date: "2025-08-08",
+    answer: null,
+    answerDate: null
+  },
+  {
+    id: 12,
+    title: "죽어라",
+    category: "서비스 이용 문의",
+    content: "죽어라",
+    date: "2025-11-08",
+    answer: null,
+    answerDate: null
+  },
+  {
+    id: 11,
+    title: "살아라",
+    category: "정지 문의",
+    content: "살아라",
+    date: "2025-01-09",
+    answer: null,
+    answerDate: null
+  },
+  {
     id: 10,
     title: "아버지",
     category: "카테고리",

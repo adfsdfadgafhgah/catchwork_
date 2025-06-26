@@ -2,8 +2,8 @@
 
 .boardListPage {
   max-width: 1000px;
-  margin: 0 auto;
-  padding: 20px;
+  margin: 20px auto;
+  padding: 0 16px;
   background-color: white;
   min-height: 100vh;
 }
@@ -64,4 +64,11 @@
   cursor: pointer;
   color: #46b5ab;
   padding-left: 4px;
+}
+
+.noResult {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--stroke-color1); /* 또는 #888 같이 연한 색 */
+  margin-top: 2rem;
 }

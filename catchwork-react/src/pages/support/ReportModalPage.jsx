@@ -2,6 +2,16 @@ import React from "react";
 import "./ReportModalPage.css";
 
 const ReportModalPage = ({ target, onClose }) => {
+  const handleSubmit = () => {
+    alert("신고되었습니다");
+    onClose(); // 신고 후 모달 닫기
+  };
+
+  const handleCancel = () => {
+    alert("취소되었습니다");
+    onClose(); // 취소 후 모달 닫기
+  };
+
   return (
     <div className="modal-overlay">
       <div className="report-modal-box">
@@ -31,10 +41,12 @@ const ReportModalPage = ({ target, onClose }) => {
         </div>
 
         <div className="button-group">
-          <button className="button-common cancel-button" onClick={onClose}>
-            ✕ 취소하기
+          <button className="button-common cancel-button" onClick={handleCancel}>
+            <span className="material-symbols-outlined">close</span> 취소하기
           </button>
-          <button className="button-common submit-button">🚨 신고하기</button>
+          <button className="button-common submit-button" onClick={handleSubmit}>
+            <span className="material-symbols-outlined">siren</span> 신고하기
+          </button>
         </div>
       </div>
     </div>

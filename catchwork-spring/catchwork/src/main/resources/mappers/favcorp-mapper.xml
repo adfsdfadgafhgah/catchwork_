@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper	namespace="com.example.demo.company.model.mapper.FavCorpMapper">
+
+
+    <!-- 관심기업 등록 -->
+    <insert id="insertFavCorp">
+     	INSERT INTO FAV_CORP (MEM_NO, CORP_NO)
+        VALUES (#{memNo}, #{corpNo})
+    </insert>
+
+    <!-- 관심기업 삭제 -->
+    <delete id="deleteFavCorp">
+        DELETE FROM FAV_CORP
+        WHERE MEM_NO = #{memNo} AND CORP_NO = #{corpNo}
+    </delete>
+</mapper>

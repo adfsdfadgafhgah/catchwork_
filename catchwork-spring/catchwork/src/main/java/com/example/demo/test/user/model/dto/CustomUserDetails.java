@@ -20,10 +20,20 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> collection = new ArrayList<>();
-        collection.add(() -> "ROLE_ADMIN"); // 고정 ADMIN 부여 (Entity에 role 없음)
-        return collection;
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+
+        int memType = memberEntity.getMemType(); // 예: 0=개인, 1=기업, 2=관리자 등
+        System.out.println(memType);
+        String role = switch (memType) {
+            case 0 -> "ROLE_USER";
+            case 1 -> "ROLE_COMPANY";
+            default -> "ROLE_USER";
+        };
+
+        authorities.add(() -> role);
+        return authorities;
     }
+
 
     @Override
     public String getPassword() {
