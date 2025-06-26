@@ -1,100 +1,77 @@
-/* 상단 컨테이너: 사이드바 + 메인 콘텐츠 */
+/* 전체 레이아웃 */
 .corp-page-container {
   display: flex;
   min-height: 100vh;
-  background-color: #f5f5f5; /* 부드러운 배경색 */
+  font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
 }
 
-/* 메인 콘텐츠 영역 */
 .main-content {
   flex: 1;
-  padding: 80px; /* CorpEditMyInfoPage와 일치 */
-  background-color: #fff;
+  padding: 80px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
 }
 
-/* 콘텐츠 컨테이너 (네모박스 스타일 제거) */
+/* 메인 내용 컨테이너 */
 .content-container {
   width: 100%;
-  max-width: 600px; /* CorpEditMyInfoPage와 일치 */
-  padding: 40px 0; /* 상하 여백만 유지, 좌우 패딩 제거 */
-  /* border, border-radius, box-shadow 제거 */
+  max-width: 600px;
+  padding: 0;
+  margin-left: 0;
 }
 
-/* 페이지 타이틀 */
 .page-title {
-  font-size: 1.875rem; /* 30px, CorpEditMyInfoPage와 일치 */
+  font-size: 30px; 
   font-weight: 700;
-  color: #1f2937; /* CorpEditMyInfoPage와 일치 */
-  margin: 0 0 1rem 0; /* 간소화 */
+  color: var(--text);
   text-align: left;
 }
 
-/* 타이틀 구분선 */
 .title-divider {
   border: none;
   height: 2px;
-  background: #e0e7ff; /* CorpEditMyInfoPage와 유사 */
-  margin: 20px 0 40px 0; /* 간소화 */
+  margin: 20px 0 40px 0;
   border-radius: 1px;
 }
 
-/* 폼 스타일 */
 .password-form {
   width: 100%;
-}
-
-.form-section {
-  margin-bottom: 30px;
 }
 
 .form-group {
   margin-bottom: 30px;
 }
 
-.form-group:last-child {
-  margin-bottom: 0;
-}
-
-/* 폼 라벨 */
 .form-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 8px;
   display: block;
-  font-size: 16px;
-  color: #374151; /* CorpEditMyInfoPage와 유사 */
-  margin-bottom: 12px;
-  font-weight: 500; /* CorpEditMyInfoPage와 유사 */
 }
 
-/* 폼 입력 필드 */
 .form-input {
   width: 100%;
-  padding: 12px 16px; /* 간소화 */
-  border: 1px solid #e0e7ff; /* CorpEditMyInfoPage와 유사 */
-  border-radius: 8px; /* 둥근 모서리 유지 */
-  font-size: 15px;
-  background: #fafbfc;
-  box-sizing: border-box;
-  color: #1f2937; /* CorpEditMyInfoPage와 유사 */
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  padding: 8px 0;
+  font-size: 14px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  outline: none;
+  transition: border-color 0.2s ease;
 }
 
 .form-input:focus {
-  outline: none;
-  border-color: #46b5ab; /* CorpEditMyInfoPage의 main-color */
-  background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.2); /* 부드러운 포커스 효과 */
+  border-bottom: 2px solid #46b5ab;
 }
 
 .form-input::placeholder {
-  color: #9ca3af; /* CorpEditMyInfoPage와 유사 */
+  color: #9ca3af;
   font-size: 14px;
 }
 
-/* 에러 메시지 */
 .error-message {
-  color: #dc3545; /* CorpEditMyInfoPage와 유사 */
+  color: #dc3545;
   font-size: 14px;
   margin-top: 8px;
   font-weight: 500;
@@ -109,70 +86,43 @@
   font-size: 16px;
 }
 
-/* 버튼 컨테이너 */
 .button-container {
-  text-align: center; /* 중앙 정렬 */
-  margin-top: 40px;
+  text-align: right;
+  margin-top: 24px;
 }
 
-/* 제출 버튼 */
 .submit-btn {
-  background: #ffffff;
-  color: #374151; /* CorpEditMyInfoPage와 유사 */
-  border: 1px solid #e0e7ff; /* CorpEditMyInfoPage와 유사 */
-  padding: 12px 40px; /* 간소화 */
-  border-radius: 8px; /* 둥근 모서리 */
-  font-size: 16px;
-  font-weight: 600;
+  padding: 8px 20px;
+  font-size: 14px;
+  color: #374151;
+  border: 1px solid #ccc;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 160px;
 }
 
 .submit-btn:hover {
-  background: #f0f4f8; /* 부드러운 호버 효과 */
-  color: #46b5ab; /* CorpEditMyInfoPage의 main-color-dark와 유사 */
+  color: #46b5ab;
   border-color: #46b5ab;
 }
 
 .submit-btn:disabled {
-  cursor: not-allowed;
   opacity: 0.6;
+  cursor: not-allowed;
 }
 
-/* 반응형 디자인 */
+/* 반응형 */
 @media (max-width: 768px) {
   .main-content {
-    padding: 40px 20px; /* CorpEditMyInfoPage와 일치 */
+    padding: 40px 20px;
   }
-  
+
   .content-container {
-    padding: 30px 0; /* 상하 여백만 유지 */
     max-width: 100%;
-    margin: 0;
   }
-  
-  .page-title {
-    font-size: 1.5rem; /* CorpEditMyInfoPage와 일치 */
-  }
-  
-  .form-label {
-    font-size: 15px;
-  }
-  
-  .form-input {
-    padding: 10px 14px;
-    font-size: 14px;
-  }
-  
+
   .submit-btn {
     width: 100%;
-    padding: 12px 20px;
-    font-size: 15px;
-  }
-  
-  .form-group {
-    margin-bottom: 25px;
   }
 }
 
@@ -180,34 +130,17 @@
   .main-content {
     padding: 20px 15px;
   }
-  
-  .content-container {
-    padding: 20px 0;
-  }
-  
+
   .page-title {
-    font-size: 1.25rem; /* CorpEditMyInfoPage와 일치 */
+    font-size: 1.25rem;
   }
-  
-  .form-input {
-    padding: 10px 12px;
-    font-size: 14px;
-  }
-  
-  .form-label {
-    font-size: 14px;
-    margin-bottom: 8px;
-  }
-  
+
   .form-group {
     margin-bottom: 20px;
   }
-  
-  .button-container {
-    margin-top: 30px;
-  }
-  
-  .title-divider {
-    margin: 15px 0 30px 0;
+
+  .submit-btn {
+    font-size: 13px;
+    padding: 10px 16px;
   }
 }

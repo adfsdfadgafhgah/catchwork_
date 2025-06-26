@@ -15,29 +15,29 @@ const CVBasic = ({ userInfo }) => {
         <div className={styles.infoRow}>
           <div className={styles.infoItem}>
             <span className={styles.infoLabel}>이름</span>
-            <span className={styles.infoText}>{userInfo.name}</span>
+            <span className={styles.infoText}>{userInfo.memName}</span>
           </div>
           <div className={styles.infoItem}>
             <span className={styles.infoLabel}>연락처</span>
-            <span className={styles.infoText}>{userInfo.phone}</span>
+            <span className={styles.infoText}>{userInfo.memTel}</span>
           </div>
         </div>
 
         <div className={styles.infoRow}>
           <div className={styles.infoItem}>
             <span className={styles.infoLabel}>성별</span>
-            <span className={styles.infoText}>{userInfo.gender}</span>
+            <span className={styles.infoText}>{userInfo.memGender}</span>
           </div>
           <div className={styles.infoItem}>
             <span className={styles.infoLabel}>이메일</span>
-            <span className={styles.infoText}>{userInfo.email}</span>
+            <span className={styles.infoText}>{userInfo.memEmail}</span>
           </div>
         </div>
 
         <div className={styles.infoRow}>
           <div className={`${styles.infoItem} ${styles.birthItem}`}>
             <span className={styles.infoLabel}>생일</span>
-            <span className={styles.infoText}>{userInfo.birth}</span>
+            <span className={styles.infoText}>{userInfo.memBirthday}</span>
           </div>
         </div>
       </div>
