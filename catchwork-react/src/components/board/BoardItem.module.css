@@ -105,6 +105,13 @@
   cursor: pointer;
 }
 
+.thumbnailImg {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
 /* 반응형 */
 @media (max-width: 600px) {
   .boardItem {

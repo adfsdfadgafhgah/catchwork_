@@ -65,3 +65,10 @@
   color: #46b5ab;
   padding-left: 4px;
 }
+
+.noResult {
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--stroke-color1); /* 또는 #888 같이 연한 색 */
+  margin-top: 2rem;
+}

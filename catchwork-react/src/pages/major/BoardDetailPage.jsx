@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom"; // 페이지 이동용
 import CommentList from "../../components/board/CommentList";
 import { formatTimeAgo } from "../../components/common/formatTimeAgo";
 import ReportModalPage from "../support/ReportModalPage";
+import { Viewer } from "@toast-ui/react-editor"; // Toast UI Viewer 추가
 
 // 서버 구현 전 깡데이터용 ㅋㅋ
 export const dummyBoards = [
@@ -173,7 +174,22 @@ export default function BoardDetailPage() {
   );
 }
 
+//----------------------------------------------------------------------
 // // 추후 서버 구현 후 쓸 코드
+
+// import { useParams } from "react-router-dom";
+// import { useEffect, useState } from "react";
+// import { axiosApi } from "../../api/axiosAPI";
+// import BoardCss from "./BoardDetailPage.module.css";
+// import SectionHeader from "../../components/common/SectionHeader";
+// import { useContext } from "react";
+// import { AuthContext } from "../../contexts/AuthContext";
+// import { useNavigate } from "react-router-dom"; // 페이지 이동용
+// import CommentList from "../../components/board/CommentList";
+// import { formatTimeAgo } from "../../components/common/formatTimeAgo";
+// import ReportModalPage from "../support/ReportModalPage";
+// import { Viewer } from "@toast-ui/react-editor"; // Toast UI Viewer 추가
+
 // export default function BoardDetailPage() {
 //   const { boardNo } = useParams();
 //   const [board, setBoard] = useState(null);
@@ -273,10 +289,10 @@ export default function BoardDetailPage() {
 //     {/* 섹션 헤더 */}
 //     <SectionHeader title="취준진담" />
 
-//     {/* 제목 + 수정/삭제 */}
-//     <div className={BoardCss.headerRow}>
-//       <h1 className={BoardCss.title}>{board.boardTitle}</h1>
-//       {loginUser && loginUser.memNo === board.member.memNo && (
+//    {/* 제목 + 수정/삭제 */}
+//      <div className={BoardCss.headerRow}>
+//        <h1 className={BoardCss.title}>{board.boardTitle}</h1>
+//        {loginUser && loginUser.memNo === board.member.memNo && (
 //       <div className={BoardCss.actionButtons}>
 //         <button className={BoardCss.actionBtn} onClick={handleEdit}>
 //           <i className="fa-regular fa-pen-to-square"></i> 수정하기
@@ -288,10 +304,10 @@ export default function BoardDetailPage() {
 //       )}
 //     </div>
 
-//     {/* 작성자 정보 + 메타 정보 */}
-//     <div className={BoardCss.metaRow}>
-//       <div className={BoardCss.writerInfo}>
-//         <img
+//      {/* 작성자 정보 + 메타 정보 */}
+//      <div className={BoardCss.metaRow}>
+//        <div className={BoardCss.writerInfo}>
+//          <img
 //            src={
 //               board.member.memProfilePath
 //                ? `http://localhost:8080/${board.member.memProfilePath}`
@@ -310,10 +326,10 @@ export default function BoardDetailPage() {
 //           onClick={toggleLike}
 //         />{" "}
 //         {likeCount} &nbsp;&nbsp;
-{
-  /* 신고하기 버튼 조건 렌더링 */
-}
-// {(!loginUser || loginUser.memNo !== board.member.memNo) && (
+// {
+//   /* 신고하기 버튼 조건 렌더링 */
+// }
+//  {(!loginUser || loginUser.memNo !== board.member.memNo) && (
 //          <button className={BoardCss.actionBtn} onClick={handleReportClick}>
 //            <span className={`material-symbols-outlined ${BoardCss.iconSmall}`}>
 //              siren
@@ -324,9 +340,12 @@ export default function BoardDetailPage() {
 //       </div>
 //     </div>
 
-//     {/* 본문 */}
-//     <div className={BoardCss.contentBox}>{board.boardContent}</div>
-//   </div>
+//      {/* 본문 */}
+//     <div className={BoardCss.contentBox}>
+//        {/* markdown을 HTML로 렌더링 */}
+//        <Viewer initialValue={board.boardContent} />
+//     </div>
+//    </div>
 //     {/* 댓글 컴포넌트 */}
 //     <CommentList boardNo={board.boardNo} loginUser={loginUser} />
 //     {/* 신고하기 모달 */}

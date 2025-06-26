@@ -96,8 +96,12 @@ public class SecurityConfig {
 
 		// 경로별 인가 작업
 		http.authorizeHttpRequests((auth) -> auth
+<<<<<<< heobae
+				.requestMatchers("/", "/**", "/signup","/boardList").permitAll()
+=======
 // 				.requestMatchers("/", "/signup","signout").permitAll()
 				.requestMatchers("/**").permitAll()
+>>>>>>> dev
 				.requestMatchers("/admin").hasRole("ADMIN").anyRequest().authenticated());
 		
 
