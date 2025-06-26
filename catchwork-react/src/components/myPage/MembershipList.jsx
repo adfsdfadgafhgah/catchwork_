@@ -1,21 +1,9 @@
-import { useEffect, useState } from "react";
-import { axiosApi } from "../../api/axiosAPI";
+import { useEffect } from "react";
 import MembershipItem from "./MembershipItem";
+import useMembershipList from "./Membership";
 
 function MembershipList({ handleCheckout }) {
-  const [membershipList, setMembershipList] = useState("");
-
-  const getMembershipList = async () => {
-    try {
-      const resp = await axiosApi.get("/membership/getMembershipList");
-
-      if (resp.status === 200) {
-        setMembershipList(resp.data);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { membershipList, getMembershipList } = useMembershipList();
 
   useEffect(() => {
     getMembershipList();

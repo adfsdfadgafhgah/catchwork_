@@ -23,6 +23,8 @@ import com.example.demo.test.util.JWTUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -64,7 +66,7 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-	    // cors
+    // cors
 		http
         .cors((corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
 
@@ -96,14 +98,9 @@ public class SecurityConfig {
 
 		// 경로별 인가 작업
 		http.authorizeHttpRequests((auth) -> auth
-<<<<<<< heobae
-				.requestMatchers("/", "/**", "/signup","/boardList").permitAll()
-=======
 // 				.requestMatchers("/", "/signup","signout").permitAll()
 				.requestMatchers("/**").permitAll()
->>>>>>> dev
 				.requestMatchers("/admin").hasRole("ADMIN").anyRequest().authenticated());
-		
 
 		// LoginFilter 
         LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil);
@@ -112,9 +109,25 @@ public class SecurityConfig {
         // JWT 검증 필터
         http.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
         
-
 		// 세션 설정
 		http.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+		// 인증 및 권한 관련 예외 발생 시 JSON 형태로 응답을 반환하도록 설정
+		http.exceptionHandling((exceptions) -> exceptions
+
+				// 인증 실패 (예: JWT 없음, 만료 등) 시 401 Unauthorized 응답 처리
+				.authenticationEntryPoint((request, response, authException) -> {
+					response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); // 401 상태 코드 설정
+					response.setContentType("application/json"); // 응답 타입을 JSON으로 지정
+					response.getWriter().write("{\"error\": \"Unauthorized\"}"); // 간단한 JSON 에러 메시지 반환
+				})
+
+				// 접근 거부 (예: 권한 부족한 사용자가 ADMIN 경로 접근 등) 시 403 Forbidden 응답 처리
+				.accessDeniedHandler((request, response, accessDeniedException) -> {
+					response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 상태 코드 설정
+					response.setContentType("application/json"); // 응답 타입을 JSON으로 지정
+					response.getWriter().write("{\"error\": \"Forbidden\"}"); // 간단한 JSON 에러 메시지 반환
+				}));
 
 		return http.build();
 	}

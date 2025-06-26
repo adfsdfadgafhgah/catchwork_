@@ -10,7 +10,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -26,51 +25,52 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
-    private final ObjectMapper objectMapper = new ObjectMapper();
-    private final JWTUtil jwtUtil;
+	private final ObjectMapper objectMapper = new ObjectMapper();
+	private final JWTUtil jwtUtil;
 
-    public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
-        super(new AntPathRequestMatcher("/signin", "POST"));
-        setAuthenticationManager(authenticationManager);
-        this.jwtUtil = jwtUtil;
-    }
-    
-    @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
-            throws AuthenticationException {
+	public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+		super(new AntPathRequestMatcher("/signin", "POST"));
+		setAuthenticationManager(authenticationManager);
+		this.jwtUtil = jwtUtil;
+	}
 
-        try {
-            // Content-Type이 application/json인지 확인
-            String contentType = request.getContentType();
-            if (contentType == null || !contentType.contains("application/json")) {
-                throw new AuthenticationServiceException("Content-Type must be application/json");
-            }
+	@Override
+	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+			throws AuthenticationException {
 
-            // Request body에서 JSON 데이터 읽기
-            String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
+		try {
+			// Content-Type이 application/json인지 확인
+			String contentType = request.getContentType();
+			if (contentType == null || !contentType.contains("application/json")) {
+				throw new AuthenticationServiceException("Content-Type must be application/json");
+			}
 
+			// Request body에서 JSON 데이터 읽기
+			String requestBody = request.getReader().lines().collect(Collectors.joining(System.lineSeparator()));
 
-            // JSON을 Member 객체로 변환
-            Member member = objectMapper.readValue(requestBody, Member.class);
+			// JSON을 Member 객체로 변환
+			Member member = objectMapper.readValue(requestBody, Member.class);
 
-            String memId = member.getMemId();
-            String memPw = member.getMemPw();
+			String memId = member.getMemId();
+			String memPw = member.getMemPw();
 
-            // null 체크
-            if (memId == null || memPw == null) {
-                throw new AuthenticationServiceException("Username or password is null");
-            }
+			// null 체크
+			if (memId == null || memPw == null) {
+				throw new AuthenticationServiceException("Username or password is null");
+			}
 
-            UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(memId, memPw);
+			UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(memId, memPw);
 
-            return this.getAuthenticationManager().authenticate(authToken);
+			return this.getAuthenticationManager().authenticate(authToken);
 
-        } catch (IOException e) {
-            throw new AuthenticationServiceException("Failed to parse authentication request", e);
-        }
-    }
+		} catch (IOException e) {
+			throw new AuthenticationServiceException("Failed to parse authentication request", e);
+		}
+	}
 
-
+	@Override
+	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+			Authentication authentication) {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain chain, Authentication authentication) {

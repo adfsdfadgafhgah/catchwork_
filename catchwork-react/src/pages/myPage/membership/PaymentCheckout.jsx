@@ -1,39 +1,41 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import useMembershipList from "../../../components/myPage/Membership";
+
+const userInfo = {
+  userId: "95132b50-d360-400b-bfb2-5a1c51857f4c",
+  userName: "홍길동",
+  userEmail: "user01@example.com",
+  memNo: "95132b50-d360-400b-bfb2-5a1c51857f4c",
+};
 
 const API_BASE_URL = "http://localhost:8080";
 
-const products = [
-  {
-    productName: "구독상품 1유형",
-    price: 0,
-  },
-];
-
-const userInfo = {
-  userId: "testuser",
-  userName: "홍길동",
-  userEmail: "user01@kh.or",
-  customerKey: "test_customerKey",
-};
-
-function generateRandomString() {
-  return window.btoa(Math.random().toString()).slice(0, 20);
-}
-
 function PaymentCheckout() {
+  function generateRandomString() {
+    return window.btoa(Math.random().toString()).slice(0, 20);
+  }
   const navigate = useNavigate();
+  const isPayed = useRef(false);
 
   const [subscribeConfirmed, setSubscribeConfirmed] = useState(false);
   const [searchParams] = useSearchParams();
   const productId = searchParams.get("productId");
 
+  const { membershipList, getMembershipList } = useMembershipList();
+  useEffect(() => {
+    getMembershipList();
+  }, []);
+  const product = membershipList.find(
+    (item) => item.memGradeId === Number(productId)
+  );
+
   async function confirmBilling() {
     const requestData = {
-      customerKey: userInfo.customerKey,
-      amount: products.price,
+      customerKey: userInfo.memNo,
+      amount: product.memGradePrice,
       orderId: generateRandomString(),
-      orderName: products.productName,
+      orderName: product.memGradeName,
       customerEmail: userInfo.userEmail,
       customerName: userInfo.userName,
     };
@@ -48,6 +50,8 @@ function PaymentCheckout() {
 
     const json = await response.json();
 
+    console.log(json);
+
     if (!response.ok) {
       throw { message: json.message, code: json.code };
     }
@@ -55,24 +59,38 @@ function PaymentCheckout() {
     return json;
   }
 
-  confirmBilling()
-    .then(() => setSubscribeConfirmed(true))
-    .catch((err) => {
-      navigate(
-        `/mypage/membership/fail?message=${err.message}&code=${err.code}`
-      );
-    });
+  useEffect(() => {
+    if (!product || isPayed.current) return;
+    isPayed.current = true;
 
+    confirmBilling()
+      .then(() => setSubscribeConfirmed(true))
+      .catch((err) => {
+        navigate(
+          `/mypage/payment/fail?message=${err.message}&code=${err.code}`
+        );
+      });
+  }, [product]);
+
+  if (subscribeConfirmed) {
+    return (
+      <div className="membership-container">
+        <div className="membership-box_section" style={{ width: "600px" }}>
+          <img
+            width="100px"
+            src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png"
+          />
+          <h2 id="membership-title">구독이 완료되었습니다.</h2>
+        </div>
+      </div>
+    );
+  }
+
+  // ✅ fallback UI 추가
   return (
     <div className="membership-container">
       <div className="membership-box_section" style={{ width: "600px" }}>
-        <img
-          width="100px"
-          src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png"
-        />
-        {subscribeConfirmed && (
-          <h2 id="membership-title">구독이 완료되었습니다.</h2>
-        )}
+        <h2 id="membership-title">결제 확인 중입니다...</h2>
       </div>
     </div>
   );
