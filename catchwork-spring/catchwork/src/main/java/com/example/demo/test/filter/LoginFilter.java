@@ -68,9 +68,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 		}
 	}
 
-	@Override
-	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-			Authentication authentication) {
+
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain chain, Authentication authentication) {
