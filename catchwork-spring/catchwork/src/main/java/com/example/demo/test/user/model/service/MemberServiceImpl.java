@@ -1,12 +1,15 @@
 package com.example.demo.test.user.model.service;
 
 
+import java.util.Date;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.test.user.model.dto.Member;
 import com.example.demo.test.user.model.entity.MemberEntity;
+import com.example.demo.test.user.model.entity.MemberGradeEntity;
 import com.example.demo.test.user.model.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -64,43 +67,42 @@ public class MemberServiceImpl implements MemberService{
 	 *
 	 * @author Won
 	 */
-	@Override
-	public String signin(Member inputMember) {
-	    // 입력값 검증
-	    if (!isValidSigninInput(inputMember)) {
-	        return "INVALID_INPUT";
-	    }
-	    
-	    try {
-	        // DB에서 사용자 조회
-	        MemberEntity memberEntity = memberRepository.findByMemId(inputMember.getMemId());
-	        
-	        // 사용자가 존재하지 않는 경우
-	        if (memberEntity == null) {
-	            return "USER_NOT_FOUND";
-	        }
-	        
-	        // 비밀번호 검증
-	        if (!bcrypt.matches(inputMember.getMemPw(), memberEntity.getMemPw())) {
-	            return "INVALID_PASSWORD";
-	        }
-	        
-	        // 로그인 성공
-	        String token = generateJWTToken(memberEntity);
-	        return token;
-	        
-	    } catch (Exception e) {
-	        throw new RuntimeException("로그인 처리 중 오류가 발생했습니다.", e);
-	    }
-	}
-	/**
-	 * JWT 토큰 생성 메서드 (실제 JWT 라이브러리 사용 필요)
-	 */
-	private String generateJWTToken(MemberEntity member) {
-	    // 실제로는 JWT 라이브러리를 사용해서 토큰 생성
-	    // 예시: return jwtUtil.generateToken(member.getMemId());
-	    return "jwt.token.example." + member.getMemId(); // 임시 토큰
-	}
+//	@Override
+//	public String signin(Member inputMember) {
+//	    // 입력값 검증
+//	    if (!isValidSigninInput(inputMember)) {
+//	        return "INVALID_INPUT";
+//	    }
+//	    
+//	    try {
+//	        // DB에서 사용자 조회
+//	        MemberEntity memberEntity = memberRepository.findByMemId(inputMember.getMemId());
+//	        
+//	        // 사용자가 존재하지 않는 경우
+//	        if (memberEntity == null) {
+//	            return "USER_NOT_FOUND";
+//	        }
+//	        
+//	        // 비밀번호 검증
+//	        if (!bcrypt.matches(inputMember.getMemPw(), memberEntity.getMemPw())) {
+//	            return "INVALID_PASSWORD";
+//	        }
+//	        
+//	        // 로그인 성공
+//	        String token = generateJWTToken(memberEntity);
+//	        return token;
+//	        
+//	    } catch (Exception e) {
+//	        throw new RuntimeException("로그인 처리 중 오류가 발생했습니다.", e);
+//	    }
+//	}
+//	
+//	// JWT 토큰 생성 메서드 (실제 JWT 라이브러리 사용 필요)
+//	private String generateJWTToken(MemberEntity member) {
+//	    // 실제로는 JWT 라이브러리를 사용해서 토큰 생성
+//	    // 예시: return jwtUtil.generateToken(member.getMemId());
+//	    return "jwt.token.example." + member.getMemId(); // 임시 토큰
+//	}
 	
 	
 	
@@ -136,11 +138,30 @@ public class MemberServiceImpl implements MemberService{
 	 */
 	private MemberEntity createMemberEntity(Member member) {
 	    MemberEntity entity = new MemberEntity();
+	    MemberGradeEntity gradeEntity = new MemberGradeEntity();
+	    gradeEntity.setMemGradeNo(member.getMemGrade()); // FK ID만 지정
+	    
 	    entity.setMemName(member.getMemName());
 	    entity.setMemId(member.getMemId());
 	    entity.setMemPw(bcrypt.encode(member.getMemPw()));
+	    entity.setMemNickname(member.getMemNickname());
+	    entity.setMemTel(member.getMemTel());
+	    entity.setMemEmail(member.getMemEmail());
+	    entity.setMemBirthday(member.getMemBirthday());
+	    entity.setMemGender(member.getMemGender());
+	    entity.setMemAddr(member.getMemAddr());
+	    entity.setMemEnrollDate(new Date());
+	    entity.setMemSmsFl(member.getMemSmsFl());
+	    entity.setMemType(member.getMemType());
+	    entity.setMemStatus(member.getMemStatus());
+	    entity.setMemStatusDate(member.getMemStatusDate());
+	    entity.setMemProfilePath(member.getMemProfilePath());
+	    entity.setMemGrade(gradeEntity);
+	    entity.setMembershipUpdate(member.getMembershipUpdate());
+
 	    return entity;
 	}
+
 	
 	/**
 	 * 저장 후 클라이언트에 응답할 Member 객체를 생성하는 메서드

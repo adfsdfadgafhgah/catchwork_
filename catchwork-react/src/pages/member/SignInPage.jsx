@@ -3,10 +3,39 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import icon from "../../assets/icon.png";
 import "./SignInPage.css";
+import { axiosApi } from "../../api/axiosAPI";
 
 const SignInPage = () => {
   const [isCorp, setIsCorp] = useState(false); // false: 개인, true: 기업
   const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    try {
+      const res = await axiosApi.post("/signin", {
+        memId,
+        memPw,
+      });
+
+      const accessToken = res.headers.authorization?.split(" ")[1];
+      if (accessToken) {
+        localStorage.setItem("accessToken", accessToken);
+
+        const decoded = getDecodedToken(accessToken);
+        const memType = decoded?.memType;
+
+        // memType 분기: 0 - 개인, 1 - 기업
+        if (memType === 0) {
+          navigate("/");
+        } else if (memType === 1) {
+          navigate("/corp");
+        } else {
+          alert("알 수 없는 사용자 유형입니다.");
+        }
+      }
+    } catch (err) {
+      alert("로그인 실패: " + err.response?.data?.message || err.message);
+    }
+  };
 
   return (
     <div className="signin-container">

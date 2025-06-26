@@ -1,11 +1,17 @@
-.section-header {
+.section-header-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.section-header-container.with-border {
   padding-bottom: 10px;
   margin-bottom: 20px;
   border-bottom: 1px solid var(--stroke-color1);
 }
 
-.section-header .title {
+.section-header-container .title {
   font-size: 20px;
   font-weight: bold;
-  color: var(--deep-gray) !important;
+  color: var(--deep-gray);
 }

@@ -3,10 +3,12 @@ import { useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
 import iconImg from "../../assets/icon.png";
 import BoardCss from "./BoardItem.module.css";
+import { formatTimeAgo } from "./../common/formatTimeAgo";
 
 export default function BoardItem({ board, isLoggedIn, currentUser }) {
   const [likeCount, setLikeCount] = useState(board.likeCount);
-  const [liked, setLiked] = useState(board.likedByCurrentUser); // 서버에서 true/false 전달
+  // const [liked, setLiked] = useState(board.likedByCurrentUser); // 서버에서 true/false 전달
+  const [liked, setLiked] = useState(!!board.likedByCurrentUser); // 안전하게 Boolean 처리
 
   const toggleLike = async (e) => {
     e.preventDefault(); // Link 이동 막기
@@ -38,13 +40,22 @@ export default function BoardItem({ board, isLoggedIn, currentUser }) {
     <Link to={`/board/${board.boardNo}`} className={BoardCss.linkWrapper}>
       <div className={BoardCss.boardItem}>
         <div className={BoardCss.boardItemLeft}>
-          <div className={BoardCss.profileImg}>{board.memProfilePath}</div>
+          <img
+            src={
+              board.memProfilePath
+                ? `http://localhost:8080/${board.memProfilePath}`
+                : "/default-profile.png"
+            }
+            alt="프로필 이미지"
+            className={BoardCss.profileImg}
+          />
+
           <div className={BoardCss.boardItemContent}>
             <div className={BoardCss.authorDate}>
-              <span className={BoardCss.author}>
-                {board.member.memNickname}
+              <span className={BoardCss.author}>{board.memNickname}</span>
+              <span className={BoardCss.date}>
+                {formatTimeAgo(board.boardWriteDate)}
               </span>
-              <span className={BoardCss.date}>{board.boardWriteDate}</span>
             </div>
             <h3 className={BoardCss.title}>
               {/* 제목이 길 경우 */}
@@ -67,7 +78,15 @@ export default function BoardItem({ board, isLoggedIn, currentUser }) {
           </div>
         </div>
         <div className={BoardCss.logo}>
-          <img src={iconImg} alt="catchWork로고" />
+          {board.boardThumbnailUrl ? (
+            <img
+              src={`http://localhost:8080/${board.boardThumbnailUrl}`}
+              alt="썸네일"
+              className={BoardCss.thumbnailImg}
+            />
+          ) : (
+            <img src={iconImg} alt="catchWork로고" />
+          )}
         </div>
       </div>
     </Link>

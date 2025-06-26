@@ -1,5 +1,6 @@
 import { useState } from "react";
 import CommentCss from "./CommentEdit.module.css";
+import { formatTimeAgo } from "../common/formatTimeAgo";
 // import axiosApi from "../../api/axiosAPI";
 
 export default function CommentEdit({ comment, onCancel, onSuccess }) {
@@ -27,13 +28,19 @@ export default function CommentEdit({ comment, onCancel, onSuccess }) {
       <div className={CommentCss.header}>
         <div className={CommentCss.writerInfo}>
           <img
-            src={comment.memProfilePath || "/profile.png"}
+            src={
+              comment.memProfilePath
+                ? `http://localhost:8080/${comment.memProfilePath}`
+                : "/profile.png"
+            }
             alt="프로필"
             className={CommentCss.profileImg}
           />
           <span className={CommentCss.nickname}>{comment.memNickname}</span>
         </div>
-        <span className={CommentCss.date}>{comment.commentWriteDate}</span>
+        <span className={CommentCss.date}>
+          {formatTimeAgo(comment.commentWriteDate)}
+        </span>
       </div>
 
       {/* 수정 input */}
@@ -53,7 +60,7 @@ export default function CommentEdit({ comment, onCancel, onSuccess }) {
           <i className="fa-solid fa-xmark"></i> 취소하기
         </button>
         <button className={CommentCss.submitBtn} onClick={handleSubmit}>
-          <i className="fa-regular fa-pen-to-square"></i> 저장하기
+          <i className="fa-regular fa-pen-to-square"></i> 작성하기
         </button>
       </div>
     </div>

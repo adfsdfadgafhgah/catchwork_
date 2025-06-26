@@ -1,8 +1,10 @@
 import { createBrowserRouter } from "react-router-dom";
 import "./App.css";
 
-// 레이아웃
+// 공통
+// 레이아웃 & 페이지 접근 제어
 import Layout from "./Layout";
+import ProtectedRoute from "./AppRoute";
 
 // 오류 및 메인
 import NotFound from "./pages/error/NotFound";
@@ -22,17 +24,31 @@ import CompanyListPage from "./pages/major/CompanyListPage";
 import BoardPage from "./pages/major/BoardPage";
 import CVPage from "./pages/major/CVListPage";
 
+// 개인 회원
 // 마이페이지
 import MyPage from "./pages/myPage/MyPage";
 import MyInfo from "./pages/myPage/MyInfoPage";
 import MyRecruitPage from "./pages/myPage/MyRecruitPage";
+import MembershipPage from "./pages/myPage/MembershipPage";
+
+// 멤버십
+import PaymentBilling from "./pages/myPage/membership/PaymentBilling";
+import PaymentCheckout from "./pages/myPage/membership/PaymentCheckout";
+import PaymentFail from "./pages/myPage/membership/PaymentFail";
 
 //이력서 제출
 import SubmitCVPage from "./pages/major/SubmitCVPage";
+import WriteCVPage from "./pages/major/WriteCVPage";
 
 // 게시글
 import BoardListPage from "./pages/major/BoardListPage";
 import BoardDetailPage from "./pages/major/BoardDetailPage";
+import WriteBoardPage from "./pages/major/WriteBoardPage";
+import EditBoardPage from "./pages/major/EditBoardPage";
+
+// 기업 회원
+// 기업 메인
+import CorpRecruitListPage from "./pages/corpMajor/CorpRecruitListPage";
 
 // 기업상세
 import CompanyPage from "./pages/major/CompanyPage";
@@ -45,20 +61,24 @@ import SupportDetailPage from "./pages/support/SupportDetailPage";
 
 // 기업 마이페이지
 import CorpMyPage from "./pages/corpMypage/CorpMyPage";
-import CorpEditMyInfoPage from "./pages/corpMypage/CorpEditMyInfoPage"; 
-import CorpConfirmEditPage from "./pages/corpMypage/CorpConfirmEditPage"; 
-import CorpChangePwPage from "./pages/corpMypage/CorpChangePwPage"; 
-import CorpWithdrawPage from "./pages/corpMypage/CorpWithdrawPage"; 
+import CorpEditMyInfoPage from "./pages/corpMypage/CorpEditMyInfoPage";
+import CorpConfirmEditPage from "./pages/corpMypage/CorpConfirmEditPage";
+import CorpChangePwPage from "./pages/corpMypage/CorpChangePwPage";
+import CorpWithdrawPage from "./pages/corpMypage/CorpWithdrawPage";
 
 //기업 제출된 이력서 목록
 import CorpCVListPage from "./pages/corpMajor/CorpCVListPage";
 
 //기업 정보, 기업 정보 수정
 import CorpCompanyDetailPage from "./pages/corpMajor/CorpCompanyDetailPage";
-// import EditCompanyPage from "./pages/corpMajor/EditCompanyPage";
+import EditCompanyPage from "./pages/corpMajor/EditCompanyPage";
+import CorpCompanyPage from "./pages/corpMajor/CorpCompanyPage";
 
 // 신고하기
 import ReportModalPage from "./pages/support/ReportModalPage";
+
+//test
+import AuthTest from "./pages/member/AuthTest";
 
 const router = createBrowserRouter([
   {
@@ -66,20 +86,31 @@ const router = createBrowserRouter([
     element: <Layout />,
     children: [
       { index: true, element: <MainPage /> },
-      { path: "signin", element: <SignInPage /> },
-      { path: "signup", element: <SignUpPage /> },
-      { path: "recruit", element: <RecruitPage /> },
-
-      { path: "board", element: <BoardPage /> },
-      { path: "cv", element: <CVPage /> },
-
+      // 등록된 주소 외 모든 주소 예외 처리
+      { path: "*", element: <NotFound /> },
       // 로그인/회원가입
       { path: "signin", element: <SignInPage /> },
       { path: "signup", element: <SignUpPage /> },
-
+      { path: "auth", element: <AuthTest /> },
       // Id,PW 찾기
       { path: "findid", element: <FindIdPage /> },
       { path: "findpw", element: <FindPWPage /> },
+
+      { path: "recruit", element: <RecruitPage /> },
+
+      { path: "board", element: <BoardPage /> },
+
+      // 로그인 필요, 개인회원 전용 예시
+      {
+        path: "cv",
+        element: (
+          <ProtectedRoute allowedType={0}>
+            <CVPage />
+          </ProtectedRoute>
+        ),
+      },
+      /* 테스트 : 이력서 작성페이지*/
+      { path: "writecvpage", element: <WriteCVPage /> },
 
       { path: "recruit", element: <RecruitPage /> },
       {
@@ -93,11 +124,13 @@ const router = createBrowserRouter([
 
       // 게시글
       {
-        path: "/board",
+        path: "board",
         element: <BoardPage />,
         children: [
           { index: true, element: <BoardListPage /> },
           { path: ":boardNo", element: <BoardDetailPage /> },
+          { path: "write", element: <WriteBoardPage /> },
+          { path: "edit/:boardNo", element: <EditBoardPage /> },
         ],
       },
 
@@ -106,17 +139,33 @@ const router = createBrowserRouter([
       { path: "supportlist", element: <SupportListPage /> },
       { path: "writesupport", element: <WriteSupportPage /> },
       { path: "reportmodal", element: <ReportModalPage /> },
-       
-      { path: "corpcvlist", element: <CorpCVListPage /> },
-      { path: "corpcompanydetail/:corpNo", element: <CorpCompanyDetailPage /> },
-      // { path: "editcompany", element: <EditCompanyPage /> },
-
       {
         path: "/supportdetail",
         element: <SupportDetailPage />,
         children: [{ path: ":id", element: <SupportDetailPage /> }],
       },
-      { path: "corpmypage", element: <CorpMyPage /> },
+
+      /*
+  ______   ______   .______      .______      .______      ___       _______  _______     _______.
+ /      | /  __  \  |   _  \     |   _  \     |   _  \    /   \     /  _____||   ____|   /       |
+|  ,----'|  |  |  | |  |_)  |    |  |_)  |    |  |_)  |  /  ^  \   |  |  __  |  |__     |   (----`
+|  |     |  |  |  | |      /     |   ___/     |   ___/  /  /_\  \  |  | |_ | |   __|     \   \    
+|  `----.|  `--'  | |  |\  \----.|  |         |  |     /  _____  \ |  |__| | |  |____.----)   |   
+ \______| \______/  | _| `._____|| _|    _____| _|    /__/     \__\ \______| |_______|_______/    
+                                        |______|                                                  
+      */
+      { path: "corp", element: <CorpRecruitListPage /> },
+
+      // 기업 회원
+      { path: "corpcvlist", element: <CorpCVListPage /> },
+      {
+        path: "corpcompanydetail",
+        element: <CorpCompanyPage />,
+        children: [
+          { path: ":corpNo", element: <CorpCompanyDetailPage /> },
+          { path: ":corpNo/edit", element: <EditCompanyPage /> },
+        ],
+      },
 
       {
         path: "/mypage",
@@ -125,13 +174,22 @@ const router = createBrowserRouter([
           { index: true, element: <MyInfo /> },
           { path: "home", element: <MyInfo /> },
           { path: "myrecruit", element: <MyRecruitPage /> },
+          {
+            path: "membership",
+            element: <MembershipPage />,
+          },
+          {
+            path: "payment",
+            children: [
+              { path: "billing", element: <PaymentBilling /> },
+              { path: "checkout", element: <PaymentCheckout /> },
+              { path: "fail", element: <PaymentFail /> },
+            ],
+          },
         ],
       },
-
-      // 등록된 주소 외 모든 주소 예외 처리
-      { path: "*", element: <NotFound /> },
-
-      // 기업 페이지
+      // 기업 마이 페이지
+      { path: "corpmypage", element: <CorpMyPage /> },
       { path: "corpeditmyinfo", element: <CorpEditMyInfoPage /> },
       { path: "corpconfirmedit", element: <CorpConfirmEditPage /> },
       { path: "corpchangepw", element: <CorpChangePwPage /> },
@@ -144,13 +202,46 @@ export default router;
 
 /*
 참조
+      // 로그인 필요 페이지 예시
+      // <ProtectedRoute> 으로 감싸기 +@ children도 접속 불가
       {
-        path: '/board',
-        element: <BoardPage />, // 공통 wrapper 컴포넌트
+        path: "board",
+        element: (
+          <ProtectedRoute>
+            <BoardPage />
+          </ProtectedRoute>
+        ),
         children: [
-          { index: true, element: <BoardListPage /> }, // /board
-          { path: ':id', element: <BoardDetailPage /> }, // /board/123
-          { path: 'write', element: <BoardWritePage /> }, // /board/write
-        ]
+          { index: true, element: <BoardListPage /> },
+          { path: ":boardNo", element: <BoardDetailPage /> },
+          { path: "write", element: <WriteBoardPage /> },
+          { path: "edit/:boardNo", element: <EditBoardPage /> },
+        ],
+      },
+
+
+
+      // 개인회원 예시
+      // <ProtectedRoute allowedType={0}> 으로 감싸기
+      {
+        path: "cv",
+        element: (
+          <ProtectedRoute allowedType={0}>
+            <CVPage />
+          </ProtectedRoute>
+        ),
+      },
+
+
+
+      // 기업회원 예시
+      // <ProtectedRoute allowedType={1}> 으로 감싸기
+      {
+        path: "corpcvlist",
+        element: (
+          <ProtectedRoute allowedType={1}>
+            <CorpCVListPage />
+          </ProtectedRoute>
+        ),
       },
 */

@@ -20,9 +20,16 @@ configurations {
 }
 
 repositories {
-	mavenCentral()
-	maven { url = 'https://repo.spring.io/snapshot' }
+    mavenCentral()
+    maven { 
+        url = uri('https://repo.spring.io/snapshot')
+    }
+    maven {
+        url = uri('https://maven.oracle.com') //윤진 추가
+    }
 }
+
+
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -33,6 +40,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 	implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
+	
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.oracle.database.jdbc:ojdbc11'
@@ -42,6 +50,16 @@ dependencies {
 	testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4'
 	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+	
+	// Json Web Token
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+    
+    // tossPayment
+    implementation 'org.json:json:20230227'
+	implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+    
 }
 
 tasks.named('test') {

@@ -63,6 +63,17 @@ public class MemberController {
 	                .body(Map.of("error", "회원가입 실패", "details", e.getMessage()));
 	    }
 	}
+	
+	@PostMapping("/signout")
+	public ResponseEntity<?> logout(HttpServletResponse response) {
+	    Cookie cookie = new Cookie("refreshToken", null);
+	    cookie.setMaxAge(0);
+	    cookie.setPath("/");
+	    cookie.setHttpOnly(true);
+	    cookie.setSecure(true);
+	    response.addCookie(cookie);
+	    return ResponseEntity.ok("로그아웃 성공");
+	}
 
 
 
@@ -80,6 +91,7 @@ public class MemberController {
 	 *
 	 * @author Won
 	 */
+/*
 	@PostMapping("/signin")
 	public ResponseEntity<?> signin(@RequestBody Member inputMember,
 	                               HttpServletRequest request,
@@ -123,46 +135,9 @@ public class MemberController {
 	                .body(Map.of("error", "로그인 중 예외 발생", "details", e.getMessage()));
 	    }
 	}
-	
-	/**
-	 * JWT 토큰 유효성 간단 체크 (실제로는 더 복잡한 검증 필요)
-	 */
-	private boolean isValidJWT(String token) {
-	    return token != null && token.contains(".");
-	}
+ */
 	
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
-
 	
 	
 	
@@ -185,45 +160,45 @@ public class MemberController {
 	
 	
 
-	/**
-	 * 로그인 에러 코드에 따른 메시지 반환
-	 */
-	private String getSigninErrorMessage(String errorCode) {
-	    switch (errorCode) {
-	        case "INVALID_INPUT":
-	            return "아이디와 비밀번호를 모두 입력해주세요.";
-	        case "USER_NOT_FOUND":
-	        case "INVALID_PASSWORD":
-	            return "아이디 또는 비밀번호가 일치하지 않습니다.";
-	        default:
-	            return "로그인 처리 중 오류가 발생했습니다.";
-	    }
-	}
-
-	/**
-	 * 아이디 저장 쿠키 설정
-	 */
-	private void setCookieForSaveId(HttpServletResponse response, String memId, String saveId) {
-	    Cookie cookie = new Cookie("saveId", memId);
-	    cookie.setPath("/");
-	    if (saveId != null) {
-	        cookie.setMaxAge(60 * 60 * 24 * 30); // 30일
-	    } else {
-	        cookie.setMaxAge(0); // 쿠키 삭제
-	    }
-	    response.addCookie(cookie);
-	}
-
-	/**
-	 * 로그인 성공 응답 JSON 생성
-	 */
-	private Map<String, Object> createSigninResponse(String token, String prevPage) {
-	    if (prevPage != null) {
-	        return Map.of("token", token, "redirectUrl", prevPage);
-	    } else {
-	        return Map.of("token", token);
-	    }
-	}
+//	/**
+//	 * 로그인 에러 코드에 따른 메시지 반환
+//	 */
+//	private String getSigninErrorMessage(String errorCode) {
+//	    switch (errorCode) {
+//	        case "INVALID_INPUT":
+//	            return "아이디와 비밀번호를 모두 입력해주세요.";
+//	        case "USER_NOT_FOUND":
+//	        case "INVALID_PASSWORD":
+//	            return "아이디 또는 비밀번호가 일치하지 않습니다.";
+//	        default:
+//	            return "로그인 처리 중 오류가 발생했습니다.";
+//	    }
+//	}
+//
+//	/**
+//	 * 아이디 저장 쿠키 설정
+//	 */
+//	private void setCookieForSaveId(HttpServletResponse response, String memId, String saveId) {
+//	    Cookie cookie = new Cookie("saveId", memId);
+//	    cookie.setPath("/");
+//	    if (saveId != null) {
+//	        cookie.setMaxAge(60 * 60 * 24 * 30); // 30일
+//	    } else {
+//	        cookie.setMaxAge(0); // 쿠키 삭제
+//	    }
+//	    response.addCookie(cookie);
+//	}
+//
+//	/**
+//	 * 로그인 성공 응답 JSON 생성
+//	 */
+//	private Map<String, Object> createSigninResponse(String token, String prevPage) {
+//	    if (prevPage != null) {
+//	        return Map.of("token", token, "redirectUrl", prevPage);
+//	    } else {
+//	        return Map.of("token", token);
+//	    }
+//	}
 
 
 }

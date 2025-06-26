@@ -62,7 +62,7 @@
   font-size: 14px;
 }
 
-.submit-btn {
+.submitcv-btn {
   display: inline-block;
   margin-top: 30px;
   padding: 6px 16px;
@@ -76,6 +76,6 @@
   float: right;
 }
 
-.submit-btn:hover {
+.submitcv-btn:hover {
   color: var(--main-color-dark);
 }

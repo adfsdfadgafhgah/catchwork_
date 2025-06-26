@@ -1,202 +1,131 @@
-.mypage-container {
+.corp-page-container {
   display: flex;
   min-height: 100vh;
-  font-family: "Noto Sans KR", sans-serif;
+  background-color: #f8f9fa;
+  font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
 }
 
-.main-content {
+.corp-edit-content {
   flex: 1;
-  padding: 80px 24px;
-  overflow-y: auto;
-}
-
-.content-container {
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.content-title {
-  font-size: 1.875rem; /* 30px */
-  font-weight: 700;
-  color: #1f2937;
-  margin-bottom: 1rem;
-  text-align: left;
-}
-
-.title-divider {
-  border: 0;
-  height: 1px;
-  background: #e5e7eb;
-  margin-bottom: 2rem;
-}
-
-.profile-section {
+  padding: 60px 80px; 
+  box-sizing: border-box;
   display: flex;
-  gap: 40px;
+  flex-direction: column;
+  justify-content: flex-start;
   align-items: flex-start;
-  margin-top: 1rem;
 }
 
-.profile-img {
-  flex-shrink: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 200px;
-  height: 200px;
-  background-color: #dbeafe;
-  border-radius: 50%;
-  font-size: 3rem;
-  color: #46b5ab;
-}
-
-.confirm-edit-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  height: 100%;
-  flex-grow: 1;
-}
-
-.confirm-edit-box {
-  max-width: 500px;
+.form-container {
   width: 100%;
-  background-color: #f9fafb;
-  border: 1px solid #e5e7eb;
-  padding: 2rem;
-  border-radius: 8px;
-  text-align: center;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  max-width: 500px;
 }
 
-.confirm-edit-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+.page-title {
+  font-size: 24px;
+  margin-bottom: 40px;
+  font-weight: 600;
+  text-align: left;
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  text-align: left;
+  margin-bottom: 30px;
+  width: 100%;
 }
 
 .form-label {
-  font-size: 1rem;
+  display: block;
+  margin-bottom: 8px;
   font-weight: 500;
-  color: #374151;
+  font-size: 14px;
 }
 
 .form-input {
-  padding: 0.75rem 1rem;
-  border: 2px solid #e5e7eb;
-  border-radius: 4px;
-  font-size: 1rem;
-  outline: none;
   width: 100%;
-  transition: border-color 0.3s ease;
-}
-
-.form-input:focus {
-  border-color: #46b5ab;
-  box-shadow: 0 0 5px rgba(70, 181, 171, 0.3);
-}
-
-.error-text {
-  color: #dc3545;
-  font-size: 0.875rem; /* 14px */
-  margin-top: -0.5rem;
-  text-align: left;
-}
-
-.button-group {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
-}
-
-.confirm-button {
-  background-color: #46b5ab;
-  color: white;
-  padding: 0.75rem 1.5rem;
+  padding: 12px 0;
   border: none;
+  font-size: 14px;
+  outline: none;
+  background-color: transparent;
+  box-sizing: border-box;
+}
+
+.form-input::placeholder {
+  font-size: 14px;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 8px;
+  display: block;
+}
+
+.button-container {
+  margin-top: 30px;
+  text-align: right;
+}
+
+.submit-btn {
+  padding: 10px 20px;
+  font-size: 14px;
   border-radius: 4px;
-  font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-  flex: 1;
+  transition: all 0.2s ease;
+  min-width: 80px;
 }
 
-.confirm-button:hover {
-  background-color: #3a9a91;
-}
-
-.cancel-button {
-  background-color: #e5e7eb;
-  color: #374151;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 4px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-  flex: 1;
-}
-
-.cancel-button:hover {
-  background-color: #d1d5db;
-}
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
-  .main-content {
-    padding: 40px 12px;
-  }
-
-  .content-title {
-    font-size: 1.5rem; /* 24px */
-  }
-
-  .profile-section {
+  .corp-page-container {
     flex-direction: column;
-    align-items: center;
-    gap: 20px;
+  }
+  
+  .corp-edit-content {
+    padding: 40px 20px;
   }
 
-  .profile-img {
-    width: 150px;
-    height: 150px;
+  .page-title {
+    font-size: 20px;
+    margin-bottom: 30px;
   }
 
-  .confirm-edit-box {
-    padding: 1.5rem;
+  .form-input {
+    padding: 10px 0;
+    font-size: 14px;
   }
-
-  .button-group {
-    flex-direction: column;
-    gap: 0.75rem;
+  
+  .button-container {
+    text-align: center;
   }
-
-  .confirm-button,
-  .cancel-button {
+  
+  .submit-btn {
     width: 100%;
+    padding: 12px 20px;
   }
 }
 
 @media (max-width: 480px) {
-  .content-title {
-    font-size: 1.25rem; /* 20px */
+  .corp-edit-content {
+    padding: 20px 15px;
   }
 
-  .profile-img {
-    width: 120px;
-    height: 120px;
+  .page-title {
+    font-size: 18px;
+    margin-bottom: 25px;
+  }
+
+  .form-group {
+    margin-bottom: 25px;
   }
 
   .form-input {
-    padding: 0.5rem 0.75rem;
+    padding: 8px 0;
+    font-size: 13px;
+  }
+
+  .submit-btn {
+    padding: 10px 16px;
+    font-size: 13px;
   }
 }

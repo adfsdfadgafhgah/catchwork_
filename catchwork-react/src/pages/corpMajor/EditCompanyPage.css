@@ -1,0 +1,17 @@
+.company-section textarea {
+  width: 100%; /* 부모 div 기준으로 꽉 차게 */
+  height: 120px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid var(--stroke-color1);
+  border-radius: 6px;
+  resize: vertical; /* 세로 방향 리사이즈만 허용 (optional) */
+}
+.company-basic-info input,
+.company-title-line input {
+  width: 100%; /* or 500px 처럼 고정값 줘도 되고 */
+  max-width: 600px; /* 최대폭 설정도 가능 */
+  padding: 10px;
+  border: 1px solid var(--stroke-color1);
+  border-radius: 6px;
+}

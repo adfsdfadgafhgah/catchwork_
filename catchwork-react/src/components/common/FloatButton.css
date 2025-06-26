@@ -1,0 +1,52 @@
+.float-button-container {
+  position: sticky;
+  bottom: 0;
+  margin: 16px auto; /* 가운데 정렬 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background-color: var(--white);
+  box-shadow: var(--box-shadow);
+  border: 1px solid var(--stroke-color1);
+  gap: 12px;
+  width: fit-content;
+  margin-top: 40px;
+}
+
+/* 추가: 공통 버튼 스타일 */
+.float-btn {
+  bottom: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  color: var(--text-color);
+}
+
+/* .float-button-container .float-btn-cancel,
+.float-button-container .float-btn-edit {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  color: var(--text-color);
+}
+
+.float-button-container .float-btn-cancel {
+  border-right: 1px solid var(--stroke-color1);
+}
+
+.float-btn-cancel:hover,
+.float-btn-edit:hover {
+  color: var(--main-color-dark);
+} */

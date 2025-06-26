@@ -18,13 +18,15 @@
   color: var(--gray01);
 }
 
-.submitWrapper {
+.buttonGroup {
   display: flex;
   justify-content: flex-end;
   margin-top: 10px;
+  gap: 4px;
 }
 
-.submitBtn {
+.submitBtn,
+.cancelBtn {
   background-color: white;
   border: 1px solid var(--stroke-color1);
   padding: 6px 12px;
@@ -37,7 +39,8 @@
   gap: 5px;
 }
 
-.submitBtn:hover {
+.submitBtn:hover,
+.cancelBtn:hover {
   border-color: var(--main-color-dark);
   color: var(--main-color-dark);
 }

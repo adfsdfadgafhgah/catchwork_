@@ -1,6 +1,8 @@
-const SectionHeader = ({ title }) => {
+const SectionHeader = ({ title, noBorder = false }) => {
   return (
-    <div className="section-header">
+    <div
+      className={`section-header-container ${noBorder ? "" : "with-border"}`}
+    >
       <h2 className="title">{title}</h2>
     </div>
   );

@@ -4,7 +4,8 @@ import YearMonthPicker from "./YearMonthPicker";
 import FormRemoveButton from "./FormRemoveButton";
 import styles from "./CVForm02.module.css";
 
-const CVForm02 = ({ index, onRemove, mode, data, labels, type, onChange }) => {
+                //  번호  종류(경력) 값   제목    삭제버튼    변경
+const CVForm02 = ({ index, type, data, labels, onRemove, onChange, mode }) => {
   const handleChange = (field, value) => {
     onChange(type, index, field, value);
   };
@@ -14,24 +15,37 @@ const CVForm02 = ({ index, onRemove, mode, data, labels, type, onChange }) => {
       <div className={styles.inner}>
         <div className={styles.row}>
           <input
+            className={styles.input}
             type="text"
             placeholder={labels.name}
             value={data.name || ""}
             onChange={(e) => handleChange("name", e.target.value)}
-            className={styles.input}
           />
           <div className={styles.dateRow}>
             <YearMonthPicker
+              mode={mode}
               value={data.startDate || ""}
               onChange={(val) => handleChange("startDate", val)}
             />
             <span className={styles.dateDash}>-</span>
             <YearMonthPicker
+              mode={mode}
               value={data.endDate || ""}
               onChange={(val) => handleChange("endDate", val)}
             />
           </div>
         </div>
+        {type !== "portfolio" && ( // 포폴이 아닌경우 경우에만 렌더
+          <div className={styles.row}>
+            <input
+              className={styles.input}
+              type="text"
+              placeholder={labels.org}
+              value={data.org || ""}
+              onChange={(e) => handleChange("org", e.target.value)}
+            />
+          </div>
+        )}
         <div className={styles.row}>
           <textarea
             placeholder={labels.description}

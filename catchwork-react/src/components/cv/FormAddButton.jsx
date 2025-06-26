@@ -4,7 +4,7 @@ import AddIcon from '@mui/icons-material/Add';
 
 const FormAddButton = ({ onClick }) => (
   <button type="button" className={styles.addBtn} onClick={onClick}>
-    <AddIcon  className={styles.icon}/>
+    <AddIcon  className={styles.addIcon}/>
   </button>
 );
 

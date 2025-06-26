@@ -1,66 +1,81 @@
 import React, { useState } from "react";
-import SideBar from "../../components/myPage/CorpSideBar"; // 경로 확인하세요
+import { useNavigate } from "react-router-dom";
+import CorpSideBar from "../../components/myPage/CorpSideBar";
 import "./CorpConfirmEditPage.css";
 
-const CorpConfirmEditPage = ({ onSuccess, onCancel }) => {
-  const [activeTab, setActiveTab] = React.useState("비밀번호 확인");
+const CorpConfirmEditPage = () => {
+  const navigate = useNavigate();
   const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (password !== confirm) {
-      setError("비밀번호가 일치하지 않습니다.");
-    } else if (password.length < 8) {
-      setError("비밀번호는 최소 8자 이상이어야 합니다.");
-    } else {
-      setError("");
-      onSuccess();
+    
+    if (!password || !confirmPassword) {
+      setError("모든 항목을 입력해주세요.");
+      return;
     }
+    
+    if (password !== confirmPassword) {
+      setError("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+    
+    // 비밀번호가 일치하면 페이지 이동
+    setError("");
+    navigate("/corpeditmyinfo");
   };
 
   return (
-    <div className="mypage-container">
-      {/* 좌측 사이드바 */}
-      <SideBar activeTab={activeTab} setActiveTab={setActiveTab} />
-
-      {/* 우측 메인 컨텐츠 */}
-      <div className="main-content">
-        <div className="content-container">
-          <h2 className="content-title">기업 회원 정보 수정</h2>
-          <div className="confirm-edit-container">
-            <div className="confirm-edit-box">
-              <form onSubmit={handleSubmit} className="confirm-edit-form">
-                <div className="form-group">
-                  <label className="form-label">비밀번호</label>
-                  <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="비밀번호를 입력해주세요"
-                    className="form-input"
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="form-label">비밀번호 확인</label>
-                  <input
-                    type="password"
-                    value={confirm}
-                    onChange={(e) => setConfirm(e.target.value)}
-                    placeholder="비밀번호를 다시 입력해주세요"
-                    className="form-input"
-                  />
-                </div>
-                {error && <p className="error-text">{error}</p>}
-                <div className="button-group">
-                  <button type="submit" className="confirm-button">
-                    확인
-                  </button>
-                </div>
-              </form>
+    <div className="corp-page-container">
+      <CorpSideBar />
+      <div className="corp-edit-content">
+        <div className="form-container">
+          <h2 className="page-title">기업 회원 정보 수정</h2>
+          
+          <form onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="password" className="form-label">
+                비밀번호
+              </label>
+              <input
+                type="password"
+                id="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="비밀번호를 입력해주세요"
+                className="form-input"
+                required
+              />
             </div>
-          </div>
+            
+            <div className="form-group">
+              <label htmlFor="confirmPassword" className="form-label">
+                비밀번호 확인
+              </label>
+              <input
+                type="password"
+                id="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="비밀번호를 다시 입력해주세요"
+                className="form-input"
+                required
+              />
+            </div>
+            
+            {error && <p className="error-message">{error}</p>}
+            
+            <div className="button-container">
+              <button
+                type="submit"
+                className="submit-btn"
+              >
+                수정하기
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>

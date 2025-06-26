@@ -20,15 +20,10 @@
 }
 
 .profileImg {
-  width: 40px;
-  height: 40px;
-  background-color: #e8f5e8;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  flex-shrink: 0;
+  object-fit: cover;
 }
 
 .boardItemContent {
@@ -108,6 +103,13 @@
 .far {
   color: gray;
   cursor: pointer;
+}
+
+.thumbnailImg {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
 /* 반응형 */

@@ -1,0 +1,12 @@
+.membership-item {
+  flex: 1;
+  height: 460px;
+  border-radius: 12px;
+  box-shadow: var(--box-shadow);
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 64px 40px 24px 40px;
+  justify-content: space-between;
+}

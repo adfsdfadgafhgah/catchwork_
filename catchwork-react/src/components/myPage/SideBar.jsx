@@ -1,4 +1,6 @@
+import React, { useState } from "react";
 import "./SideBar.css";
+import { NavLink, useLocation } from "react-router-dom";
 
 const SideBar = () => {
   // 주소값
@@ -123,13 +125,14 @@ const SideBar = () => {
             )}
           </div>
 
-          <button
+          <NavLink
+            to="/mypage/membership"
             className={`nav-item ${
               location.pathname === "/mypage/membership" ? "active" : ""
             }`}
           >
             멤버쉽
-          </button>
+          </NavLink>
 
           {/* 계정 관리 */}
           <div>
