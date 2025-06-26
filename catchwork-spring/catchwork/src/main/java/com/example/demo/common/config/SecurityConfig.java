@@ -96,11 +96,8 @@ public class SecurityConfig {
 
 		// 경로별 인가 작업
 		http.authorizeHttpRequests((auth) -> auth
-<<<<<<< kichan
-				.requestMatchers("/", "/signup","signout").permitAll()
-=======
-				.requestMatchers("/", "/mypage/**", "/signup").permitAll()
->>>>>>> dev
+// 				.requestMatchers("/", "/signup","signout").permitAll()
+				.requestMatchers("/**").permitAll()
 				.requestMatchers("/admin").hasRole("ADMIN").anyRequest().authenticated());
 		
 
