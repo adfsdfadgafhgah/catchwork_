@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuthStore } from "../../stores/authStore";
 
 import logo from "../../assets/logo.png";
 
@@ -7,18 +8,23 @@ import "./Header.css";
 import HeaderNav from "./HeaderNav";
 
 const Header = () => {
-  const [user, setUser] = useState(null); // 로그인 정보
+  const { memType, role, hydrateFromToken, signin, signOut } = useAuthStore(); // zustand 상태
   const [searchTerm, setSearchTerm] = useState(""); // 검색어
+  const [result, setResult] = useState(""); // 상태 메시지
 
   const navigate = useNavigate();
   const location = useLocation();
-  const path = location.pathname;
+  // const path = location.pathname;
 
-  const isAuthPage =
-    path === "/signin" ||
-    path === "/signup" ||
-    path === "/corpsignin" ||
-    path === "/corpsignup";
+  const isAuthPage = [
+    "/signin",
+    "/signup",
+    "/corpsignin",
+    "/corpsignup",
+    "/findid",
+    "/findpw",
+  ].includes(location.pathname);
+  const isCorpUser = memType === 1;
 
   const handleSearch = (e) => {
     if (e.key === "Enter" || e.type === "click") {
@@ -27,15 +33,21 @@ const Header = () => {
       }
     }
   };
-
-  const logout = () => {
-    // 로그아웃 처리 로직
-    setUser(null);
-    navigate("/");
+  const handleSignin = async () => {
+    const { success, message } = await signin("Test_646", "Test");
+    setResult(message);
   };
 
-  const isCorpUser = user?.type === "corporate"; // 기업회원 여부 (예시)
-  // const isCorpUser = user?.memType === 1; // 기업회원 여부 (0: 개인회원, 1: 기업회원)
+  const handleCorpSignin = async () => {
+    const { success, message } = await signin("Test_313", "Test");
+    setResult(message);
+  };
+
+  const handleSignOut = () => {
+    signOut(); // zustand 초기화
+    localStorage.removeItem("accessToken");
+    navigate("/");
+  };
 
   return (
     <header className="header">
@@ -64,10 +76,10 @@ const Header = () => {
         {/* 사용자 정보 영역 */}
         {!isAuthPage && (
           <div className="user-info">
-            {user ? (
+            {memType !== null ? (
               <>
-                <span>{user.nickname} 님</span>
-                <button onClick={logout}>로그아웃</button>
+                <span>{role} 님</span>
+                <button onClick={handleSignOut}>로그아웃</button>
               </>
             ) : (
               <>
@@ -80,6 +92,11 @@ const Header = () => {
         )}
       </div>
 
+      {/* 임시 로그인 버튼 (개인/기업) */}
+      <div style={{ position: "absolute", top: 0, right: 0 }}>
+        <button onClick={handleSignin}>개인 로그인</button>
+        <button onClick={handleCorpSignin}>기업 로그인</button>
+      </div>
       {/* 네비게이션 메뉴 */}
       {!isAuthPage && <HeaderNav />}
     </header>

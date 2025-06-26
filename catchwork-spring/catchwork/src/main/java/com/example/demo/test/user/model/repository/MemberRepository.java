@@ -6,9 +6,9 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.test.user.model.entity.MemberEntity;
 
 @Repository
-public interface MemberRepository extends JpaRepository<MemberEntity, Integer>{
+public interface MemberRepository extends JpaRepository<MemberEntity, String>{
 
-    // 회원가입 시 중복 체크용
+    // 회원가입 시 Id 중복 체크용
 	Boolean existsByMemId(String memId);
 
 	// 로그인 시 사용자 조회용

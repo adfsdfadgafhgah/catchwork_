@@ -1,4 +1,4 @@
-package com.example.demo.test.jwt.util;
+package com.example.demo.test.util;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -77,7 +77,19 @@ public class JWTUtil {
 	        .signWith(secretKey)
 	        .compact();
 	}
+
+	public String createRefreshToken(String username,Long expiredMs) {
+		System.out.println("RefreshToken created");
+	    return Jwts.builder()
+	        .claim("memId", username)
+	        .issuedAt(new Date(System.currentTimeMillis()))
+	        .expiration(new Date(System.currentTimeMillis() + expiredMs))
+	        .signWith(secretKey)
+	        .compact();
+	}
+
 /*
+토큰 payload 구조
 {
   "memId": "MinJang",			// String
   "memType": 1,					// int

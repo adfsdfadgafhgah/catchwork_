@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Member {
 
+	private String memNo;
     private String memId;
     private String memPw;
     private String memNickname;
