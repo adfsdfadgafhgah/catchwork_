@@ -32,7 +32,7 @@ public class BoardController {
      */
     @GetMapping("boardList")
     public ResponseEntity<?> getBoardList(@RequestParam String sort,
-                                          @RequestParam(value="",required = false, defaultValue = "") String query) {
+                                          @RequestParam(value="query",required = false, defaultValue = "") String query) {
     	System.out.println();
         try {
             List<Board> boards = boardService.selectBoardList(sort, query.trim());
