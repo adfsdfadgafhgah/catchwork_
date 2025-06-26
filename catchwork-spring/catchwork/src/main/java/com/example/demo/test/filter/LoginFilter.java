@@ -14,12 +14,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.example.demo.test.jwt.util.JWTUtil;
+import com.example.demo.test.util.JWTUtil;
 import com.example.demo.test.user.model.dto.CustomUserDetails;
 import com.example.demo.test.user.model.dto.Member;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -73,21 +74,33 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
                                             FilterChain chain, Authentication authentication) {
+
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         String username = customUserDetails.getUsername();
-
-        // 권한 직접 추출 (memberEntity에서)
+        
+        int memType = customUserDetails.getMemberEntity().getMemType(); // memType 0 : 개인 / 1 : 기업
         String role = customUserDetails.getAuthorities().stream()
                                        .map(GrantedAuthority::getAuthority)
                                        .findFirst()
-                                       .orElse("ROLE_USER"); // 기본값
+                                       .orElse("ROLE_USER");
 
-        // JWT 생성
-        String token = jwtUtil.createJwt(username, role, 60 * 60 * 10 * 1000L); // 10시간
-        System.out.println("JWT 생성 완료: " + token);
+        // memType (int) + role (String) 모두 전달
+        String accessToken = jwtUtil.createJwt(username, memType, role, 15 * 60 * 1000L);		// 15분
+//        System.out.println("JWT 생성 완료: " + token);
+        String refreshToken = jwtUtil.createRefreshToken(username, 7 * 24 * 60 * 60 * 1000L);	// 7일
+        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+        refreshCookie.setHttpOnly(true);			// JS에서 접근 불가
+//		나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	
+        refreshCookie.setSecure(false);				// HTTPS에서만 전송
+//		나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	
+        refreshCookie.setPath("/");					// 전체 경로 유효
+        refreshCookie.setMaxAge(7 * 24 * 60 * 60);	// 7일
 
-        response.addHeader("Authorization", "Bearer " + token);
+        response.addCookie(refreshCookie); // addCookie를 반드시 사용
+        
+        response.addHeader("Authorization", "Bearer " + accessToken);
     }
+
 
     
 

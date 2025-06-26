@@ -2,7 +2,7 @@ import React from "react";
 import YearMonthPicker from "./YearMonthPicker";
 import styles from "./CVMilitary.module.css";
 
-const CVMilitary = ({ formData, onChange, mode }) => {
+const CVMilitary = ({ formData, onChange }) => {
   return (
     <>
       <h2 className="writeCVSection-title">병역</h2>
@@ -30,24 +30,25 @@ const CVMilitary = ({ formData, onChange, mode }) => {
             <option value="육군">육군</option>
             <option value="해군">해군</option>
             <option value="공군">공군</option>
+            <option value="사회복무요원">사회복무요원</option>
+            <option value="산업기능요원">산업기능요원</option>
           </select>
         </div>
 
         {/* 입대일 ~ 전역일 */}
-        <div className={styles.cvMiliStartDate}>
+        <div className={styles.militaryDates}>
           <YearMonthPicker
-            mode={mode}
-            value={formData.militaryStartDate}
+            value={formData.cvMiliStartDate}
             onChange={(val) => onChange("cvMiliStartDate", val)}
           />
           <span className={styles.dateSeparator}>~</span>
           <YearMonthPicker
-            mode={mode}
             value={formData.cvMiliEndDate}
             onChange={(val) => onChange("cvMiliEndDate", val)}
           />
         </div>
       </div>
+      <div>여성은 면제 선택</div>
     </>
   );
 };

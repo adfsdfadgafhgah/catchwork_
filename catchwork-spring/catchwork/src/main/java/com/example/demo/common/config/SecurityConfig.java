@@ -19,7 +19,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 
 import com.example.demo.test.filter.JWTFilter;
 import com.example.demo.test.filter.LoginFilter;
-import com.example.demo.test.jwt.util.JWTUtil;
+import com.example.demo.test.util.JWTUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -58,13 +58,7 @@ public class SecurityConfig {
 		return configuration.getAuthenticationManager();
 	}
 
-	// LoginFilter Bean (AuthenticationManager 주입)
-	@Bean
-	public LoginFilter loginFilter() throws Exception {
-		LoginFilter filter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil);
-		// 로그인 성공/실패 URL 설정 (필요한 경우)
-		return filter;
-	}
+
 
 	// 필터 체인
 	@Bean
@@ -102,13 +96,20 @@ public class SecurityConfig {
 
 		// 경로별 인가 작업
 		http.authorizeHttpRequests((auth) -> auth
+<<<<<<< heobae
 				.requestMatchers("/", "/**", "/signup","/boardList").permitAll()
+=======
+// 				.requestMatchers("/", "/signup","signout").permitAll()
+				.requestMatchers("/**").permitAll()
+>>>>>>> dev
 				.requestMatchers("/admin").hasRole("ADMIN").anyRequest().authenticated());
 		
 
 		// LoginFilter 
-		http.addFilterAt(loginFilter(), UsernamePasswordAuthenticationFilter.class);
-		// JWT 검증 필터
+        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil);
+        http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
+        
+        // JWT 검증 필터
         http.addFilterBefore(new JWTFilter(jwtUtil), LoginFilter.class);
         
 

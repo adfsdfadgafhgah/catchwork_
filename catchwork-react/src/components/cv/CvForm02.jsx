@@ -35,6 +35,17 @@ const CVForm02 = ({ index, type, data, labels, onRemove, onChange, mode }) => {
             />
           </div>
         </div>
+        {type !== "portfolio" && ( // 포폴이 아닌경우 경우에만 렌더
+          <div className={styles.row}>
+            <input
+              className={styles.input}
+              type="text"
+              placeholder={labels.org}
+              value={data.org || ""}
+              onChange={(e) => handleChange("org", e.target.value)}
+            />
+          </div>
+        )}
         <div className={styles.row}>
           <textarea
             placeholder={labels.description}
