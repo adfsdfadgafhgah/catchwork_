@@ -22,5 +22,30 @@ public interface BoardMapper {
 	List<Board> selectBoardsByLikes(String query);
 
 	List<Board> selectBoardsByComments(String query);
+	
+	//-----------------------------------------------------------------
+
+	/** 게시글 상세 조회
+	 * @author BAEBAE
+	 * @param boardNo
+	 * @return
+	 */
+	Board selectBoardDetail(int boardNo);
+
+	int selectLikeCount(int boardNo);
+
+	int selectCommentCount(int boardNo);
+
+	int checkUserLiked(int boardNo, Integer memNo);
+
+	//-----------------------------------------------------------------
+	
+	/** 게시글 수정
+	 * @author BAEBAE
+	 * @param board
+	 * @return
+	 */
+	int editBoard(Board board);
+	
 
 }
