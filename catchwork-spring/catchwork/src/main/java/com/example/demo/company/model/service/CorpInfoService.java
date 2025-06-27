@@ -1,7 +1,6 @@
 package com.example.demo.company.model.service;
 
 import java.util.List;
-
 import com.example.demo.company.model.dto.CorpInfo;
 
 public interface CorpInfoService {

@@ -14,7 +14,7 @@ import jakarta.servlet.http.HttpServletRequest;
 @RestControllerAdvice
 public class ExceptionController {
 
-   // 요청한 리소스를 찾을 수 없을 때 (404) 처리
+	// 요청한 리소스를 찾을 수 없을 때 (404) 처리
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<Object> notFound(HttpServletRequest request) {
         Map<String, Object> body = Map.of(

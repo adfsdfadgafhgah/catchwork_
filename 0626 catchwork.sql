@@ -1366,3 +1366,19 @@ REFERENCES "CV" (
 );
 
 COMMIT;
+
+---------------------------------------------------
+SELECT * FROM "MEMBER";
+SELECT * FROM "BOARD";
+
+CREATE SEQUENCE SEQ_BOARD_NO
+START WITH 1       -- 시퀀스 시작값
+INCREMENT BY 1     -- 증가값
+NOCACHE            -- 캐시 안 함 (보통 테스트용으로 안전하게)
+NOCYCLE;           -- 최대값 도달 시 다시 1부터 시작하지 않도록
+
+INSERT INTO "BOARD" VALUES(
+SEQ_BOARD_NO.NEXTVAL, '1번째 글', '1번째 글 내용입니다.', SYSDATE, SYSDATE, 1, 0, NULL, NULL, 'd2b75689-333e-4e07-8c65-dd5d1f9c8334');
+
+INSERT INTO "BOARD" VALUES(
+SEQ_BOARD_NO.NEXTVAL, '2번째 글', '2번째 글 내용입니다.', SYSDATE, SYSDATE, 2, 0, NULL, NULL, '1b92cbf9-5fbc-48b3-b684-ad995ce8f6ec');

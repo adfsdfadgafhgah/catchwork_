@@ -1,10 +1,10 @@
 import { useEffect } from "react";
 import MembershipItem from "./MembershipItem";
-import useMembershipList from "./Membership";
+import useMembershipList from "../../stores/membershipStore";
 
 function MembershipList({ handleCheckout }) {
+  // 멤버십 정보 목록
   const { membershipList, getMembershipList } = useMembershipList();
-
   useEffect(() => {
     getMembershipList();
   }, []);

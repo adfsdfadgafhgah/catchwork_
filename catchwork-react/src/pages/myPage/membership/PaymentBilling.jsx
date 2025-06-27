@@ -1,12 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-
-const API_BASE_URL = "http://localhost:8080";
+import { axiosApi } from "../../../api/axiosAPI";
 
 function PaymentBilling() {
   const navigate = useNavigate();
 
-  const [billingConfirmed, setBillingConfirmed] = useState(false);
   const [searchParams] = useSearchParams();
 
   const isIssueBillingKey = useRef(false);
@@ -37,24 +35,17 @@ function PaymentBilling() {
       };
 
       // 빌링키 요청을 서버로 제출하여 빌링키를 발급, 저장
-      const response = await fetch(
-        `${API_BASE_URL}/tosspayment/issueBillingKey`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(requestData),
-        }
-      );
-
-      const json = await response.json();
-
-      if (!response.ok) {
-        throw { message: json.message, code: json.code };
+      try {
+        const resp = await axiosApi.post(
+          "/tosspayment/issueBillingKey",
+          requestData
+        );
+        if (resp.status === 200) return resp.data;
+      } catch (err) {
+        navigate(
+          `/mypage/payment/fail?message=${err.message}&code=${err.code}`
+        );
       }
-
-      return json;
     }
 
     // 이미 보낸 요청이라면, 요청을 보내지 않음
@@ -66,7 +57,6 @@ function PaymentBilling() {
         .then(() =>
           /* TODO: 빌링키 발급에 성공했을 경우 UI 처리 로직을 구현하세요. */
           {
-            setBillingConfirmed(true);
             if (confirm("구독하시겠습니까?")) {
               navigate(`/mypage/payment/checkout?productId=${productId}`);
             } else {

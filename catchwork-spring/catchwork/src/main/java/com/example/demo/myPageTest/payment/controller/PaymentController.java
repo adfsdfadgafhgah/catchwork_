@@ -19,7 +19,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -44,20 +43,25 @@ public class PaymentController {
     
     // 유효한 빌링키 조회
     @RequestMapping("getBillingKey")
-    public ResponseEntity<?> getBillingKey(@RequestBody Member loginmember) {
-    	String memNo = loginmember.getMemNo();
+    public ResponseEntity<?> getBillingKey(@RequestBody Map<String, String> map) {
+    	String memNo = map.get("memNo");
     	// 유효한 빌링키 존재 플래그
     	boolean hasBillingKey = false;
     	String billingKey = null;
     	
     	try {
 			billingKey = service.getBillingKey(memNo);
+//			System.out.println("유효한 빌링키 : " + billingKey);
+//			System.out.println("memNo : " + memNo);
     		
 			// 유효한 빌링키가 있다면 true를 반환
-			if(billingKey!=null) hasBillingKey = true;
+			if(billingKey!=null) {
+				hasBillingKey = true;
+			}
 			return ResponseEntity.status(200).body(hasBillingKey);
 			
 		} catch (Exception e) {
+//			e.printStackTrace();
     		return ResponseEntity.status(500).body(e.getMessage());
 		}
     }
@@ -75,6 +79,9 @@ public class PaymentController {
         JSONObject requestData = parseRequestData(jsonBody);
         String customerKey = (String)requestData.get("customerKey");
         String billingKey = service.getBillingKey(customerKey);
+        
+        System.out.println(customerKey);
+        System.out.println(billingKey);
         // API를 호출하여 빌링 결제
         JSONObject response = sendRequest(requestData, API_SECRET_KEY, "https://api.tosspayments.com/v1/billing/" + billingKey);
 
