@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="com.example.demo.support.model.mapper.SupportMapper">
+	<select id="selectSupportList" resultType="Support">
+  		SELECT 
+    		S.SUPPORT_NO AS supportNo,
+    		S.SUPPORT_CONTENT AS supportContent,
+    		S.SUPPORT_ANSWER AS supportAnswer,
+    		S.SUPPORT_STATUS AS supportStatus,
+    		S.MEM_NO AS memNo,
+    		S.ADMIN_NO AS adminNo,
+    		C.SUPPORT_CATEGORY_NAME AS supportCategoryName,
+    		S.SUPPORT_CATEGORY_CODE AS supportCategoryCode
+  		FROM SUPPORT S
+  		JOIN SUPPORT_CATEGORY C ON S.SUPPORT_CATEGORY_CODE = C.SUPPORT_CATEGORY_CODE
+  		ORDER BY S.SUPPORT_NO DESC
+	</select>	
+
+	
+	<select id="selectSupportById" parameterType="int" resultType="com.example.demo.support.model.dto.Support">
+	  SELECT * FROM support WHERE support_no = #{id}
+	</select>
+	
+	<insert id="insertSupport" parameterType="Support">
+    	INSERT INTO SUPPORT (
+        	SUPPORT_NO,
+        	SUPPORT_CATEGORY_CODE,
+        	SUPPORT_CONTENT,
+        	SUPPORT_STATUS,
+        	MEM_NO,
+        	ADMIN_NO,
+        	SUPPORT_ANSWER
+    	) VALUES (
+        	SUPPORT_SEQ.NEXTVAL,
+        	#{supportCategoryCode},
+        	#{supportContent},
+        	#{supportStatus},
+        	#{memNo},
+        	NULL,
+        	NULL
+    	)
+	</insert>
+	
+
+</mapper>
