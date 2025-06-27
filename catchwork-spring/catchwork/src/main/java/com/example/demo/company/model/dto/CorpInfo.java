@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -37,5 +36,10 @@ public class CorpInfo {
     
     //관심 공고
     private int liked; // 1 = 관심등록함, 0 = 아님
+
+    
+    //관심 개수, 공고 개수
+    private int favCount;
+    private int recruitCount;
 
 }

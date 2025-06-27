@@ -21,9 +21,12 @@ const CompanyItem = ({ company }) => {
 
         {/* 메타 정보 */}
         <div className="company-meta">
-          <span class="material-symbols-outlined">visibility</span>
+          <span className="material-symbols-outlined">visibility</span>
           <span>{company.views}</span>
-          <span className="bookmark-icon material-symbols-outlined">
+          <span
+            className="bookmark-icon material-symbols-outlined"
+            style={{ color: company.liked === 1 ? "black" : "inherit" }}
+          >
             bookmark
           </span>
           <span>{company.favs}</span>

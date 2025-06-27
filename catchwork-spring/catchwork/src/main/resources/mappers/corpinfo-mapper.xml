@@ -2,5 +2,41 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper	namespace="com.example.demo.company.model.mapper.CorpInfoMapper">
+ 
+ 
+<select id="selectCorpList" resultType="com.example.demo.company.model.dto.CorpInfo">
+SELECT 
+  C.CORP_NO,
+  C.CORP_NAME,
+  C.CORP_TYPE,
+  COUNT(DISTINCT F.MEM_NO) AS FAV_COUNT,
+  COUNT(DISTINCT R.RECRUIT_NO) AS RECRUIT_COUNT
+FROM CORP_INFO C
+LEFT JOIN FAV_CORP F
+  ON C.CORP_NO = F.CORP_NO
+LEFT JOIN CORP_MEM CM
+  ON C.CORP_NO = CM.CORP_NO
+LEFT JOIN RECRUIT R
+  ON R.MEM_NO = CM.MEM_NO
+  AND R.RECRUIT_END_DATE >= SYSDATE
+<where>
+  <if test="memNo != null and memNo != ''">
+    AND F.MEM_NO = #{memNo}
+  </if>
+</where>
+GROUP BY C.CORP_NO, C.CORP_NAME, C.CORP_TYPE
+ORDER BY C.CORP_NO
+</select>
 
+
+
+ 
+
+
+  <select id="selectCorpDetail" resultType="com.example.demo.company.model.dto.CorpInfo">
+    SELECT * FROM CORP_INFO
+    WHERE CORP_NO = #{corpNo}
+  </select>
+  
+  
 </mapper>
