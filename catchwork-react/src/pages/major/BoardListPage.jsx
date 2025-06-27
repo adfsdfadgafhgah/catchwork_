@@ -160,6 +160,7 @@
 //     </div>
 //   );
 // }
+
 //----------------------------------------------------------
 // 서버 구현하면 주석 풀기!! (위에 더미데이터 제거)
 import { useEffect, useState } from "react";
@@ -170,6 +171,7 @@ import SectionHeader from "../../components/common/SectionHeader";
 import { useNavigate } from "react-router-dom";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
+import { useAuthStore } from "../../stores/authStore";
 // import { useContext } from "react";
 // import { AuthContext } from "../../contexts/AuthContext"; // AuthContext 사용 시 loginUser 가져오기
 
@@ -177,23 +179,27 @@ export default function BoardListPage() {
   const [boards, setBoards] = useState([]); // 게시글 목록 조회
   const [isloading, setIsLoading] = useState(true); // 로딩 상태
   const [searchTerm, setSearchTerm] = useState("");
-  // const { loginUser } = useContext(AuthContext); // AuthContext 사용 시 loginUser 가져오기
-  // const loginUser = JSON.parse(localStorage.getItem("loginUser")); // localStorage 또는 sessionStorage에서 꺼내는 경우
+  const { loginUser } = useAuthStore(); // 로그인 받아오기
   const [sortOrder, setSortOrder] = useState("latest"); // 정렬 기준 상태
   const navigate = useNavigate();
   const [filteredBoards, setFilteredBoards] = useState([]);
   const [isSearchMode, setIsSearchMode] = useState(false);
+  const customerKey = "95132b50-d360-400b-bfb2-5a1c51857f4c";
+
+  // const loginUser = {
+  //   memId: "h",
+  //   memNickname: "배령",
+  //   memEmail: "hbr0901@naver.com",
+  //   memNo: customerKey,
+  //   memType: "0",
+  // };
 
   // 게시글 목록 불러오기 (정렬 + 검색)
   const getBoardList = async () => {
     try {
-      console.log("요청 파라미터:", { sort: sortOrder, query: searchTerm });
-
       const resp = await axiosApi.get("/board/boardList", {
         params: { sort: sortOrder, query: searchTerm },
       });
-
-      console.log("서버 응답:", resp.data);
 
       if (resp.status === 200) {
         setBoards(resp.data);
@@ -272,12 +278,12 @@ export default function BoardListPage() {
       {/* 검색 결과 유무에 따른 조건 렌더링 */}
       {isSearchMode ? (
         filteredBoards.length > 0 ? (
-          <BoardList boards={filteredBoards} />
+          <BoardList boards={filteredBoards} loginUser={loginUser} />
         ) : (
           <p className={BoardCss.noResult}>검색 결과가 없습니다.</p>
         )
       ) : (
-        <BoardList boards={boards} />
+        <BoardList boards={boards} loginUser={loginUser} />
       )}
 
       <FloatButton buttons={FLOAT_BUTTON_PRESETS.writeOnly(handleWrite)} />

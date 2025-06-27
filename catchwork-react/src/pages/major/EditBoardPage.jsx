@@ -104,14 +104,21 @@
 
 import { useRef, useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
 import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import SectionHeader from "../../components/common/SectionHeader";
 import "./WriteBoardPage.css"; // 재사용 가능
 import ThumbnailUploader from "../../components/common/ThumbnailUploader";
+import { axiosApi } from "../../api/axiosAPI";
 
 export default function EditBoardPage() {
+  const loginUser = {
+    memId: "h",
+    memNickname: "배령",
+    memEmail: "hbr0901@naver.com",
+    memNo: customerKey,
+    memType: "0",
+  };
   const { boardNo } = useParams();
   const navigate = useNavigate();
   const editorRef = useRef();
@@ -119,17 +126,20 @@ export default function EditBoardPage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState(""); // initialValue용
   const [thumbnailUrl, setThumbnailUrl] = useState(null);
+  const customerKey = "95132b50-d360-400b-bfb2-5a1c51857f4c";
 
   // 기존 글 불러오기
   useEffect(() => {
     const fetchBoard = async () => {
       try {
-        const res = await axios.get(`/board/detail/${boardNo}`);
-        const data = res.data;
+        const resp = await axiosApi.get(`/board/detail/${boardNo}`, {
+          params: { memNo: loginUser.memNo },
+        });
+        const data = resp.data;
         setTitle(data.boardTitle);
         setThumbnailUrl(data.boardThumbnailUrl || null);
         editorRef.current.getInstance().setMarkdown(data.boardContent);
-        setLoading(false);
+        // setLoading(false);
       } catch (err) {
         console.error("게시글 불러오기 실패:", err);
         alert("게시글을 불러오지 못했습니다.");
@@ -145,10 +155,10 @@ export default function EditBoardPage() {
     formData.append("image", file);
 
     try {
-      const res = await axios.post("/board/thumbnail", formData, {
+      const resp = await axiosApi.post("/board/thumbnail", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      setThumbnailUrl(res.data.url);
+      setThumbnailUrl(resp.data.url);
     } catch (err) {
       console.error("썸네일 업로드 실패:", err);
       alert("썸네일 업로드 실패");
@@ -164,13 +174,14 @@ export default function EditBoardPage() {
     const content = editorRef.current.getInstance().getMarkdown();
 
     try {
-      const res = await axios.put(`/board/edit/${boardNo}`, {
+      const resp = await axiosApi.put(`/board/edit/${boardNo}`, {
         boardTitle: title,
         boardContent: content,
         boardThumbnailUrl: thumbnailUrl,
+        memNo: loginUser.memNo,
       });
 
-      if (res.data.success) {
+      if (resp.data.success) {
         alert("수정 완료!");
         navigate(`/board/${boardNo}`);
       } else {
@@ -210,10 +221,10 @@ export default function EditBoardPage() {
               const formData = new FormData();
               formData.append("image", blob);
               try {
-                const res = await axios.post("/board/image", formData, {
+                const resp = await axiosApi.post("/board/image", formData, {
                   headers: { "Content-Type": "multipart/form-data" },
                 });
-                callback(res.data.url, "업로드된 이미지");
+                callback(resp.data.url, "업로드된 이미지");
               } catch {
                 alert("이미지 업로드 실패");
               }

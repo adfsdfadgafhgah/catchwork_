@@ -182,22 +182,44 @@ import { useEffect, useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
 import BoardCss from "./BoardDetailPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
-import { useContext } from "react";
+// import { useContext } from "react";
 // import { AuthContext } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom"; // 페이지 이동용
 import CommentList from "../../components/board/CommentList";
 import { formatTimeAgo } from "../../components/common/formatTimeAgo";
 import ReportModalPage from "../support/ReportModalPage";
 import { Viewer } from "@toast-ui/react-editor"; // Toast UI Viewer 추가
+import { useAuthStore } from "../../stores/authStore";
 
 export default function BoardDetailPage() {
   const { boardNo } = useParams();
   const [board, setBoard] = useState(null);
-  // const { loginUser } = useContext(AuthContext); // 로그인 받아오기
+  const { loginUser, memNo } = useAuthStore(); // 로그인 받아오기
   const [liked, setLiked] = useState(false); // 좋아요 기능
   const [likeCount, setLikeCount] = useState(0); // 좋아요 기능
   const navigate = useNavigate(); // ← 페이지 이동을 위해 추가
   const [showReportModal, setShowReportModal] = useState(false);
+
+  // const customerKey = "95132b50-d360-400b-bfb2-5a1c51857f4c";
+
+  // const loginUser = {
+  //   memId: "h",
+  //   memNickname: "배령",
+  //   memEmail: "hbr0901@naver.com",
+  //   memNo: customerKey,
+  //   memType: "0",
+  // };
+
+  // loginUser 가져오기
+  useEffect(() => {
+    const authStorage = localStorage.getItem("auth-storage");
+    if (authStorage) {
+      const parsed = JSON.parse(authStorage);
+      console.log("zustand auth-store persist 값 =", parsed);
+    } else {
+      console.log("auth-storage 값 없음 (로그인 안했거나 persist 저장 전)");
+    }
+  }, []);
 
   // 게시글 상세 조회 API
   useEffect(() => {
@@ -216,7 +238,7 @@ export default function BoardDetailPage() {
     };
 
     fetchDetail();
-  }, [boardNo]);
+  }, [boardNo, loginUser]);
 
   // 수정 페이지로!
   const handleEdit = () => {
@@ -286,6 +308,12 @@ export default function BoardDetailPage() {
 
   if (!board) return <h2>Loading...</h2>;
 
+  console.log("🧪 board:", board);
+  console.log("🧪 loginUser:", loginUser);
+  console.log("🧪 board.member.memNo:", board?.member?.memNo);
+  console.log("🧪 loginUser.memNo:", loginUser?.memNo);
+  console.log("🧪 작성자 여부:", loginUser?.memNo === board?.member?.memNo);
+
   return (
     <>
       <div className={BoardCss.detailWrapper}>
@@ -295,7 +323,7 @@ export default function BoardDetailPage() {
         {/* 제목 + 수정/삭제 */}
         <div className={BoardCss.headerRow}>
           <h1 className={BoardCss.title}>{board.boardTitle}</h1>
-          {loginUser && loginUser.memNo === board.member.memNo && (
+          {memNo && board?.member?.memNo && memNo === board.member.memNo && (
             <div className={BoardCss.actionButtons}>
               <button className={BoardCss.actionBtn} onClick={handleEdit}>
                 <i className="fa-regular fa-pen-to-square"></i> 수정하기
@@ -312,13 +340,13 @@ export default function BoardDetailPage() {
           <div className={BoardCss.writerInfo}>
             <img
               src={
-                board.member.memProfilePath
+                board?.member?.memProfilePath
                   ? `http://localhost:8080/${board.member.memProfilePath}`
                   : "/default-profile.png"
               }
               alt="프로필"
             />
-            <span>{board.member.memNickname}</span>
+            <span>{board?.member?.memNickname}</span>
             <span>{formatTimeAgo(board.boardWriteDate)}</span>
           </div>
           <div className={BoardCss.metaInfo}>
@@ -330,7 +358,7 @@ export default function BoardDetailPage() {
             />{" "}
             {likeCount} &nbsp;&nbsp;
             {/* 신고하기 버튼 조건 렌더링 */}
-            {(!loginUser || loginUser.memNo !== board.member.memNo) && (
+            {memNo && board?.member?.memNo && memNo !== board.member.memNo && (
               <button
                 className={BoardCss.actionBtn}
                 onClick={handleReportClick}
@@ -360,7 +388,6 @@ export default function BoardDetailPage() {
         <ReportModalPage
           targetNo={boardNo}
           targetType="board"
-          // memNo={loginMemberSeq}
           onClose={handleCloseReport}
         />
       )}
