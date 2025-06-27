@@ -7,10 +7,7 @@
 
 .emptyMessage {
   text-align: center;
-  color: #6c757d;
-  font-size: 16px;
-  padding: 40px 20px;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-size: 1.2rem;
+  color: var(--stroke-color1); /* 또는 #888 같이 연한 색 */
+  margin-top: 2rem;
 }

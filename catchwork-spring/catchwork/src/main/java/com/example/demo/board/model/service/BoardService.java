@@ -24,7 +24,7 @@ public interface BoardService {
 	 * @param memNo
 	 * @return
 	 */
-	Board selectBoardDetail(int boardNo, Integer memNo);
+	Board selectBoardDetail(int boardNo, String memNo);
 
 	/** 게시글 수정
 	 * @author BAEBAE

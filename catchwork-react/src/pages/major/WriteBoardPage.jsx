@@ -1,17 +1,29 @@
 import { useRef, useState, useEffect } from "react";
 import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
-import axios from "axios";
 import SectionHeader from "../../components/common/SectionHeader";
 import "./WriteBoardPage.css";
 import { useNavigate } from "react-router-dom";
 import ThumbnailUploader from "../../components/common/ThumbnailUploader";
+import { axiosApi } from "../../api/axiosAPI";
+import { useAuthStore } from "../../stores/authStore";
 
 export default function WriteBoardPage() {
   const editorRef = useRef();
   const [title, setTitle] = useState("");
   const [thumbnailFile, setThumbnailFile] = useState(null);
   const [thumbnailUrl, setThumbnailUrl] = useState("");
+  const navigate = useNavigate();
+  const { loginUser, memNo } = useAuthStore(); // 로그인 받아오기
+  // const customerKey = "95132b50-d360-400b-bfb2-5a1c51857f4c";
+
+  // const loginUser = {
+  //   memId: "h",
+  //   memNickname: "배령",
+  //   memEmail: "hbr0901@naver.com",
+  //   memNo: customerKey,
+  //   memType: "0",
+  // };
 
   // Toast UI Editor가 완전히 로드된 후 placeholder 보이게 강제 refresh
   useEffect(() => {
@@ -29,10 +41,10 @@ export default function WriteBoardPage() {
     formData.append("file", file);
 
     try {
-      const res = await axios.post("/board/thumbnail", formData, {
+      const resp = await axiosApi.post("/board/thumbnail", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      setThumbnailUrl(res.data.url);
+      setThumbnailUrl(resp.data.url);
       setThumbnailFile(file);
     } catch (err) {
       alert("썸네일 업로드 실패");
@@ -49,16 +61,16 @@ export default function WriteBoardPage() {
   const handleSubmit = async () => {
     const contentMarkdown = editorRef.current.getInstance().getMarkdown();
 
-    const res = await axios.post("/board/write", {
+    const resp = await axiosApi.post("/board/write", {
       boardTitle: title,
       boardContent: contentMarkdown,
       boardThumbnailUrl: thumbnailUrl,
+      memNo: loginUser.memNo,
     });
 
     alert("게시글 등록 완료!");
+    navigate(`/board/${boardNo}`);
   };
-
-  const navigate = useNavigate();
 
   const handleCancel = () => {
     navigate("/board"); // 또는 "/board/list" 등 너의 목록 페이지 경로에 맞게
@@ -93,11 +105,11 @@ export default function WriteBoardPage() {
               formData.append("image", blob);
 
               try {
-                const res = await axios.post("/board/image", formData, {
+                const resp = await axiosApi.post("/board/image", formData, {
                   headers: { "Content-Type": "multipart/form-data" },
                 });
 
-                const imageUrl = res.data.url; // 서버가 응답한 이미지 URL
+                const imageUrl = resp.data.url; // 서버가 응답한 이미지 URL
                 callback(imageUrl, "업로드된 이미지");
               } catch (error) {
                 console.error("이미지 업로드 실패:", error);

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.ResultMap;
 
 import com.example.demo.board.model.dto.Board;
 
@@ -30,13 +31,15 @@ public interface BoardMapper {
 	 * @param boardNo
 	 * @return
 	 */
-	Board selectBoardDetail(int boardNo);
+	@ResultMap("boardDetailMap")
+	Board selectBoardDetail(@Param("boardNo") int boardNo);
 
 	int selectLikeCount(int boardNo);
 
 	int selectCommentCount(int boardNo);
 
-	int checkUserLiked(int boardNo, Integer memNo);
+	int checkUserLiked(@Param("boardNo") int boardNo,
+					   @Param("memNo") String memNo);
 
 	//-----------------------------------------------------------------
 	

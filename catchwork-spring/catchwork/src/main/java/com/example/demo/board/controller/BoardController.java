@@ -54,14 +54,19 @@ public class BoardController {
      * @param memNo
      * @return
      */
-    public ResponseEntity<?> getBoardDetail(@PathVariable int boardNo,
-    										@RequestParam(required = false) Integer memNo) {
+    @GetMapping("detail/{boardNo}")
+    public ResponseEntity<?> getBoardDetail(@PathVariable("boardNo") int boardNo,
+    										@RequestParam(name = "memNo", required = false) String memNo) {
+    	
+    	
     	
     	try {
             Board board = boardService.selectBoardDetail(boardNo, memNo);
+            System.out.println("작성자 memNo = " + board.getMember().getMemNo()); // ← null이 아니어야 함
             return ResponseEntity.ok(board);
         } catch (Exception e) {
-            e.printStackTrace();
+        	System.out.println("🔥 게시글 상세 오류 발생!");
+            e.printStackTrace(); // 콘솔에 에러를 반드시 찍게
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("게시글 상세 조회 실패");
         }
     }
@@ -73,7 +78,8 @@ public class BoardController {
      * @return
      */
     @PutMapping("/edit/{boardNo}")
-    public ResponseEntity<?> editBoard(@PathVariable int boardNo, @RequestBody Board board) {
+    public ResponseEntity<?> editBoard(@PathVariable int boardNo,
+    								   @RequestBody Board board) {
         try {
             board.setBoardNo(boardNo);
             int result = boardService.editBoard(board);
@@ -89,19 +95,3 @@ public class BoardController {
     }
 }
 	
-	/** boardList 정렬 셀렉터
-	 * @author BAEBAE
-	 * @param sort
-	 * @return
-	 */
-//	@GetMapping("/boardList")
-//	public List<Board> getBoardList(@RequestParam String sort) {
-//	    switch(sort) {
-//	        case "latest": return boardService.getBoardsOrderByCreatedDesc();
-//	        case "oldest": return boardService.getBoardsOrderByCreatedAsc();
-//	        case "likes": return boardService.getBoardsOrderByLikesDesc();
-//	        case "comments": return boardService.getBoardsOrderByCommentsDesc();
-//	        default: return boardService.getBoardsOrderByCreatedDesc();
-//	    }
-//	}
-

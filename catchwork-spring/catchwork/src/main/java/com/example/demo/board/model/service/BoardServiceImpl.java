@@ -3,6 +3,7 @@ package com.example.demo.board.model.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.board.model.dto.Board;
 import com.example.demo.board.model.mapper.BoardMapper;
@@ -41,7 +42,10 @@ public class BoardServiceImpl implements BoardService {
 	 * @author BAEBAE
 	 */
 	@Override
-	public Board selectBoardDetail(int boardNo, Integer memNo) {
+	@Transactional(readOnly = true)
+	public Board selectBoardDetail(int boardNo, String memNo) {
+		
+		
 		
 		Board board = boardMapper.selectBoardDetail(boardNo);
 	    if (board == null) return null;
@@ -55,10 +59,12 @@ public class BoardServiceImpl implements BoardService {
 	    board.setCommentCount(commentCount);
 
 	    // 로그인 유저가 좋아요 눌렀는지 확인
-	    if (memNo != null) {
+	    if (memNo != null && !memNo.trim().isEmpty()) {
 	        boolean liked = boardMapper.checkUserLiked(boardNo, memNo) > 0;
 	        board.setLikedByCurrentUser(liked);
 	    }
+	    
+	    System.out.println("▶ board.member.memNo = " + (board.getMember() != null ? board.getMember().getMemNo() : "null"));
 		
 		return board;
 	}
