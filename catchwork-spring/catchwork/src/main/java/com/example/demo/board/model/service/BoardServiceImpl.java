@@ -34,4 +34,43 @@ public class BoardServiceImpl implements BoardService {
                 return boardMapper.selectBoardsByLatest(query);
         }
     }
+
+
+
+	/** 게시글 상세
+	 * @author BAEBAE
+	 */
+	@Override
+	public Board selectBoardDetail(int boardNo, Integer memNo) {
+		
+		Board board = boardMapper.selectBoardDetail(boardNo);
+	    if (board == null) return null;
+
+	    // 좋아요 개수
+	    int likeCount = boardMapper.selectLikeCount(boardNo);
+	    board.setLikeCount(likeCount);
+
+	    // 댓글 개수
+	    int commentCount = boardMapper.selectCommentCount(boardNo);
+	    board.setCommentCount(commentCount);
+
+	    // 로그인 유저가 좋아요 눌렀는지 확인
+	    if (memNo != null) {
+	        boolean liked = boardMapper.checkUserLiked(boardNo, memNo) > 0;
+	        board.setLikedByCurrentUser(liked);
+	    }
+		
+		return board;
+	}
+
+
+
+	/** 게시글 수정
+	 * @author BAEBAE
+	 */
+	@Override
+	public int editBoard(Board board) {
+		
+		return boardMapper.editBoard(board);
+	}
 }
