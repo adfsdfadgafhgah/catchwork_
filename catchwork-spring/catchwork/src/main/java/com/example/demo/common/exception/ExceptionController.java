@@ -1,12 +1,12 @@
 package com.example.demo.common.exception;
 
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 
-@ControllerAdvice // 전역적 예외처리 활성화 어노테이션
+@RestControllerAdvice // 전역적 예외처리 활성화 어노테이션
 public class ExceptionController {
 	
 	@ExceptionHandler(NoResourceFoundException.class)
