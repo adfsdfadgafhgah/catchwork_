@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import axios from "axios";
 
 // 기본 컴포넌트 import
 import CVTitle from "../../components/cv/CVTitle";
@@ -18,6 +17,9 @@ import CVForm01 from "../../components/cv/CVForm01";
 import CVForm02 from "../../components/cv/CVForm02";
 import CVLanguage from "../../components/cv/CVLanguage";
 
+// zustand
+import { useAuthStore } from "../../stores/authStore";
+
 // 페이지 전용 CSS import
 import "./WriteCVPage.css";
 import { axiosApi } from "./../../api/axiosAPI";
@@ -30,36 +32,15 @@ const useQuery = () => {
 const WriteCVPage = () => {
   const query = useQuery();
 
-  const [mode, setMode] = useState(query.get("mode") || "view"); // 작성/보기/수정 모드 상태
+  // zustand 로그인 회원정보
+  const { memNo, memType, role } = useAuthStore();
+  
 
-  useEffect(() => {
-    console.log("현재 mode =", mode);
-  }, [mode]);
+  // 작성/보기/수정 모드 상태
+  const [mode, setMode] = useState(query.get("mode") || "view"); 
 
-  /* 가져오기 */
-  // useEffect(() => {
-  //   axios.get("/cv/detail?id=123").then((res) => {
-  //     const data = res.data;
-  //     const newComponents = {};
-
-  //     Object.keys(clientKeyMap).forEach((type) => {
-  //       const sectionList = data[type] || [];
-  //       newComponents[type] = sectionList.map((item) =>
-  //         convertToClient(type, item)  // type 주입 포함
-  //       );
-  //     });
-
-  //     setComponents(newComponents);
-
-  //     // 주소 복원 처리
-  //     const [mainAddress, detailAddress] = (data.memAddress || "").split("/");
-  //     setFormData({
-  //       ...data,
-  //       mainAddress: mainAddress?.trim() || "",
-  //       detailAddress: detailAddress?.trim() || "",
-  //     });
-  //   });
-  // }, []);
+  // 이미지 isLoading
+  const [isUploading, setIsUploading] = useState(false);
 
   // 사용자 기본 정보 (출력용)
   const [userInfo, setUserInfo] = useState({
@@ -69,6 +50,9 @@ const WriteCVPage = () => {
     memEmail: "whalswkd1213@gmail.com",
     memBirthday: "2000-12-13",
   });
+
+  // 증명사진 이미지 경로 상태
+  const [cvImgPath, setCvImgPath] = useState("");
 
   // 이력서 입력 데이터 상태
   const [formData, setFormData] = useState({
@@ -190,12 +174,33 @@ const WriteCVPage = () => {
   // clientKeyMap을 역으로 변환
   // 서버 키맵
   const serverKeyMap = Object.fromEntries(
-    // 클라 키맵 가져오기      각 항목 순회  key, value(map) 
+    // 클라 키맵 가져오기      각 항목 순회  key, value(map)
     Object.entries(clientKeyMap).map(([type, mapping]) => [
-      type,            // value 내부의 k, v를 역으로 변환 ("id": "expId" -> "expId": "id",)
+      type, // value 내부의 k, v를 역으로 변환 ("id": "expId" -> "expId": "id",)
       Object.fromEntries(Object.entries(mapping).map(([k, v]) => [v, k])),
     ])
   );
+
+  // 이미지 업로드 핸들러
+  const handleUploadImage = async (file) => {
+    const imgFormData = new FormData();
+    imgFormData.append("image", file);
+    imgFormData.append("memName", userInfo.memName);
+    setIsUploading(true);
+    try {
+      const res = await axiosApi.post("/cv/img/upload", imgFormData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      setCvImgPath(res.data); // 응답 받은 리네임된 경로 저장
+      return true;
+    } catch (err) {
+      console.error("이미지 업로드 실패", err);
+      alert("이미지 업로드 중 오류 발생");
+      return false;
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   // 주소 찾기 핸들러
   const handleSearchAddress = () => {
@@ -267,10 +272,9 @@ const WriteCVPage = () => {
       .then(() => alert("이력서 저장 완료"))
       .catch((err) => {
         console.error("저장 실패", err.response?.data || err.message);
-        alert("저장 중 오류가 발생했습니다") ;
+        alert("저장 중 오류가 발생했습니다");
       });
   };
-
 
   // DTO 생각 안한 Bottle God의 작품
   const payloadRename = () => {
@@ -286,6 +290,7 @@ const WriteCVPage = () => {
 
     return {
       ...userInfo,
+      cvImgPath, // 이미지 경로
       ...restFormData, // 나머지 formData 필드 그대로
       memAddress: `${mainAddress}/${detailAddress}`, // 주소만 커스텀 처리
       ...convertedSections,
@@ -293,7 +298,7 @@ const WriteCVPage = () => {
   };
 
   // 클라이언트 형식 -> DTO 형식 변환
-                    // 클라 키맵, 서버에서 받아온 맵 
+  // 클라 키맵, 서버에서 받아온 맵
   const convertToServer = (type, data) => {
     // 클라 키맵의 종류 가져오기(award, exp 등)
     const map = clientKeyMap[type];
@@ -307,7 +312,7 @@ const WriteCVPage = () => {
         // result에 클라 키 이름, 서버의 값 저장
         result[map[key]] = data[key];
       } else {
-        result[key] = data[key]; 
+        result[key] = data[key];
       }
     }
     return result;
@@ -328,6 +333,50 @@ const WriteCVPage = () => {
     return result;
   };
 
+    
+  useEffect(() => {
+    console.log("모드 =", mode);
+    console.log("이미지 경로 =", cvImgPath);
+    console.log("기본 정보 =", userInfo);
+    console.log("단일 데이터 =", formData);
+    console.log("컴포넌트 데이터 =", components);
+    console.log("zustand 값:", memNo, memType, role);
+
+    const authStorage = localStorage.getItem("auth-storage");
+    if (authStorage) {
+      const parsed = JSON.parse(authStorage);
+      console.log("zustand auth-store persist 값 =", parsed);
+    } else {
+      console.log("auth-storage 값 없음 (로그인 안했거나 persist 저장 전)");
+    }
+  }, [mode, cvImgPath, userInfo, formData, components]);
+
+  /* 가져오기 */
+  // useEffect(() => {
+  //   axios.get("/cv/detail?id=123").then((res) => {
+  //     const data = res.data;
+  //     const newComponents = {};
+
+  //     Object.keys(clientKeyMap).forEach((type) => {
+  //       const sectionList = data[type] || [];
+  //       newComponents[type] = sectionList.map((item) =>
+  //         convertToClient(type, item)  // type 주입 포함
+  //       );
+  //     });
+
+  //     setComponents(newComponents);
+
+  //     // 주소 복원 처리
+  //     const [mainAddress, detailAddress] = (data.memAddress || "").split("/");
+  //     setFormData({
+  //       ...data,
+  //       mainAddress: mainAddress?.trim() || "",
+  //       detailAddress: detailAddress?.trim() || "",
+  //     });
+  //   });
+  // }, []);
+
+
   return (
     <div className="resume-container">
       <div
@@ -346,7 +395,12 @@ const WriteCVPage = () => {
         <div className="writeCVInfo">
           {/* 기본 정보 표시 */}
           <div className="writeCVSection">
-            <CVBasic userInfo={userInfo} />
+            <CVBasic
+              userInfo={userInfo}
+              cvImgPath={cvImgPath}
+              onImageUpload={handleUploadImage}
+              isUploading={isUploading}
+            />
           </div>
 
           {/* 주소 입력 */}
@@ -428,11 +482,7 @@ const WriteCVPage = () => {
             <div className="writeCVSection" key={type}>
               <h2 className="writeCVSection-title">{labels.title}</h2>
               {/* 경력 섹션일 때만 렌더링되는 (최종 경력)*/}
-              {type === "experience" && (
-                <div>
-                  최종경력 : ㅗ
-                </div>
-              )}
+              {type === "experience" && <div>최종경력 : ㅗ</div>}
               {components[type].length === 0 && (
                 <div className="empty-message">
                   입력된 {labels.title}이 없습니다.

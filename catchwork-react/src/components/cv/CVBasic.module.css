@@ -4,6 +4,13 @@
   align-items: flex-start;
 }
 
+.previewImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
 .photoSection {
   flex-shrink: 0;
 }
@@ -57,4 +64,12 @@
   font-size: 16px;
   color: var(--deep-gray);
   padding: 6px 12px;
+}
+
+.loading {
+  position: absolute;
+  margin-top: 8px;
+  color: var(--main-color);
+  font-size: 14px;
+  font-weight: bold;
 }
