@@ -1,4 +1,4 @@
-package com.example.demo.test.user.controller;
+package com.example.demo.member.controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

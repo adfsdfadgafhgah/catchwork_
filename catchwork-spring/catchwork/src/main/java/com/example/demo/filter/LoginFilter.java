@@ -1,4 +1,4 @@
-package com.example.demo.test.filter;
+package com.example.demo.filter;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -13,9 +13,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.example.demo.test.util.JWTUtil;
-import com.example.demo.test.user.model.dto.CustomUserDetails;
-import com.example.demo.test.user.model.dto.Member;
+import com.example.demo.member.model.dto.CustomUserDetails;
+import com.example.demo.member.model.dto.Member;
+import com.example.demo.util.JWTUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
@@ -73,7 +73,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
                                             FilterChain chain, Authentication authentication) {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
-        String username = customUserDetails.getUsername();
+        String username = customUserDetails.getUsername();	// memNo 임
         
         int memType = customUserDetails.getMemberEntity().getMemType(); // memType 0 : 개인 / 1 : 기업
         String role = customUserDetails.getAuthorities().stream()
@@ -83,13 +83,16 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
         // memType (int) + role (String) 모두 전달
         String accessToken = jwtUtil.createJwt(username, memType, role, 15 * 60 * 1000L);		// 15분
-//        System.out.println("JWT 생성 완료: " + token);
+//        System.out.println("JWT 생성 완료: " + accessToken);
+//        System.out.println(username +" "+memType+" "+role);
         String refreshToken = jwtUtil.createRefreshToken(username, 7 * 24 * 60 * 60 * 1000L);	// 7일
         Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
         refreshCookie.setHttpOnly(true);			// JS에서 접근 불가
-//		나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	
+        
+//		나중에 변경할 것 나중에 변경할 것 나중에 변경할 것 나중에 변경할 것 
         refreshCookie.setSecure(false);				// HTTPS에서만 전송
-//		나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	나중에 변경	
+//		나중에 변경할 것 나중에 변경할 것 나중에 변경할 것 나중에 변경할 것 
+        
         refreshCookie.setPath("/");					// 전체 경로 유효
         refreshCookie.setMaxAge(7 * 24 * 60 * 60);	// 7일
 

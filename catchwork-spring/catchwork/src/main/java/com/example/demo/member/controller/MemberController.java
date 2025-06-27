@@ -1,4 +1,4 @@
-package com.example.demo.test.user.controller;
+package com.example.demo.member.controller;
 
 import java.util.Map;
 
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.test.user.model.dto.Member;
-import com.example.demo.test.user.model.service.MemberService;
+import com.example.demo.member.model.dto.Member;
+import com.example.demo.member.model.service.MemberService;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,9 +38,10 @@ public class MemberController {
 	 */
 	@PostMapping("/signup")
 	public ResponseEntity<?> signup(@RequestBody Member inputMember) {
+		System.out.println("signup controller");
 	    try {
 	        Object result = service.signup(inputMember);
-	        
+	        System.out.println(result);
 	        // String 반환 시 에러 처리
 	        if (result instanceof String) {
 	            String errorCode = (String) result;

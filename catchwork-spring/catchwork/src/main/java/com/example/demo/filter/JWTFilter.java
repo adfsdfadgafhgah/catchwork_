@@ -1,4 +1,4 @@
-package com.example.demo.test.filter;
+package com.example.demo.filter;
 
 import java.io.IOException;
 
@@ -7,9 +7,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.demo.test.util.JWTUtil;
-import com.example.demo.test.user.model.dto.CustomUserDetails;
-import com.example.demo.test.user.model.entity.MemberEntity;
+import com.example.demo.member.model.dto.CustomUserDetails;
+import com.example.demo.member.model.entity.MemberEntity;
+import com.example.demo.util.JWTUtil;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
@@ -53,12 +53,12 @@ public class JWTFilter extends OncePerRequestFilter{
         }
 
 
-        String username = jwtUtil.getMemId(token);
+        String username = jwtUtil.getMemNo(token);
         int memType = jwtUtil.getMemType(token); // "0" or "1"
         
         MemberEntity member = new MemberEntity();
-        member.setMemId(username);
-        member.setMemPw("N/A");  // 비밀번호는 사용되지 않음
+        member.setMemNo(username);
+        member.setMemPw(null);  // 비밀번호는 사용되지 않음
         member.setMemType(memType);
         
         CustomUserDetails customUserDetails = new CustomUserDetails(member);

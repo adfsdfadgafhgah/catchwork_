@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.member.model.dto.Member;
 import com.example.demo.myPageTest.payment.model.service.PaymentService;
-import com.example.demo.test.user.model.dto.Member;
 
 import lombok.extern.slf4j.Slf4j;
 

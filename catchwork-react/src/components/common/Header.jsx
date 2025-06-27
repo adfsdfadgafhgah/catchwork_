@@ -33,13 +33,23 @@ const Header = () => {
       }
     }
   };
+
+  // 개인 회원 임시 로그인
+  // 개인 회원 임시 로그인
+  // 개인 회원 임시 로그인
+  // 개인 회원 임시 로그인
+  // 개인 회원 임시 로그인
   const handleSignin = async () => {
-    const { success, message } = await signin("Test_646", "Test");
+    const { success, message } = await signin("Test_229", "Test");
     setResult(message);
   };
-
+  // 기업 회원 임시 로그인
+  // 기업 회원 임시 로그인
+  // 기업 회원 임시 로그인
+  // 기업 회원 임시 로그인
+  // 기업 회원 임시 로그인
   const handleCorpSignin = async () => {
-    const { success, message } = await signin("Test_313", "Test");
+    const { success, message } = await signin("Test_146", "Test");
     setResult(message);
   };
 

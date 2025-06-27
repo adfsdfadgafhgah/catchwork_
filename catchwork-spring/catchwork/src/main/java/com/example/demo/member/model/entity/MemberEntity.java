@@ -1,7 +1,9 @@
-package com.example.demo.test.user.model.entity;
+package com.example.demo.member.model.entity;
 
 import java.util.Date;
 import java.util.UUID;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -17,8 +19,8 @@ import lombok.Data;
 @Data
 public class MemberEntity {
 
-    @Id
-    @Column(name = "MEM_NO", length = 36)
+	@Id
+	@Column(name = "MEM_NO", length = 36)
     private String memNo = UUID.randomUUID().toString(); 
 
     @Column(name = "MEM_ID", nullable = false, length = 15, unique = true)

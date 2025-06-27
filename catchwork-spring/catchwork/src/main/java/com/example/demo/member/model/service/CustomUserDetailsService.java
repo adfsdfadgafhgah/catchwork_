@@ -1,4 +1,4 @@
-package com.example.demo.test.user.model.service;
+package com.example.demo.member.model.service;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,9 +11,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.test.user.model.dto.CustomUserDetails;
-import com.example.demo.test.user.model.entity.MemberEntity;
-import com.example.demo.test.user.model.repository.MemberRepository;
+import com.example.demo.member.model.dto.CustomUserDetails;
+import com.example.demo.member.model.entity.MemberEntity;
+import com.example.demo.member.model.repository.MemberRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
@@ -27,7 +27,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         
-        // DB에서 사용자 조회
+        // DB에서 Id로 사용자 조회 (로그인 때 쓰임)
         MemberEntity memberEntity = memberRepository.findByMemId(username);
         
         if (memberEntity == null) {

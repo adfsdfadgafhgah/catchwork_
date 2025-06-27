@@ -1,4 +1,4 @@
-package com.example.demo.test.user.controller;
+package com.example.demo.member.controller;
 
 import java.util.Collection;
 import java.util.Iterator;
