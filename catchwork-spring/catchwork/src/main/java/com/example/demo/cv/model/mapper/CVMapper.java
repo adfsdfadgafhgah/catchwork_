@@ -1,4 +1,4 @@
-package com.example.demo.cvtest.model.mapper;
+package com.example.demo.cv.model.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 

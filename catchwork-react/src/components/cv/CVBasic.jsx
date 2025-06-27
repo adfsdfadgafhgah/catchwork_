@@ -1,14 +1,75 @@
-import React from "react";
-import { Camera } from "lucide-react";
+import React, { useEffect, useRef, useState } from "react";
+import { Camera, Loader } from "lucide-react";
 import styles from "./CVBasic.module.css";
+import defaultImg from "../../assets/icon.png";
 
-const CVBasic = ({ userInfo }) => {
+const CVBasic = ({ userInfo, cvImgPath, onImageUpload, isUploading }) => {
+  const fileInputRef = useRef(null);
+  const [previewSrc, setPreviewSrc] = useState("");
+
+  const imgUrl = import.meta.env.VITE_FILE_CV_IMG_URL;
+
+  useEffect(() => {
+    // previewSrc가 바뀔 때마다 기존 URL 정리
+    return () => {
+      if (previewSrc) {
+        URL.revokeObjectURL(previewSrc);
+      }
+    };
+  }, [previewSrc]);
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const previewUrl = URL.createObjectURL(file);
+      setPreviewSrc(previewUrl);
+
+      const success = await onImageUpload(file);
+      if (!success) {
+        setPreviewSrc("");
+        URL.revokeObjectURL(previewUrl);
+      }
+    }
+  };
+
+  const handleClick = () => {
+    fileInputRef.current.click();
+  };
+
   return (
     <div className={styles.photoAndBasicInfo}>
       <div className={styles.photoSection}>
-        <div className={styles.photoPlaceholder}>
-          <Camera size={40} color="#000000" />
+        <div
+          className={styles.photoPlaceholder}
+          onClick={!isUploading ? handleClick : undefined}
+          style={{ opacity: isUploading ? 0.5 : 1 }}
+        >
+          {isUploading ? (
+            <Loader size={40} color="#000000" className={styles.spin} />
+          ) : previewSrc || cvImgPath ? (
+            <img
+              src={
+                previewSrc ||
+                (cvImgPath ? `${imgUrl}/${cvImgPath}` : defaultImg)
+              }
+              alt="프로필"
+              className={styles.previewImg}
+            />
+          ) : (
+            <Camera size={40} color="#000000" />
+          )}
         </div>
+
+        {/* 업로드 중 표시 */}
+        {isUploading && <div className={styles.loading}>업로드 중...</div>}
+
+        <input
+          type="file"
+          accept="image/*"
+          ref={fileInputRef}
+          style={{ display: "none" }}
+          onChange={handleFileChange}
+        />
       </div>
 
       <div className={styles.basicInfo}>

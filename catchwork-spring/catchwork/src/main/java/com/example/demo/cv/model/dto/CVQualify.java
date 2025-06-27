@@ -1,4 +1,4 @@
-package com.example.demo.cvtest.model.dto;
+package com.example.demo.cv.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

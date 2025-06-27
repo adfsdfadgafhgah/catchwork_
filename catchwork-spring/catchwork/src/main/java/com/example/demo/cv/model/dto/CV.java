@@ -1,4 +1,4 @@
-package com.example.demo.cvtest.model.dto;
+package com.example.demo.cv.model.dto;
 
 import java.util.List;
 
@@ -14,9 +14,10 @@ import lombok.NoArgsConstructor;
 public class CV {
 	
 	private int cvNo;           				// 이력서 번호
-	private String cvAlias;      				// 이력서 별칭
 	private String cvResume;     				// 자기소개서 내용
-	private Boolean cvMainFl;    				// 대표 이력서 여부
+	private String cvAlias;      				// 이력서 별칭
+	private String cvImgPath;					// 이력서 이미지 경로
+	private char cvMainFl;    					// 대표 이력서 여부
 	private String memNo;          				// 회원 번호 (FK → MEMBER)
 	private String memAddress;   				// 주소 (mainAddress/detailAddress 형식으로 프론트에서 결합 전송)
 	
