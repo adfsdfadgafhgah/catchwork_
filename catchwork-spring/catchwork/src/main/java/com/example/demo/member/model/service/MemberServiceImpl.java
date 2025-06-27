@@ -1,9 +1,9 @@
 package com.example.demo.member.model.service;
 
-
 import java.util.Date;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.demo.member.model.dto.Member;
 import com.example.demo.member.model.entity.MemberEntity;
 import com.example.demo.member.model.entity.MemberGradeEntity;
+import com.example.demo.member.model.mapper.MemberMapper;
 import com.example.demo.member.model.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -26,9 +27,13 @@ public class MemberServiceImpl implements MemberService{
 //	@Autowired
 	private final BCryptPasswordEncoder bcrypt;
 	
-	public MemberServiceImpl(MemberRepository memberRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+//	@Autowired
+	private final MemberMapper mapper;
+	
+	public MemberServiceImpl(MemberRepository memberRepository, BCryptPasswordEncoder bCryptPasswordEncoder, MemberMapper mapper) {
 		this.memberRepository = memberRepository;
 		this.bcrypt = bCryptPasswordEncoder;
+		this.mapper = mapper;
 	}
 	
 
@@ -213,4 +218,11 @@ public class MemberServiceImpl implements MemberService{
 	           member.getMemPw() != null && !member.getMemPw().trim().isEmpty();
 	}
 	
+	/** 로그인 회원의 정보 조회
+	 *
+	 */
+	@Override
+	public Member getLoginMember(String memNo) {
+		return mapper.getLoginMember(memNo);
+	}
 }

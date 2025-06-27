@@ -12,6 +12,9 @@ import com.example.demo.myPageTest.payment.model.dto.BillingKey;
 import com.example.demo.myPageTest.payment.model.dto.Payment;
 import com.example.demo.myPageTest.payment.model.mapper.PaymentMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 @Transactional(value = "myBatisTransactionManager", rollbackFor = Exception.class)
 public class PaymentServiceImpl implements PaymentService{
@@ -87,15 +90,18 @@ public class PaymentServiceImpl implements PaymentService{
 		
 		// 2. 구독중인 서비스가 있다면 수정
 		if(selectResult!=null&&!selectResult.equalsIgnoreCase(orderName)) {
+			log.info("구독중인 서비스 있음");
 			updateResult = mapper.updateSubscription(map);
 		}
 		// 3. 구독중인 서비스가 없다면 삽입
-		else if(selectResult==null) {			
+		else if(selectResult==null) {
+			log.info("구독중인 서비스 없음");
 			insertResult = mapper.insertSubscription(map);
 		}
 		
 		// 4. 사용자 등급 수정
 		if(updateResult>0||insertResult>0) {
+			log.info("구독정보 수정 완료");
 			result = mapper.updateMemGrade(map);
 		}
 		return result;

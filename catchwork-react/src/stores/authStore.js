@@ -17,7 +17,7 @@ export const useAuthStore = create(
           if (token) {
             localStorage.setItem("accessToken", token);
             const decoded = getDecodedToken(token);
-            set({ memType: decoded.memType, role: decoded.role });
+            set({ memNo: decoded.memNo, memType: decoded.memType, role: decoded.role });
             return { success: true, message: "로그인 성공, 토큰 저장됨" };
           }
           return { success: true, message: "로그인 성공, 하지만 토큰 없음" };
