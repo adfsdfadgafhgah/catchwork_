@@ -18,17 +18,17 @@ public class FavCorpController {
 
 	    @PostMapping("/insert")
 	    public int insert(@RequestBody FavCorp fav) {
-	        return service.insertFav(fav);
+	        return service.insertFavCorp(fav);
 	    }
 
 	    @PostMapping("/delete")
 	    public int remove(@RequestBody FavCorp fav) {
-	        return service.deleteFav(fav);
+	        return service.deleteFavCorp(fav);
 	    }
 
 	    @PostMapping("/check")
 	    public boolean isFav(@RequestBody FavCorp fav) {
-	        return service.isFav(fav);
+	        return service.isFavCorp(fav);
 	    }
 
 	    @GetMapping("/total")

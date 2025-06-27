@@ -34,7 +34,7 @@ export const useAuthStore = create(
         try {
           await axiosApi.post("/signout");
           localStorage.removeItem("accessToken");
-          set({ memType: null, role: null });
+          set({ memNo: null, memType: null, role: null });
         } catch (err) {
           console.error("로그아웃 실패:", err);
           throw err;

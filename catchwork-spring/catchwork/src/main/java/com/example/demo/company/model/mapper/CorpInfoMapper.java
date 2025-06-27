@@ -22,7 +22,5 @@ public interface CorpInfoMapper {
 		 * @return
 		 */
 		CorpInfo selectCorpDetail(int corpNo,String memNo); // 특정 기업 조회->detail로 가기 위한
-
-		
 	
 }
