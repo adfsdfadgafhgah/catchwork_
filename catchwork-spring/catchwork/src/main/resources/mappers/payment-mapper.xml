@@ -6,13 +6,13 @@
 <!-- 유효한 빌링키 조회 : 없다면 신규 빌링키를 발급받도록 -->
 <select id="getBillingKey">
 SELECT BILLING_KEY
-FROM "BILLING"
+FROM "BILLING_KEY"
 WHERE MEM_NO = #{memNo}
 </select>
 
 <!-- 발급받은 빌링키 저장 -->
 <insert id="insertBillingKey">
-INSERT INTO "BILLING" (
+INSERT INTO "BILLING_KEY" (
     "BILLING_KEY",
     "BILLING_METHOD",
     "CARD_COMPANY",
@@ -78,9 +78,9 @@ INSERT INTO PAYMENT (
 <select id="selectSubscription">	
 SELECT
   MG.MEM_GRADE_NAME
-FROM MEMBER M
-JOIN MEMBER_GRADE MG ON M.MEM_GRADE = MG.MEM_GRADE
-WHERE M.MEM_NO = #{memNo}
+FROM SUBSCRIPTION S
+JOIN MEMBER_GRADE MG ON S.MEM_GRADE = MG.MEM_GRADE
+WHERE S.MEM_NO = #{memNo}
 </select>
 
 <!-- 구독중인 서비스 수정 -->

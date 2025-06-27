@@ -9,7 +9,7 @@ function MembershipItem({ membership, handleCheckout }) {
         <p>{membership.membershipBenefit}</p>
         <button
           className="membership-button"
-          disabled={membership.memGrade === 1}
+          disabled={membership.memGrade === 0}
           onClick={() => handleCheckout(membership.memGrade)}
         >
           결제하기

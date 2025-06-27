@@ -2,21 +2,17 @@ package com.example.demo.member.controller;
 
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.member.model.dto.Member;
 import com.example.demo.member.model.service.MemberService;
 
 import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
 
 @RestController
 public class MemberController {
@@ -24,7 +20,7 @@ public class MemberController {
 //	@Autowired
 	private final MemberService service;
 	
-	public MemberController(MemberService service) {
+	public MemberController(MemberService service) {	
 		this.service = service;
 	}
 	
@@ -202,4 +198,24 @@ public class MemberController {
 //	}
 
 
+		
+	/** 로그인 회원의 정보 조회
+	 * @param memNo
+	 * @author 허재호
+	 */
+	@PostMapping("member/getLoginMember")
+	private ResponseEntity<Object> getLoginMember(@RequestBody Map<String, String> map) {
+		String memNo = map.get("memNo");
+//		System.out.println("memNo :" + memNo);
+		try {
+			Member loginMember = service.getLoginMember(memNo);
+			if(loginMember!=null) {
+//				System.out.println("loginMember.getMemEmail() : " + loginMember.getMemEmail());
+				return ResponseEntity.status(200).body(loginMember);
+			}
+			return ResponseEntity.status(200).body("Failed to fetch loginMember");
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(e.getMessage());
+		}
+	}
 }

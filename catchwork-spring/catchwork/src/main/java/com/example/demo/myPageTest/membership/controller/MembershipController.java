@@ -26,7 +26,7 @@ public class MembershipController {
 
 	// 멤버십 리스트 조회
 	@GetMapping("getMembershipList")
-	public ResponseEntity<Object> getMembershipList() {
+	private ResponseEntity<Object> getMembershipList() {
 		List<MemberGrade> membershipList = service.getMembershipList();
 
 		try {
