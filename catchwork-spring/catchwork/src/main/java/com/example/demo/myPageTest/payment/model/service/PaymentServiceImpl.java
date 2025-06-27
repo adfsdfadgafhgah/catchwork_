@@ -1,5 +1,8 @@
 package com.example.demo.myPageTest.payment.model.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,7 +72,32 @@ public class PaymentServiceImpl implements PaymentService{
 	
 	@Override
 	public int updateSubscription(String memNo, String orderName) {
-		// TODO 구독 테이블에 구독 정보 삽입/수정 + 사용자 등급 수
-		return 0;
+		// TODO 구독 테이블에 구독 정보 삽입/수정 + 사용자 등급 수정
+		String selectResult = null;
+		int updateResult = 0;
+		int insertResult = 0;
+		int result = 0;
+		
+		Map<String,String> map = new HashMap<>();
+		map.put("memNo", memNo);
+		map.put("orderName", orderName);
+		
+		// 1. 구독중인 서비스 조회 
+		selectResult = mapper.selectSubscription(memNo);
+		
+		// 2. 구독중인 서비스가 있다면 수정
+		if(selectResult!=null&&!selectResult.equalsIgnoreCase(orderName)) {
+			updateResult = mapper.updateSubscription(map);
+		}
+		// 3. 구독중인 서비스가 없다면 삽입
+		else if(selectResult==null) {			
+			insertResult = mapper.insertSubscription(map);
+		}
+		
+		// 4. 사용자 등급 수정
+		if(updateResult>0||insertResult>0) {
+			result = mapper.updateMemGrade(map);
+		}
+		return result;
 	}
 }

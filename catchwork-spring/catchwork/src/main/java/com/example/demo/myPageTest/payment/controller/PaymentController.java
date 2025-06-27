@@ -29,7 +29,7 @@ import com.example.demo.test.user.model.dto.Member;
 
 import lombok.extern.slf4j.Slf4j;
 
-@CrossOrigin(origins="http://localhost:5173", allowCredentials = "true")
+//@CrossOrigin(origins="http://localhost:5173", allowCredentials = "true")
 @RestController
 @RequestMapping("tosspayment")
 @Slf4j
@@ -87,7 +87,7 @@ public class PaymentController {
         	if(result>0&&"DONE".equalsIgnoreCase((String) response.get("status"))) {
         		String orderName = (String)response.get("orderName");
         		// 구독 정보 수정
-        		updateSubscription(customerKey,orderName);
+        		int updateResult = service.updateSubscription(customerKey,orderName);
         	}
         }        
         return ResponseEntity.status(response.containsKey("error") ? 400 : 200).body(response);

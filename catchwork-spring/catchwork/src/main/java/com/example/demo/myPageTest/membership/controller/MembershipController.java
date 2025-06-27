@@ -15,7 +15,7 @@ import com.example.demo.myPageTest.membership.model.service.MembershipService;
 
 import lombok.extern.slf4j.Slf4j;
 
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
+//@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RestController
 @RequestMapping("membership")
 @Slf4j

@@ -65,7 +65,15 @@ function PaymentBilling() {
       issueBillingKey()
         .then(() =>
           /* TODO: 빌링키 발급에 성공했을 경우 UI 처리 로직을 구현하세요. */
-          setBillingConfirmed(true)
+          {
+            setBillingConfirmed(true);
+            if (confirm("구독하시겠습니까?")) {
+              navigate(`/mypage/payment/checkout?productId=${productId}`);
+            } else {
+              alert("결제를 취소하셨습니다.");
+              navigate("/mypage/membership");
+            }
+          }
         )
         .catch((err) => {
           // TODO: 빌링키 발급에 실패했을 경우 UI 처리 로직을 구현하세요.
@@ -76,28 +84,13 @@ function PaymentBilling() {
     }
   }, []);
 
-  if (billingConfirmed) {
-    return (
-      <div className="membership-container">
-        <div className="membership-box_section" style={{ width: "600px" }}>
-          <img
-            width="100px"
-            src="https://static.toss.im/illusts/check-blue-spot-ending-frame.png"
-          />
-          <h2 id="membership-title">카드 등록이 완료되었습니다.</h2>
-          <button
-            id="membership-confirm"
-            className="membership-button"
-            onClick={() =>
-              navigate(`/mypage/payment/checkout?productId=${productId}`)
-            }
-          >
-            구독하기
-          </button>
-        </div>
+  return (
+    <div className="membership-container">
+      <div className="membership-box_section" style={{ width: "600px" }}>
+        <h2 id="membership-title">등록 확인 중입니다...</h2>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default PaymentBilling;

@@ -1,5 +1,7 @@
 package com.example.demo.myPageTest.payment.model.mapper;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.demo.myPageTest.payment.model.dto.BillingKey;
@@ -16,5 +18,17 @@ public interface PaymentMapper {
 
 	// 결제 내역 저장
 	int insertPayment(Payment payment);
+
+	// 구독중인 서비스 조회
+	String selectSubscription(String memNo);
+
+	// 구독중인 서비스 수정
+	int updateSubscription(Map<String, String> map);
+
+	// 신규 구독 삽입
+	int insertSubscription(Map<String, String> map);
+
+	// 사용자 등급 수정
+	int updateMemGrade(Map<String, String> map);
 
 }

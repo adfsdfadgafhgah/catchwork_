@@ -74,4 +74,62 @@ INSERT INTO PAYMENT (
 )
 </insert>
 
+<!-- 구독중인 서비스 조회 -->
+<select id="selectSubscription">	
+SELECT
+  MG.MEM_GRADE_NAME
+FROM MEMBER M
+JOIN MEMBER_GRADE MG ON M.MEM_GRADE = MG.MEM_GRADE
+WHERE M.MEM_NO = #{memNo}
+</select>
+
+<!-- 구독중인 서비스 수정 -->
+<update id="updateSubscription">
+UPDATE SUBSCRIPTION
+SET MEM_GRADE = (
+    SELECT MEM_GRADE
+    FROM MEMBER_GRADE
+    WHERE MEM_GRADE_NAME = #{orderName}
+),
+    SUB_UPDATE_AT = SYSDATE
+WHERE MEM_NO = #{memNo}
+</update>
+
+<!-- 신규 구독 삽입 -->
+<insert id="insertSubscription">
+INSERT INTO SUBSCRIPTION (
+  SUB_NO,
+  MEM_GRADE,
+  MEM_NO,
+  SUB_START_AT,
+  SUB_END_AT,
+  SUB_UPDATE_AT,
+  SUB_PAY_AT,
+  SUB_STATUS
+)
+VALUES (
+  SUBSCRIPTION_SEQ.NEXTVAL,
+  (SELECT MEM_GRADE
+   FROM MEMBER_GRADE
+   WHERE MEM_GRADE_NAME = #{orderName}),
+  #{memNo},
+  SYSDATE,
+  NULL,
+  SYSDATE,
+  SYSDATE,
+  DEFAULT
+)
+</insert>
+
+<!-- 사용자 등급 수정 -->
+<update id="updateMemGrade" parameterType="map">
+UPDATE MEMBER
+SET MEM_GRADE = (
+  SELECT MEM_GRADE
+  FROM MEMBER_GRADE
+  WHERE MEM_GRADE_NAME = #{orderName}
+)
+WHERE MEM_NO = #{memNo}
+</update>
+
 </mapper>
