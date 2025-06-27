@@ -14,7 +14,7 @@ function PaymentFail() {
         src="https://static.toss.im/lotties/error-spot-no-loop-space-apng.png"
         alt="에러 이미지"
       />
-      <h2>결제를 실패했어요</h2>
+      <h2>오류가 발생했어요</h2>
 
       <div className="p-grid typography--p" style={{ marginTop: "50px" }}>
         <div className="p-grid-col text--left">

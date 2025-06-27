@@ -67,7 +67,12 @@ function MembershipPage() {
 
       // 유효한 빌링키가 있다면 바로 결제 진행
       if (response.status == 200 && response.data) {
-        navigate(`/mypage/payment/checkout?productId=${memGrade}`);
+        if (confirm("구독하시겠습니까?")) {
+          navigate(`/mypage/payment/checkout?productId=${memGrade}`);
+        } else {
+          alert("결제를 취소하셨습니다.");
+          navigate("/mypage/membership");
+        }
       }
       // 유효한 빌링키가 없다면 새로 발급
       else if (response.status == 200 && !response.data) {
