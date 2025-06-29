@@ -12,6 +12,7 @@ const CVForm02 = ({ index, type, data, labels, onRemove, onChange, mode }) => {
 
   return (
     <div className={styles.section}>
+      <FormRemoveButton onClick={onRemove} />
       <div className={styles.inner}>
         <div className={styles.row}>
           <input
@@ -54,8 +55,6 @@ const CVForm02 = ({ index, type, data, labels, onRemove, onChange, mode }) => {
             className={styles.textarea}
           />
         </div>
-
-        <FormRemoveButton onClick={onRemove} />
       </div>
     </div>
   );
