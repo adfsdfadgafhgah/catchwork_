@@ -5,12 +5,16 @@ import com.example.demo.company.model.dto.CorpInfo;
 
 public interface CorpInfoService {
 
+	
+	
+	
 	/**
-	 * @author JIN
+	 * @param query
 	 * @param memNo
 	 * @return
 	 */
-	List<CorpInfo> selectCorpList(String memNo);
+	List<CorpInfo> selectCorpList(String query,String memNo);
+	
 
 	/**
 	 * @author JIN
@@ -19,5 +23,7 @@ public interface CorpInfoService {
 	 * @return
 	 */
 	CorpInfo selectCorpDetail(int corpNo, String memNo);
+	
+	
 
 }

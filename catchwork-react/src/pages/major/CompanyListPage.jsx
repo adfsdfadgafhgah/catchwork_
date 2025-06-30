@@ -120,34 +120,36 @@ import { axiosApi } from "../../api/axiosAPI";
 const CompanyListPage = () => {
   const [companyList, setCompanyList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
 
   //기업 목록
 
   const getCorpList = async () => {
+    setLoading(true);
     try {
-      //const token = localStorage.getItem("jwt"); // JWT가 있다면 사용
-      // const res = await axios.get("http://localhost:8080/company", {
-      //   headers: {
-      //     Authorization: `Bearer ${token}`,
-      //   },
-      // });
+      const memNo = "49d354c4-bd52-4cdb-8fe5-a7ff69454b16";
+      const params = { memNo };
 
-      const res = await axiosApi.get("/company", {
-        params: searchTerm.trim() ? { query: searchTerm } : {}, //  검색어 있을 때만 쿼리 파라미터 추가
-      });
+      if (searchTerm && searchTerm.trim()) {
+        params.query = searchTerm.trim();
+      }
+
+      const res = await axiosApi.get("/company", { params });
 
       if (res.status === 200) {
-        console.log("기업 목록 데이터 확인:", res.data); // 👈 여기서 부터 아래가 console로 확인중 나중에 지울게요
-        console.log("데이터 타입:", Array.isArray(res.data));
-        console.log("타입이 배열인가?:", Array.isArray(res.data));
-        console.log("typeof data:", typeof res.data);
+        console.log("기업 목록 데이터 확인:", res.data);
         setCompanyList(res.data);
+      } else if (res.status === 204) {
+        setCompanyList([]);
+        console.log("조회된 기업 정보가 없습니다.");
       } else {
-        alert(res.data);
+        alert("기업 목록 조회 실패");
       }
     } catch (err) {
       console.error("기업 정보 로딩 실패:", err);
       alert("기업 정보를 불러오는 데 실패했습니다.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -173,11 +175,19 @@ const CompanyListPage = () => {
         </div>
 
         {/* 기업 카드 리스트 */}
-        <div className="company-grid">
-          {companyList.map((company) => (
-            <CompanyItem key={company.corpNo} company={company} />
-          ))}
-        </div>
+        {loading ? (
+          <p style={{ textAlign: "center" }}>로딩 중...</p>
+        ) : (
+          <div className="company-grid">
+            {companyList.length > 0 ? (
+              companyList.map((company) => (
+                <CompanyItem key={company.corpNo} company={company} />
+              ))
+            ) : (
+              <p style={{ textAlign: "center" }}>기업 정보가 없습니다.</p>
+            )}
+          </div>
+        )}
       </main>
       <ScrollToTopButton />
     </>

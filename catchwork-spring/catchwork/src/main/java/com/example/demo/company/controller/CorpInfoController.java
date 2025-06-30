@@ -30,48 +30,7 @@ public class CorpInfoController {
 	@Autowired
 	private CorpInfoService service;
 	
-	//controller가 잘 되는지 확인용 (지울거임)
-	@GetMapping("debug")
-	public ResponseEntity<?> debugTest() {
-	    return ResponseEntity.ok("✅ 단순 문자열 응답 성공");
-	}
-	
-	
-	/**
-     * 기업 목록 조회
-     * ex)/company
-     */
-//	@GetMapping("")
-//	public ResponseEntity<?> getCorpList(@RequestParam(required = false) String memNo) {
 
-//		try {
-//		    List<CorpInfo> corpList = service.selectCorpList(memNo);
-//		    log.info("✅ 조회된 기업 수: {}", corpList.size());
-//		    return ResponseEntity.ok(corpList);
-//		} catch (Exception e) {
-//		    log.error("❌ 기업 목록 조회 중 오류 발생", e); // 전체 스택 출력
-//		    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//		                         .body("기업 목록 조회 중 오류 발생: " + e.getMessage());
-//		}
-//
-//	}
-	
-	
-	//name = "memNo"로 명시 해주니까 그래도 홈페이지는 뜸
-	@GetMapping("")
-	public ResponseEntity<?> getCorpList(@RequestParam(name = "memNo", required = false) String memNo) {
-	    log.info("✅ /company 진입 성공");
-	    
-	    log.info("memNo 값 확인: {}", memNo);
-	    try {
-	        List<CorpInfo> corpList = service.selectCorpList(memNo);
-	        return ResponseEntity.ok(corpList);
-	    } catch (Exception e) {
-	        log.error("기업 목록 조회 중 오류 발생", e);
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                             .body("기업 목록 조회 중 오류 발생");
-	    }
-	}
 
     
 //	  로그인한 멤버에 따라서 저장한 기업인지 아닌지 보여주기   
@@ -83,14 +42,48 @@ public class CorpInfoController {
 //    }
     
     
+
+	
+    
+    /** 3번째 시도
+     * 기업 정보 목록을 조회하는 API
+     * @param query 검색어 (선택 사항)
+     * @param memNo 회원번호 (선택 사항)
+     * @return 기업 정보 리스트
+     */
+    @GetMapping("")
+    public ResponseEntity<?> selectCompanyList(
+    		@RequestParam(value = "query", required = false) String query,
+    		@RequestParam(value = "memNo", required = false) String memNo) {
+    	
+    	 log.info("기업 목록 조회 요청. 검색어: {}, memNo: {}", query, memNo);
+    	 
+        try {  List<CorpInfo> companyList = service.selectCorpList(query, memNo);
+        
+            if (companyList.isEmpty()) {
+                log.info("조회된 기업 정보가 없습니다.");
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("기업 정보 없음");
+            }
+            log.info("기업 목록 조회 성공. 총 {}개", companyList.size());
+            return ResponseEntity.ok(companyList); // 200 OK
+        } catch (Exception e) {
+        	log.error("기업 목록 조회 중 오류 발생: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("기업 목록 조회 중 오류 발생");
+        }
+    }
+    
+    
     /**
      * 기업 상세 조회 
      * ex) /company/3
      */
     @GetMapping("{corpNo}")
-    public ResponseEntity<?> getCorpDetail(@PathVariable int corpNo,
+    public ResponseEntity<?> getCorpDetail(@PathVariable("corpNo") int corpNo,
                                      @RequestParam(required = false) String memNo) {
-       // return service.selectCorpDetail(corpNo, memNo);
+    	
+    	log.info("corpNo: {}", corpNo);//지금 못받는중
+    	log.info("memNo: {}", memNo);//못받는중임
     	try {
     		CorpInfo corpInfo = service.selectCorpDetail(corpNo, memNo);
     		return ResponseEntity.ok(corpInfo);
@@ -99,5 +92,4 @@ public class CorpInfoController {
     		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("기업 상세 조회중 오류발생");
     	}
     }
-	
 }

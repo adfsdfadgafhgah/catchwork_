@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.example.demo.cv.model.service.CVService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,8 +31,8 @@ public class CVController {
     @Value("${file.upload.cv-img-path}")
     private String uploadDir; // <- 값 = C:/upload/cv/img
     
-//	@Autowired
-//	private CVService service; 
+	@Autowired
+	private CVService service; 
 	
 	@PostMapping("add")
 	public String CVAdd(@RequestBody Map<String, Object> payload) {
@@ -82,5 +85,26 @@ public class CVController {
             return ResponseEntity.internalServerError().body("업로드 실패");
         }
     }
+	
+	
+	
+	//윤진 submit cv
+	@PostMapping("/submitcv")
+	public ResponseEntity<?> submitCV(@RequestBody Map<String, Object> data) {
+		 try {
+	            log.info("이력서 제출 요청 데이터: {}", data);
+
+	            String memNo = (String) data.get("memNo");
+	            int cvNo = (int) data.get("cvNo");
+	            int recruitNo = (int) data.get("recruitNo");
+
+	            service.submitCV(memNo, cvNo, recruitNo);
+
+	            return ResponseEntity.ok("이력서 제출 완료");
+	        } catch (Exception e) {
+	            log.error("이력서 제출 중 오류", e);
+	            return ResponseEntity.internalServerError().body("제출 실패");
+	        }
+	}
 	
 }
