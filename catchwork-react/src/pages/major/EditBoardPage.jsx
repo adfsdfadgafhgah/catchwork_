@@ -110,30 +110,32 @@ import SectionHeader from "../../components/common/SectionHeader";
 import "./WriteBoardPage.css"; // 재사용 가능
 import ThumbnailUploader from "../../components/common/ThumbnailUploader";
 import { axiosApi } from "../../api/axiosAPI";
+import useLoginMember from "../../stores/loginMember";
 
 export default function EditBoardPage() {
-  const loginUser = {
-    memId: "h",
-    memNickname: "배령",
-    memEmail: "hbr0901@naver.com",
-    memNo: customerKey,
-    memType: "0",
-  };
   const { boardNo } = useParams();
   const navigate = useNavigate();
   const editorRef = useRef();
-
   const [title, setTitle] = useState("");
   const [content, setContent] = useState(""); // initialValue용
   const [thumbnailUrl, setThumbnailUrl] = useState(null);
-  const customerKey = "95132b50-d360-400b-bfb2-5a1c51857f4c";
+  const { loginMember, setLoginMember } = useLoginMember();
 
-  // 기존 글 불러오기
+  // 로그인 정보 없으면 세팅 시도
   useEffect(() => {
+    if (!loginMember?.memNo) {
+      setLoginMember();
+    }
+  }, []);
+
+  // 기존 게시글 불러오기
+  useEffect(() => {
+    if (!loginMember?.memNo) return; // 로그인 정보 없으면 대기
+
     const fetchBoard = async () => {
       try {
         const resp = await axiosApi.get(`/board/detail/${boardNo}`, {
-          params: { memNo: loginUser.memNo },
+          params: { memNo: loginMember.memNo },
         });
         const data = resp.data;
         setTitle(data.boardTitle);
@@ -147,7 +149,7 @@ export default function EditBoardPage() {
       }
     };
     fetchBoard();
-  }, [boardNo, navigate]);
+  }, [boardNo, loginMember]);
 
   // 썸네일 등록
   const handleThumbnailUpload = async (file) => {
@@ -178,10 +180,10 @@ export default function EditBoardPage() {
         boardTitle: title,
         boardContent: content,
         boardThumbnailUrl: thumbnailUrl,
-        memNo: loginUser.memNo,
+        memNo: loginMember.memNo,
       });
 
-      if (resp.data.success) {
+      if (resp.status === 200) {
         alert("수정 완료!");
         navigate(`/board/${boardNo}`);
       } else {

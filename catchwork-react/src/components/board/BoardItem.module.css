@@ -95,9 +95,8 @@
   display: block; /* ✅ 전체 박스 클릭 가능하게 */
 }
 
-.fas.red {
-  color: red;
-  cursor: pointer;
+.liked-heart {
+  color: red !important;
 }
 
 .far {

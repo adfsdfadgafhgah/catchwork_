@@ -1,21 +1,17 @@
 import BoardItem from "./BoardItem";
 import BoardCss from "./BoardList.module.css";
 
-export default function BoardList({ boards, loginUser }) {
+export default function BoardList({ boards, loginMember, onLikeToggle }) {
   return (
     <div className={BoardCss.boardList}>
-      {Array.isArray(boards) && boards.length === 0 ? (
-        <p className={BoardCss.emptyMessage}>게시글이 없습니다.</p>
-      ) : (
-        boards.map((board) => (
-          <BoardItem
-            key={board.boardNo}
-            board={board}
-            isLoggedIn={!!loginUser}
-            currentUser={loginUser}
-          />
-        ))
-      )}
+      {boards.map((board) => (
+        <BoardItem
+          key={board.boardNo}
+          board={board}
+          loginMember={loginMember}
+          onLikeToggle={onLikeToggle}
+        />
+      ))}
     </div>
   );
 }

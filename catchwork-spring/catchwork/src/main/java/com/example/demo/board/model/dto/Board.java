@@ -41,12 +41,9 @@ public class Board {
 	// 좋아요 여부 확인
 	private int likeCheck;
 
-	private boolean likeByCurrentUser; // 로그인 유저가 좋아요 눌렀는지 여부
+	private boolean likedByCurrentUser; // 로그인 유저가 좋아요 눌렀는지 여부
 
-	public void setLikedByCurrentUser(boolean liked) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 	
 	

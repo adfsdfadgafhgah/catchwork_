@@ -17,12 +17,10 @@ public class Comment {
 	private String commentEditDate;
 	private int commentStatus;
 	private String commentStatusDate;
+	private int boardNo; // 어떤 게시글
+	private int parentCommentNo; // 부모 댓글
+	private String memNo; // 누구 댓글
 	
-	// 어느 게시글?
-	private int boardNo;
-	
-	// 부모 댓글
-	private int parentCommentNo;
 	
 	// 댓글 조회 시 회원 프로필, 이름
 	private String memProfilePath;
