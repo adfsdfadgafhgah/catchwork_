@@ -146,29 +146,6 @@ const router = createBrowserRouter([
         element: <SupportDetailPage />,
         children: [{ path: ":id", element: <SupportDetailPage /> }],
       },
-
-      /*
-  ______   ______   .______      .______      .______      ___       _______  _______     _______.
- /      | /  __  \  |   _  \     |   _  \     |   _  \    /   \     /  _____||   ____|   /       |
-|  ,----'|  |  |  | |  |_)  |    |  |_)  |    |  |_)  |  /  ^  \   |  |  __  |  |__     |   (----`
-|  |     |  |  |  | |      /     |   ___/     |   ___/  /  /_\  \  |  | |_ | |   __|     \   \    
-|  `----.|  `--'  | |  |\  \----.|  |         |  |     /  _____  \ |  |__| | |  |____.----)   |   
- \______| \______/  | _| `._____|| _|    _____| _|    /__/     \__\ \______| |_______|_______/    
-                                        |______|                                                  
-      */
-      { path: "corp", element: <CorpRecruitListPage /> },
-
-      // 기업 회원
-      { path: "corpcvlist", element: <CorpCVListPage /> },
-      {
-        path: "corpcompanydetail",
-        element: <CorpCompanyPage />,
-        children: [
-          { path: ":corpNo", element: <CorpCompanyDetailPage /> },
-          { path: ":corpNo/edit", element: <EditCompanyPage /> },
-        ],
-      },
-
       {
         path: "/mypage",
         element: <MyPage />,
@@ -191,6 +168,28 @@ const router = createBrowserRouter([
           },
         ],
       },
+      /*
+  ______   ______   .______      .______      .______      ___       _______  _______     _______.
+ /      | /  __  \  |   _  \     |   _  \     |   _  \    /   \     /  _____||   ____|   /       |
+|  ,----'|  |  |  | |  |_)  |    |  |_)  |    |  |_)  |  /  ^  \   |  |  __  |  |__     |   (----`
+|  |     |  |  |  | |      /     |   ___/     |   ___/  /  /_\  \  |  | |_ | |   __|     \   \    
+|  `----.|  `--'  | |  |\  \----.|  |         |  |     /  _____  \ |  |__| | |  |____.----)   |   
+ \______| \______/  | _| `._____|| _|    _____| _|    /__/     \__\ \______| |_______|_______/    
+                                        |______|                                                  
+      */
+      { path: "corp", element: <CorpRecruitListPage /> },
+
+      // 기업 회원
+      { path: "corpcvlist", element: <CorpCVListPage /> },
+      {
+        path: "corpcompanydetail",
+        element: <CorpCompanyPage />,
+        children: [
+          { path: ":corpNo", element: <CorpCompanyDetailPage /> },
+          { path: ":corpNo/edit", element: <EditCompanyPage /> },
+        ],
+      },
+
       // 기업 마이 페이지
       { path: "corpmypage", element: <CorpMyPage /> },
       { path: "corpeditmyinfo", element: <CorpEditMyInfoPage /> },

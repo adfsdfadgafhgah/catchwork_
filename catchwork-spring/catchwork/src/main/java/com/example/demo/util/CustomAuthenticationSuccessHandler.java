@@ -25,8 +25,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         int memType = userDetails.getMemberEntity().getMemType();
 
         String redirectUrl = switch (memType) {
-            case 0 -> "/user/home";
-            case 1 -> "/company/home";
+            case 0 -> "/";
+            case 1 -> "/corp";
             default -> "/";  // fallback
         };
 
