@@ -49,7 +49,7 @@ const AuthTest = () => {
   const signin = async () => {
     try {
       const res = await axiosApi.post(`/signin`, {
-        memId: "Test_646",
+        memId: "Test_229",
         memPw: "Test",
       });
 
@@ -70,7 +70,7 @@ const AuthTest = () => {
   const corpSignin = async () => {
     try {
       const res = await axiosApi.post(`/signin`, {
-        memId: "Test_313",
+        memId: "Test_146",
         memPw: "Test",
       });
 
@@ -156,5 +156,5 @@ const generateRandomNickname = () => {
   const adj = adjectives[Math.floor(Math.random() * adjectives.length)];
   const noun = nouns[Math.floor(Math.random() * nouns.length)];
 
-  return `${adj}_${noun}#${tag}`;
+  return `${adj}_${noun}_${tag}`;
 };

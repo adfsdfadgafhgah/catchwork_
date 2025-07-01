@@ -3,7 +3,44 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.board.model.mapper.BoardMapper">
 
-  <select id="selectBoardsByLatest" resultType="Board">
+<resultMap id="boardListMap" type="Board">
+  <id property="boardNo" column="BOARD_NO" />
+  <result property="boardTitle" column="BOARD_TITLE" />
+  <result property="boardContent" column="BOARD_CONTENT" />
+  <result property="boardWriteDate" column="BOARD_WRITE_DATE" />
+  <result property="boardEditDate" column="BOARD_EDIT_DATE" />
+  <result property="boardReadCount" column="BOARD_READ_COUNT" />
+  <result property="boardStatusCode" column="BOARD_STATUS_CODE" />
+  <result property="boardStatusDate" column="BOARD_STATUS_DATE" />
+  <result property="boardThumbnailUrl" column="BOARD_THUMBNAIL_URL" />
+  <result property="likeCount" column="LIKE_COUNT" />
+  <result property="commentCount" column="COMMENT_COUNT" />
+  <result property="likedByCurrentUser" column="LIKED_BY_CURRENT_USER" />
+  
+  </resultMap>
+  
+  <!-- SQL로 가져온 MEM_NO 등을 Board.member 객체 내부로 정확히 매핑하기 위한 설정 -->
+<resultMap id="boardDetailMap" type="Board">
+  <id property="boardNo" column="BOARD_NO" />
+  <result property="boardTitle" column="BOARD_TITLE" />
+  <result property="boardContent" column="BOARD_CONTENT" />
+  <result property="boardWriteDate" column="BOARD_WRITE_DATE" />
+  <result property="boardEditDate" column="BOARD_EDIT_DATE" />
+  <result property="boardReadCount" column="BOARD_READ_COUNT" />
+  <result property="boardStatusCode" column="BOARD_STATUS_CODE" />
+  <result property="boardStatusDate" column="BOARD_STATUS_DATE" />
+  <result property="boardThumbnailUrl" column="BOARD_THUMBNAIL_URL" />
+
+ <!-- member 객체 내부에 매핑 -->
+  <association property="member" javaType="Member">
+    <id property="memNo" column="MEM_NO" />
+    <result property="memNickname" column="MEM_NICKNAME" />
+    <result property="memProfilePath" column="MEM_PROFILE_PATH" />
+  </association>
+</resultMap>
+
+	<!-- 최신 순 정렬 -->
+  <select id="selectBoardsByLatest" resultType="Board" resultMap="boardListMap">
     SELECT 
       B.BOARD_NO,
       B.BOARD_TITLE,
@@ -16,7 +53,13 @@
       B.BOARD_THUMBNAIL_URL,
       M.MEM_NO,
       M.MEM_NICKNAME,
-      M.MEM_PROFILE_PATH
+      M.MEM_PROFILE_PATH,
+      (SELECT COUNT(*) FROM FAV_BOARD F WHERE F.BOARD_NO = B.BOARD_NO) AS LIKE_COUNT,
+      (SELECT COUNT(*) 
+     FROM FAV_BOARD F 
+     WHERE F.BOARD_NO = B.BOARD_NO AND F.MEM_NO = #{memNo}) AS LIKED_BY_CURRENT_USER,
+     (SELECT COUNT(*) FROM "COMMENT" C WHERE C.BOARD_NO = B.BOARD_NO) AS COMMENT_COUNT
+     
     FROM BOARD B
     JOIN MEMBER M ON B.MEM_NO = M.MEM_NO
     WHERE B.BOARD_STATUS_CODE = 0
@@ -26,8 +69,9 @@
     </if>
     ORDER BY B.BOARD_WRITE_DATE DESC
   </select>
-
-  <select id="selectBoardsByOldest" resultType="Board">
+	
+	<!-- 오래된 순 정렬 -->
+  <select id="selectBoardsByOldest" resultType="Board" resultMap="boardListMap">
     SELECT 
       B.BOARD_NO,
       B.BOARD_TITLE,
@@ -40,7 +84,12 @@
       B.BOARD_THUMBNAIL_URL,
       M.MEM_NO,
       M.MEM_NICKNAME,
-      M.MEM_PROFILE_PATH
+      M.MEM_PROFILE_PATH,
+     (SELECT COUNT(*) FROM FAV_BOARD F WHERE F.BOARD_NO = B.BOARD_NO) AS LIKE_COUNT,
+      (SELECT COUNT(*) 
+     FROM FAV_BOARD F 
+     WHERE F.BOARD_NO = B.BOARD_NO AND F.MEM_NO = #{memNo}) AS LIKED_BY_CURRENT_USER,
+     (SELECT COUNT(*) FROM "COMMENT" C WHERE C.BOARD_NO = B.BOARD_NO) AS COMMENT_COUNT
     FROM BOARD B
     JOIN MEMBER M ON B.MEM_NO = M.MEM_NO
     WHERE B.BOARD_STATUS_CODE = 0
@@ -50,66 +99,188 @@
     </if>
     ORDER BY B.BOARD_WRITE_DATE ASC
   </select>
-
-  <select id="selectBoardsByLikes" resultType="Board">
-    SELECT 
-      B.BOARD_NO,
-      B.BOARD_TITLE,
-      B.BOARD_CONTENT,
-      TO_CHAR(B.BOARD_WRITE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_WRITE_DATE,
-      TO_CHAR(B.BOARD_EDIT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_EDIT_DATE,
-      B.BOARD_READ_COUNT,
-      B.BOARD_STATUS_CODE,
-      B.BOARD_STATUS_DATE,
-      B.BOARD_THUMBNAIL_URL,
-      M.MEM_NO,
-      M.MEM_NICKNAME,
-      M.MEM_PROFILE_PATH,
-      COUNT(L.LIKE_NO) AS LIKE_COUNT
-    FROM BOARD B
-    JOIN MEMBER M ON B.MEM_NO = M.MEM_NO
-    LEFT JOIN BOARD_LIKE L ON B.BOARD_NO = L.BOARD_NO
-    WHERE B.BOARD_STATUS_CODE = 0
-    <if test="query != null and query != ''">
+	
+	<!-- 좋아요 순 정렬 -->
+  <select id="selectBoardsByLikes" resultType="Board" resultMap="boardListMap">
+  SELECT 
+    B.BOARD_NO,
+    B.BOARD_TITLE,
+    B.BOARD_CONTENT,
+    TO_CHAR(B.BOARD_WRITE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_WRITE_DATE,
+    TO_CHAR(B.BOARD_EDIT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_EDIT_DATE,
+    B.BOARD_READ_COUNT,
+    B.BOARD_STATUS_CODE,
+    B.BOARD_STATUS_DATE,
+    B.BOARD_THUMBNAIL_URL,
+    M.MEM_NO,
+    M.MEM_NICKNAME,
+    M.MEM_PROFILE_PATH,
+   (SELECT COUNT(*) FROM FAV_BOARD F WHERE F.BOARD_NO = B.BOARD_NO) AS LIKE_COUNT,
+      (SELECT COUNT(*) 
+     FROM FAV_BOARD F 
+     WHERE F.BOARD_NO = B.BOARD_NO AND F.MEM_NO = #{memNo}) AS LIKED_BY_CURRENT_USER,
+     (SELECT COUNT(*) FROM "COMMENT" C WHERE C.BOARD_NO = B.BOARD_NO) AS COMMENT_COUNT
+  FROM BOARD B
+  JOIN MEMBER M ON B.MEM_NO = M.MEM_NO
+  LEFT JOIN FAV_BOARD L ON B.BOARD_NO = L.BOARD_NO
+  WHERE B.BOARD_STATUS_CODE = 0
+  <if test="query != null and query != ''">
+    AND (B.BOARD_TITLE LIKE '%' || #{query} || '%'
+      OR B.BOARD_CONTENT LIKE '%' || #{query} || '%')
+  </if>
+  GROUP BY 
+    B.BOARD_NO, B.BOARD_TITLE, B.BOARD_CONTENT, B.BOARD_WRITE_DATE, B.BOARD_EDIT_DATE,
+    B.BOARD_READ_COUNT, B.BOARD_STATUS_CODE, B.BOARD_STATUS_DATE, B.BOARD_THUMBNAIL_URL,
+    M.MEM_NO, M.MEM_NICKNAME, M.MEM_PROFILE_PATH
+  ORDER BY LIKE_COUNT DESC
+</select>
+	
+	<!-- 댓글 순 정렬 -->
+ <select id="selectBoardsByComments" resultType="Board" resultMap="boardListMap">
+  SELECT 
+    B.BOARD_NO,
+    B.BOARD_TITLE,
+    B.BOARD_CONTENT,
+    TO_CHAR(B.BOARD_WRITE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_WRITE_DATE,
+    TO_CHAR(B.BOARD_EDIT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_EDIT_DATE,
+    B.BOARD_READ_COUNT,
+    B.BOARD_STATUS_CODE,
+    B.BOARD_STATUS_DATE,
+    B.BOARD_THUMBNAIL_URL,
+    M.MEM_NO,
+    M.MEM_NICKNAME,
+    M.MEM_PROFILE_PATH,
+    (SELECT COUNT(*) FROM FAV_BOARD F WHERE F.BOARD_NO = B.BOARD_NO) AS LIKE_COUNT,
+      (SELECT COUNT(*) 
+     FROM FAV_BOARD F 
+     WHERE F.BOARD_NO = B.BOARD_NO AND F.MEM_NO = #{memNo}) AS LIKED_BY_CURRENT_USER,
+     (SELECT COUNT(*) FROM "COMMENT" C WHERE C.BOARD_NO = B.BOARD_NO) AS COMMENT_COUNT
+  FROM BOARD B
+  JOIN MEMBER M ON B.MEM_NO = M.MEM_NO
+  WHERE B.BOARD_STATUS_CODE = 0
+  <if test="query != null and query != ''">
       AND (B.BOARD_TITLE LIKE '%' || #{query} || '%'
         OR B.BOARD_CONTENT LIKE '%' || #{query} || '%')
     </if>
-    GROUP BY 
-      B.BOARD_NO, B.BOARD_TITLE, B.BOARD_CONTENT, B.BOARD_WRITE_DATE, B.BOARD_EDIT_DATE,
-      B.BOARD_READ_COUNT, B.BOARD_STATUS_CODE, B.BOARD_STATUS_DATE, B.BOARD_THUMBNAIL_URL,
-      M.MEM_NO, M.MEM_NICKNAME, M.MEM_PROFILE_PATH
-    ORDER BY LIKE_COUNT DESC
-  </select>
+  GROUP BY 
+    B.BOARD_NO, B.BOARD_TITLE, B.BOARD_CONTENT, B.BOARD_WRITE_DATE, B.BOARD_EDIT_DATE,
+    B.BOARD_READ_COUNT, B.BOARD_STATUS_CODE, B.BOARD_STATUS_DATE, B.BOARD_THUMBNAIL_URL,
+    M.MEM_NO, M.MEM_NICKNAME, M.MEM_PROFILE_PATH
+  ORDER BY COMMENT_COUNT DESC
+</select>
 
-  <select id="selectBoardsByComments" resultType="Board">
-    SELECT 
-      B.BOARD_NO,
-      B.BOARD_TITLE,
-      B.BOARD_CONTENT,
-      TO_CHAR(B.BOARD_WRITE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_WRITE_DATE,
-      TO_CHAR(B.BOARD_EDIT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_EDIT_DATE,
-      B.BOARD_READ_COUNT,
-      B.BOARD_STATUS_CODE,
-      B.BOARD_STATUS_DATE,
-      B.BOARD_THUMBNAIL_URL,
-      M.MEM_NO,
-      M.MEM_NICKNAME,
-      M.MEM_PROFILE_PATH,
-      (SELECT COUNT(*) FROM COMMENT C WHERE C.BOARD_NO = B.BOARD_NO) AS COMMENT_COUNT,
-      (SELECT COUNT(*) FROM BOARD_LIKE L WHERE L.BOARD_NO = B.BOARD_NO) AS LIKE_COUNT
-    FROM BOARD B
-    JOIN MEMBER M ON B.MEM_NO = M.MEM_NO
-    LEFT JOIN COMMENT C ON B.BOARD_NO = C.BOARD_NO
-    WHERE B.BOARD_STATUS_CODE = 0
-    <if test="query != null and query != ''">
-      AND (B.BOARD_TITLE LIKE '%' || #{query} || '%'
-        OR B.BOARD_CONTENT LIKE '%' || #{query} || '%')
-    </if>
-    GROUP BY 
-      B.BOARD_NO, B.BOARD_TITLE, B.BOARD_CONTENT, B.BOARD_WRITE_DATE, B.BOARD_EDIT_DATE,
-      B.BOARD_READ_COUNT, B.BOARD_STATUS_CODE, B.BOARD_STATUS_DATE, B.BOARD_THUMBNAIL_URL,
-      M.MEM_NO, M.MEM_NICKNAME, M.MEM_PROFILE_PATH
-    ORDER BY COMMENT_COUNT DESC
+
+
+ 
+  
+  <!-- 게시글 상세 -->
+  <select id="selectBoardDetail" resultMap="boardDetailMap">
+  SELECT 
+    B.BOARD_NO,
+    B.BOARD_TITLE,
+    B.BOARD_CONTENT,
+    TO_CHAR(B.BOARD_WRITE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_WRITE_DATE,
+    TO_CHAR(B.BOARD_EDIT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_EDIT_DATE,
+    B.BOARD_READ_COUNT,
+    B.BOARD_STATUS_CODE,
+    B.BOARD_STATUS_DATE,
+    B.BOARD_THUMBNAIL_URL,
+    M.MEM_NO,
+    M.MEM_NICKNAME,
+    M.MEM_PROFILE_PATH
+  FROM BOARD B
+  JOIN MEMBER M ON B.MEM_NO = M.MEM_NO
+  WHERE B.BOARD_NO = #{boardNo}
+</select>
+
+<!-- 좋아요 수 -->
+<select id="selectLikeCount" resultType="int">
+  SELECT COUNT(*) FROM FAV_BOARD WHERE BOARD_NO = #{boardNo}
+</select>
+
+<!-- 댓글 수 -->
+<select id="selectCommentCount" resultType="int">
+  SELECT COUNT(*) FROM "COMMENT" WHERE BOARD_NO = #{boardNo}
+</select>
+
+<!-- 체크 여부 -->
+<select id="checkUserLiked" resultType="int">
+  SELECT COUNT(*) 
+  FROM FAV_BOARD 
+  WHERE BOARD_NO = #{boardNo} AND MEM_NO = #{memNo, jdbcType=VARCHAR}
+</select>
+
+<!-- 좋아요 등록 -->
+<insert id="insertBoardLike">
+  INSERT INTO FAV_BOARD (BOARD_NO, MEM_NO)
+  VALUES (#{boardNo}, #{memNo})
+</insert>
+
+<!-- 좋아요 취소 -->
+<delete id="deleteBoardLike">
+  DELETE FROM FAV_BOARD
+  WHERE BOARD_NO = #{boardNo} AND MEM_NO = #{memNo}
+</delete>
+
+<!-- 좋아요 여부 확인 -->
+<select id="selectBoardLike" resultType="int">
+  SELECT COUNT(*) 
+  FROM FAV_BOARD 
+  WHERE BOARD_NO = #{boardNo}
+    AND MEM_NO = #{memNo}
+</select>
+
+<!-- 게시글 수정 -->
+<update id="editBoard">
+  UPDATE BOARD
+  SET 
+    BOARD_TITLE = #{boardTitle},
+    BOARD_CONTENT = #{boardContent},
+    BOARD_EDIT_DATE = SYSDATE,
+    BOARD_THUMBNAIL_URL = #{boardThumbnailUrl}
+  WHERE BOARD_NO = #{boardNo}
+</update>
+
+<!-- 게시글 작성 -->
+<insert id="writeBoard" parameterType="Board">
+  <selectKey resultType="int" keyProperty="boardNo" order="BEFORE">
+    SELECT SEQ_BOARD_NO.NEXTVAL FROM DUAL
+  </selectKey>
+
+  INSERT INTO BOARD (
+    BOARD_NO,
+    BOARD_TITLE,
+    BOARD_CONTENT,
+    BOARD_WRITE_DATE,
+    BOARD_EDIT_DATE,
+    BOARD_STATUS_CODE,
+    BOARD_THUMBNAIL_URL,
+    MEM_NO
+  ) VALUES (
+    #{boardNo},
+    #{boardTitle},
+    #{boardContent},
+    SYSDATE,
+    SYSDATE,
+    0,
+    #{boardThumbnailUrl},
+    #{memNo}
+  )
+</insert>
+
+<!-- 게시글 작성자 조회 -->
+  <select id="findWriterByBoardNo" resultType="string">
+    SELECT MEM_NO
+    FROM BOARD
+    WHERE BOARD_NO = #{boardNo}
   </select>
+  
+  <!-- 게시글 삭제 -->
+  <update id="deleteBoard">
+    UPDATE BOARD 
+    SET BOARD_STATUS_CODE = 1
+    WHERE BOARD_NO = #{boardNo}
+    AND MEM_NO = #{memNo, jdbcType=VARCHAR}
+  </update>
 
 </mapper>

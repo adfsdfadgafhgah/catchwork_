@@ -1,6 +1,6 @@
 import "./MembershipItem.css";
 
-function MembershipItem({ membership, handleCheckout }) {
+function MembershipItem({ membership, handleCheckout, loginMemGrade }) {
   return (
     <>
       <div className="membership-item">
@@ -9,10 +9,16 @@ function MembershipItem({ membership, handleCheckout }) {
         <p>{membership.membershipBenefit}</p>
         <button
           className="membership-button"
-          disabled={membership.memGrade === 1}
+          disabled={
+            membership.memGrade === 0 || membership.memGrade == loginMemGrade
+          }
           onClick={() => handleCheckout(membership.memGrade)}
         >
-          결제하기
+          {membership.memGrade === 0
+            ? "해지하기"
+            : membership.memGrade == loginMemGrade
+            ? "내 플랜"
+            : "결제하기"}
         </button>
       </div>
     </>

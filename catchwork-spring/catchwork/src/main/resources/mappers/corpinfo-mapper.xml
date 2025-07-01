@@ -3,4 +3,52 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper	namespace="com.example.demo.company.model.mapper.CorpInfoMapper">
 
+    <resultMap id="corpInfoResultMap" type="com.example.demo.company.model.dto.CorpInfo">
+        <id property="corpNo" column="CORP_NO"/>
+        <result property="corpRegNo" column="CORP_REG_NO"/>
+        <result property="corpType" column="CORP_TYPE"/>
+        <result property="corpName" column="CORP_NAME"/>
+        <result property="corpLogo" column="CORP_LOGO"/>
+        <result property="corpCeoName" column="CORP_CEO_NAME"/>
+        <result property="corpAddr" column="CORP_ADDR"/>
+        <result property="corpOpenDate" column="CORP_OPEN_DATE"/>
+        <result property="corpHomeLink" column="CORP_HOME_LINK"/>
+        <result property="corpBm" column="CORP_BM"/>
+        <result property="corpDetail" column="CORP_DETAIL"/>
+        <result property="corpBenefit" column="CORP_BENEFIT"/>
+        <result property="corpBenefitDetail" column="CORP_BENEFIT_DETAIL"/>
+        <result property="corpBanFl" column="CORP_BAN_FL"/>
+        <result property="corpBanDate" column="CORP_BAN_DATE"/>
+        
+        <result property="recruitCount" column="RECRUIT_COUNT"/>
+        <result property="views" column="TOTAL_VIEWS"/>
+        <result property="favs" column="TOTAL_FAVS"/>
+    </resultMap>
+
+ 
+<select id="selectCorpListWithRecruitInfo" resultType="com.example.demo.company.model.dto.CorpInfo">
+SELECT
+  c.CORP_NO,
+  c.CORP_NAME,
+  c.CORP_TYPE,
+  c.CORP_LOGO,
+  COUNT(r.RECRUIT_NO) AS recruitCount,
+  COALESCE(SUM(r.RECRUIT_READCOUNT), 0) AS totalViews,
+  CASE WHEN MAX(f.MEM_NO) IS NOT NULL THEN 1 ELSE 0 END AS liked
+FROM CORP_INFO c
+LEFT JOIN CORP_MEM cm ON c.CORP_NO = cm.CORP_NO
+LEFT JOIN MEMBER m ON cm.MEM_NO = m.MEM_NO
+LEFT JOIN RECRUIT r ON r.MEM_NO = m.MEM_NO
+LEFT JOIN FAV_CORP f ON c.CORP_NO = f.CORP_NO
+GROUP BY c.CORP_NO, c.CORP_NAME, c.CORP_TYPE, c.CORP_LOGO
+ORDER BY c.CORP_NAME
+</select>
+
+
+<select id="selectCorpDetail" parameterType="map" resultType="com.example.demo.company.model.dto.CorpInfo">
+    SELECT * FROM CORP_INFO 
+    WHERE CORP_NO = #{corpNo}
+</select>
+  
+
 </mapper>

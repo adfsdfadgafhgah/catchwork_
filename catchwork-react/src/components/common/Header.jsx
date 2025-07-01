@@ -8,7 +8,7 @@ import "./Header.css";
 import HeaderNav from "./HeaderNav";
 
 const Header = () => {
-  const { memType, role, hydrateFromToken, signin, signOut } = useAuthStore(); // zustand 상태
+  const { memType, memNickname, role, signin, signOut } = useAuthStore(); // zustand 상태
   const [searchTerm, setSearchTerm] = useState(""); // 검색어
   const [result, setResult] = useState(""); // 상태 메시지
 
@@ -33,13 +33,23 @@ const Header = () => {
       }
     }
   };
+
+  // 개인 회원 임시 로그인
+  // 개인 회원 임시 로그인
+  // 개인 회원 임시 로그인
+  // 개인 회원 임시 로그인
+  // 개인 회원 임시 로그인
   const handleSignin = async () => {
-    const { success, message } = await signin("Test_646", "Test");
+    const { success, message } = await signin("Test_286", "Test");
     setResult(message);
   };
-
+  // 기업 회원 임시 로그인
+  // 기업 회원 임시 로그인
+  // 기업 회원 임시 로그인
+  // 기업 회원 임시 로그인
+  // 기업 회원 임시 로그인
   const handleCorpSignin = async () => {
-    const { success, message } = await signin("Test_313", "Test");
+    const { success, message } = await signin("Test_107", "Test");
     setResult(message);
   };
 
@@ -78,7 +88,7 @@ const Header = () => {
           <div className="user-info">
             {memType !== null ? (
               <>
-                <span>{role} 님</span>
+                <span>{memNickname} 님</span>
                 <button onClick={handleSignOut}>로그아웃</button>
               </>
             ) : (

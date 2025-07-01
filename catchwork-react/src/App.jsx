@@ -32,9 +32,12 @@ import MyRecruitPage from "./pages/myPage/MyRecruitPage";
 import MembershipPage from "./pages/myPage/MembershipPage";
 
 // 멤버십
-import PaymentBilling from "./pages/myPage/membership/PaymentBilling";
+import IssueBillingKeyPage from "./pages/myPage/membership/IssueBillingKeyPage";
 import PaymentCheckout from "./pages/myPage/membership/PaymentCheckout";
 import PaymentFail from "./pages/myPage/membership/PaymentFail";
+import PaymentSuccess from "./pages/myPage/membership/PaymentSuccess";
+import UpgradeMembership from "./pages/myPage/membership/UpgradeMembership";
+import DowngradeMembership from "./pages/myPage/membership/DowngradeMembership";
 
 //이력서 제출
 import SubmitCVPage from "./pages/major/SubmitCVPage";
@@ -82,6 +85,7 @@ import AuthTest from "./pages/member/AuthTest";
 
 const router = createBrowserRouter([
   {
+    // 전체 요청
     path: "/",
     element: <Layout />,
     children: [
@@ -144,7 +148,30 @@ const router = createBrowserRouter([
         element: <SupportDetailPage />,
         children: [{ path: ":id", element: <SupportDetailPage /> }],
       },
-
+      {
+        path: "/mypage",
+        element: <MyPage />,
+        children: [
+          { index: true, element: <MyInfo /> },
+          { path: "home", element: <MyInfo /> },
+          { path: "myrecruit", element: <MyRecruitPage /> },
+          {
+            path: "membership",
+            element: <MembershipPage />,
+          },
+          {
+            path: "payment",
+            children: [
+              { path: "billing", element: <IssueBillingKeyPage /> },
+              { path: "checkout", element: <PaymentCheckout /> },
+              { path: "fail", element: <PaymentFail /> },
+              { path: "sucess", element: <PaymentSuccess /> },
+              { path: "upgrade", element: <UpgradeMembership /> },
+              { path: "downgrade", element: <DowngradeMembership /> },
+            ],
+          },
+        ],
+      },
       /*
   ______   ______   .______      .______      .______      ___       _______  _______     _______.
  /      | /  __  \  |   _  \     |   _  \     |   _  \    /   \     /  _____||   ____|   /       |
@@ -167,27 +194,6 @@ const router = createBrowserRouter([
         ],
       },
 
-      {
-        path: "/mypage",
-        element: <MyPage />,
-        children: [
-          { index: true, element: <MyInfo /> },
-          { path: "home", element: <MyInfo /> },
-          { path: "myrecruit", element: <MyRecruitPage /> },
-          {
-            path: "membership",
-            element: <MembershipPage />,
-          },
-          {
-            path: "payment",
-            children: [
-              { path: "billing", element: <PaymentBilling /> },
-              { path: "checkout", element: <PaymentCheckout /> },
-              { path: "fail", element: <PaymentFail /> },
-            ],
-          },
-        ],
-      },
       // 기업 마이 페이지
       { path: "corpmypage", element: <CorpMyPage /> },
       { path: "corpeditmyinfo", element: <CorpEditMyInfoPage /> },

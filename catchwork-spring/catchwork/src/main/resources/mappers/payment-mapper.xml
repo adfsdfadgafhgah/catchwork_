@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper	namespace="com.example.demo.myPageTest.payment.model.mapper.PaymentMapper">
+<mapper	namespace="com.example.demo.myPage.payment.model.mapper.PaymentMapper">
 
 <!-- 유효한 빌링키 조회 : 없다면 신규 빌링키를 발급받도록 -->
 <select id="getBillingKey">
 SELECT BILLING_KEY
-FROM "BILLING"
+FROM "BILLING_KEY"
 WHERE MEM_NO = #{memNo}
 </select>
 
 <!-- 발급받은 빌링키 저장 -->
 <insert id="insertBillingKey">
-INSERT INTO "BILLING" (
+INSERT INTO "BILLING_KEY" (
     "BILLING_KEY",
     "BILLING_METHOD",
     "CARD_COMPANY",
@@ -73,5 +73,75 @@ INSERT INTO PAYMENT (
     #{failure}
 )
 </insert>
+
+<!-- 구독중인 서비스 조회 -->
+<select id="selectSubscription">	
+SELECT
+  MG.MEM_GRADE_NAME
+FROM SUBSCRIPTION S
+JOIN MEMBER_GRADE MG ON S.MEM_GRADE = MG.MEM_GRADE
+WHERE S.MEM_NO = #{memNo}
+</select>
+
+<!-- 구독중인 서비스 수정 -->
+<update id="updateSubscription">
+UPDATE SUBSCRIPTION
+SET MEM_GRADE = (
+    SELECT MEM_GRADE
+    FROM MEMBER_GRADE
+    WHERE MEM_GRADE_NAME = #{orderName}
+),
+    SUB_END_AT = TRUNC(ADD_MONTHS(SYSDATE, 1)),
+    SUB_UPDATE_AT = SYSDATE,
+    SUB_PAY_AT = TRUNC(SYSDATE)
+WHERE MEM_NO = #{memNo}
+</update>
+
+
+<!-- 신규 구독 삽입 -->
+<insert id="insertSubscription">
+INSERT INTO SUBSCRIPTION (
+  SUB_NO,
+  MEM_GRADE,
+  MEM_NO,
+  SUB_START_AT,
+  SUB_END_AT,
+  SUB_UPDATE_AT,
+  SUB_PAY_AT,
+  SUB_STATUS
+)
+VALUES (
+  SUBSCRIPTION_SEQ.NEXTVAL,
+  (SELECT MEM_GRADE
+   FROM MEMBER_GRADE
+   WHERE MEM_GRADE_NAME = #{orderName}),
+  #{memNo},
+  TRUNC(SYSDATE),
+  ADD_MONTHS(TRUNC(SYSDATE), 1),
+  SYSDATE,
+  TRUNC(SYSDATE),
+  DEFAULT
+)
+</insert>
+
+<!-- 사용자 등급 수정 -->
+<update id="updateMemGrade" parameterType="map">
+UPDATE MEMBER
+SET MEM_GRADE = (
+  SELECT MEM_GRADE
+  FROM MEMBER_GRADE
+  WHERE MEM_GRADE_NAME = #{orderName}
+)
+WHERE MEM_NO = #{memNo}
+</update>
+
+<select id="selectBalanceAmount" resultType="_int">
+SELECT TRUNC((s.SUB_END_AT - TRUNC(SYSDATE))
+* (mg.MEM_GRADE_PRICE / (s.SUB_END_AT - s.SUB_UPDATE_AT))) 
+AS REFUND_AMOUNT
+FROM "SUBSCRIPTION" s
+JOIN "MEMBER_GRADE" mg ON mg.MEM_GRADE = s.MEM_GRADE - 1
+WHERE s.MEM_NO = #{memNo}
+</select>
 
 </mapper>

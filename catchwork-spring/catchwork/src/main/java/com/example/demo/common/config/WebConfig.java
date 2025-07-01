@@ -17,7 +17,14 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/static/")
                 .setCacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES));
+        
+     // ✅ /static/editor/** 요청은 /upload/editor 폴더에서 가져오도록 설정
+        registry.addResourceHandler("/static/editor/**")
+                .addResourceLocations("file:/upload/editor/")
+                .setCacheControl(CacheControl.noCache());
     }
+    
+    
     
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {

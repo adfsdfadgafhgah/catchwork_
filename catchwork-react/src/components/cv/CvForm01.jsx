@@ -11,6 +11,9 @@ const CVForm01 = ({ index, type, data, labels, onRemove, onChange, mode }) => {
 
   return (
     <div className={styles.section}>
+      {mode !== "view" && (
+        <FormRemoveButton onClick={onRemove} />
+      )}
       <div className={styles.inner}>
         <div className={styles.row}>
           <input
@@ -32,8 +35,6 @@ const CVForm01 = ({ index, type, data, labels, onRemove, onChange, mode }) => {
             value={data.date || "0000-00"}
             onChange={(val) => handleChange("date", val)}
           />
-          
-          <FormRemoveButton onClick={onRemove} />
         </div>
       </div>
     </div>

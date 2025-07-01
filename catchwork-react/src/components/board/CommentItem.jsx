@@ -4,20 +4,19 @@ import CommentEdit from "./CommentEdit";
 import CommentCss from "./CommentItem.module.css";
 import { formatTimeAgo } from "./../common/formatTimeAgo";
 import ReportModalPage from "../../pages/support/ReportModalPage";
-import { useParams } from "react-router-dom";
+import { axiosApi } from "../../api/axiosAPI";
 
 export default function CommentItem({
   comment,
   childComments,
-  loginUser,
+  loginMember,
   onRefresh,
 }) {
   const [isReplyOpen, setIsReplyOpen] = useState(false); // 대댓글 입력창 열림 여부
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
   const [showReportModal, setShowReportModal] = useState(false);
-  const { commentNo } = useParams();
 
-  const isWriter = loginUser && loginUser.memNo === comment.memNo;
+  const isWriter = loginMember && loginMember.memNo === comment.memNo;
 
   // 댓글 삭제
   const handleDelete = async () => {
@@ -25,6 +24,7 @@ export default function CommentItem({
     try {
       await axiosApi.delete(`/comment/delete/${comment.commentNo}`);
       onRefresh();
+      alert("댓글이 삭제되었습니다");
     } catch (err) {
       console.error("댓글 삭제 실패:", err);
     }
@@ -32,7 +32,7 @@ export default function CommentItem({
 
   // 신고하기 버튼 클릭 핸들러
   const handleReport = () => {
-    if (!loginUser) {
+    if (!loginMember) {
       alert("로그인 후 이용해주세요.");
       return;
     }
@@ -87,12 +87,14 @@ export default function CommentItem({
 
           <div className={CommentCss.actions}>
             {/* 말풍선: 부모 댓글에만 노출 */}
-            {comment.parentCommentNo === null && (
+            {(comment.parentCommentNo === null ||
+              comment.parentCommentNo === 0) && (
               <button
                 className={CommentCss.actionBtn}
                 onClick={() => setIsReplyOpen((prev) => !prev)}
               >
-                <i className="fa-regular fa-comment-dots" />{" "}
+                <i className="fa-regular fa-comment-dots" />
+
                 {childComments.length}
               </button>
             )}
@@ -127,9 +129,12 @@ export default function CommentItem({
         <div className={CommentCss.replyInputBox}>
           <CommentWrite
             boardNo={comment.boardNo}
-            loginUser={loginUser}
+            loginMember={loginMember}
             parentCommentNo={comment.commentNo}
-            onAdd={onRefresh}
+            onAdd={(success) => {
+              if (success) setIsReplyOpen(false); // 🔥 작성 후 닫기
+              onRefresh(); // 목록 새로고침
+            }}
           />
         </div>
       )}
@@ -141,7 +146,7 @@ export default function CommentItem({
             key={child.commentNo}
             comment={child}
             childComments={[]} // 대댓글의 자식은 없음
-            loginUser={loginUser}
+            loginMember={loginMember}
             onRefresh={onRefresh}
           />
         ))}
@@ -149,7 +154,7 @@ export default function CommentItem({
       {/* 신고하기 모달 */}
       {showReportModal && (
         <ReportModalPage
-          targetNo={commentNo}
+          targetNo={comment.commentNo}
           targetType="comment"
           onClose={handleCloseReport}
         />
