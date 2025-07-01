@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import axios from "axios"; // ✅ axios 추가
 import "./SupportDetailPage.css";
 
 const SupportDetailPage = () => {
@@ -11,14 +12,10 @@ const SupportDetailPage = () => {
   useEffect(() => {
     const fetchSupportDetail = async () => {
       try {
-        const response = await fetch(`http://localhost:8080/support/detail/${id}`);
-        if (!response.ok) {
-          throw new Error("데이터를 가져오는 데 실패했습니다.");
-        }
-        const data = await response.json();
-        setSupport(data);
+        const response = await axios.get(`http://localhost:8080/support/detail/${id}`);
+        setSupport(response.data);
       } catch (err) {
-        setError(err.message);
+        setError(err.response?.data?.message || err.message || "데이터를 가져오는 중 오류 발생");
       } finally {
         setLoading(false);
       }
@@ -36,12 +33,12 @@ const SupportDetailPage = () => {
       <h2 className="page-title">문의 상세</h2>
 
       <section className="form-group">
-        <p className="readonly-text">내용 : {support.supportContent}</p>
+        <p className="readonly-text">제목 : {support.supportTitle}</p>
       </section>
 
       <div className="meta-row">
         <span className="category">카테고리 : {support.supportCategoryName}</span>
-        {/* 필요하면 날짜 필드 추가 */}
+        {/* 필요하면 날짜 필드 추가 가능 */}
       </div>
 
       <section className="form-group">
@@ -51,11 +48,9 @@ const SupportDetailPage = () => {
       <h2 className="page-title" style={{ marginTop: "48px" }}>문의 답변</h2>
 
       {support.supportAnswer ? (
-        <>
-          <section className="form-group">
-            <textarea readOnly value={support.supportAnswer} rows={8} />
-          </section>
-        </>
+        <section className="form-group">
+          <textarea readOnly value={support.supportAnswer} rows={8} />
+        </section>
       ) : (
         <section className="form-group">
           <p className="no-answer-message">답변이 아직 오지 않았습니다.</p>

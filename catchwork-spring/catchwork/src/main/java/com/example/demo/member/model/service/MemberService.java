@@ -4,11 +4,14 @@ import com.example.demo.member.model.dto.Member;
 
 public interface MemberService {
 
-	Object signup(Member inputMember);
+	// 아이디 중복확인
+	boolean isIdAvailable(String memId);
+	// 닉네임 중복확인
+    boolean isNicknameAvailable(String nickname);
+    
+    //회원가입
+    Object signup(Member inputMember);
 
-	// 로그인 회원의 정보 조회
-	Member getLoginMember(String memNo);
-
-//	String signin(Member inputMember); //LoginFilter에서 인증 처리
-
+    // 로그인 회원의 정보 조회
+    Member getLoginMember(String memNo);
 }

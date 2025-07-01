@@ -29,7 +29,8 @@ public class Member {
 	private Integer memStatus;
 	private Date memStatusDate;
 	private String memProfilePath;
-	private int memGrade;
 	private Date membershipUpdate;
 
+	@Builder.Default
+	private int memGrade = 0;
 }

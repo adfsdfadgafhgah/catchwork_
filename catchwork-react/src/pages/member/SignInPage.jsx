@@ -1,39 +1,41 @@
-// SignInPage.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import icon from "../../assets/icon.png";
 import "./SignInPage.css";
-import { axiosApi } from "../../api/axiosAPI";
+import { useAuthStore } from "../../stores/authStore";
 
 const SignInPage = () => {
-  const [isCorp, setIsCorp] = useState(false); // false: 개인, true: 기업
+  const [isCorp, setIsCorp] = useState(false);
+  const [memId, setMemId] = useState("");
+  const [memPw, setMemPw] = useState("");
+  const { signin, signOut } = useAuthStore();
   const navigate = useNavigate();
 
-  const handleLogin = async () => {
-    try {
-      const res = await axiosApi.post("/signin", {
-        memId,
-        memPw,
-      });
+  const handleLogin = async (e) => {
+    e.preventDefault(); // form 기본 제출 막기
 
-      const accessToken = res.headers.authorization?.split(" ")[1];
-      if (accessToken) {
-        localStorage.setItem("accessToken", accessToken);
+    const result = await signin(memId, memPw);
+    if (result.success) {
+      const { memType } = useAuthStore.getState();
 
-        const decoded = getDecodedToken(accessToken);
-        const memType = decoded?.memType;
-
-        // memType 분기: 0 - 개인, 1 - 기업
-        if (memType === 0) {
-          navigate("/");
-        } else if (memType === 1) {
-          navigate("/corp");
-        } else {
-          alert("알 수 없는 사용자 유형입니다.");
-        }
+      // 기업 로그인 탭인데 개인 회원일 경우
+      if (isCorp && memType !== 1) {
+        alert("잘못된 아이디,비밀번호입니다.");
+        await signOut();
+        return;
       }
-    } catch (err) {
-      alert("로그인 실패: " + err.response?.data?.message || err.message);
+
+      // 개인 로그인 탭인데 기업 회원일 경우
+      if (!isCorp && memType !== 0) {
+        alert("잘못된 아이디,비밀번호입니다.");
+        await signOut();
+        return;
+      }
+
+      // 로그인 성공 시 페이지 이동
+      navigate(memType === 0 ? "/" : "/corp");
+    } else {
+      alert(result.message);
     }
   };
 
@@ -51,15 +53,17 @@ const SignInPage = () => {
         </button>
       </div>
 
-      <div className="signin-form-box">
+      <form className="signin-form-box" onSubmit={handleLogin}>
         <div className="tab-buttons">
           <button
+            type="button"
             className={!isCorp ? "active" : ""}
             onClick={() => setIsCorp(false)}
           >
             개인 회원
           </button>
           <button
+            type="button"
             className={isCorp ? "active" : ""}
             onClick={() => setIsCorp(true)}
           >
@@ -68,22 +72,36 @@ const SignInPage = () => {
         </div>
 
         <div className="input-group">
-          <input type="text" placeholder="아이디를 입력해주세요" />
-          <input type="password" placeholder="비밀번호를 입력해주세요" />
+          <input
+            type="text"
+            placeholder="아이디를 입력해주세요"
+            value={memId}
+            onChange={(e) => setMemId(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="비밀번호를 입력해주세요"
+            value={memPw}
+            onChange={(e) => setMemPw(e.target.value)}
+            required
+          />
         </div>
 
-        <div className="remember-me">
+        {/* <div className="remember-me">
           <input type="radio" id="rememberId" />
           <label htmlFor="rememberId">아이디 저장</label>
-        </div>
+        </div> */}
 
-        <button className="signin-button">로그인하기</button>
+        <button type="submit" className="signin-button">
+          로그인하기
+        </button>
 
         <div className="links">
           <span onClick={() => navigate("/findid")}>아이디 찾기</span>
           <span onClick={() => navigate("/findpw")}>비밀번호 찾기</span>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

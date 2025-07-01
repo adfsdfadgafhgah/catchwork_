@@ -12,6 +12,7 @@ import com.example.demo.member.model.dto.Member;
 import com.example.demo.member.model.entity.MemberEntity;
 import com.example.demo.member.model.entity.MemberGradeEntity;
 import com.example.demo.member.model.mapper.MemberMapper;
+import com.example.demo.member.model.repository.MemberGradeRepository;
 import com.example.demo.member.model.repository.MemberRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -19,67 +20,78 @@ import lombok.RequiredArgsConstructor;
 @Service
 //@RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
-public class MemberServiceImpl implements MemberService{
+public class MemberServiceImpl implements MemberService {
 
 //	@Autowired
 	private final MemberRepository memberRepository;
+	private final MemberGradeRepository memberGradeRepository;
+//	private final MemberGradeRepository memberGradeRepository;
 
 //	@Autowired
 	private final BCryptPasswordEncoder bcrypt;
-	
+
 //	@Autowired
 	private final MemberMapper mapper;
-	
-	public MemberServiceImpl(MemberRepository memberRepository, BCryptPasswordEncoder bCryptPasswordEncoder, MemberMapper mapper) {
+
+	public MemberServiceImpl(
+			MemberRepository memberRepository, 
+			MemberGradeRepository memberGradeRepository,
+			BCryptPasswordEncoder bCryptPasswordEncoder, 
+			MemberMapper mapper) {
 		this.memberRepository = memberRepository;
+		this.memberGradeRepository = memberGradeRepository;
 		this.bcrypt = bCryptPasswordEncoder;
 		this.mapper = mapper;
 	}
-	
 
 	@Override
 	public Object signup(Member inputMember) {
 		System.out.println("signup service");
-//		System.out.println("1 getMemNo : "+inputMember.getMemNo());	// 왜 UUID 자동 생성 안됨? 진짜 않이 익어 외않되
-    	inputMember.setMemNo(UUID.randomUUID().toString());
-//		System.out.println("getMemNo : "+inputMember.getMemNo());
-//		System.out.println("inputMember : "+inputMember);
-	    // 입력값 검증
-	    if (!isValidInput(inputMember)) {
-	        return "INVALID_INPUT";
-	    }
-	    
-	    // 중복 MEM_NO 체크 // 근데 UUID가 겹칠 수 있나?
-//	    if (memberRepository.existsByMemNo(inputMember.getMemNo())) {
-//	        return "DUPLICATE_NO";
-//	    }
-	    // 중복 MEM_ID 체크
-	    if (memberRepository.existsByMemId(inputMember.getMemId())) {
-	        return "DUPLICATE_ID";
-	    }
+//		memNo UUID 생성
+		inputMember.setMemNo(UUID.randomUUID().toString());
+//		memGrade 0 기본 설정
+		inputMember.setMemGrade(0);
 
-	    
-	    try {
-	        // 회원 정보 저장
-	        MemberEntity entity = createMemberEntity(inputMember);
-	        MemberEntity saved = memberRepository.save(entity);
-	        System.out.println("saved entity = " + saved);
+//	    입력값 검증
+		if (!isValidInput(inputMember)) {
+			return "INVALID_INPUT";
+		}
 
-//	        디버깅용
-//	        System.out.println(entity); 
-	        
-	        // 응답용 Member 객체 생성 (비밀번호 제외)
-	        return createResponseMember(inputMember);
-	        
-	    } catch (Exception e) {
-	        // 저장 중 오류 발생 시 예외 던지기
-	    	System.out.println(e);
-	        throw new RuntimeException("회원 정보 저장 중 오류가 발생했습니다.", e);
-	    }
+//	    중복 MEM_ID 체크
+		if (memberRepository.existsByMemId(inputMember.getMemId())) {
+			return "DUPLICATE_ID";
+		}
+//	    중복 MEM_NICKNAME 체크
+		if (memberRepository.existsByMemNickname(inputMember.getMemNickname())) {
+			return "DUPLICATE_NICKNAME";
+		}
+
+		try {
+			// 회원 정보 저장
+			MemberEntity entity = createMemberEntity(inputMember);
+			MemberEntity saved = memberRepository.save(entity);
+			System.out.println("saved entity = " + saved);
+
+			// 응답용 Member 객체 생성 (비밀번호 제외)
+			return createResponseMember(inputMember);
+
+		} catch (Exception e) {
+			// 저장 중 오류 발생 시 예외 던지기
+			System.out.println(e);
+			throw new RuntimeException("회원 정보 저장 중 오류가 발생했습니다.", e);
+		}
 	}
 
+	@Override
+	public boolean isIdAvailable(String memId) {
+		return !memberRepository.existsByMemId(memId);
+	}
 
-	
+	@Override
+	public boolean isNicknameAvailable(String nickname) {
+		return !memberRepository.existsByMemNickname(nickname);
+	}
+
 	/**
 	 * 사용자 로그인을 처리하는 메서드
 	 *
@@ -124,31 +136,27 @@ public class MemberServiceImpl implements MemberService{
 //	    // 예시: return jwtUtil.generateToken(member.getMemId());
 //	    return "jwt.token.example." + member.getMemId(); // 임시 토큰
 //	}
-	
-	
-	
-	
-	
-	
-	
-/*  회원가입 헬퍼 메소드  */	
+
+	/* 회원가입 헬퍼 메소드 */
 
 	/**
 	 * 입력된 회원 정보의 유효성을 검사하는 메서드
 	 *
 	 * @param member 클라이언트로부터 전달된 회원가입 정보
-	 * @return 모든 필수 필드(memId, memPw, memName)가 null이 아니고 공백이 아니면 true, 그렇지 않으면 false
+	 * @return 모든 필수 필드(memId, memPw, memName)가 null이 아니고 공백이 아니면 true, 그렇지 않으면
+	 *         false
 	 *
 	 * @author Won
 	 */
 	private boolean isValidInput(Member member) {
-	    return member != null && 
-	           member.getMemId() != null && !member.getMemId().trim().isEmpty() &&
-	           member.getMemPw() != null && !member.getMemPw().trim().isEmpty() &&
-	           member.getMemName() != null && !member.getMemName().trim().isEmpty();
+		return member != null && member.getMemId() != null && !member.getMemId().trim().isEmpty()
+				&& member.getMemPw() != null && !member.getMemPw().trim().isEmpty() && member.getMemName() != null
+				&& !member.getMemName().trim().isEmpty() && member.getMemEmail() != null
+				&& !member.getMemEmail().trim().isEmpty() && member.getMemTel() != null
+				&& !member.getMemTel().trim().isEmpty() && member.getMemNickname() != null
+				&& !member.getMemNickname().trim().isEmpty();
 	}
-	
-	
+
 	/**
 	 * Member DTO를 기반으로 DB 저장용 MemberEntity 객체를 생성하는 메서드
 	 *
@@ -159,9 +167,9 @@ public class MemberServiceImpl implements MemberService{
 	 */
 	private MemberEntity createMemberEntity(Member member) {
 	    MemberEntity entity = new MemberEntity();
-	    MemberGradeEntity gradeEntity = new MemberGradeEntity();
-	    gradeEntity.setMemGrade(member.getMemGrade()); // FK ID만 지정
-	    
+	    MemberGradeEntity gradeEntity = memberGradeRepository.findById(member.getMemGrade())
+	        .orElseThrow(() -> new RuntimeException("회원 등급 정보가 없습니다."));
+
 	    entity.setMemNo(member.getMemNo());
 	    entity.setMemId(member.getMemId());
 	    entity.setMemPw(bcrypt.encode(member.getMemPw()));
@@ -175,7 +183,7 @@ public class MemberServiceImpl implements MemberService{
 	    entity.setMemEnrollDate(new Date());
 	    entity.setMemSmsFl(member.getMemSmsFl());
 	    entity.setMemType(member.getMemType());
-	    entity.setMemStatus(member.getMemStatus());
+	    entity.setMemStatus(0);
 	    entity.setMemStatusDate(member.getMemStatusDate());
 	    entity.setMemProfilePath(member.getMemProfilePath());
 	    entity.setMemGrade(gradeEntity);
@@ -184,7 +192,6 @@ public class MemberServiceImpl implements MemberService{
 	    return entity;
 	}
 
-	
 	/**
 	 * 저장 후 클라이언트에 응답할 Member 객체를 생성하는 메서드
 	 *
@@ -194,16 +201,15 @@ public class MemberServiceImpl implements MemberService{
 	 * @author Won
 	 */
 	private Member createResponseMember(Member member) {
-	    Member result = new Member();
-	    result.setMemName(member.getMemName());
-	    result.setMemNo(member.getMemNo());
-	    result.setMemId(member.getMemId());
-	    result.setMemPw(null); // 보안상 비밀번호는 응답에서 제외
-	    return result;
+		Member result = new Member();
+		result.setMemName(member.getMemName());
+		result.setMemNo(member.getMemNo());
+		result.setMemId(member.getMemId());
+		result.setMemPw(null); // 보안상 비밀번호는 응답에서 제외
+		return result;
 	}
-	
-	
-/*  로그인 헬퍼 메소드  */
+
+	/* 로그인 헬퍼 메소드 */
 	/**
 	 * 로그인 입력값의 유효성을 검사하는 메서드
 	 *
@@ -213,12 +219,12 @@ public class MemberServiceImpl implements MemberService{
 	 * @author Won
 	 */
 	private boolean isValidSigninInput(Member member) {
-	    return member != null && 
-	           member.getMemId() != null && !member.getMemId().trim().isEmpty() &&
-	           member.getMemPw() != null && !member.getMemPw().trim().isEmpty();
+		return member != null && member.getMemId() != null && !member.getMemId().trim().isEmpty()
+				&& member.getMemPw() != null && !member.getMemPw().trim().isEmpty();
 	}
-	
-	/** 로그인 회원의 정보 조회
+
+	/**
+	 * 로그인 회원의 정보 조회
 	 *
 	 */
 	@Override

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.corpMyPage.model.mapper.CorpMyPageMapper">
+
+    <select id="findCorpInfoById" parameterType="String" resultType="com.example.demo.corpMyPage.model.dto.CorpMyPage">
+        SELECT 
+            COMPANY_NAME AS company,
+            CORP_ID AS corpId,
+            CORP_EMAIL AS corpEmail,
+            CORP_PHONE AS corpPhone,
+            CORP_NAME AS corpName,
+            CORP_DEPARTMENT AS corpDepartment
+        FROM CORPORATE_MEMBER
+        WHERE CORP_ID = #{corpId}
+    </select>
+
+</mapper>

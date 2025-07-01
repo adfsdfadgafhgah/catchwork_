@@ -35,6 +35,21 @@ public class SupportController {
         return ResponseEntity.ok(support);
     }
     
+    // 문의하기 작성
+    @PostMapping("/write")
+    public ResponseEntity<?> writeSupport(@RequestBody Support support) {
+        try {
+            int result = supportService.insertSupport(support);
+            if (result > 0) {
+                return ResponseEntity.ok("저장 완료");
+            } else {
+                return ResponseEntity.status(500).body("저장 실패");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();  // 콘솔에 에러 내용 출력
+            return ResponseEntity.status(500).body("서버 오류: " + e.getMessage());
+        }
+    }
 
     
 }
