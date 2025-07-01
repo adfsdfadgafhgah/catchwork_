@@ -26,29 +26,47 @@
     </resultMap>
 
  
-<select id="selectCorpListWithRecruitInfo" resultType="com.example.demo.company.model.dto.CorpInfo">
-SELECT
-  c.CORP_NO,
-  c.CORP_NAME,
-  c.CORP_TYPE,
-  c.CORP_LOGO,
-  COUNT(r.RECRUIT_NO) AS recruitCount,
-  COALESCE(SUM(r.RECRUIT_READCOUNT), 0) AS totalViews,
-  CASE WHEN MAX(f.MEM_NO) IS NOT NULL THEN 1 ELSE 0 END AS liked
-FROM CORP_INFO c
-LEFT JOIN CORP_MEM cm ON c.CORP_NO = cm.CORP_NO
-LEFT JOIN MEMBER m ON cm.MEM_NO = m.MEM_NO
-LEFT JOIN RECRUIT r ON r.MEM_NO = m.MEM_NO
-LEFT JOIN FAV_CORP f ON c.CORP_NO = f.CORP_NO
-GROUP BY c.CORP_NO, c.CORP_NAME, c.CORP_TYPE, c.CORP_LOGO
-ORDER BY c.CORP_NAME
+<select id="selectCorpListWithRecruitInfo" resultType="CorpInfo">
+SELECT 
+    ci.*,
+    (SELECT COUNT(*) 
+     FROM FAV_CORP fc 
+     WHERE fc.CORP_NO = ci.CORP_NO) AS favs,
+    (SELECT COUNT(*) 
+     FROM FAV_CORP fc 
+     WHERE fc.CORP_NO = ci.CORP_NO AND fc.MEM_NO = #{memNo}) AS isSaved
+FROM CORP_INFO ci
+<where>
+    <if test="query != null and query != ''">
+        ci.CORP_NAME LIKE CONCAT('%', #{query}, '%')
+    </if>
+</where>
 </select>
 
 
-<select id="selectCorpDetail" parameterType="map" resultType="com.example.demo.company.model.dto.CorpInfo">
-    SELECT * FROM CORP_INFO 
-    WHERE CORP_NO = #{corpNo}
+
+
+
+<select id="selectCorpDetail" resultMap="corpInfoResultMap" parameterType="map">
+SELECT 
+    ci.*,
+    (SELECT COUNT(*) 
+     FROM FAV_CORP fc 
+     WHERE fc.CORP_NO = ci.CORP_NO) AS TOTAL_FAVS,
+    (SELECT COUNT(*) 
+     FROM FAV_CORP fc 
+     WHERE fc.CORP_NO = ci.CORP_NO AND fc.MEM_NO = #{memNo}) AS IS_SAVED,
+    COALESCE((
+        SELECT SUM(r.RECRUIT_READCOUNT)
+        FROM RECRUIT r
+        JOIN CORP_MEM cm ON cm.MEM_NO = r.MEM_NO
+        WHERE cm.CORP_NO = ci.CORP_NO
+    ), 0) AS TOTAL_VIEWS
+FROM CORP_INFO ci
+WHERE ci.CORP_NO = #{corpNo}
 </select>
+
+
   
 
 </mapper>

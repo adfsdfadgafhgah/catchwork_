@@ -17,9 +17,9 @@ public class CorpInfoServiceImpl implements CorpInfoService{
 	@Autowired
 	private CorpInfoMapper mapper;
 	
-	
-	
-	//3번째 시도
+		/**
+		 *기업 목록 조회
+		 */
 		@Override
 		public List<CorpInfo> selectCorpList(String query, String memNo) {
 		    log.info("📌 getCorpList 호출 - query: {}, memNo: {}", query, memNo);
@@ -33,7 +33,6 @@ public class CorpInfoServiceImpl implements CorpInfoService{
 		        throw e;
 		    }
 		}
-	
 
 	/**
 	 * detail인데 memNo에 따라 저장 표시가 다르게 보여짐
@@ -42,12 +41,16 @@ public class CorpInfoServiceImpl implements CorpInfoService{
 	public CorpInfo selectCorpDetail(int corpNo, String memNo) {
 		log.info("📌 corpNo: {}", corpNo);
 		log.info("📌 memNo: {}", memNo);
-		return mapper.selectCorpDetail(corpNo, memNo);
+		
+		CorpInfo corpInfo= mapper.selectCorpDetail(corpNo, memNo);
+		
+		// 조회수는 DB에 저장하지 않고, 응답에만 1 증가시켜 클라이언트에게 보여줌
+		if(corpInfo != null) {
+			corpInfo.setViews(corpInfo.getViews()+1);
+		}
+		return corpInfo;
 	}
 
-	
-	
-	
 
 	
 }
