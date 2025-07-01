@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -16,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.cv.model.dto.CV;
+import com.example.demo.cv.model.service.CVService;
+
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -24,63 +28,85 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("cv")
 public class CVController {
 	
-
-    @Value("${file.upload.cv-img-path}")
-    private String uploadDir; // <- 값 = C:/upload/cv/img
-    
-//	@Autowired
-//	private CVService service; 
+	// CVService 주입
+	@Autowired
+	private CVService service;
 	
-	@PostMapping("add")
-	public String CVAdd(@RequestBody Map<String, Object> payload) {
-	    try {
-	        System.out.println("Payload 수신됨: " + payload);
-	        return "success";
-	    } catch (Exception e) {
-	        e.printStackTrace(); // 콘솔에 에러 전체 출력
-	        return "fail";
-	    }
+	// application.properties의 file.upload.cv-img-path 값을 주입
+	@Value("${file.upload.cv-img-path}")
+	private String uploadDir; // C:/upload/cv/img
+	 
+	/** 이력서 추가
+	 * @param cv
+	 * @return
+	 */
+	@PostMapping("/add")
+	public ResponseEntity<String> addCV(@RequestBody CV cv) {
+		
+		// 수신한 payload 로그 출력
+		log.debug("Payload 수신됨: {}", cv);
+
+		try {
+			// CV 등록 서비스 호출
+			service.addCV(cv);
+			
+			// 성공 응답 반환
+			return ResponseEntity.ok("이력서 등록 성공");
+			
+		} catch (Exception e) {
+			// 실패 시 에러 로그 및 500 응답
+			log.error("이력서 등록 실패", e);
+			return ResponseEntity.internalServerError().body("이력서 등록 실패: " + e.getMessage());
+		}
 	}
 	
+	/** 이력서 이미지 업로드 처리
+	 * @param file
+	 * @param memName
+	 * @return
+	 */
 	@PostMapping("img/upload")
-    public ResponseEntity<?> uploadCvImage(
-    		@RequestParam("image") MultipartFile file,
-    		@RequestParam("memName") String memName) {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body("파일이 없습니다.");
-        }
+	public ResponseEntity<?> uploadCVImage(
+			@RequestParam("image") MultipartFile file,
+			@RequestParam("memName") String memName) {
+		
+		// 파일이 비어 있는지 확인
+		if (file.isEmpty()) {
+			return ResponseEntity.badRequest().body("파일이 없습니다.");
+		}
 
-        try {
-            // 원본 파일명
-            String originalFilename = file.getOriginalFilename();
-            
-            // uuid 자르기
-            String uuid = UUID.randomUUID().toString().substring(0, 6);
-
-            // 확장자만 따로 추출
-            String ext = StringUtils.getFilenameExtension(originalFilename);
-
-            // 파일명을 UUID로 리네임
-            String savedName = memName + "_" + System.currentTimeMillis() + "_" + uuid + "." + ext;
-
-            // 저장 경로 생성
-            File target = new File(uploadDir, savedName);
-
-            // 디렉토리 없으면 생성
-            if (!target.getParentFile().exists()) {
-                target.getParentFile().mkdirs();
-            }
-
-            // 파일 저장
-            file.transferTo(target);
-
-            // 프론트에 저장된 파일명 반환
-            return ResponseEntity.ok(savedName);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            return ResponseEntity.internalServerError().body("업로드 실패");
-        }
-    }
+		try {
+			// 원본 파일명 추출
+			String originalFilename = file.getOriginalFilename();
+			
+			// UUID 생성 후 앞 6자리만 사용
+			String uuid = UUID.randomUUID().toString().substring(0, 6);
+			
+			// 확장자 추출 (예: jpg, png)
+			String ext = StringUtils.getFilenameExtension(originalFilename);
+			
+			// 저장 파일명 구성 (이름_타임스탬프_uuid.확장자)
+			String savedName = memName + "_" + System.currentTimeMillis() + "_" + uuid + "." + ext;
+			
+			// 업로드 대상 경로 생성
+			File target = new File(uploadDir, savedName);
+			
+			// 상위 디렉터리가 없으면 생성
+			if (!target.getParentFile().exists()) {
+				target.getParentFile().mkdirs();
+			}
+			
+			// 파일 저장
+			file.transferTo(target);
+			
+			// 저장된 파일명 반환
+			return ResponseEntity.ok(savedName);
+			
+		} catch (IOException e) {
+			// 업로드 실패 시 에러 로그 및 500 응답
+			e.printStackTrace();
+			return ResponseEntity.internalServerError().body("업로드 실패");
+		}
+	}
 	
 }

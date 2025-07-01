@@ -3,7 +3,7 @@ import { Camera, Loader } from "lucide-react";
 import styles from "./CVBasic.module.css";
 import defaultImg from "../../assets/icon.png";
 
-const CVBasic = ({ userInfo, cvImgPath, onImageUpload, isUploading }) => {
+const CVBasic = ({ memberInfo, cvImgPath, onImageUpload, isUploading }) => {
   const fileInputRef = useRef(null);
   const [previewSrc, setPreviewSrc] = useState("");
 
@@ -76,29 +76,29 @@ const CVBasic = ({ userInfo, cvImgPath, onImageUpload, isUploading }) => {
         <div className={styles.infoRow}>
           <div className={styles.infoItem}>
             <span className={styles.infoLabel}>이름</span>
-            <span className={styles.infoText}>{userInfo.memName}</span>
+            <span className={styles.infoText}>{memberInfo.memName}</span>
           </div>
           <div className={styles.infoItem}>
             <span className={styles.infoLabel}>연락처</span>
-            <span className={styles.infoText}>{userInfo.memTel}</span>
+            <span className={styles.infoText}>{memberInfo.memTel}</span>
           </div>
         </div>
 
         <div className={styles.infoRow}>
           <div className={styles.infoItem}>
             <span className={styles.infoLabel}>성별</span>
-            <span className={styles.infoText}>{userInfo.memGender}</span>
+            <span className={styles.infoText}>{memberInfo.memGender}</span>
           </div>
           <div className={styles.infoItem}>
             <span className={styles.infoLabel}>이메일</span>
-            <span className={styles.infoText}>{userInfo.memEmail}</span>
+            <span className={styles.infoText}>{memberInfo.memEmail}</span>
           </div>
         </div>
 
         <div className={styles.infoRow}>
           <div className={`${styles.infoItem} ${styles.birthItem}`}>
             <span className={styles.infoLabel}>생일</span>
-            <span className={styles.infoText}>{userInfo.memBirthday}</span>
+            <span className={styles.infoText}>{memberInfo.memBirthday}</span>
           </div>
         </div>
       </div>
