@@ -24,7 +24,6 @@ export const useAuthStore = create(
               memType: decoded.memType,
               role: decoded.role,
             });
-            console.log(decoded.memNickname + " " + decoded.memNo);
             return { success: true, message: "로그인 성공, 토큰 저장됨" };
           }
           return { success: true, message: "로그인 성공, 하지만 토큰 없음" };
