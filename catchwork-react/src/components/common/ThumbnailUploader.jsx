@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import "./ThumbnailUploader.css";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
 export default function ThumbnailUploader({
   thumbnailUrl,
@@ -27,7 +28,7 @@ export default function ThumbnailUploader({
         {thumbnailUrl ? (
           <>
             <img
-              src={`http://localhost:8080/${thumbnailUrl}`}
+              src={`${BASE_URL}/${thumbnailUrl}`}
               alt="썸네일 미리보기"
               className="thumbnail-preview"
             />

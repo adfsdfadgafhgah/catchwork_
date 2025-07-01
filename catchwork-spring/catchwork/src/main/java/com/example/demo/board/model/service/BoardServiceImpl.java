@@ -15,24 +15,24 @@ import lombok.RequiredArgsConstructor;
 public class BoardServiceImpl implements BoardService {
 
     private final BoardMapper boardMapper;
-
- 
+    
+   
 
 	/** 게시판 목록 조회
 	 * @author BAEBAE
 	 */
     @Override
-    public List<Board> selectBoardList(String sort, String query) {
+    public List<Board> selectBoardList(String sort, String query, String memNo) {
         switch (sort) {
             case "oldest":
-                return boardMapper.selectBoardsByOldest(query);
+                return boardMapper.selectBoardsByOldest(query, memNo);
             case "likes":
-                return boardMapper.selectBoardsByLikes(query);
+                return boardMapper.selectBoardsByLikes(query, memNo);
             case "comments":
-                return boardMapper.selectBoardsByComments(query);
+                return boardMapper.selectBoardsByComments(query, memNo);
             case "latest":
             default:
-                return boardMapper.selectBoardsByLatest(query);
+                return boardMapper.selectBoardsByLatest(query, memNo);
         }
     }
 
@@ -79,4 +79,54 @@ public class BoardServiceImpl implements BoardService {
 		
 		return boardMapper.editBoard(board);
 	}
+
+
+
+	/** 게시글 좋아요
+	 * @author BAEBAE
+	 */
+	@Override
+	public boolean toggleLike(int boardNo, String memNo) {
+		boolean alreadyLiked = boardMapper.selectBoardLike(boardNo, memNo) > 0;
+		if (alreadyLiked) {
+            boardMapper.deleteBoardLike(boardNo, memNo);
+            return false;
+        } else {
+            boardMapper.insertBoardLike(boardNo, memNo);
+            return true;
+        }
+    }
+
+
+
+	/** 게시글 작성
+	 * @author BAEBAE
+	 */
+	@Override
+	public int writeBoard(Board board) {
+		
+		return boardMapper.writeBoard(board);
+	}
+
+
+
+	/** 게시글 삭제
+	 * @author BAEBAE
+	 */
+	@Override
+	public boolean deleteBoard(int boardNo, String memNo) {
+		
+		String writerNo = boardMapper.findWriterByBoardNo(boardNo);
+		
+		if(writerNo == null || !writerNo.equals(memNo)) {
+			return false; // 작성자 아니면 삭제 불가
+		}
+		int rows = boardMapper.deleteBoard(boardNo, memNo);
+		return rows > 0;
+	}
+
+
+
+	
+	
 }

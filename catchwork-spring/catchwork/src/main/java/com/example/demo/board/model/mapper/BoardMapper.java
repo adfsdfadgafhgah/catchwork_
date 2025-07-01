@@ -10,19 +10,21 @@ import com.example.demo.board.model.dto.Board;
 
 @Mapper
 public interface BoardMapper {
+	
+	
 
 	/** 게시판 목록 조회
 	 * @author BAEBAE
 	 * @param query
 	 * @return
 	 */
-	List<Board> selectBoardsByLatest(String query);
-
-	List<Board> selectBoardsByOldest(String query);
-
-	List<Board> selectBoardsByLikes(String query);
-
-	List<Board> selectBoardsByComments(String query);
+	List<Board> selectBoardsByLatest(@Param("query") String query, @Param("memNo") String memNo);
+	
+	List<Board> selectBoardsByOldest(@Param("query") String query, @Param("memNo") String memNo);
+	
+	List<Board> selectBoardsByLikes(@Param("query") String query, @Param("memNo") String memNo);
+	
+	List<Board> selectBoardsByComments(@Param("query") String query, @Param("memNo") String memNo);
 	
 	//-----------------------------------------------------------------
 
@@ -49,6 +51,52 @@ public interface BoardMapper {
 	 * @return
 	 */
 	int editBoard(Board board);
+
+	// ----------------------------------------------------------------
+	
+	
+	/** 게시글 좋아요
+	 * @author BAEBAE
+	 * @param boardNo
+	 * @param memNo
+	 * @return
+	 */
+	int selectBoardLike(@Param("boardNo") int boardNo, @Param("memNo") String memNo);
+
+	void deleteBoardLike(@Param("boardNo") int boardNo, @Param("memNo") String memNo);
+
+//	void decreaseLikeCount(@Param("boardNo") int boardNo);
+
+	void insertBoardLike(@Param("boardNo") int boardNo, @Param("memNo") String memNo);
+
+//	void increaseLikeCount(@Param("boardNo") int boardNo);
+	
+	//------------------------------------------------------------------
+
+	/** 게시글 작성
+	 * @author BAEBAE
+	 * @param board
+	 * @return
+	 */
+	int writeBoard(Board board);
+
+	/** 게시글 작성자 조회
+	 * @author BAEBAE
+	 * @param boardNo
+	 * @return
+	 */
+	String findWriterByBoardNo(int boardNo);
+
+	/** 게시글 삭제
+	 * @author BAEBAE
+	 * @param boardNo
+	 * @return
+	 */
+	int deleteBoard(@Param("boardNo") int boardNo, @Param("memNo") String memNo);
+
+	
+
+	
 	
 
 }

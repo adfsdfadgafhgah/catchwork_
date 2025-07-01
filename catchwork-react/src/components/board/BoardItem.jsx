@@ -1,38 +1,74 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
 import iconImg from "../../assets/icon.png";
 import BoardCss from "./BoardItem.module.css";
 import { formatTimeAgo } from "./../common/formatTimeAgo";
+import useLoginMember from "../../stores/loginMember";
+import { useEffect, useState } from "react";
 
-export default function BoardItem({ board, isLoggedIn, currentUser }) {
+export default function BoardItem({ board, onLikeToggle }) {
+  const { loginMember, setLoginMember } = useLoginMember();
   const [likeCount, setLikeCount] = useState(board.likeCount);
-  // const [liked, setLiked] = useState(board.likedByCurrentUser); // 서버에서 true/false 전달
-  const [liked, setLiked] = useState(!!board.likedByCurrentUser); // 안전하게 Boolean 처리
+  const [liked, setLiked] = useState(false);
+
+  useEffect(() => {
+    if (!loginMember?.memNo) {
+      const fetchLoginMember = async () => {
+        await setLoginMember();
+      };
+      fetchLoginMember();
+    }
+  }, []);
+
+  // props와 loginMember가 모두 준비되었을 때 상태 동기화
+  useEffect(() => {
+    console.log("💡 board.likedByCurrentUser =", board.likedByCurrentUser);
+    console.log("💡 loginMember =", loginMember);
+
+    setLikeCount(board.likeCount);
+
+    // loginMember가 있을 때만 liked 상태 설정
+    if (loginMember?.memNo) {
+      setLiked(
+        board.likedByCurrentUser === true || board.likedByCurrentUser === 1
+      );
+    } else {
+      setLiked(false);
+    }
+  }, [board.likeCount, board.likedByCurrentUser, loginMember?.memNo]);
 
   const toggleLike = async (e) => {
-    e.preventDefault(); // Link 이동 막기
+    e.preventDefault();
+    e.stopPropagation();
 
-    if (!isLoggedIn) {
+    if (!loginMember?.memNo) {
       alert("로그인 후 이용해 주세요.");
       return;
     }
 
     try {
-      const response = await axiosApi.post("/board/like", {
+      const resp = await axiosApi.post("/board/like", {
         boardNo: board.boardNo,
-        memNo: currentUser.memNo,
+        memNo: loginMember.memNo,
       });
 
-      if (response.data.result === "liked") {
+      console.log("좋아요 응답:", resp.data);
+
+      if (resp.data.result === "liked") {
         setLiked(true);
         setLikeCount((prev) => prev + 1);
-      } else if (response.data.result === "unliked") {
+      } else if (resp.data.result === "unliked") {
         setLiked(false);
         setLikeCount((prev) => prev - 1);
       }
+
+      // 부모 컴포넌트에 변경사항 알림
+      if (onLikeToggle) {
+        onLikeToggle();
+      }
     } catch (err) {
       console.error("좋아요 처리 실패:", err);
+      alert("좋아요 처리 중 오류가 발생했습니다.");
     }
   };
 
@@ -58,7 +94,6 @@ export default function BoardItem({ board, isLoggedIn, currentUser }) {
               </span>
             </div>
             <h3 className={BoardCss.title}>
-              {/* 제목이 길 경우 */}
               {board.boardTitle.length > 40
                 ? board.boardTitle.slice(0, 40) + "..."
                 : board.boardTitle}
@@ -70,9 +105,15 @@ export default function BoardItem({ board, isLoggedIn, currentUser }) {
               <i className="fa-regular fa-comment"></i>
               {board.commentCount} &nbsp;&nbsp;{" "}
               <i
-                className={`fa-heart ${liked ? "fas red" : "far"}`}
+                className={`fa-heart ${
+                  liked ? "fa-solid liked-heart" : "fa-regular"
+                }`}
                 onClick={toggleLike}
-              ></i>{" "}
+                style={{
+                  cursor: "pointer",
+                  color: liked ? "var(--main-color)" : "gray",
+                }}
+              />
               {likeCount}
             </div>
           </div>

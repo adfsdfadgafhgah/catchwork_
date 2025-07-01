@@ -1,7 +1,7 @@
 import { useState } from "react";
 import CommentCss from "./CommentEdit.module.css";
 import { formatTimeAgo } from "../common/formatTimeAgo";
-// import axiosApi from "../../api/axiosAPI";
+import { axiosApi } from "../../api/axiosAPI";
 
 export default function CommentEdit({ comment, onCancel, onSuccess }) {
   const [content, setContent] = useState(comment.commentContent);
@@ -60,7 +60,7 @@ export default function CommentEdit({ comment, onCancel, onSuccess }) {
           <i className="fa-solid fa-xmark"></i> 취소하기
         </button>
         <button className={CommentCss.submitBtn} onClick={handleSubmit}>
-          <i className="fa-regular fa-pen-to-square"></i> 작성하기
+          <i className="fa-regular fa-pen-to-square"></i> 수정하기
         </button>
       </div>
     </div>
