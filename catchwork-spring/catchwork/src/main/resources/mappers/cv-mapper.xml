@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper	namespace="com.example.demo.cv.model.mapper.CVMapper">
+ 
+ 
+ <!-- 이력서 리스트 조회 -->
+  <select id="selectCVList" resultType="com.example.demo.cv.model.dto.CV">
+   	SELECT 
+   	CV_NO,
+   	CV_ALIAS,
+  	CV_MAIN_FL,
+   	MEM_NO,
+   	TO_CHAR(CREATED_DATE, 'YYYY-MM-DD') AS CREATED_DATE
+    FROM CV
+    WHERE MEM_NO = #{memNo}
+    ORDER BY CV_MAIN_FL DESC, CV_NO DESC
+  </select>
+  
+  
+</mapper>
