@@ -1,4 +1,4 @@
-package com.example.demo.myPageTest.membership.model.dto;
+package com.example.demo.myPage.membership.model.dto;
 
 import lombok.Data;
 

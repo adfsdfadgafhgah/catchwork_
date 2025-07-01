@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { axiosApi } from "../../../api/axiosAPI";
 
-function PaymentBilling() {
+function IssueBillingKeyPage() {
   const navigate = useNavigate();
 
   const [searchParams] = useSearchParams();
@@ -36,11 +36,26 @@ function PaymentBilling() {
 
       // 빌링키 요청을 서버로 제출하여 빌링키를 발급, 저장
       try {
-        const resp = await axiosApi.post(
-          "/tosspayment/issueBillingKey",
-          requestData
-        );
-        if (resp.status === 200) return resp.data;
+        const resp = await axiosApi({
+          method: "post",
+          url: "/tosspayment/issueBillingKey",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          data: requestData,
+        });
+
+        if (resp.status === 200) {
+          {
+            if (confirm("구독하시겠습니까?")) {
+              navigate(`/mypage/payment/checkout?productId=${productId}`);
+            } else {
+              alert("결제를 취소하셨습니다.");
+              navigate("/mypage/membership");
+            }
+          }
+          return resp.data;
+        }
       } catch (err) {
         navigate(
           `/mypage/payment/fail?message=${err.message}&code=${err.code}`
@@ -53,24 +68,7 @@ function PaymentBilling() {
       isIssueBillingKey.current = true;
 
       // 페이지 로드시, 빌링키 발급
-      issueBillingKey()
-        .then(() =>
-          /* TODO: 빌링키 발급에 성공했을 경우 UI 처리 로직을 구현하세요. */
-          {
-            if (confirm("구독하시겠습니까?")) {
-              navigate(`/mypage/payment/checkout?productId=${productId}`);
-            } else {
-              alert("결제를 취소하셨습니다.");
-              navigate("/mypage/membership");
-            }
-          }
-        )
-        .catch((err) => {
-          // TODO: 빌링키 발급에 실패했을 경우 UI 처리 로직을 구현하세요.
-          navigate(
-            `/mypage/payment/fail?message=${err.message}&code=${err.code}`
-          );
-        });
+      issueBillingKey();
     }
   }, []);
 
@@ -83,4 +81,4 @@ function PaymentBilling() {
   );
 }
 
-export default PaymentBilling;
+export default IssueBillingKeyPage;

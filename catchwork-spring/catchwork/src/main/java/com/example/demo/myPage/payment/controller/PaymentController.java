@@ -1,4 +1,4 @@
-package com.example.demo.myPageTest.payment.controller;
+package com.example.demo.myPage.payment.controller;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,12 +19,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.member.model.dto.Member;
-import com.example.demo.myPageTest.payment.model.service.PaymentService;
+import com.example.demo.myPage.payment.model.service.PaymentService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,6 +37,7 @@ public class PaymentController {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     private static final String API_SECRET_KEY = "test_sk_zXLkKEypNArWmo50nX3lmeaxYG5R";
+    
     private final Map<String, String> billingKeyMap = new HashMap<>();
     
     @Autowired
@@ -67,23 +69,69 @@ public class PaymentController {
     }
     
     // 구독 정보 갱신
-    public void updateSubscription(String memNo, String orderName) {
+    private void updateSubscription(String memNo, String orderName) {
     	
     	int result = service.updateSubscription(memNo,orderName);
     	
     }
+    
+    // 환불 잔액 조회
+    @PostMapping("selectBalanceAmount")
+    private ResponseEntity<Object> selectBalanceAmount(@RequestBody String memNo) {
+    	System.out.println("@@@@ 매핑 성공 @@@@");
+    	try {			
+    		int balanceAmount = service.selectBalanceAmount(memNo);
+    		System.out.println("@@@@ 환불 금액 : " + balanceAmount);
+    		if(balanceAmount>0) {    			
+    			return ResponseEntity.status(200).body(balanceAmount);
+    		}
+    		return ResponseEntity.status(200).body(0);
+		} catch (Exception e) {
+			System.out.println("@@@@ 오류 발생 @@@@");
+			e.printStackTrace();
+			return ResponseEntity.status(500).body(e.getMessage());
+		}
+    }
+    
+    // 업그레이드 빌링 결제
+    @PostMapping("upgrade")
+    private ResponseEntity<JSONObject> upgradeMembership(@RequestBody String jsonBody) throws Exception{
+    	System.out.println("설마?");
+    	JSONObject requestData = parseRequestData(jsonBody);
+        String customerKey = (String)requestData.get("customerKey");
+        String billingKey = service.getBillingKey(customerKey);
+        System.out.println(customerKey);
+        System.out.println(billingKey);
+        
+        // API를 호출하여 빌링 결제
+        JSONObject response = sendRequest(requestData, API_SECRET_KEY, 
+        		"https://api.tosspayments.com/v1/billing/" + billingKey);
+        
+        // 빌링 결제 성공시
+        if(!response.containsKey("error")) {
+        	// 결제 내역을 DB에 저장
+        	int result = service.insertPayment(response, customerKey);
+        	
+        	// 결제 내역 저장 성공시, 사용자 등급 수정
+        	if(result>0&&"DONE".equalsIgnoreCase((String) response.get("status"))) {
+        		String orderName = (String)response.get("orderName");
+        		// 구독 정보 수정
+        		int updateResult = service.updateSubscription(customerKey,orderName);
+        	}
+        }       
+    	return ResponseEntity.status(response.containsKey("error") ? 400 : 200).body(response);
+    }
 
     // 빌링 최초 결제
-    @RequestMapping(value = "confirmBilling")
+    @PostMapping(value = "confirmBilling")
     public ResponseEntity<JSONObject> confirmBilling(@RequestBody String jsonBody) throws Exception {
         JSONObject requestData = parseRequestData(jsonBody);
         String customerKey = (String)requestData.get("customerKey");
         String billingKey = service.getBillingKey(customerKey);
         
-        System.out.println(customerKey);
-        System.out.println(billingKey);
         // API를 호출하여 빌링 결제
-        JSONObject response = sendRequest(requestData, API_SECRET_KEY, "https://api.tosspayments.com/v1/billing/" + billingKey);
+        JSONObject response = sendRequest(requestData, API_SECRET_KEY, 
+        		"https://api.tosspayments.com/v1/billing/" + billingKey);
 
         // 빌링 결제 성공시
         if(!response.containsKey("error")) {

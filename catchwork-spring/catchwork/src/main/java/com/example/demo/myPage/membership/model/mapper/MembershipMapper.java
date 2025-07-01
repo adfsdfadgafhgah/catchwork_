@@ -1,10 +1,10 @@
-package com.example.demo.myPageTest.membership.model.mapper;
+package com.example.demo.myPage.membership.model.mapper;
 
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import com.example.demo.myPageTest.membership.model.dto.MemberGrade;
+import com.example.demo.myPage.membership.model.dto.MemberGrade;
 
 @Mapper
 public interface MembershipMapper {

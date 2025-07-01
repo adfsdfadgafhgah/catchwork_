@@ -1,4 +1,4 @@
-package com.example.demo.myPageTest.membership.model.service;
+package com.example.demo.myPage.membership.model.service;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.example.demo.myPageTest.membership.model.dto.MemberGrade;
-import com.example.demo.myPageTest.membership.model.mapper.MembershipMapper;
+import com.example.demo.myPage.membership.model.dto.MemberGrade;
+import com.example.demo.myPage.membership.model.mapper.MembershipMapper;
 
 @Service
 @Transactional(value = "myBatisTransactionManager", rollbackFor = Exception.class)

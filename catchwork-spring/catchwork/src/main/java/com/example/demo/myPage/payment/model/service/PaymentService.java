@@ -1,4 +1,4 @@
-package com.example.demo.myPageTest.payment.model.service;
+package com.example.demo.myPage.payment.model.service;
 
 import org.json.simple.JSONObject;
 
@@ -15,5 +15,8 @@ public interface PaymentService {
 
 	// 구독 정보 수정
 	int updateSubscription(String memNo, String orderName);
+
+	// 환불 잔액 조회
+	int selectBalanceAmount(String memNo);
 
 }
