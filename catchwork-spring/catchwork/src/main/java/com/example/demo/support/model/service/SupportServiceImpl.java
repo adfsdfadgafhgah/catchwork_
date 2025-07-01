@@ -35,6 +35,12 @@ public class SupportServiceImpl implements SupportService {
     public Support findById(int id) {
         return supportMapper.selectSupportById(id);
     }
+    
+    // 문의하기 작성
+    @Override
+    public int insertSupport(Support support) {
+        return supportMapper.insertSupport(support);
+    }
 
 
 }

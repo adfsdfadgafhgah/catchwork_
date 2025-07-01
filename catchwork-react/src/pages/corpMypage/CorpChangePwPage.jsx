@@ -26,7 +26,7 @@ const CorpChangePasswordPage = () => {
 
     setError("");
     alert("비밀번호가 성공적으로 변경되었습니다.");
-    navigate("/corpeditmyinfo");
+    navigate("/corpmypage");
   };
 
   return (
