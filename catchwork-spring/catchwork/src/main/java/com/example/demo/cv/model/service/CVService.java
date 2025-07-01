@@ -10,4 +10,5 @@ public interface CVService {
 	 */
 	void addCV(CV cv) throws Exception;
 
+// 	 void submitCV(String memNo, int cvNo, int recruitNo);
 }

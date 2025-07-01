@@ -1,11 +1,14 @@
 package com.example.demo.member.controller;
 
+import java.util.Collections;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.member.model.dto.Member;
@@ -73,7 +76,19 @@ public class MemberController {
 	}
 
 
+    @GetMapping("/check-id")
+    public ResponseEntity<?> checkId(@RequestParam("memId") String memId) {
+        boolean available = service.isIdAvailable(memId);
+        return ResponseEntity.ok(Collections.singletonMap("available", available));
+    }
 
+    @GetMapping("/check-nickname")
+    public ResponseEntity<?> checkNickname(@RequestParam("nickname") String nickname) {
+        boolean available = service.isNicknameAvailable(nickname);
+        return ResponseEntity.ok(Collections.singletonMap("available", available));
+    }
+	
+	
 	/**
 	 * 로그인 처리 메소드
 	 *

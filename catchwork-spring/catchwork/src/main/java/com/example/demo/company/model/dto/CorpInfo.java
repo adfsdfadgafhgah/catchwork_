@@ -38,8 +38,14 @@ public class CorpInfo {
     private int liked; // 1 = 관심등록함, 0 = 아님
 
     
-    //관심 개수, 공고 개수
-    private int favCount;
-    private int recruitCount;
+    //추가정보
+    private int recruitCount;			//공고 개수
+    private int favCount;				//관심 개수
+    private int views;					//조회수
+    
+    
+
+   
+   
 
 }

@@ -2,6 +2,9 @@ import { useEffect, useRef, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import useMembershipList from "../../../stores/membershipStore";
 import useLoginMember from "../../../stores/loginMember";
+import { axiosApi } from "../../../api/axiosAPI";
+
+const url = import.meta.env.VITE_BASE_URL;
 
 function PaymentCheckout() {
   // 페이지 이동용
@@ -30,21 +33,13 @@ function PaymentCheckout() {
     );
   }, [membershipList, productId]);
 
-  // 상품 정보, 회원 정보가 로딩되면 결제 인증 → 결제 확정 API 호출
+  // 상품 정보가 로딩되면 && 결제하지 않았으면 → 서버에서 결제 API 호출
   useEffect(() => {
-    if (!product || isPayed.current) return;
-
+    if (!product || !loginMember?.memNo || isPayed.current) return;
+    // 중복 결제 방지
     isPayed.current = true;
 
-    confirmBilling()
-      .then(() => {
-        navigate("/mypage/payment/sucess");
-      })
-      .catch((err) => {
-        navigate(
-          `/mypage/payment/fail?message=${err.message}&code=${err.code}`
-        );
-      });
+    confirmBilling();
   }, [product, loginMember.memNo]);
 
   // 결제 내역 구분키를 난수로 생성
@@ -54,6 +49,8 @@ function PaymentCheckout() {
 
   // 실제 결제 요청을 백엔드에 보내는 함수 (빌링키 기반 자동결제 확정)
   async function confirmBilling() {
+    console.log("결제 진행");
+
     const requestData = {
       customerKey: loginMember.memNo,
       amount: product.memGradePrice,
@@ -64,11 +61,17 @@ function PaymentCheckout() {
     };
 
     try {
-      const response = await axiosApi.post("/tosspayment/confirmBilling", {
-        requestData,
+      const response = await axiosApi({
+        method: "post",
+        url: "/tosspayment/confirmBilling",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        data: requestData,
       });
 
       if (response.status === 200) {
+        navigate("/mypage/payment/sucess");
         return response.data;
       }
     } catch (err) {

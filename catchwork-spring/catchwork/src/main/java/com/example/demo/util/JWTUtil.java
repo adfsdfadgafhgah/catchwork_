@@ -35,6 +35,16 @@ public class JWTUtil {
                 .get("memNo", String.class);
     }
     
+    public String getNickname(String token) {
+        return Jwts.parser()
+            .verifyWith(secretKey)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload()
+            .get("nickname", String.class);
+    }
+
+    
     public String getMemId(String token) {
         return Jwts.parser()
         		.verifyWith(secretKey)
@@ -76,9 +86,10 @@ public class JWTUtil {
 	
 	
 
-	public String createJwt(String memNo, int memType, String role, Long expiredMs) {
+	public String createJwt(String memNo, String memNickname, int memType, String role, Long expiredMs) {
 	    return Jwts.builder()
 	        .claim("memNo", memNo)
+	        .claim("memNickname", memNickname)
 	        .claim("memType", memType)
 	        .claim("role", role)
 	        .issuedAt(new Date(System.currentTimeMillis()))
@@ -100,11 +111,12 @@ public class JWTUtil {
 /*
 access 토큰 payload 구조
 {
-  "memNo": "MinJang",			// String
-  "memType": 1,					// int
-  "role": "ROLE_COMPANY",		// String
-  "iat": 1750842790,			// long
-  "exp": 1750878790				// long
+  "memNo": "MinJang",				// String
+  "memNickname": "미친_민장_180",	// String
+  "memType": 1,						// int
+  "role": "ROLE_COMPANY",			// String
+  "iat": 1750842790,				// long
+  "exp": 1750878790					// long
 }
 
 refresh 토큰 payload 구조

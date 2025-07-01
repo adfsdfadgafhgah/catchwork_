@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -74,15 +75,19 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         String username = customUserDetails.getUsername();	// memNo 임
-        
+        String memNickname = customUserDetails.getMemberEntity().getMemNickname(); // 닉네임 추출
+
         int memType = customUserDetails.getMemberEntity().getMemType(); // memType 0 : 개인 / 1 : 기업
         String role = customUserDetails.getAuthorities().stream()
                                        .map(GrantedAuthority::getAuthority)
                                        .findFirst()
                                        .orElse("ROLE_USER");
 
-        // memType (int) + role (String) 모두 전달
-        String accessToken = jwtUtil.createJwt(username, memType, role, 15 * 60 * 1000L);		// 15분
+//        SecurityContext <- token에 넣는걸로 해서 그냥 빠꾸
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+        
+//        memType (int) + role (String) 모두 전달
+        String accessToken = jwtUtil.createJwt(username, memNickname, memType, role, 15 * 60 * 1000L);		// 15분
 //        System.out.println("JWT 생성 완료: " + accessToken);
 //        System.out.println(username +" "+memType+" "+role);
         String refreshToken = jwtUtil.createRefreshToken(username, 7 * 24 * 60 * 60 * 1000L);	// 7일
@@ -96,9 +101,18 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
         refreshCookie.setPath("/");					// 전체 경로 유효
         refreshCookie.setMaxAge(7 * 24 * 60 * 60);	// 7일
 
-        response.addCookie(refreshCookie); // addCookie를 반드시 사용
         
+        // 응답
+        response.addCookie(refreshCookie);
         response.addHeader("Authorization", "Bearer " + accessToken);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        try {
+			response.getWriter().write("{\"message\": \"로그인 성공\"}");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
     }
 
 
@@ -110,5 +124,6 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     	
 		//로그인 실패시 401 응답 코드 반환
         response.setStatus(401);
+        
     }
 }

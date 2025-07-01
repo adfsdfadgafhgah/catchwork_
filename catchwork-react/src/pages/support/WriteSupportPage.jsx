@@ -1,10 +1,24 @@
 import React, { useState } from "react";
+import axios from "axios"; 
 import "./WriteSupportPage.css";
+import { useNavigate } from "react-router-dom";
 
 export default function WriteSupportPage() {
+  const navigate = useNavigate(); 
+
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("계정 관련 문의");
   const [content, setContent] = useState("");
+
+  // 카테고리 문자열 → 숫자 코드 매핑 (서버에 맞게 조정하세요)
+  const categoryCodeMap = {
+    "계정 관련 문의": 1,
+    "결제/환불 문의": 2,
+    "서비스 이용 문의": 3,
+    "정지 문의": 4,
+    "의의제기 문의": 5,
+    "기타 문의": 6,
+  };
 
   const handleSubmit = async () => {
     if (!title || !content) {
@@ -13,28 +27,22 @@ export default function WriteSupportPage() {
     }
 
     try {
-      const response = await fetch("http://localhost:8080/support/write", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          supportTitle: title,
-          supportCategory: category,
-          supportContent: content,
-          memNo: 100, // 필요에 따라 로그인한 사용자 정보 사용
-        }),
+      const response = await axios.post("http://localhost:8080/support/write", {
+        supportTitle: title,              // 서버에서 지원하지 않으면 제거 가능
+        supportCategoryCode: categoryCodeMap[category],
+        supportContent: content,
+        memNo: 100,
       });
 
-      if (response.ok) {
-        alert("문의가 성공적으로 등록되었습니다.");
-        // 예: navigate("/support"); 등으로 이동 가능
-      } else {
-        alert("등록 실패");
-      }
+      alert("문의가 성공적으로 등록되었습니다.");
+      navigate("/supportlist"); 
     } catch (error) {
       console.error("에러 발생:", error);
-      alert("서버 오류가 발생했습니다.");
+      if (error.response) {
+        alert("등록 실패: " + (error.response.data?.message || "서버 오류가 발생했습니다."));
+      } else {
+        alert("서버와의 연결에 실패했습니다.");
+      }
     }
   };
 

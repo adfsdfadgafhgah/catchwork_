@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios"; // axios 추가
 import "./SupportListPage.css";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../../components/common/Pagination"; // 페이지네이션 컴포넌트
@@ -9,19 +10,15 @@ const SupportListPage = () => {
   const [supportItems, setSupportItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const itemsPerPage = 10; // 페이지당 10개
+  const itemsPerPage = 10; // 페이지당 항목 수
 
   useEffect(() => {
     const fetchSupportData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/support/list");
-        if (!response.ok) {
-          throw new Error("데이터를 가져오지 못했습니다.");
-        }
-        const data = await response.json();
-        setSupportItems(data);
+        const response = await axios.get("http://localhost:8080/support/list");
+        setSupportItems(response.data); // 응답 데이터 설정
       } catch (err) {
-        setError(err.message);
+        setError(err.response?.data?.message || err.message || "데이터를 가져오는 중 오류 발생");
       } finally {
         setLoading(false);
       }
@@ -80,9 +77,9 @@ const SupportListPage = () => {
                       onClick={() => goToDetail(item.supportNo)}
                       style={{ cursor: "pointer" }}
                     >
-                      {item.supportContent}
+                      {item.supportTitle}
                     </td>
-                    <td>{item.supportDate || "-"}</td> {/* 작성일이 없으면 '-' 처리 */}
+                    <td>{item.supportDate || "-"}</td>
                     <td
                       className={
                         item.supportStatus === "Y"
