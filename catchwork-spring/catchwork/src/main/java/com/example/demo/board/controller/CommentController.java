@@ -95,10 +95,14 @@ public class CommentController {
      */
     @DeleteMapping("delete/{commentNo}")
     public ResponseEntity<?> deleteComment(@PathVariable("commentNo") int commentNo) {
+    	
         try {
+        	
             commentService.deleteComment(commentNo);
             return ResponseEntity.ok().build();
+            
         } catch (Exception e) {
+        	
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("댓글 삭제 실패");
         }
     }
