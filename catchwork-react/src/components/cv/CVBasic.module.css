@@ -38,7 +38,7 @@
 
 .infoRow {
   display: flex;
-  gap: 40px;
+  gap: 10px;
   margin-bottom: 20px;
   align-items: center;
 }

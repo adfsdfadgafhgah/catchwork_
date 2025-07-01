@@ -371,6 +371,7 @@ DROP TABLE "SUPPORT";
 
 CREATE TABLE "SUPPORT" (
 	"SUPPORT_NO"	NUMBER		NOT NULL,
+	"SUPPORT_TITLE"		VARCHAR2(50)		NOT NULL,
 	"SUPPORT_CONTENT"	VARCHAR2(4000)		NOT NULL,
 	"SUPPORT_ANSWER"	VARCHAR2(4000)		NULL,
 	"SUPPORT_STATUS"	CHAR(1)	DEFAULT 'N'	NOT NULL,
@@ -380,6 +381,8 @@ CREATE TABLE "SUPPORT" (
 );
 
 COMMENT ON COLUMN "SUPPORT"."SUPPORT_NO" IS '문의_시퀀스_번호(PK)';
+
+COMMENT ON COLUMN "SUPPORT"."SUPPORT_TITLE" IS '문의_제목';
 
 COMMENT ON COLUMN "SUPPORT"."SUPPORT_CONTENT" IS '문의_내용';
 
@@ -1368,143 +1371,13 @@ REFERENCES "CV" (
 COMMIT;
 
 ---------------------------------------------------
-SELECT * FROM "MEMBER";
-SELECT * FROM "BOARD";
-
-CREATE SEQUENCE SEQ_BOARD_NO
-START WITH 1       -- 시퀀스 시작값
-INCREMENT BY 1     -- 증가값
-NOCACHE            -- 캐시 안 함 (보통 테스트용으로 안전하게)
-NOCYCLE;           -- 최대값 도달 시 다시 1부터 시작하지 않도록
-
-INSERT INTO "BOARD" VALUES(
-SEQ_BOARD_NO.NEXTVAL, '1번째 글', '1번째 글 내용입니다.', SYSDATE, SYSDATE, 1, 0, NULL, NULL, 'd2b75689-333e-4e07-8c65-dd5d1f9c8334');
-
-INSERT INTO "BOARD" VALUES(
-SEQ_BOARD_NO.NEXTVAL, '2번째 글', '2번째 글 내용입니다.', SYSDATE, SYSDATE, 2, 0, NULL, NULL, '1b92cbf9-5fbc-48b3-b684-ad995ce8f6ec');
-
-------------------------------윤진
-SELECT * FROM "MEMBER";
-SELECT * FROM "CORP_INFO";
-SELECT * FROM CORP_INFO WHERE CORP_NO = 3;
-SELECT * FROM "FAV_CORP";
-SELECT * FROM "RECRUIT";
-
-CREATE SEQUENCE SEQ_CORP_NO
-START WITH 1
-INCREMENT BY 1
-NOCACHE
-NOCYCLE;
-
-INSERT INTO CORP_INFO (
-    CORP_NO,
-    CORP_REG_NO,
-    CORP_TYPE,
-    CORP_NAME,
-    CORP_LOGO,
-    CORP_CEO_NAME,
-    CORP_ADDR,
-    CORP_OPEN_DATE,
-    CORP_HOME_LINK,
-    CORP_BM,
-    CORP_DETAIL,
-    CORP_BENEFIT,
-    CORP_BENEFIT_DETAIL,
-    CORP_BAN_FL,
-    CORP_BAN_DATE
-) VALUES (
-    SEQ_CORP_NO.NEXTVAL,
-    1234567890,
-    '중소기업',
-    'KH 정보교육원 종로',
-    '/images/kh_logo.png',
-    '김대표',
-    '서울특별시 종로구 종로 1',
-    TO_DATE('1990-03-01', 'YYYY-MM-DD'),
-    'http://www.khinfo.com',
-    'IT 교육',
-    'KH정보교육원은 IT 전문 교육 기관입니다.',
-    '식사제공,4대보험',
-    '중식 제공, 4대 보험, 주 5일 근무, 명절 상여금 지급',
-    NULL,
-    NULL
-);
 
 
 
+SELECT * FROM ALL_SEQUENCES;
 
-INSERT INTO CORP_INFO (
-    CORP_NO,
-    CORP_REG_NO,
-    CORP_TYPE,
-    CORP_NAME,
-    CORP_LOGO,
-    CORP_CEO_NAME,
-    CORP_ADDR,
-    CORP_OPEN_DATE,
-    CORP_HOME_LINK,
-    CORP_BM,
-    CORP_DETAIL,
-    CORP_BENEFIT,
-    CORP_BENEFIT_DETAIL,
-    CORP_BAN_FL,
-    CORP_BAN_DATE
-) VALUES (
-    SEQ_CORP_NO.NEXTVAL,
-    3259630709,
-    '대기업',
-    '이윤진 정보교육원 노원',
-    '/images/kh_logo.png',
-    '이윤진',
-    '서울특별시 노원구',
-    TO_DATE('1996-03-25', 'YYYY-MM-DD'),
-    'http://www.yoonjin.com',
-    'IT 교육',
-    'KH정보교육원은 IT 전문 교육 기관입니다.',
-    '식사제공,4대보험',
-    '중식 제공, 4대 보험, 주 5일 근무, 명절 상여금 지급',
-    NULL,
-    NULL
-);
+CREATE SEQUENCE SEQ_BOARD_NO START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;
 
-INSERT INTO FAV_CORP (MEM_NO, CORP_NO)
-VALUES ('49d354c4-bd52-4cdb-8fe5-a7ff69454b16', 3);
+CREATE SEQUENCE SEQ_CV_NO START WITH 1 INCREMENT BY 1 NOMAXVALUE NOCYCLE NOCACHE;
 
-INSERT INTO FAV_CORP (MEM_NO, CORP_NO)
-VALUES ('1f2adbd2-0c5e-4648-af1a-32587e4a224a', 3);
-
-
-
-----------~~회원이 좋아요 누른 기업 ------------------------------------------
-SELECT C.*
-FROM CORP_INFO C
-LEFT JOIN FAV_CORP F ON C.CORP_NO = F.CORP_NO
-WHERE C.CORP_NO = 1
-AND F.MEM_NO = '49d354c4-bd52-4cdb-8fe5-a7ff69454b16';
-
-
-SELECT C.*,
-       CASE WHEN F.MEM_NO IS NOT NULL THEN 'Y' ELSE 'N' END AS FAV_FL
-FROM CORP_INFO C
-LEFT JOIN FAV_CORP F 
-  ON C.CORP_NO = F.CORP_NO 
- AND F.MEM_NO = '1f2adbd2-0c5e-4648-af1a-32587e4a224a'
-WHERE C.CORP_NO = 1;
-
------------------------------------------------------------------------------
-SELECT
-  c.CORP_NO,
-  c.CORP_NAME,
-  c.CORP_TYPE,
-  c.CORP_LOGO,
-  COUNT(r.RECRUIT_NO) AS recruitCount,
-  COALESCE(SUM(r.RECRUIT_READCOUNT), 0) AS totalViews,
-  CASE WHEN MAX(f.MEM_NO) IS NOT NULL THEN 1 ELSE 0 END AS liked
-FROM CORP_INFO c
-LEFT JOIN CORP_MEM cm ON c.CORP_NO = cm.CORP_NO
-LEFT JOIN MEMBER m ON cm.MEM_NO = m.MEM_NO
-LEFT JOIN RECRUIT r ON r.MEM_NO = m.MEM_NO
-LEFT JOIN FAV_CORP f ON c.CORP_NO = f.CORP_NO
-GROUP BY c.CORP_NO, c.CORP_NAME, c.CORP_TYPE, c.CORP_LOGO
-ORDER BY c.CORP_NAME;
-
+CREATE SEQUENCE SEQ_CORP_NO START WITH 1 INCREMENT BY 1 NOCACHE NOCYCLE;

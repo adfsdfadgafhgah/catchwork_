@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper	namespace="com.example.demo.cv.model.mapper.CVMapper">
- 
- 
- <!-- 이력서 리스트 조회 -->
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.cv.model.mapper.CVMapper">
+
+   <!-- 이력서 리스트 조회 -->
   <select id="selectCVList" resultType="com.example.demo.cv.model.dto.CV">
    	SELECT 
    	CV_NO,
@@ -17,5 +16,201 @@
     ORDER BY CV_MAIN_FL DESC, CV_NO DESC
   </select>
   
+    <!-- CV 추가 (selectKey로 cvNo 채번) -->
+    <insert id="addCV">
+        <selectKey keyProperty="cvNo" resultType="int" order="BEFORE">
+            SELECT SEQ_CV_NO.NEXTVAL FROM DUAL
+        </selectKey>
+        INSERT INTO CV (
+            CV_NO,
+            CV_RESUME,
+            CV_ALIAS,
+            CV_IMG_PATH,
+            CV_MAIN_FL,
+            MEM_NO
+        ) VALUES (
+            #{cvNo},
+            #{cvResume},
+            #{cvAlias},
+            #{cvImgPath},
+            #{cvMainFl},
+            #{memNo}
+        )
+    </insert>
+
+    <!-- Military 추가 -->
+    <insert id="addMilitary">
+        INSERT INTO CV_MILITARY (
+            CV_NO,
+            CV_MILI_CLASS,
+            CV_MILI_BRANCH,
+            CV_MILI_START_DATE,
+            CV_MILI_END_DATE
+        ) VALUES (
+            #{cvNo},
+            #{cvMiliClass},
+            #{cvMiliBranch},
+            TO_DATE(#{cvMiliStartDate}, 'YYYY-MM'),
+            TO_DATE(#{cvMiliEndDate}, 'YYYY-MM')
+        )
+    </insert>
+
+    <!-- Education 추가 -->
+    <insert id="addEducation">
+        INSERT INTO CV_EDUCATION (
+            CV_NO,
+            EDU_NAME,
+            EDU_START_DATE,
+            EDU_END_DATE,
+            EDU_MAJOR,
+            EDU_CODE_NO,
+            EDU_STATUS_CODE_NO
+        ) VALUES (
+            #{cvNo},
+            #{eduName},
+            TO_DATE(#{eduStartDate}, 'YYYY-MM'),
+            TO_DATE(#{eduEndDate}, 'YYYY-MM'),
+            #{eduMajor},
+            #{eduCodeNo},
+            #{eduStatusCodeNo}
+        )
+    </insert>
+
+    <!-- Experience 추가 -->
+    <insert id="addExperience">
+        INSERT INTO CV_EXPERIENCE (
+            EXP_ID,
+            EXP_NAME,
+            EXP_DEPT,
+            EXP_CONTENT,
+            EXP_START_DATE,
+            EXP_END_DATE,
+            CV_NO
+        ) VALUES (
+            #{expId},
+            #{expName},
+            #{expDept},
+            #{expContent},
+            TO_DATE(#{expStartDate}, 'YYYY-MM'),
+            TO_DATE(#{expEndDate}, 'YYYY-MM'),
+            #{cvNo}
+        )
+    </insert>
+
+    <!-- Award 추가 -->
+    <insert id="addAward">
+        INSERT INTO CV_AWARD (
+            AWARD_ID,
+            AWARD_NAME,
+            AWARD_DATE,
+            AWARD_ORG,
+            CV_NO
+        ) VALUES (
+            #{awardId},
+            #{awardName},
+            TO_DATE(#{awardDate}, 'YYYY-MM'),
+            #{awardOrg},
+            #{cvNo}
+        )
+    </insert>
+
+    <!-- Qualify 추가 -->
+    <insert id="addQualify">
+        INSERT INTO CV_QUALIFY (
+            QUALIFY_ID,
+            QUALIFY_NAME,
+            QUALIFY_DATE,
+            QUALIFY_ORG,
+            CV_NO
+        ) VALUES (
+            #{qualifyId},
+            #{qualifyName},
+            TO_DATE(#{qualifyDate}, 'YYYY-MM'),
+            #{qualifyOrg},
+            #{cvNo}
+        )
+    </insert>
+
+    <!-- Language 추가 -->
+    <insert id="addLanguage">
+        INSERT INTO CV_LANGUAGE (
+            LANG_ID,
+            LANG_NAME,
+            LANG_DATE,
+            LANG_TYPE,
+            LANG_SCORE,
+            CV_NO
+        ) VALUES (
+            #{langId},
+            #{langName},
+            TO_DATE(#{langDate}, 'YYYY-MM'),
+            #{langType},
+            #{langScore},
+            #{cvNo}
+        )
+    </insert>
+
+    <!-- Outer 추가 -->
+    <insert id="addOuter">
+        INSERT INTO CV_OUTER (
+            OUTER_ID,
+            OUTER_NAME,
+            OUTER_START_DATE,
+            OUTER_END_DATE,
+            OUTER_ORGANIZATION,
+            OUTER_CONTENT,
+            CV_NO
+        ) VALUES (
+            #{outerId},
+            #{outerName},
+            TO_DATE(#{outerStartDate}, 'YYYY-MM'),
+            TO_DATE(#{outerEndDate}, 'YYYY-MM'),
+            #{outerOrganization},
+            #{outerContent},
+            #{cvNo}
+        )
+    </insert>
+
+    <!-- Training 추가 -->
+    <insert id="addTraining">
+        INSERT INTO CV_TRAINING (
+            TRAIN_ID,
+            TRAIN_NAME,
+            TRAIN_START_DATE,
+            TRAIN_END_DATE,
+            TRAIN_ORGANIZATION,
+            TRAIN_CONTENT,
+            CV_NO
+        ) VALUES (
+            #{trainId},
+            #{trainName},
+            TO_DATE(#{trainStartDate}, 'YYYY-MM'),
+            TO_DATE(#{trainEndDate}, 'YYYY-MM'),
+            #{trainOrganization},
+            #{trainContent},
+            #{cvNo}
+        )
+    </insert>
+
+    <!-- Portfolio 추가 -->
+    <insert id="addPortfolio">
+        INSERT INTO CV_PORTFOLIO (
+            PORT_ID,
+            PORT_NAME,
+            PORT_START_DATE,
+            PORT_END_DATE,
+            PORT_CONTENT,
+            CV_NO
+        ) VALUES (
+            #{portId},
+            #{portName},
+            TO_DATE(#{portStartDate}, 'YYYY-MM'),
+            TO_DATE(#{portEndDate}, 'YYYY-MM'),
+            #{portContent},
+            #{cvNo}
+        )
+    </insert>
+ 
+
   
 </mapper>

@@ -17,8 +17,8 @@ import CVForm01 from "../../components/cv/CVForm01";
 import CVForm02 from "../../components/cv/CVForm02";
 import CVLanguage from "../../components/cv/CVLanguage";
 
-// zustand
-import { useAuthStore } from "../../stores/authStore";
+// 로그인 회원 정보
+import useLoginMember from "../../stores/loginMember";
 
 // 페이지 전용 CSS import
 import "./WriteCVPage.css";
@@ -30,26 +30,35 @@ const useQuery = () => {
 };
 
 const WriteCVPage = () => {
+  // 쿼리스트링
   const query = useQuery();
 
-  // zustand 로그인 회원정보
-  const { memNo, memType, role } = useAuthStore();
-  
+  // 로그인 회원 정보
+  const { loginMember, setLoginMember } = useLoginMember();
 
   // 작성/보기/수정 모드 상태
-  const [mode, setMode] = useState(query.get("mode") || "view"); 
+  const [mode, setMode] = useState(query.get("mode") || "view");
+
+  // 사용자
+  const member = {
+    memNo: loginMember.memNo,
+    memId: loginMember.memId,
+  };
+
+  // 사용자 기본 정보 (출력용)
+  const memberInfo = {
+    memName: loginMember.memName,
+    memTel: loginMember.memTel,
+    memGender: loginMember.memGender,
+    memEmail: loginMember.memEmail,
+    memBirthday: loginMember.memBirthday,
+  };
+
+  // 날짜 에러
+  const [dateError, setDateError] = useState("");
 
   // 이미지 isLoading
   const [isUploading, setIsUploading] = useState(false);
-
-  // 사용자 기본 정보 (출력용)
-  const [userInfo, setUserInfo] = useState({
-    memName: "조민장",
-    memTel: "01087948442",
-    memGender: "남성",
-    memEmail: "whalswkd1213@gmail.com",
-    memBirthday: "2000-12-13",
-  });
 
   // 증명사진 이미지 경로 상태
   const [cvImgPath, setCvImgPath] = useState("");
@@ -185,7 +194,7 @@ const WriteCVPage = () => {
   const handleUploadImage = async (file) => {
     const imgFormData = new FormData();
     imgFormData.append("image", file);
-    imgFormData.append("memName", userInfo.memName);
+    imgFormData.append("memName", memberInfo.memName);
     setIsUploading(true);
     try {
       const res = await axiosApi.post("/cv/img/upload", imgFormData, {
@@ -226,7 +235,27 @@ const WriteCVPage = () => {
   const handleComponentChange = (type, index, field, value) => {
     setComponents((prev) => {
       const updated = [...prev[type]];
-      updated[index] = { ...updated[index], [field]: value, type };
+      const newItem = { ...updated[index], [field]: value, type };
+
+      // ▼ 날짜 비교: startDate & endDate가 모두 존재할 때만 검사
+      if (field === "startDate" || field === "endDate") {
+        if (
+          newItem.startDate &&
+          newItem.endDate &&
+          /^\d{4}-\d{2}$/.test(newItem.startDate) &&
+          /^\d{4}-\d{2}$/.test(newItem.endDate)
+        ) {
+          const startNum = parseInt(newItem.startDate.replace("-", ""), 10);
+          const endNum = parseInt(newItem.endDate.replace("-", ""), 10);
+
+          if (endNum < startNum) {
+            setDateError("종료일은 시작일과 같거나 이후여야 합니다.");
+            return prev; // 기존 state 유지, 변경 안 함
+          }
+        }
+      }
+
+      updated[index] = newItem;
       return { ...prev, [type]: updated };
     });
   };
@@ -289,7 +318,8 @@ const WriteCVPage = () => {
     const { mainAddress, detailAddress, ...restFormData } = formData;
 
     return {
-      ...userInfo,
+      ...member, // 회원 정보
+      ...memberInfo, // 회원 기본 정보(출력용)
       cvImgPath, // 이미지 경로
       ...restFormData, // 나머지 formData 필드 그대로
       memAddress: `${mainAddress}/${detailAddress}`, // 주소만 커스텀 처리
@@ -333,14 +363,24 @@ const WriteCVPage = () => {
     return result;
   };
 
-    
+  useEffect(() => {
+    setLoginMember();
+  }, []);
+
+  useEffect(() => {
+    if (dateError) {
+      alert(dateError);
+      setDateError("");
+    }
+  }, [dateError]);
+
   useEffect(() => {
     console.log("모드 =", mode);
     console.log("이미지 경로 =", cvImgPath);
-    console.log("기본 정보 =", userInfo);
     console.log("단일 데이터 =", formData);
     console.log("컴포넌트 데이터 =", components);
-    console.log("zustand 값:", memNo, memType, role);
+    console.log("회원 정보 = ", memberInfo);
+    console.log("회원 = ", member);
 
     const authStorage = localStorage.getItem("auth-storage");
     if (authStorage) {
@@ -349,7 +389,7 @@ const WriteCVPage = () => {
     } else {
       console.log("auth-storage 값 없음 (로그인 안했거나 persist 저장 전)");
     }
-  }, [mode, cvImgPath, userInfo, formData, components]);
+  }, [mode, cvImgPath, memberInfo, member, formData, components]);
 
   /* 가져오기 */
   // useEffect(() => {
@@ -376,7 +416,6 @@ const WriteCVPage = () => {
   //   });
   // }, []);
 
-
   return (
     <div className="resume-container">
       <div
@@ -396,7 +435,7 @@ const WriteCVPage = () => {
           {/* 기본 정보 표시 */}
           <div className="writeCVSection">
             <CVBasic
-              userInfo={userInfo}
+              memberInfo={memberInfo}
               cvImgPath={cvImgPath}
               onImageUpload={handleUploadImage}
               isUploading={isUploading}
@@ -453,7 +492,9 @@ const WriteCVPage = () => {
                   onChange={handleComponentChange}
                 />
               ))}
-              <FormAddButton onClick={() => addComponent(type)} />
+              {mode !== "view" && (
+                <FormAddButton onClick={() => addComponent(type)} />
+              )}
             </div>
           ))}
 
@@ -473,7 +514,9 @@ const WriteCVPage = () => {
                 onChange={handleComponentChange}
               />
             ))}
-            <FormAddButton onClick={() => addComponent("language")} />
+            {mode !== "view" && (
+              <FormAddButton onClick={() => addComponent("language")} />
+            )}
           </div>
 
           {/* 공통 Form02 영역 */}
@@ -500,7 +543,9 @@ const WriteCVPage = () => {
                   onChange={handleComponentChange}
                 />
               ))}
-              <FormAddButton onClick={() => addComponent(type)} />
+              {mode !== "view" && (
+                <FormAddButton onClick={() => addComponent(type)} />
+              )}
             </div>
           ))}
 
