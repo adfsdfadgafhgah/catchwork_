@@ -119,23 +119,23 @@ public class CVController {
 	
 	
 	
-	//윤진 submit cv
-	@PostMapping("/submitcv")
-	public ResponseEntity<?> submitCV(@RequestBody Map<String, Object> data) {
-		 try {
-	            log.info("이력서 제출 요청 데이터: {}", data);
-
-	            String memNo = (String) data.get("memNo");
-	            int cvNo = (int) data.get("cvNo");
-	            int recruitNo = (int) data.get("recruitNo");
-
-	            service.submitCV(memNo, cvNo, recruitNo);
-
-	            return ResponseEntity.ok("이력서 제출 완료");
-	        } catch (Exception e) {
-	            log.error("이력서 제출 중 오류", e);
-	            return ResponseEntity.internalServerError().body("제출 실패");
-	        }
-	}
+//	//윤진 submit cv
+//	@PostMapping("/submitcv")
+//	public ResponseEntity<?> submitCV(@RequestBody Map<String, Object> data) {
+//		 try {
+//	            log.info("이력서 제출 요청 데이터: {}", data);
+//
+//	            String memNo = (String) data.get("memNo");
+//	            int cvNo = (int) data.get("cvNo");
+//	            int recruitNo = (int) data.get("recruitNo");
+//
+//	            service.submitCV(memNo, cvNo, recruitNo);
+//
+//	            return ResponseEntity.ok("이력서 제출 완료");
+//	        } catch (Exception e) {
+//	            log.error("이력서 제출 중 오류", e);
+//	            return ResponseEntity.internalServerError().body("제출 실패");
+//	        }
+//	}
 	
 }
