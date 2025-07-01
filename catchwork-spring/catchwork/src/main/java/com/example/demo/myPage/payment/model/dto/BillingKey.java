@@ -1,4 +1,4 @@
-package com.example.demo.myPageTest.payment.model.dto;
+package com.example.demo.myPage.payment.model.dto;
 
 import lombok.Builder;
 import lombok.Data;

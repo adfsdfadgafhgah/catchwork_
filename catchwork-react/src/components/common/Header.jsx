@@ -40,7 +40,7 @@ const Header = () => {
   // 개인 회원 임시 로그인
   // 개인 회원 임시 로그인
   const handleSignin = async () => {
-    const { success, message } = await signin("Test_229", "Test");
+    const { success, message } = await signin("Test_286", "Test");
     setResult(message);
   };
   // 기업 회원 임시 로그인

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper	namespace="com.example.demo.myPageTest.payment.model.mapper.PaymentMapper">
+<mapper	namespace="com.example.demo.myPage.payment.model.mapper.PaymentMapper">
 
 <!-- 유효한 빌링키 조회 : 없다면 신규 빌링키를 발급받도록 -->
 <select id="getBillingKey">
@@ -91,9 +91,12 @@ SET MEM_GRADE = (
     FROM MEMBER_GRADE
     WHERE MEM_GRADE_NAME = #{orderName}
 ),
-    SUB_UPDATE_AT = SYSDATE
+    SUB_END_AT = TRUNC(ADD_MONTHS(SYSDATE, 1)),
+    SUB_UPDATE_AT = SYSDATE,
+    SUB_PAY_AT = TRUNC(SYSDATE)
 WHERE MEM_NO = #{memNo}
 </update>
+
 
 <!-- 신규 구독 삽입 -->
 <insert id="insertSubscription">
@@ -113,10 +116,10 @@ VALUES (
    FROM MEMBER_GRADE
    WHERE MEM_GRADE_NAME = #{orderName}),
   #{memNo},
+  TRUNC(SYSDATE),
+  ADD_MONTHS(TRUNC(SYSDATE), 1),
   SYSDATE,
-  NULL,
-  SYSDATE,
-  SYSDATE,
+  TRUNC(SYSDATE),
   DEFAULT
 )
 </insert>
@@ -131,5 +134,14 @@ SET MEM_GRADE = (
 )
 WHERE MEM_NO = #{memNo}
 </update>
+
+<select id="selectBalanceAmount" resultType="_int">
+SELECT TRUNC((s.SUB_END_AT - TRUNC(SYSDATE))
+* (mg.MEM_GRADE_PRICE / (s.SUB_END_AT - s.SUB_UPDATE_AT))) 
+AS REFUND_AMOUNT
+FROM "SUBSCRIPTION" s
+JOIN "MEMBER_GRADE" mg ON mg.MEM_GRADE = s.MEM_GRADE - 1
+WHERE s.MEM_NO = #{memNo}
+</select>
 
 </mapper>

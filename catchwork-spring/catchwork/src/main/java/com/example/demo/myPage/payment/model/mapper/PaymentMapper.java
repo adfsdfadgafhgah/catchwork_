@@ -1,11 +1,12 @@
-package com.example.demo.myPageTest.payment.model.mapper;
+package com.example.demo.myPage.payment.model.mapper;
 
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
-import com.example.demo.myPageTest.payment.model.dto.BillingKey;
-import com.example.demo.myPageTest.payment.model.dto.Payment;
+import com.example.demo.myPage.payment.model.dto.BillingKey;
+import com.example.demo.myPage.payment.model.dto.Payment;
 
 @Mapper
 public interface PaymentMapper {
@@ -30,5 +31,8 @@ public interface PaymentMapper {
 
 	// 사용자 등급 수정
 	int updateMemGrade(Map<String, String> map);
+
+	// 환불 잔액 조회
+	int selectBalanceAmount(@Param("memNo") String memNo);
 
 }

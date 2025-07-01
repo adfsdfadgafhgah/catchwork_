@@ -1,4 +1,4 @@
-package com.example.demo.myPageTest.membership.controller;
+package com.example.demo.myPage.membership.controller;
 
 import java.util.List;
 
@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.myPageTest.membership.model.dto.MemberGrade;
-import com.example.demo.myPageTest.membership.model.service.MembershipService;
+import com.example.demo.myPage.membership.model.dto.MemberGrade;
+import com.example.demo.myPage.membership.model.service.MembershipService;
 
 import lombok.extern.slf4j.Slf4j;
 
