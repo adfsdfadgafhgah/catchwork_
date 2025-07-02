@@ -30,7 +30,10 @@ export default function CorpRecruitDetailPage() {
   useEffect(() => {
     const fetchRecruit = async () => {
       try {
-        const resp = await axiosApi.get(`/recruit/detail/${recruitNo}`);
+        const resp = await axiosApi.get(`/corprecruit/detail/${recruitNo}`, {
+          params: { memNo: loginMember?.memNo },
+        });
+        const data = resp.data;
         setRecruit(resp.data);
         setLiked(data.likedByCurrentUser);
         setLikeCount(data.likeCount);
@@ -42,13 +45,29 @@ export default function CorpRecruitDetailPage() {
   }, [recruitNo, loginMember?.memNo]);
 
   // 공고 마감 핸들러
-  const handleEnd = () => {
-    navigate(`/recruit/edit/${recruitNo}`);
+  const handleEnd = async () => {
+    if (!window.confirm("이 공고를 마감처리하시겠습니까?")) return;
+
+    try {
+      const resp = await axiosApi.put(`/corprecruit/end/${recruitNo}`, {
+        memNo: loginMember.memNo,
+      });
+
+      if (resp.status === 200) {
+        alert("마감처리 되었습니다.");
+        navigate("/corprecruit"); // 목록으로 이동
+      } else {
+        alert("마감처리에 실패했습니다.");
+      }
+    } catch (err) {
+      console.error("마감처리 실패:", err);
+      alert("오류가 발생했습니다.");
+    }
   };
 
   // 공고 수정 페이지로 핸들러
   const handleEdit = () => {
-    navigate(`/recruit/edit/${recruitNo}`);
+    navigate(`/corprecruit/edit/${recruitNo}`);
   };
 
   // 공고 삭제 핸들러
@@ -56,13 +75,13 @@ export default function CorpRecruitDetailPage() {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
 
     try {
-      const resp = await axiosApi.delete(`/recruit/delete/${recruitNo}`, {
+      const resp = await axiosApi.delete(`/corprecruit/delete/${recruitNo}`, {
         data: { memNo: loginMember.memNo },
       });
 
       if (resp.status === 200) {
         alert("삭제되었습니다.");
-        navigate("/recruit"); // 삭제 후 목록으로 이동
+        navigate("/corprecruit"); // 삭제 후 목록으로 이동
       } else {
         alert("삭제에 실패했습니다.");
       }
@@ -83,8 +102,8 @@ export default function CorpRecruitDetailPage() {
     setLikeLoading(true);
 
     try {
-      const resp = await axiosApi.post("/board/like", {
-        boardNo: board.boardNo,
+      const resp = await axiosApi.post("corprecruit/like", {
+        recruitNo: recruit.recruitNo,
         memNo: loginMember.memNo,
       });
 
@@ -107,7 +126,7 @@ export default function CorpRecruitDetailPage() {
   return (
     <div className={styles.detailPageWrap}>
       {/* 섹션 헤더 */}
-      <SectionHeader title="채용공고" />
+      <SectionHeader title="채용공고 상세정보" />
       {/* 기업 정보 */}
       <div className={styles.corpHeader}>
         <img
@@ -129,6 +148,22 @@ export default function CorpRecruitDetailPage() {
           <p className={styles.recruitDates}>
             {recruit.recruitStartDate} ~ {recruit.recruitEndDate}
           </p>
+
+          {/* ✅ 조회수/좋아요 표시 라인 추가 */}
+          <div className={styles.engagementInfo}>
+            <span>
+              <i className="fa-regular fa-eye" /> {recruit.recruitReadCount}{" "}
+              &nbsp;&nbsp;
+            </span>
+
+            <span onClick={toggleLike} style={{ cursor: "pointer" }}>
+              <i
+                className={`fa-heart ${liked ? "fa-solid" : "fa-regular"}`}
+                style={{ color: liked ? "var(--main-color)" : "gray" }}
+              />{" "}
+              {likeCount}
+            </span>
+          </div>
         </div>
       </div>
 
@@ -189,13 +224,26 @@ export default function CorpRecruitDetailPage() {
         공고 마감까지 남은 시간:{" "}
         <span className={styles.highlight}>20일 07:23:06</span>
       </p>
-      <FloatButton
-        buttons={FLOAT_BUTTON_PRESETS.endAndEditAndDelete(
-          handleEnd,
-          handleEdit,
-          handleDelete
-        )}
-      />
+
+      {loginMember?.memNo === recruit.memNo ? (
+        <FloatButton
+          buttons={
+            recruit.recruitStatus === 3
+              ? FLOAT_BUTTON_PRESETS.deleteOnly(handleDelete)
+              : FLOAT_BUTTON_PRESETS.endAndEditAndDelete(
+                  handleEnd,
+                  handleEdit,
+                  handleDelete
+                )
+          }
+        />
+      ) : (
+        <FloatButton
+          buttons={FLOAT_BUTTON_PRESETS.reportOnly(() => {
+            alert("신고되었습니다.");
+          })}
+        />
+      )}
     </div>
   );
 }

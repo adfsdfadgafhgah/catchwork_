@@ -64,8 +64,9 @@ export default function WriteRecruitPage() {
     };
 
     try {
-      const resp = await axiosApi.post("/recruit/write", submitData);
-      const newRecruitNo = resp.data.boardNo;
+      const resp = await axiosApi.post("/corprecruit/write", submitData);
+      console.log("백엔드 응답:", resp.data);
+      const newRecruitNo = resp.data.recruitNo;
       alert("공고 등록 완료!");
       navigate(`/corprecruit/${newRecruitNo}`);
     } catch (err) {

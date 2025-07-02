@@ -64,4 +64,13 @@ export const FLOAT_BUTTON_PRESETS = {
       className: "float-btn-write",
     },
   ],
+  reportOnly: (onReport) => [
+    {
+      label: "신고하기",
+      icon: "siren",
+      iconType: "material",
+      onclick: onReport,
+      className: "float-btn-report",
+    },
+  ],
 };
