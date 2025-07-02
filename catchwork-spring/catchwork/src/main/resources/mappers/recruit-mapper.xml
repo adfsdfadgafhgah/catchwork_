@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.recruit.model.mapper.RecruitMapper">
+	
+	<!-- 채용공고 작성 -->
+	<insert id="writeRecruit" parameterType="com.example.demo.recruit.model.dto.Recruit">
+    INSERT INTO RECRUIT (
+      RECRUIT_NO,
+      RECRUIT_TITLE,
+      RECRUIT_START_DATE,
+      RECRUIT_END_DATE,
+      RECRUIT_JOB_NAME,
+      RECRUIT_JOB_DETAIL,
+      RECRUIT_EDU,
+      RECRUIT_CAREER,
+      RECRUIT_HEADCOUNT,
+      RECRUIT_TYPE,
+      RECRUIT_JOB_AREA,
+      RECRUIT_SALARY,
+      RECRUIT_RESULT_DATE,
+      RECRUIT_DOCX,
+      RECRUIT_APPLY,
+      RECRUIT_CORP_URL,
+      RECRUIT_HIRE_DETAIL,
+      RECRUIT_ETC,
+      RECRUIT_STATUS,
+      RECRUIT_WRITE_DATE,
+      MEM_NO
+    )
+    VALUES (
+      SEQ_RECRUIT_NO.NEXTVAL,
+      #{recruitTitle},
+      #{recruitStartDate},
+      #{recruitEndDate},
+      #{recruitJobName},
+      #{recruitJobDetail},
+      #{recruitEdu},
+      #{recruitCareer},
+      #{recruitHeadcount},
+      #{recruitType},
+      #{recruitJobArea},
+      #{recruitSalary},
+      #{recruitResultDate},
+      #{recruitDocx},
+      #{recruitApply},
+      #{recruitCorpUrl},
+      #{recruitHireDetail},
+      #{recruitEtc},
+      0,
+      SYSDATE,
+      #{memNo}
+    )
+  </insert>
+	
+	<!-- 채용공고 상세 -->
+	<select id="getRecruitDetail" parameterType="int" resultType="com.example.demo.recruit.model.dto.Recruit">
+    SELECT 
+      R.RECRUIT_NO,
+      R.RECRUIT_TITLE,
+      R.RECRUIT_START_DATE,
+      R.RECRUIT_END_DATE,
+      R.RECRUIT_JOB_NAME,
+      R.RECRUIT_JOB_DETAIL,
+      R.RECRUIT_EDU,
+      R.RECRUIT_CAREER,
+      R.RECRUIT_HEADCOUNT,
+      R.RECRUIT_TYPE,
+      R.RECRUIT_JOB_AREA,
+      R.RECRUIT_SALARY,
+      R.RECRUIT_RESULT_DATE,
+      R.RECRUIT_DOCX,
+      R.RECRUIT_APPLY,
+      R.RECRUIT_CORP_URL,
+      R.RECRUIT_HIRE_DETAIL,
+      R.RECRUIT_ETC,
+      R.RECRUIT_STATUS,
+      R.RECRUIT_WRITE_DATE,
+      R.MEM_NO,
+
+      CI.CORP_LOGO AS corpLogo,
+      CI.CORP_NAME AS corpName,
+      CI.CORP_TYPE AS corpType
+
+    FROM RECRUIT R
+    JOIN CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
+    JOIN CORP_INFO CI ON CM.CORP_NO = CI.CORP_NO
+    WHERE R.RECRUIT_NO = #{recruitNo}
+  </select>
+	
+</mapper>

@@ -54,7 +54,10 @@ export default function CommentList({ boardNo }) {
       {/* 상단 작성창 */}
       <div className={CommentCss.writeWrapper}>
         <span className={CommentCss.commentCount}>
-          댓글 <span className={CommentCss.countNum}>{comments.length}</span>
+          댓글{" "}
+          <span className={CommentCss.countNum}>
+            {comments.filter((c) => c.commentStatus === 0).length}
+          </span>
         </span>
         <CommentWrite
           boardNo={boardNo}

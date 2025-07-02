@@ -30,7 +30,7 @@ export const FLOAT_BUTTON_PRESETS = {
   deleteOnly: (onDelete) => [
     {
       label: "삭제하기",
-      icon: "fa-solid fa-trash",
+      icon: "fa-regular fa-trash-can",
       onClick: onDelete,
       className: "float-btn-delete",
     },
@@ -41,6 +41,26 @@ export const FLOAT_BUTTON_PRESETS = {
       label: "작성하기",
       icon: "fa-regular fa-pen-to-square",
       onClick: onWrite,
+      className: "float-btn-write",
+    },
+  ],
+  endAndEditAndDelete: (onEnd, onEdit, onDelete) => [
+    {
+      label: "마감하기",
+      icon: "fa-regular fa-clock",
+      onClick: onEnd,
+      className: "float-btn-cancel",
+    },
+    {
+      label: "수정하기",
+      icon: "fa-regular fa-pen-to-square",
+      onClick: onEdit,
+      className: "float-btn-cancel",
+    },
+    {
+      label: "삭제하기",
+      icon: "fa-regular fa-trash-can",
+      onClick: onDelete,
       className: "float-btn-write",
     },
   ],
