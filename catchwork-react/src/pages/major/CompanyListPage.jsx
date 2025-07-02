@@ -11,7 +11,6 @@ const CompanyListPage = () => {
   const [loading, setLoading] = useState(false);
 
   //기업 목록
-
   const getCorpList = async () => {
     setLoading(true);
     try {

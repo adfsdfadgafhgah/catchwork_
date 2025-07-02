@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import SectionHeader from "../../components/common/SectionHeader";
 import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 import "./CompanyDetailPage.css";
+import { axiosApi } from "../../api/axiosAPI";
 
 //명하 신고하기모달창
 import ReportModalPage from "../support/ReportModalPage";
@@ -28,26 +29,26 @@ const CompanyDetailPage = () => {
   //기업 상세 정보
   useEffect(() => {
     const getCorpDetail = async () => {
+      setLoading(true);
       try {
-        const url = `http://localhost:8080/company/${corpNo}${
-          loginMemberNo ? `?memNo=${loginMemberNo}` : ""
-        }`;
+        const url = `/company/${corpNo}`;
+        const params = loginMemberNo ? { memNo: loginMemberNo } : {};
 
-        console.log("📦 Fetch 실행됨:", url); // fetch 진입 확인
+        const res = await axiosApi.get(url, { params });
 
-        const response = await fetch(url);
-
-        if (!response.ok) throw new Error("기업 정보를 불러오지 못했습니다.");
-
-        const data = await response.json();
-        console.log("✅ 받은 company:", data); //받아온 데이터 확인
-        // ✅ 여기!! 숫자 변환 처리
-        setCompany({
-          ...data,
-          isSaved: Number(data.isSaved), // 숫자로 변환해줘야 조건문에서 정확히 비교됨
-        });
+        if (res.status === 200) {
+          const data = res.data;
+          console.log("받은 company:", data);
+          setCompany({
+            ...data,
+            isSaved: Number(data.isSaved),
+          });
+        } else {
+          console.warn("기업 정보 없음:", res.status);
+          setCompany(null);
+        }
       } catch (error) {
-        console.error("❌ 기업 정보 요청 실패:", error);
+        console.error("기업 정보 요청 실패:", error);
         setCompany(null);
       } finally {
         setLoading(false);
@@ -56,40 +57,36 @@ const CompanyDetailPage = () => {
 
     getCorpDetail();
   }, [corpNo]);
-  // ✅ 관심 기업 토글 처리
+
+  // 관심 기업 토글 처리
   const handleToggleFavorite = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:8080/company/toggle-favorite",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            corpNo: parseInt(corpNo),
-            memNo: loginMemberNo,
-          }),
-        }
-      );
+      const payload = {
+        corpNo: parseInt(corpNo),
+        memNo: loginMemberNo,
+      };
 
-      if (!response.ok) throw new Error("관심기업 토글 실패");
+      const res = await axiosApi.post("/company/toggle-favorite", payload);
 
-      const result = await response.json();
-      console.log("🎯 Toggle 응답:", result);
+      if (res.status === 200) {
+        const result = res.data;
+        console.log("Toggle 응답:", result);
 
-      // UI 갱신
-      setCompany((prev) => {
-        const updated = {
+        setCompany((prev) => ({
           ...prev,
-          isSaved: Number(result.isSaved), // ✅ 여기가 핵심!
+          isSaved: Number(result.isSaved),
           favs: result.totalFav,
-        };
-        return JSON.parse(JSON.stringify(updated));
-      });
+        }));
+      } else {
+        throw new Error("관심기업 토글 실패");
+      }
     } catch (error) {
-      console.error("❌ 관심기업 처리 실패:", error);
+      console.error(" 관심기업 처리 실패:", error);
+      alert("관심기업 처리 중 오류가 발생했습니다.");
     }
   };
-  // ✅ 로딩 중 표시
+
+  // 로딩 중 표시
   if (loading) {
     return (
       <main className="container">
@@ -99,7 +96,7 @@ const CompanyDetailPage = () => {
     );
   }
 
-  // ✅ 로딩 후에도 회사 정보가 없다면
+  // 로딩 후에도 회사 정보가 없다면
   if (!company) {
     return (
       <main className="container">
@@ -109,7 +106,6 @@ const CompanyDetailPage = () => {
     );
   }
 
-  // ✅ 정상 렌더링
   return (
     <>
       <main className="container">
