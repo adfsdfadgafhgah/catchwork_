@@ -36,8 +36,6 @@ import IssueBillingKeyPage from "./pages/myPage/membership/IssueBillingKeyPage";
 import PaymentCheckout from "./pages/myPage/membership/PaymentCheckout";
 import PaymentFail from "./pages/myPage/membership/PaymentFail";
 import PaymentSuccess from "./pages/myPage/membership/PaymentSuccess";
-import UpgradeMembership from "./pages/myPage/membership/UpgradeMembership";
-import DowngradeMembership from "./pages/myPage/membership/DowngradeMembership";
 
 //이력서 제출
 import SubmitCVPage from "./pages/major/SubmitCVPage";
@@ -166,8 +164,6 @@ const router = createBrowserRouter([
               { path: "checkout", element: <PaymentCheckout /> },
               { path: "fail", element: <PaymentFail /> },
               { path: "sucess", element: <PaymentSuccess /> },
-              { path: "upgrade", element: <UpgradeMembership /> },
-              { path: "downgrade", element: <DowngradeMembership /> },
             ],
           },
         ],

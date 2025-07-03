@@ -1,21 +1,232 @@
+/* 멤버십 컨테이너 전체 */
 .membership-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 멤버십 카드 리스트 영역 */
+.membership-list {
   display: flex;
-  flex-direction: row;
   gap: 20px;
-
-  width: 80%;
-  max-width: 800px;
-
-  padding: 50px 50px 50px 50px;
-  margin: 30px auto;
+  justify-content: center;
+  align-items: stretch;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
 }
 
-.membership-title {
-  margin: 0 0 4px;
-  font-size: 24px;
+/* 개별 멤버십 카드 */
+.membership-item {
+  flex: 1;
+  min-width: 280px;
+  max-width: 320px;
+  padding: 30px 24px;
+  border-radius: 12px;
+  box-shadow: var(--box-shadow);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.membership-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 각 플랜별 배경색 */
+.membership-item:nth-child(1) {
+  background-color: #f5f5f5;
+}
+
+.membership-item:nth-child(2) {
+  /* background-color: #fce4ec; */
+  background-color: #f5f5f5;
+}
+
+.membership-item:nth-child(3) {
+  /* background-color: #fff3c4; */
+  background-color: #f5f5f5;
+}
+
+/* 멤버십 제목 */
+.membership-item h3 {
+  font-size: 18px;
   font-weight: 600;
-  color: #4e5968;
+  color: var(--text);
+  margin: 0 0 8px 0;
 }
+
+/* 가격 표시 */
+.membership-item .price {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 4px 0;
+  line-height: 1;
+}
+
+.membership-item .price-unit {
+  font-size: 14px;
+  font-weight: 400;
+  color: #666;
+  margin-left: 4px;
+}
+
+/* 플랜 설명 */
+.membership-item .description {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 20px 0;
+  font-weight: 500;
+}
+
+/* 기능 목록 */
+.membership-item ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 30px 0;
+  flex-grow: 1;
+}
+
+.membership-item li {
+  font-size: 14px;
+  color: var(--text);
+  margin-bottom: 12px;
+  padding-left: 20px;
+  position: relative;
+  line-height: 1.4;
+}
+
+.membership-item li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: var(--main-color);
+  font-weight: 600;
+}
+
+/* 멤버십 카드 버튼 */
+.membership-item button {
+  width: 100%;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Free 플랜 버튼 */
+.membership-item:nth-child(1) button {
+  background-color: var(--main-color);
+  color: white;
+}
+
+.membership-item:nth-child(1) button:hover {
+  background-color: var(--main-color-dark);
+}
+
+/* Basic 플랜 버튼 */
+.membership-item:nth-child(2) button {
+  /* background-color: #e91e63;
+  color: white; */
+  background-color: var(--main-color);
+  color: white;
+}
+
+.membership-item:nth-child(2) button:hover {
+  /* background-color: #c2185b; */
+  background-color: var(--main-color-dark);
+}
+
+/* Premium 플랜 버튼 */
+.membership-item:nth-child(3) button {
+  /* background-color: #ff9800;
+  color: white; */
+  background-color: var(--main-color);
+  color: white;
+}
+
+.membership-item:nth-child(3) button:hover {
+  /* background-color: #f57c00; */
+  background-color: var(--main-color-dark);
+}
+
+/* 현재 구독 정보 텍스트 */
+.membership-container > p {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  background-color: #f8f9fa;
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  border-left: 4px solid var(--main-color);
+}
+
+/* 해지하기 버튼 */
+.membership-container > button {
+  display: block;
+  margin: 20px auto 0;
+  padding: 10px 24px;
+  background-color: transparent;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.membership-container > button:hover {
+  border-color: #999;
+  color: #333;
+  background-color: #f5f5f5;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .membership-list {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .membership-item {
+    max-width: 100%;
+    min-width: auto;
+  }
+
+  .membership-container {
+    padding: 15px;
+  }
+}
+
+/* 공통 비활성 버튼 스타일 */
+button:disabled,
+input:disabled,
+.membership-item button:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+  background-color: #e0e0e0; /* 회색 배경 */
+  color: #999; /* 비활성 텍스트 색상 */
+  border: none;
+}
+
+/* 비활성 버튼 호버 효과 제거 */
+button:disabled:hover,
+.membership-item button:disabled:hover {
+  background-color: #e0e0e0; /* 그대로 유지 */
+  color: #999;
+  box-shadow: none;
+  transform: none;
+}
+
+/* TOSSPAYMENT STYLE SHEET */
 
 :root {
   --inverseGrey50: #202027;
@@ -74,83 +285,6 @@
 :after,
 :before {
   box-sizing: border-box;
-}
-
-.membership-button {
-  color: #f9fafb;
-  background-color: var(--main-color);
-  margin: 30px 15px 0px 15px;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 18px;
-  white-space: nowrap;
-  text-align: center;
-  /* vertical-align: middle; */
-  cursor: pointer;
-  border: 0 solid transparent;
-  user-select: none;
-  transition: background 0.2s ease, color 0.1s ease;
-  text-decoration: none;
-  border-radius: 7px;
-  padding: 11px 16px;
-  /* width: 250px; */
-  /* flex: 1; */
-}
-
-.membership-button2 {
-  color: #000000;
-  background-color: #ffffff;
-  margin: 30px 15px 0px 15px;
-  font-size: 15px;
-  font-weight: 600;
-  line-height: 18px;
-  white-space: nowrap;
-  text-align: center;
-  /* vertical-align: middle; */
-  cursor: pointer;
-  border: 1px solid #000000;
-  user-select: none;
-  transition: background 0.2s ease, color 0.1s ease;
-  text-decoration: none;
-  border-radius: 7px;
-  padding: 11px 16px;
-  width: 125px;
-}
-
-.membership-button2.active {
-  background-color: rgb(229 239 255);
-}
-
-.membership-button:hover {
-  color: #fff;
-  background-color: var(--main-color-dark);
-}
-
-button:disabled,
-input:disabled {
-  opacity: 80%;
-  cursor: not-allowed;
-}
-
-.membership-button:disabled {
-  opacity: 80%;
-  cursor: not-allowed;
-  background-color: var(--gray01);
-}
-
-.membership-button:disabled:hover {
-  opacity: 80%;
-  cursor: not-allowed;
-  background-color: var(--gray01);
-}
-
-button,
-input,
-textarea {
-  font-family: Toss Product Sans, -apple-system, BlinkMacSystemFont,
-    Bazier Square, Noto Sans KR, Segoe UI, Apple SD Gothic Neo, Roboto,
-    Helvetica Neue, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji,
-    Segoe UI Symbol, Noto Color Emoji;
 }
 
 .color--grey800 {
