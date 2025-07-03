@@ -22,7 +22,8 @@ import FindPWPage from "./pages/member/FindPWPage";
 import RecruitPage from "./pages/major/RecruitListPage";
 import CompanyListPage from "./pages/major/CompanyListPage";
 import BoardPage from "./pages/major/BoardPage";
-import CVPage from "./pages/major/CVListPage";
+import CVListPage from "./pages/major/CVListPage";
+import CVPage from "./pages/major/CVPage";
 
 // 개인 회원
 // 마이페이지
@@ -41,7 +42,7 @@ import DowngradeMembership from "./pages/myPage/membership/DowngradeMembership";
 
 //이력서 제출
 import SubmitCVPage from "./pages/major/SubmitCVPage";
-import WriteCVPage from "./pages/major/WriteCVPage";
+import CVManagePage from "./pages/major/CVManagePage";
 
 // 게시글
 import BoardListPage from "./pages/major/BoardListPage";
@@ -112,9 +113,12 @@ const router = createBrowserRouter([
             <CVPage />
           </ProtectedRoute>
         ),
+        children: [
+          { index: true, element: <CVListPage /> },
+          /* 이력서 CRUD페이지*/
+          { path: "cvmanage", element: <CVManagePage /> },
+        ],
       },
-      /* 테스트 : 이력서 작성페이지*/
-      { path: "writecvpage", element: <WriteCVPage /> },
 
       { path: "recruit", element: <RecruitPage /> },
       {
@@ -138,7 +142,6 @@ const router = createBrowserRouter([
         ],
       },
 
-      { path: "cv", element: <CVPage /> },
       { path: "submitcv", element: <SubmitCVPage /> },
       { path: "supportlist", element: <SupportListPage /> },
       { path: "writesupport", element: <WriteSupportPage /> },
