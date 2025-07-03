@@ -24,5 +24,8 @@ public class RecruitCV {
 	   //조인
 	    private String recruitTitle;          // 공고 제목
 	    
+	    //경력 개월수로 바꾸려고
+	    private Integer careerMin;
+	    private Integer careerMax;
 	    
 }

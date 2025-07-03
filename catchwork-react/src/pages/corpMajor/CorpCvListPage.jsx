@@ -3,6 +3,8 @@ import SectionHeader from "../../components/common/SectionHeader";
 import Pagination from "../../components/common/Pagination";
 import { axiosApi } from "../../api/axiosAPI";
 import "./CorpCvListPage.css";
+// 수정 후 ✅
+import { getCareerRange } from "../../utils/getCareerRange";
 
 const CorpCvListPage = () => {
   const [cvList, setCvList] = useState([]);
@@ -33,15 +35,31 @@ const CorpCvListPage = () => {
     }
   };
 
-  const handleFilter = () => {
-    const result = cvList.filter((cv) => {
-      const eduMatch = selectedEdu === "" || cv.recruitCvEdu === selectedEdu;
-      const expMatch = selectedExp === "" || cv.recruitCvCareer === selectedExp;
-      return eduMatch && expMatch;
-    });
-    setFilteredList(result);
-    setSelectedCvNos([]);
-    setCurrentPage(1);
+  const handleFilter = async () => {
+    try {
+      const { careerMin, careerMax } = getCareerRange(selectedExp);
+
+      const params = {};
+      if (selectedEdu !== "") params.edu = selectedEdu;
+      if (careerMin !== null && careerMax !== null) {
+        params.careerMin = careerMin;
+        params.careerMax = careerMax;
+      }
+
+      const res = await axiosApi.get("/corp/cv", { params });
+      const formatted = res.data.map((cv) => ({
+        ...cv,
+        isDownloaded: cv.recruitCvCheckFl === "Y",
+        date: cv.recruitCvDate || "",
+      }));
+      setCvList(formatted);
+      setFilteredList(formatted);
+      setCurrentPage(1);
+      setSelectedCvNos([]);
+    } catch (err) {
+      console.error("필터링된 이력서 불러오기 실패", err);
+      alert("이력서 목록 불러오기에 실패했습니다.");
+    }
   };
 
   const handleCheckboxChange = (cvNo) => {
@@ -113,6 +131,7 @@ const CorpCvListPage = () => {
   const currentItems = filteredList.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(filteredList.length / itemsPerPage);
 
+  const { careerMin, careerMax } = getCareerRange(selectedExp);
   return (
     <main className="container">
       <SectionHeader title="이력서 목록 조회" />
@@ -128,11 +147,11 @@ const CorpCvListPage = () => {
               onChange={(e) => setSelectedEdu(e.target.value)}
             >
               <option value="">학력 선택</option>
-              <option value="고졸">고졸</option>
-              <option value="전문학사">전문학사</option>
-              <option value="학사">학사</option>
-              <option value="석사">석사</option>
-              <option value="박사">박사</option>
+              <option value="0">고졸</option>
+              <option value="1">전문학사</option>
+              <option value="2">학사</option>
+              <option value="3">석사</option>
+              <option value="4">박사</option>
             </select>
 
             {/* 경력 필터 */}

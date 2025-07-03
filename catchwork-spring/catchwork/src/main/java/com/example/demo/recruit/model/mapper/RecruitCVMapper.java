@@ -13,7 +13,8 @@ public interface RecruitCVMapper {
 	 List<RecruitCV> selectAllRecruitCV();
 	 
 	//학력/경력 필터링 조회
-	 List<RecruitCV> getCvList(@Param("edu") String edu, @Param("career") String career);
+	 List<RecruitCV> getCvList(RecruitCV filter);
+
 
 	 //파일 경로 저장
 	 String selectCvFilePath(int cvNo);

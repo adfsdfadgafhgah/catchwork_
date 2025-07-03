@@ -50,14 +50,12 @@ public class RecruitCVController {
 	    
 	 //필터링 목록 조회
 	    @GetMapping("/list/filter")
-	    public ResponseEntity<?> getFilteredCvList(
-	            @RequestParam(required = false) String edu,
-	            @RequestParam(required = false) String career) {
+	    public ResponseEntity<?> getCvList(RecruitCV filter) {
 
-	        log.info("[GET] /list/filter - 필터링 요청: edu = {}, career = {}", edu, career);
+	      
 
 	        try {
-	            List<RecruitCV> filteredList = service.getFilteredCV(edu, career);
+	        	 List<RecruitCV> filteredList = service.getCvList(filter);
 	            log.info("필터링 결과 이력서 수: {}", filteredList.size());
 	            return ResponseEntity.ok(filteredList);
 	        } catch (Exception e) {
@@ -67,7 +65,9 @@ public class RecruitCVController {
 	        }
 	    }
 
-
+	    
+	    
+	    
 	    //이력서 다운로드
 	    @GetMapping("/download/{cvNo}")
 	    public ResponseEntity<byte[]> downloadCv(@PathVariable int cvNo) {
