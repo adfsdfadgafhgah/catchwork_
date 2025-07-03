@@ -39,7 +39,7 @@
 	</select>
 	
 	<!-- 문의하기 디테일 나옴 -->
-	<select id="selectSupportById" parameterType="int" resultType="com.example.demo.support.model.dto.Support">
+	<select id="selectSupportById" parameterType="int">
   	 SELECT 
     	S.SUPPORT_NO,
     	S.SUPPORT_TITLE,

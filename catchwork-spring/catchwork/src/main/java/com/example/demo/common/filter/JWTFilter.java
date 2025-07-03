@@ -7,8 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.example.demo.member.model.dto.CustomUserDetails;
-import com.example.demo.member.model.entity.MemberEntity;
+import com.example.demo.auth.model.dto.CustomUserDetails;
+import com.example.demo.auth.model.entity.MemberEntity;
 import com.example.demo.util.JWTUtil;
 
 import io.jsonwebtoken.ExpiredJwtException;

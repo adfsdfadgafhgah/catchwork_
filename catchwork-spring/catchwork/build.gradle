@@ -24,9 +24,6 @@ repositories {
     maven { 
         url = uri('https://repo.spring.io/snapshot')
     }
-    maven {
-        url = uri('https://maven.oracle.com') //윤진 추가
-    }
 }
 
 
@@ -67,7 +64,3 @@ tasks.named('test') {
 	useJUnitPlatform()
 }
 
-// board parameter 불러오는 용 (삭제 해도 될 수 있지만 일단 남겨놓기 추후 문제 없을 경우 삭제 예정)
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs << "-parameters"
-}

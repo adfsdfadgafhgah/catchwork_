@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper	namespace="com.example.demo.company.model.mapper.CorpInfoMapper">
+<mapper	namespace="com.example.demo.member.company.model.mapper.CorpInfoMapper">
 
-    <resultMap id="corpInfoResultMap" type="com.example.demo.company.model.dto.CorpInfo">
+    <resultMap id="corpInfoResultMap" type="com.example.demo.member.company.model.dto.CorpInfo">
         <id property="corpNo" column="CORP_NO"/>
         <result property="corpRegNo" column="CORP_REG_NO"/>
         <result property="corpType" column="CORP_TYPE"/>
