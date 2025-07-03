@@ -3,20 +3,182 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.cv.model.mapper.CVMapper">
 
-   <!-- 이력서 리스트 조회 -->
-  <select id="selectCVList" resultType="com.example.demo.cv.model.dto.CV">
-   	SELECT 
-   	CV_NO,
-   	CV_ALIAS,
-  	CV_MAIN_FL,
-   	MEM_NO,
-   	TO_CHAR(CREATED_DATE, 'YYYY-MM-DD') AS CREATED_DATE
-    FROM CV
-    WHERE MEM_NO = #{memNo}
-    ORDER BY CV_MAIN_FL DESC, CV_NO DESC
-  </select>
-  
-    <!-- CV 추가 (selectKey로 cvNo 채번) -->
+	<!-- 이력서 주인 확인 -->
+	<select id="checkCVOwner" resultType="int">
+	    SELECT COUNT(*)
+	    FROM CV
+	    WHERE CV_NO = #{cvNo}
+	      AND MEM_NO = #{memNo}
+	</select>
+	
+	<!-- 이력서 목록 조회 -->
+    <select id="selectCVList" resultType="com.example.demo.cv.model.dto.CV">
+        SELECT
+            CV_NO,
+            CV_ALIAS
+        FROM
+            CV
+        WHERE
+            MEM_NO = #{memNo}
+    </select>
+    
+   	<!-- 이력서 리스트 조회 -->
+   	<!--
+	<select id="selectCVList">
+	  SELECT 
+	  CV_NO,
+	  CV_ALIAS,
+	  CV_MAIN_FL,
+	  MEM_NO,
+	  TO_CHAR(CREATED_DATE, 'YYYY-MM-DD') AS CREATED_DATE
+	  FROM CV
+	  WHERE MEM_NO = #{memNo}
+	  ORDER BY CV_MAIN_FL DESC, CV_NO DESC
+	</select>
+	-->
+	
+  	<!-- 
+	============================
+      		조회(SELECT)
+	============================ 
+	-->
+  	<!-- CV 조회 -->
+	<select id="selectCV">
+	  SELECT
+	        CV_NO,
+	        CV_RESUME,
+	        CV_ALIAS,
+	        CV_IMG_PATH,
+	        CV_MAIN_FL,
+	        MEM_NO
+	    FROM CV
+	    WHERE CV_NO = #{cvNo}
+	</select>
+	
+	<!-- Military 조회 -->
+	<select id="selectMilitary">
+	    SELECT
+	        CV_NO,
+	        CV_MILI_CLASS,
+	        CV_MILI_BRANCH,
+	        TO_CHAR(CV_MILI_START_DATE, 'YYYY-MM') AS CV_MILI_START_DATE,
+	        TO_CHAR(CV_MILI_END_DATE, 'YYYY-MM') AS CV_MILI_END_DATE
+	    FROM CV_MILITARY
+	    WHERE CV_NO = #{cvNo}
+	</select>
+
+	<!-- Education 조회 -->
+	<select id="selectEducation">
+	    SELECT
+	        CV_NO,
+	        EDU_NAME,
+	        TO_CHAR(EDU_START_DATE, 'YYYY-MM') AS EDU_START_DATE,
+	        TO_CHAR(EDU_END_DATE, 'YYYY-MM') AS EDU_END_DATE,
+	        EDU_MAJOR,
+	        EDU_CODE_NO,
+	        EDU_STATUS_CODE_NO
+	    FROM CV_EDUCATION
+    WHERE CV_NO = #{cvNo}
+	</select>
+
+	<!-- Experience 조회 -->
+	<select id="selectExperience">
+	    SELECT
+	        EXP_ID,
+	        EXP_NAME,
+	        EXP_DEPT,
+	        EXP_CONTENT,
+	        TO_CHAR(EXP_START_DATE, 'YYYY-MM') AS EXP_START_DATE,
+	        TO_CHAR(EXP_END_DATE, 'YYYY-MM') AS EXP_END_DATE,
+	        CV_NO
+	    FROM CV_EXPERIENCE
+	    WHERE CV_NO = #{cvNo}
+	</select>
+
+	<!-- Award 조회 -->
+	<select id="selectAward">
+	    SELECT
+	        AWARD_ID,
+	        AWARD_NAME,
+	        TO_CHAR(AWARD_DATE, 'YYYY-MM') AS AWARD_DATE,
+	        AWARD_ORG,
+	        CV_NO
+	    FROM CV_AWARD
+	    WHERE CV_NO = #{cvNo}
+	</select>
+	
+	<!-- Qualify 조회 -->
+	<select id="selectQualify">
+	    SELECT
+	        QUALIFY_ID,
+	        QUALIFY_NAME,
+	        TO_CHAR(QUALIFY_DATE, 'YYYY-MM') AS QUALIFY_DATE,
+	        QUALIFY_ORG,
+	        CV_NO
+	    FROM CV_QUALIFY
+	    WHERE CV_NO = #{cvNo}
+	</select>
+	
+	<!-- Language 조회 -->
+	<select id="selectLanguage">
+	    SELECT
+	        LANG_ID,
+	        LANG_NAME,
+	        TO_CHAR(LANG_DATE, 'YYYY-MM') AS LANG_DATE,
+	        LANG_TYPE,
+	        LANG_SCORE,
+	        CV_NO
+	    FROM CV_LANGUAGE
+	    WHERE CV_NO = #{cvNo}
+	</select>
+	
+	<!-- Outer 조회 -->
+	<select id="selectOuter">
+	    SELECT
+	        OUTER_ID,
+	        OUTER_NAME,
+	        TO_CHAR(OUTER_START_DATE, 'YYYY-MM') AS OUTER_START_DATE,
+	        TO_CHAR(OUTER_END_DATE, 'YYYY-MM') AS OUTER_END_DATE,
+	        OUTER_ORGANIZATION,
+	        OUTER_CONTENT,
+	        CV_NO
+	    FROM CV_OUTER
+	    WHERE CV_NO = #{cvNo}
+	</select>
+	
+	<!-- Training 조회 -->
+	<select id="selectTraining">
+	    SELECT
+	        TRAIN_ID,
+	        TRAIN_NAME,
+	        TO_CHAR(TRAIN_START_DATE, 'YYYY-MM') AS TRAIN_START_DATE,
+	        TO_CHAR(TRAIN_END_DATE, 'YYYY-MM') AS TRAIN_END_DATE,
+	        TRAIN_ORGANIZATION,
+	        TRAIN_CONTENT,
+	        CV_NO
+	    FROM CV_TRAINING
+	    WHERE CV_NO = #{cvNo}
+	</select>
+		
+	<!-- Portfolio 조회 -->
+	<select id="selectPortfolio">
+	    SELECT
+	        PORT_ID,
+	        PORT_NAME,
+	        TO_CHAR(PORT_START_DATE, 'YYYY-MM') AS PORT_START_DATE,
+	        TO_CHAR(PORT_END_DATE, 'YYYY-MM') AS PORT_END_DATE,
+	        PORT_CONTENT,
+	        CV_NO
+	    FROM CV_PORTFOLIO
+	    WHERE CV_NO = #{cvNo}
+	</select>
+
+  	<!-- 
+	============================
+      		추가(INSERT)
+	============================ 
+	-->
+    <!-- CV 추가 -->
     <insert id="addCV">
         <selectKey keyProperty="cvNo" resultType="int" order="BEFORE">
             SELECT SEQ_CV_NO.NEXTVAL FROM DUAL
@@ -211,6 +373,187 @@
         )
     </insert>
  
-
+  	<!-- 
+	============================
+      		수정(UPDATE)
+	============================ 
+	-->
+  	<update id="updateCV">
+	    UPDATE CV
+	    SET
+	        CV_RESUME = #{cvResume},
+	        CV_ALIAS = #{cvAlias},
+	        CV_IMG_PATH = #{cvImgPath},
+	        CV_MAIN_FL = #{cvMainFl}
+	    WHERE CV_NO = #{cvNo}
+	</update>
   
+	
+	<!-- Military 수정 -->
+	<update id="updateMilitary">
+	    UPDATE CV_MILITARY
+	    SET
+	        CV_MILI_CLASS = #{cvMiliClass},
+	        CV_MILI_BRANCH = #{cvMiliBranch},
+	        CV_MILI_START_DATE = TO_DATE(#{cvMiliStartDate}, 'YYYY-MM'),
+	        CV_MILI_END_DATE = TO_DATE(#{cvMiliEndDate}, 'YYYY-MM')
+	    WHERE CV_NO = #{cvNo}
+	</update>
+	
+	<!-- Education 수정 -->
+	<update id="updateEducation">
+	    UPDATE CV_EDUCATION
+	    SET
+	        EDU_NAME = #{eduName},
+	        EDU_START_DATE = TO_DATE(#{eduStartDate}, 'YYYY-MM'),
+	        EDU_END_DATE = TO_DATE(#{eduEndDate}, 'YYYY-MM'),
+	        EDU_MAJOR = #{eduMajor},
+	        EDU_CODE_NO = #{eduCodeNo},
+	        EDU_STATUS_CODE_NO = #{eduStatusCodeNo}
+	    WHERE CV_NO = #{cvNo}
+	</update>
+	
+	<!-- Experience 수정 -->
+	<update id="updateExperience">
+	    UPDATE CV_EXPERIENCE
+	    SET
+	        EXP_NAME = #{expName},
+	        EXP_DEPT = #{expDept},
+	        EXP_CONTENT = #{expContent},
+	        EXP_START_DATE = TO_DATE(#{expStartDate}, 'YYYY-MM'),
+	        EXP_END_DATE = TO_DATE(#{expEndDate}, 'YYYY-MM')
+	    WHERE EXP_ID = #{expId}
+	</update>
+	
+	<!-- Award 수정 -->
+	<update id="updateAward">
+	    UPDATE CV_AWARD
+	    SET
+	        AWARD_NAME = #{awardName},
+	        AWARD_DATE = TO_DATE(#{awardDate}, 'YYYY-MM'),
+	        AWARD_ORG = #{awardOrg}
+	    WHERE AWARD_ID = #{awardId}
+	</update>
+	
+	<!-- Qualify 수정 -->
+	<update id="updateQualify">
+	    UPDATE CV_QUALIFY
+	    SET
+	        QUALIFY_NAME = #{qualifyName},
+	        QUALIFY_DATE = TO_DATE(#{qualifyDate}, 'YYYY-MM'),
+	        QUALIFY_ORG = #{qualifyOrg}
+	    WHERE QUALIFY_ID = #{qualifyId}
+	</update>
+	
+	<!-- Language 수정 -->
+	<update id="updateLanguage">
+	    UPDATE CV_LANGUAGE
+	    SET
+	        LANG_NAME = #{langName},
+	        LANG_DATE = TO_DATE(#{langDate}, 'YYYY-MM'),
+	        LANG_TYPE = #{langType},
+	        LANG_SCORE = #{langScore}
+	    WHERE LANG_ID = #{langId}
+	</update>
+	
+	<!-- Outer 수정 -->
+	<update id="updateOuter">
+	    UPDATE CV_OUTER
+	    SET
+	        OUTER_NAME = #{outerName},
+	        OUTER_START_DATE = TO_DATE(#{outerStartDate}, 'YYYY-MM'),
+	        OUTER_END_DATE = TO_DATE(#{outerEndDate}, 'YYYY-MM'),
+	        OUTER_ORGANIZATION = #{outerOrganization},
+	        OUTER_CONTENT = #{outerContent}
+	    WHERE OUTER_ID = #{outerId}
+	</update>
+	
+	<!-- Training 수정 -->
+	<update id="updateTraining">
+	    UPDATE CV_TRAINING
+	    SET
+	        TRAIN_NAME = #{trainName},
+	        TRAIN_START_DATE = TO_DATE(#{trainStartDate}, 'YYYY-MM'),
+	        TRAIN_END_DATE = TO_DATE(#{trainEndDate}, 'YYYY-MM'),
+	        TRAIN_ORGANIZATION = #{trainOrganization},
+	        TRAIN_CONTENT = #{trainContent}
+	    WHERE TRAIN_ID = #{trainId}
+	</update>
+	
+	<!-- Portfolio 수정 -->
+	<update id="updatePortfolio">
+	    UPDATE CV_PORTFOLIO
+	    SET
+	        PORT_NAME = #{portName},
+	        PORT_START_DATE = TO_DATE(#{portStartDate}, 'YYYY-MM'),
+	        PORT_END_DATE = TO_DATE(#{portEndDate}, 'YYYY-MM'),
+	        PORT_CONTENT = #{portContent}
+	    WHERE PORT_ID = #{portId}
+	</update>
+	
+	<!-- 
+	============================
+      		삭제(DELETE)
+	============================ 
+	-->
+	<!-- CV 삭제 -->
+	<delete id="deleteCV">
+	    DELETE FROM CV
+	    WHERE CV_NO = #{cvNo}
+	</delete>
+	
+	<!-- Military 삭제 -->
+	<delete id="deleteMilitary">
+	    DELETE FROM CV_MILITARY
+	    WHERE CV_NO = #{cvNo}
+	</delete>
+	
+	<!-- Education 삭제 -->
+	<delete id="deleteEducation">
+	    DELETE FROM CV_EDUCATION
+	    WHERE CV_NO = #{cvNo}
+	</delete>
+	
+	<!-- Experience 삭제 -->
+	<delete id="deleteExperience">
+	    DELETE FROM CV_EXPERIENCE
+	    WHERE CV_NO = #{cvNo}
+	</delete>
+	
+	<!-- Award 삭제 -->
+	<delete id="deleteAward">
+	    DELETE FROM CV_AWARD
+	    WHERE CV_NO = #{cvNo}
+	</delete>
+	
+	<!-- Qualify 삭제 -->
+	<delete id="deleteQualify">
+	    DELETE FROM CV_QUALIFY
+	    WHERE CV_NO = #{cvNo}
+	</delete>
+	
+	<!-- Language 삭제 -->
+	<delete id="deleteLanguage">
+	    DELETE FROM CV_LANGUAGE
+	    WHERE CV_NO = #{cvNo}
+	</delete>
+	
+	<!-- Outer 삭제 -->
+	<delete id="deleteOuter">
+	    DELETE FROM CV_OUTER
+	    WHERE CV_NO = #{cvNo}
+	</delete>
+	
+	<!-- Training 삭제 -->
+	<delete id="deleteTraining">
+	    DELETE FROM CV_TRAINING
+	    WHERE CV_NO = #{cvNo}
+	</delete>
+	
+	<!-- Portfolio 삭제 -->
+	<delete id="deletePortfolio">
+	    DELETE FROM CV_PORTFOLIO
+	    WHERE CV_NO = #{cvNo}
+	</delete>
+
 </mapper>

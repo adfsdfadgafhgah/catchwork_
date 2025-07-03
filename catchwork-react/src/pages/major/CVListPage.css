@@ -1,0 +1,13 @@
+/* src/pages/cv/CVListPage.css */
+
+.cv-list-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+}
+
+.cv-list-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
