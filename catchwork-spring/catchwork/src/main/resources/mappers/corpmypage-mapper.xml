@@ -3,9 +3,9 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.example.demo.corpMyPage.model.mapper.CorpMyPageMapper">
+<mapper namespace="com.example.demo.corp.myPage.model.mapper.CorpMyPageMapper">
 
-    <select id="findCorpInfoById" parameterType="String" resultType="com.example.demo.corpMyPage.model.dto.CorpMyPage">
+    <select id="findCorpInfoById" parameterType="String">
         SELECT 
             COMPANY_NAME AS company,
             CORP_ID AS corpId,

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper	namespace="com.example.demo.recruit.model.mapper.RecruitCVMapper">
+<mapper	namespace="com.example.demo.corp.recruit.model.mapper.RecruitCVMapper">
 
  <!-- resultMap 정의 -->
-  <resultMap id="recruitCVMap" type="com.example.demo.recruit.model.dto.RecruitCV">
+  <resultMap id="recruitCVMap" type="com.example.demo.corp.recruit.model.dto.RecruitCV">
     <id property="recruitCvNo" column="recruit_cv_no"/>
     <result property="recruitCvEdu" column="recruit_cv_edu"/>
     <result property="recruitCvCareer" column="recruit_cv_career"/>
@@ -18,7 +18,7 @@
 
   
   <!-- 전체 결과 조회 -->
-<select id="selectAllRecruitCV" resultMap="recruitCVMap" resultType="com.example.demo.recruit.model.dto.RecruitCV">
+<select id="selectAllRecruitCV" resultMap="recruitCVMap">
         SELECT
             RC.RECRUIT_CV_NO,
             R.RECRUIT_TITLE,
@@ -37,7 +37,7 @@
     </select>
     
      <!-- 필터링 (학력, 경력) -->
- <select id="getCvList" resultType="com.example.demo.recruit.model.dto.RecruitCV">
+ <select id="getCvList">
   SELECT 
     rc.recruit_cv_no,
     rc.recruit_cv_edu,

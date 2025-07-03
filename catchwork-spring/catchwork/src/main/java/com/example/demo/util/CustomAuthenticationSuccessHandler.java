@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 
-import com.example.demo.member.model.dto.CustomUserDetails;
+import com.example.demo.auth.model.dto.CustomUserDetails;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

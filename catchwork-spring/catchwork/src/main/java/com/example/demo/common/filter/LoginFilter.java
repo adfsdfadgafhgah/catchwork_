@@ -15,10 +15,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.example.demo.auth.model.entity.RefreshTokenEntity;
-import com.example.demo.auth.model.repository.RefreshTokenRepository;
-import com.example.demo.member.model.dto.CustomUserDetails;
-import com.example.demo.member.model.dto.Member;
+import com.example.demo.auth.model.dto.CustomUserDetails;
+import com.example.demo.auth.model.dto.Member;
+import com.example.demo.auth.token.entity.RefreshTokenEntity;
+import com.example.demo.auth.token.repository.RefreshTokenRepository;
 import com.example.demo.util.JWTUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -89,15 +89,15 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 //        SecurityContext <- token에 넣는걸로 해서 그냥 빠꾸
 //        SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String accessToken = jwtUtil.createJwt(username, memNickname, memType, 5 * 1000L); // 5 sec (test)
-//        String accessToken = jwtUtil.createJwt(username, memNickname, memType, 15 * 60 * 1000L);		// 15 min
+//        String accessToken = jwtUtil.createJwt(username, memNickname, memType, 5 * 1000L); // 5 sec (test)
+        String accessToken = jwtUtil.createJwt(username, memNickname, memType, 15 * 60 * 1000L);		// 15 min
         
-        String refreshToken = jwtUtil.createRefreshToken(username, 10 * 1000L);	// 10 sec (test)
-//        String refreshToken = jwtUtil.createRefreshToken(username, 7 * 24 * 60 * 60 * 1000L);	// 7 D
+//        String refreshToken = jwtUtil.createRefreshToken(username, 10 * 1000L);	// 10 sec (test)
+        String refreshToken = jwtUtil.createRefreshToken(username, 7 * 24 * 60 * 60 * 1000L);	// 7 D
 
         // 만료 시간 계산해서 직접 삽입
-        LocalDateTime expiry = LocalDateTime.now().plusSeconds(10); // 10초 테스트용
-//        LocalDateTime expiry = LocalDateTime.now().plusDays(7); // 7일 유효
+//        LocalDateTime expiry = LocalDateTime.now().plusSeconds(10); // 10초 테스트용
+        LocalDateTime expiry = LocalDateTime.now().plusDays(7); // 7일 유효
         
         RefreshTokenEntity tokenEntity = new RefreshTokenEntity(username, refreshToken, expiry);
         refreshTokenRepository.save(tokenEntity);
