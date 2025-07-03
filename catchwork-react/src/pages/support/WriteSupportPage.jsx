@@ -1,16 +1,14 @@
 import React, { useState } from "react";
-import axios from "axios"; 
+import axios from "axios";
 import "./WriteSupportPage.css";
 import { useNavigate } from "react-router-dom";
 
 export default function WriteSupportPage() {
-  const navigate = useNavigate(); 
-
+  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("계정 관련 문의");
   const [content, setContent] = useState("");
 
-  // 카테고리 문자열 → 숫자 코드 매핑 (서버에 맞게 조정하세요)
   const categoryCodeMap = {
     "계정 관련 문의": 1,
     "결제/환불 문의": 2,
@@ -20,6 +18,8 @@ export default function WriteSupportPage() {
     "기타 문의": 6,
   };
 
+  const token = localStorage.getItem("accessToken");
+
   const handleSubmit = async () => {
     if (!title || !content) {
       alert("제목과 내용을 모두 입력해주세요.");
@@ -27,15 +27,22 @@ export default function WriteSupportPage() {
     }
 
     try {
-      const response = await axios.post("http://localhost:8080/support/write", {
-        supportTitle: title,              // 서버에서 지원하지 않으면 제거 가능
-        supportCategoryCode: categoryCodeMap[category],
-        supportContent: content,
-        memNo: 100,
-      });
+      await axios.post(
+        "http://localhost:8080/support/write",
+        {
+          supportTitle: title,
+          supportCategoryCode: categoryCodeMap[category],
+          supportContent: content,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       alert("문의가 성공적으로 등록되었습니다.");
-      navigate("/supportlist"); 
+      navigate("/supportlist");
     } catch (error) {
       console.error("에러 발생:", error);
       if (error.response) {
@@ -50,7 +57,6 @@ export default function WriteSupportPage() {
     <div className="write-support-container">
       <main className="main">
         <h2 className="page-title">문의 작성</h2>
-
         <div className="form-group">
           <input
             type="text"
@@ -79,24 +85,22 @@ export default function WriteSupportPage() {
 
         <div className="form-group">
           <label htmlFor="content">내용</label>
-          <textarea
-            id="content"
-            placeholder="내용을 입력하세요."
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
-        </div>
-
-        <div className="button-group">
-          <button
-            className="button-common cancel-button"
-            onClick={() => window.history.back()}
-          >
-            ✕ 취소하기
-          </button>
-          <button className="button-common submit-button" onClick={handleSubmit}>
-            ✏️ 작성하기
-          </button>
+          <div className="textarea-container">
+            <textarea
+              id="content"
+              placeholder="내용을 입력하세요."
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+            />
+            <div className="write-btn-area">
+              <button className="write-btn-cancel" onClick={() => window.history.back()}>
+                <i className="fa-solid fa-xmark"></i> 취소하기
+              </button>
+              <button className="write-btn-submit" onClick={handleSubmit}>
+                <i className="fa-regular fa-pen-to-square"></i> 작성하기
+              </button>
+            </div>
+          </div>
         </div>
       </main>
     </div>
