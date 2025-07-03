@@ -18,7 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
                 .addResourceLocations("classpath:/static/")
                 .setCacheControl(CacheControl.maxAge(10, TimeUnit.MINUTES));
         
-     // ✅ /static/editor/** 요청은 /upload/editor 폴더에서 가져오도록 설정
+     // /static/editor/** 요청은 /upload/editor 폴더에서 가져오도록 설정
         registry.addResourceHandler("/static/editor/**")
                 .addResourceLocations("file:/upload/editor/")
                 .setCacheControl(CacheControl.noCache());
@@ -30,7 +30,10 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
                 .allowedOrigins("http://localhost:5173")
-                .allowedMethods("*")
-                .allowCredentials(true);
+//                .allowedMethods("*")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("*")
+                .allowCredentials(true)
+                .exposedHeaders("Authorization");
     }
 }

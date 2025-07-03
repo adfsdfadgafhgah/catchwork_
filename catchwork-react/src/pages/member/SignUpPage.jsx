@@ -17,6 +17,7 @@ const SignUpPage = () => {
   const userType =
     searchParams.get("type") === "corporate" ? "corporate" : "personal";
 
+  // 폼 핸들러
   const { formData, handleChange, setField, validity } = useFormHandler({
     memId: "",
     memPw: "",
@@ -37,6 +38,7 @@ const SignUpPage = () => {
     memSmsFl: false,
   });
 
+  // 제출출
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm(formData, userType)) return;
@@ -51,6 +53,7 @@ const SignUpPage = () => {
     }
   };
 
+  // 아이디 중복확인
   const handleCheckId = async () => {
     if (!formData.memId.trim()) return alert("아이디를 입력해주세요.");
     const available = await checkDuplicateId(formData.memId);
@@ -59,6 +62,7 @@ const SignUpPage = () => {
     );
   };
 
+  // 닉네임 중복확인
   const handleCheckNickname = async () => {
     if (!formData.memNickname.trim()) return alert("닉네임을 입력해주세요.");
     const available = await checkDuplicateNickname(formData.memNickname);
@@ -67,6 +71,12 @@ const SignUpPage = () => {
     );
   };
 
+  // 주소 입력
+  const handleAddressSelect = (data) => {
+    setField("memAddr", data.roadAddress);
+  };
+
+  // 닉네임 생성
   const handleGenerateNickname = () => {
     const nickname = generateRandomNickname();
     setField("memNickname", nickname);
@@ -254,6 +264,9 @@ const SignUpPage = () => {
           </div>
         </>
 
+        {/* *********************
+         * 기업 회원가입 필드
+         ********************* */}
         {userType === "corporate" && (
           <>
             <label>
@@ -282,6 +295,7 @@ const SignUpPage = () => {
             </label>
           </>
         )}
+        {/* ********************* */}
 
         <label>
           주소
@@ -289,8 +303,12 @@ const SignUpPage = () => {
             name="memAddr"
             value={formData.memAddr}
             onChange={handleChange}
+            readOnly
           />
-          <button type="button" onClick={searchAddress}>
+          <button
+            type="button"
+            onClick={() => searchAddress(handleAddressSelect)}
+          >
             주소 찾기
           </button>
         </label>

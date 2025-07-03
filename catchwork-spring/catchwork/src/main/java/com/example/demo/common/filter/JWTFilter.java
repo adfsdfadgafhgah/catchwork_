@@ -1,4 +1,4 @@
-package com.example.demo.filter;
+package com.example.demo.common.filter;
 
 import java.io.IOException;
 
@@ -15,6 +15,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -31,26 +32,55 @@ public class JWTFilter extends OncePerRequestFilter{
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        // Authorization 헤더 추출
+        String path = request.getRequestURI();
+        String method = request.getMethod();
+
+        // 요청 로그
+        System.out.println("[JWTFilter] 요청 URI: " + path + " / method: " + method);
+
+        // Authorization 헤더 확인
         String authorization = request.getHeader("Authorization");
+        // debug
+//        System.out.println("[JWTFilter] Authorization 헤더: " + authorization);
+
         // Authorization 헤더가 없거나 "Bearer "로 시작하지 않으면 필터 건너뜀(유효성 검사)
         if (authorization == null || !authorization.startsWith("Bearer ")) {
+            System.out.println("[JWTFilter] 토큰 없음 → 다음 필터로 진행");
             filterChain.doFilter(request, response);
             return;
         }
+        
         // "Bearer [토큰]"에서 토큰만 분리
         String token = authorization.split(" ")[1];
-
         try {
+        	// accessToken 만료되었는지 확인
             if (jwtUtil.isExpired(token)) {
-                // 토큰이 만료되었는지 확인/로그만 출력하고 필터 체인 계속 진행
-                System.out.println("Token expired");
-                filterChain.doFilter(request, response);
+                System.out.println("[JWTFilter] Token expired");
+
+                // refreshToken 쿠키 확인
+                boolean hasRefreshToken = false;
+                Cookie[] cookies = request.getCookies();
+                if (cookies != null) {
+                    for (Cookie cookie : cookies) {
+                        if ("refreshToken".equals(cookie.getName())) {
+                            hasRefreshToken = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (hasRefreshToken) {
+                    System.out.println("[JWTFilter] refreshToken 있음 → 401 응답 (재발급 유도)");
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                } else {
+                    System.out.println("[JWTFilter] refreshToken 없음 → 로그인 페이지로 리다이렉트");
+                    response.sendRedirect("/signin"); // 필요시 변경
+                }
                 return;
             }
-        } catch (ExpiredJwtException e) {
-            System.out.println("Token parsing error: expired");
-            filterChain.doFilter(request, response);
+        } catch (Exception e) {
+            System.out.println("[JWTFilter] Token parsing failed");
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
 

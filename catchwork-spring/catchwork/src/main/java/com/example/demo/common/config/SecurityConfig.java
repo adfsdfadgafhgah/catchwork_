@@ -1,5 +1,6 @@
 package com.example.demo.common.config;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 import org.springframework.context.annotation.Bean;
@@ -17,8 +18,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
-import com.example.demo.filter.JWTFilter;
-import com.example.demo.filter.LoginFilter;
+import com.example.demo.auth.model.repository.RefreshTokenRepository;
+import com.example.demo.common.filter.JWTFilter;
+import com.example.demo.common.filter.LoginFilter;
 import com.example.demo.util.JWTUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,12 +31,14 @@ public class SecurityConfig {
 	private final AuthenticationConfiguration authenticationConfiguration;
 	private final UserDetailsService userDetailsService;
 	private final JWTUtil jwtUtil;
+	private final RefreshTokenRepository refreshtokenrepository;
 
 	public SecurityConfig(AuthenticationConfiguration authenticationConfiguration,
-			UserDetailsService userDetailsService, JWTUtil jwtUtil) {
+			UserDetailsService userDetailsService, JWTUtil jwtUtil, RefreshTokenRepository refreshtokenrepository) {
 		this.authenticationConfiguration = authenticationConfiguration;
 		this.userDetailsService = userDetailsService;
 		this.jwtUtil = jwtUtil;
+		this.refreshtokenrepository = refreshtokenrepository;
 	}
 
 	// 비밀번호 암호화
@@ -74,7 +78,7 @@ public class SecurityConfig {
                 CorsConfiguration configuration = new CorsConfiguration();
 
                 configuration.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
-                configuration.setAllowedMethods(Collections.singletonList("*"));
+                configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 configuration.setAllowCredentials(true);
                 configuration.setAllowedHeaders(Collections.singletonList("*"));
                 configuration.setMaxAge(3600L);
@@ -101,7 +105,7 @@ public class SecurityConfig {
 				.requestMatchers("/admin").hasRole("ADMIN").anyRequest().authenticated());
 
 		// LoginFilter 
-        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil);
+        LoginFilter loginFilter = new LoginFilter(authenticationManager(authenticationConfiguration), jwtUtil, refreshtokenrepository);
         http.addFilterAt(loginFilter, UsernamePasswordAuthenticationFilter.class);
         
         // JWT 검증 필터

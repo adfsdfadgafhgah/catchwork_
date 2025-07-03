@@ -1,6 +1,7 @@
-package com.example.demo.filter;
+package com.example.demo.common.filter;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -14,6 +15,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.example.demo.auth.model.entity.RefreshTokenEntity;
+import com.example.demo.auth.model.repository.RefreshTokenRepository;
 import com.example.demo.member.model.dto.CustomUserDetails;
 import com.example.demo.member.model.dto.Member;
 import com.example.demo.util.JWTUtil;
@@ -23,21 +26,26 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 
 	private final ObjectMapper objectMapper = new ObjectMapper();
 	private final JWTUtil jwtUtil;
+	private final RefreshTokenRepository refreshTokenRepository;
 
-	public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil) {
+	public LoginFilter(AuthenticationManager authenticationManager, JWTUtil jwtUtil, RefreshTokenRepository refreshTokenRepository) {
 		super(new AntPathRequestMatcher("/signin", "POST"));
 		setAuthenticationManager(authenticationManager);
 		this.jwtUtil = jwtUtil;
+	    this.refreshTokenRepository = refreshTokenRepository;
 	}
 
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
+	    System.out.println("LoginFilter 진입: 요청 수신");
 
 		try {
 			// Content-Type이 application/json인지 확인
@@ -76,21 +84,24 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
         CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
         String username = customUserDetails.getUsername();	// memNo 임
         String memNickname = customUserDetails.getMemberEntity().getMemNickname(); // 닉네임 추출
-
         int memType = customUserDetails.getMemberEntity().getMemType(); // memType 0 : 개인 / 1 : 기업
-        String role = customUserDetails.getAuthorities().stream()
-                                       .map(GrantedAuthority::getAuthority)
-                                       .findFirst()
-                                       .orElse("ROLE_USER");
 
 //        SecurityContext <- token에 넣는걸로 해서 그냥 빠꾸
 //        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        String accessToken = jwtUtil.createJwt(username, memNickname, memType, 5 * 1000L); // 5 sec (test)
+//        String accessToken = jwtUtil.createJwt(username, memNickname, memType, 15 * 60 * 1000L);		// 15 min
         
-//        memType (int) + role (String) 모두 전달
-        String accessToken = jwtUtil.createJwt(username, memNickname, memType, role, 15 * 60 * 1000L);		// 15분
-//        System.out.println("JWT 생성 완료: " + accessToken);
-//        System.out.println(username +" "+memType+" "+role);
-        String refreshToken = jwtUtil.createRefreshToken(username, 7 * 24 * 60 * 60 * 1000L);	// 7일
+        String refreshToken = jwtUtil.createRefreshToken(username, 10 * 1000L);	// 10 sec (test)
+//        String refreshToken = jwtUtil.createRefreshToken(username, 7 * 24 * 60 * 60 * 1000L);	// 7 D
+
+        // 만료 시간 계산해서 직접 삽입
+        LocalDateTime expiry = LocalDateTime.now().plusSeconds(10); // 10초 테스트용
+//        LocalDateTime expiry = LocalDateTime.now().plusDays(7); // 7일 유효
+        
+        RefreshTokenEntity tokenEntity = new RefreshTokenEntity(username, refreshToken, expiry);
+        refreshTokenRepository.save(tokenEntity);
+        
         Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
         refreshCookie.setHttpOnly(true);			// JS에서 접근 불가
         
@@ -121,7 +132,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException failed) throws IOException {
-    	
+        log.warn("로그인 실패 - 이유: {}", failed.getMessage());
 		//로그인 실패시 401 응답 코드 반환
         response.setStatus(401);
         
