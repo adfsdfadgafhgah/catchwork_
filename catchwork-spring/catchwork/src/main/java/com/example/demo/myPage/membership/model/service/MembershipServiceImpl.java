@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.myPage.membership.model.dto.MemberGrade;
+import com.example.demo.myPage.membership.model.dto.Subscription;
 import com.example.demo.myPage.membership.model.mapper.MembershipMapper;
 
 @Service
@@ -22,4 +23,9 @@ public class MembershipServiceImpl implements MembershipService {
 		return mapper.getMembershipList();
 	}
 
+	// 구독 정보 조회
+	@Override
+	public Subscription getSubscription(String memNo) {
+		return mapper.getSubscription(memNo);
+	}
 }

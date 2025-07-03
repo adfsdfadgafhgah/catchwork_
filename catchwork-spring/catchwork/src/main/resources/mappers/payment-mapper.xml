@@ -91,9 +91,10 @@ SET MEM_GRADE = (
     FROM MEMBER_GRADE
     WHERE MEM_GRADE_NAME = #{orderName}
 ),
-    SUB_END_AT = TRUNC(ADD_MONTHS(SYSDATE, 1)),
+    SUB_END_AT = TRUNC(ADD_MONTHS(TRUNC(SYSDATE), 1) - 1),
     SUB_UPDATE_AT = SYSDATE,
-    SUB_PAY_AT = TRUNC(SYSDATE)
+    SUB_PAY_AT = TRUNC(SYSDATE),
+    SUB_STATUS = #{status}
 WHERE MEM_NO = #{memNo}
 </update>
 
@@ -117,10 +118,10 @@ VALUES (
    WHERE MEM_GRADE_NAME = #{orderName}),
   #{memNo},
   TRUNC(SYSDATE),
-  ADD_MONTHS(TRUNC(SYSDATE), 1),
+  ADD_MONTHS(TRUNC(SYSDATE), 1) - 1,
   SYSDATE,
   TRUNC(SYSDATE),
-  DEFAULT
+  #{status}
 )
 </insert>
 
@@ -135,13 +136,102 @@ SET MEM_GRADE = (
 WHERE MEM_NO = #{memNo}
 </update>
 
-<select id="selectBalanceAmount" resultType="_int">
-SELECT TRUNC((s.SUB_END_AT - TRUNC(SYSDATE))
-* (mg.MEM_GRADE_PRICE / (s.SUB_END_AT - s.SUB_UPDATE_AT))) 
-AS REFUND_AMOUNT
+<!-- 환불 잔액 조회 -->
+<select id="selectBalanceAmount">
+SELECT 
+  LEAST(
+    mg.MEM_GRADE_PRICE,
+    TRUNC(
+      GREATEST((TRUNC(s.SUB_END_AT) - TRUNC(SYSDATE)) + 1, 0) 
+      * (mg.MEM_GRADE_PRICE / GREATEST((TRUNC(s.SUB_END_AT) - TRUNC(s.SUB_UPDATE_AT)), 1))
+    )
+  ) AS REFUND_AMOUNT
 FROM "SUBSCRIPTION" s
-JOIN "MEMBER_GRADE" mg ON mg.MEM_GRADE = s.MEM_GRADE - 1
+JOIN "MEMBER" m ON s.MEM_NO = m.MEM_NO
+JOIN "MEMBER_GRADE" mg ON m.MEM_GRADE = mg.MEM_GRADE
 WHERE s.MEM_NO = #{memNo}
+</select>
+
+<!-- 구독 등급 다운그레이드 -->
+<update id="downgradeSubscription">
+UPDATE "SUBSCRIPTION"
+SET MEM_GRADE = #{newGrade},
+    SUB_UPDATE_AT = SYSDATE,
+    SUB_STATUS = 1
+WHERE MEM_NO = #{memNo}
+</update>
+
+<!-- 멤버십 명칭 조회 -->
+<select id="getOrderName">
+SELECT MEM_GRADE_NAME
+FROM "MEMBER_GRADE"
+WHERE MEM_GRADE = #{newGrade}
+</select>
+
+<!-- 멤버십 변경 적용 -->
+<update id="changeMembership">
+UPDATE "MEMBER"
+SET MEM_GRADE = #{memGrade}
+WHERE MEM_NO = #{memNo}
+</update>
+
+<!-- 멤버십 복구 -->
+<update id="restoreSubscription">
+UPDATE "SUBSCRIPTION"
+SET MEM_GRADE = (
+      SELECT MEM_GRADE
+      FROM "MEMBER"
+      WHERE MEM_NO = #{memNo}
+    ),
+    SUB_STATUS = 0
+WHERE MEM_NO = #{memNo}
+</update>
+
+<!-- 결제 상태 변경 -->
+<update id="changeSubscriptionStatus">
+UPDATE "SUBSCRIPTION"
+SET SUB_STATUS = 2
+WHERE SUB_END_AT = TRUNC(SYSDATE) - 1
+AND SUB_STATUS = 0
+AND MEM_GRADE != 0
+</update>
+
+<!-- 결제 상태 변경 -->
+<update id="changeSubscription">
+UPDATE "SUBSCRIPTION"
+SET SUB_STATUS = 0
+WHERE MEM_NO = #{memNo}
+AND SUB_STATUS = 1
+</update>
+
+<!-- 미납자 조회 -->
+<select id="selectUnpaidMembers">
+SELECT MEM_NO, MEM_EMAIL, MEM_NAME
+FROM "MEMBER"
+WHERE MEM_NO IN (
+  SELECT MEM_NO
+  FROM "SUBSCRIPTION"
+  WHERE SUB_STATUS = 2
+)
+</select>
+
+<!-- 미납자의 결제 대상 멤버십 정보 조회 -->
+<select id="selectMembership">
+SELECT MEM_GRADE_NAME, MEM_GRADE_PRICE
+FROM "MEMBER_GRADE"
+WHERE MEM_GRADE = (
+  SELECT MEM_GRADE
+  FROM "SUBSCRIPTION"
+  WHERE MEM_NO = #{memNo}
+)
+</select>
+
+<!-- 등급 변경 대상 조회 -->
+<select id="selectTargetSubscription">
+SELECT MEM_NO, MEM_GRADE
+FROM "SUBSCRIPTION"
+WHERE SUB_END_AT = TRUNC(SYSDATE) - 1
+AND SUB_STATUS = 1
 </select>
 
 </mapper>
