@@ -33,7 +33,7 @@ public class RecruitCVController {
 	    private RecruitCVService service;
 
 		//전체 목록 조회
-		@GetMapping("/list")
+		@GetMapping("list")
 	    public ResponseEntity<?> getCvList() {
 	        try {
 	            log.info("[GET] /list - 전체 이력서 목록 조회 요청");
@@ -50,7 +50,7 @@ public class RecruitCVController {
 	    
 	    
 	 //필터링 목록 조회
-	    @GetMapping("/list/filter")
+	    @GetMapping("filter")
 	    public ResponseEntity<?> getCvList(RecruitCV filter) {
 
 	      

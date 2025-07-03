@@ -5,21 +5,10 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import com.example.demo.member.company.model.dto.CorpInfo;
+import com.example.demo.member.company.model.dto.CompanyInfo;
 
 @Mapper
-public interface CorpInfoMapper {
-	
-		
-		
-		/**
-		 * 특정 기업 조회->detail로 가기 위한
-		 * @author JIN
-		 * @param corpNo
-		 * @param memNo
-		 * @return
-		 */
-		CorpInfo selectCorpDetail(@Param("corpNo") int corpNo,@Param("memNo") String memNo);
+public interface CompanyInfoMapper {
 	
 		 
 	    /**
@@ -28,7 +17,16 @@ public interface CorpInfoMapper {
 	     * @param memNo 회원 번호 (관심기업 여부 체크용)
 	     * @return 기업 정보 리스트
 	     */
-	    List<CorpInfo> selectCorpListWithRecruitInfo(@Param("query") String query, @Param("memNo") String memNo);
+	    List<CompanyInfo> selectCompanyListWithRecruitInfo(@Param("query") String query, @Param("memNo") String memNo);
 	    
+	    /**
+		 * 특정 기업 조회->detail로 가기 위한
+		 * @author JIN
+		 * @param corpNo
+		 * @param memNo
+		 * @return
+		 */
+		CompanyInfo selectCompanyDetail(@Param("corpNo") int corpNo,@Param("memNo") String memNo);
+	
 	    
 }

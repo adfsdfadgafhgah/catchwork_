@@ -1,4 +1,4 @@
-package com.example.demo.member.company.model.dto;
+package com.example.demo.corp.company.model.dto;
 
 import java.util.Date;
 
@@ -22,7 +22,7 @@ public class CorpInfo {
     private String corpLogo;            // 기업_로고
     private String corpCeoName;         // 기업_대표명
     private String corpAddr;            // 기업_회사주소
-    private Date corpOpenDate;          // 기업_개업일자
+    private String corpOpenDate;        // 기업_개업일자
     private String corpHomeLink;        // 기업_홈페이지링크
     private String corpBm;              // 기업_주요사업
     private String corpDetail;          // 기업_기업소개상세
@@ -30,22 +30,8 @@ public class CorpInfo {
     private String corpBenefitDetail;   // 기업_복리후생_내용
     private String corpBanFl;           // 기업_정지_플래그 String으로 받는게 맞나?
     private Date corpBanDate;           // 기업_정지일
-
+   
     // MEMBER 테이블 조인
- 	private String memNo;
-    
-    //관심 공고
-    private int isSaved; // 1 = 관심등록함, 0 = 아님
-
-    
-    //추가정보
-    private int recruitCount;			//공고 개수
-    private int favs;				//관심 개수
-    private int views;					//조회수
-    
-    
-
-   
-   
+  	private String memNo;
 
 }
