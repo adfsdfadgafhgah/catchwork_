@@ -1,7 +1,7 @@
 // React 및 상태 훅 import
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 // 기본 컴포넌트 import
 import CVTitle from "../../components/cv/CVTitle";
@@ -21,23 +21,30 @@ import CVLanguage from "../../components/cv/CVLanguage";
 import useLoginMember from "../../stores/loginMember";
 
 // 페이지 전용 CSS import
-import "./WriteCVPage.css";
-import { axiosApi } from "./../../api/axiosAPI";
+import "./CVManagePage.css";
+import { axiosApi } from "../../api/axiosAPI";
 
 // URL 쿼리 파싱용
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
 };
 
-const WriteCVPage = () => {
+const CVManagePage = () => {
   // 쿼리스트링
   const query = useQuery();
 
+  // 페이지 이동
+  const navigate = useNavigate();
+
   // 로그인 회원 정보
-  const { loginMember, setLoginMember } = useLoginMember();
+  const { isLoadingLogin, loginMember, setLoginMember } = useLoginMember();
+
+  // 이력서 번호 있으면 가져오기(detail)
+  const cvNo = query.get("cvNo");
+  const upMode = query.get("mode")
 
   // 작성/보기/수정 모드 상태
-  const [mode, setMode] = useState(query.get("mode") || "view");
+  const [mode, setMode] = useState(cvNo ? "view" : "add");
 
   // 사용자
   const member = {
@@ -54,6 +61,15 @@ const WriteCVPage = () => {
     memBirthday: loginMember.memBirthday,
   };
 
+  // 주소 쪼개기
+  const fullAddress = loginMember.memAddr || "";
+  const [mainAddress, detailAddress] = fullAddress.split("^^^") || [];
+
+  const memberAddress = {
+    mainAddress: mainAddress || "",
+    detailAddress: detailAddress || "",
+  };
+
   // 날짜 에러
   const [dateError, setDateError] = useState("");
 
@@ -66,19 +82,25 @@ const WriteCVPage = () => {
   // 이력서 입력 데이터 상태
   const [formData, setFormData] = useState({
     cvAlias: "",
-    mainAddress: "",
-    detailAddress: "",
+    cvResume: "",
+  });
+
+  // 학력 입력 데이터 상태
+  const [education, setEducation] = useState({
     eduName: "",
     eduMajor: "",
-    eduCodeNo: "",
-    eduStatusCodeNo: "",
     eduStartDate: "",
     eduEndDate: "",
+    eduCodeNo: "",
+    eduStatusCodeNo: "",
+  });
+
+  // 병역 입력 데이터 상태
+  const [military, setMilitary] = useState({
     cvMiliClass: "",
     cvMiliBranch: "",
-    cvMiliStartDate: "0000-00",
-    cvMiliEndDate: "0000-00",
-    cvResume: "",
+    cvMiliStartDate: "",
+    cvMiliEndDate: "",
   });
 
   // 동적 섹션 항목 상태
@@ -231,6 +253,16 @@ const WriteCVPage = () => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  // formData 변경 핸들러
+  const handleEducationChange = (field, value) => {
+    setEducation((prev) => ({ ...prev, [field]: value }));
+  };
+
+  // formData 변경 핸들러
+  const handleMilitaryChange = (field, value) => {
+    setMilitary((prev) => ({ ...prev, [field]: value }));
+  };
+
   // 동적 컴포넌트 항목 값 변경 핸들러
   const handleComponentChange = (type, index, field, value) => {
     setComponents((prev) => {
@@ -277,28 +309,43 @@ const WriteCVPage = () => {
 
   // 이력서 수정 요청
   const handleUpdate = async () => {
-    const payload = {};
+    const payload = payloadRename();
     await axiosApi
       .post("/cv/update", payload)
-      .then(() => alert("성공"))
-      .catch(() => alert("실패"));
+      .then(() => alert("수정 완료"))
+      .catch((err) => {
+        console.error("수정 실패", err.response?.data || err.message);
+        alert("수정 중 오류가 발생했습니다");
+      });
   };
 
   // 이력서 삭제 요청
   const handleDelete = async () => {
-    const payload = {};
-    await axiosApi
-      .post("/cv/delete", payload)
-      .then(() => alert("성공"))
-      .catch(() => alert("실패"));
+    if (!cvNo) {
+      alert("삭제할 이력서가 존재하지 않습니다.");
+      return;
+    }
+
+    if (!window.confirm("정말 삭제하시겠습니까?")) {
+      return;
+    }
+
+    try {
+      await axiosApi.post("/cv/delete", { cvNo });
+      alert("삭제 완료");
+      navigate("/cv");
+    } catch (error) {
+      console.error("삭제 실패", err.response?.data || err.message);
+      alert("삭제 중 오류 발생");
+    }
   };
 
   // 이력서 저장 요청
   const handleSubmit = async () => {
     const payload = payloadRename();
     await axiosApi
-      .post("/cv/add", payload, { withCredentials: true })
-      .then(() => alert("이력서 저장 완료"))
+      .post("/cv/add", payload)
+      .then(() => alert("저장 완료"))
       .catch((err) => {
         console.error("저장 실패", err.response?.data || err.message);
         alert("저장 중 오류가 발생했습니다");
@@ -315,14 +362,13 @@ const WriteCVPage = () => {
       );
     });
 
-    const { mainAddress, detailAddress, ...restFormData } = formData;
-
     return {
+      ...(cvNo ? { cvNo } : {}), // 수정 시에만 들어감
       ...member, // 회원 정보
-      ...memberInfo, // 회원 기본 정보(출력용)
       cvImgPath, // 이미지 경로
-      ...restFormData, // 나머지 formData 필드 그대로
-      memAddress: `${mainAddress}/${detailAddress}`, // 주소만 커스텀 처리
+      ...formData, // 나머지 formData 필드 그대로
+      education,
+      military,
       ...convertedSections,
     };
   };
@@ -363,9 +409,19 @@ const WriteCVPage = () => {
     return result;
   };
 
+  // 로그인 여부 검사
   useEffect(() => {
     setLoginMember();
   }, []);
+
+  useEffect(() => {
+    if(!isLoadingLogin) return;
+
+    if (!loginMember.memNo) {
+      alert("로그인이 필요합니다.");
+      navigate("/signin");
+    }
+  }, [isLoadingLogin, loginMember, navigate]);
 
   useEffect(() => {
     if (dateError) {
@@ -374,6 +430,89 @@ const WriteCVPage = () => {
     }
   }, [dateError]);
 
+  // cvNo가 있으면 detail
+  useEffect(() => {
+    const fetchCV = async () => {
+      if (!cvNo) return;
+      if (!isLoadingLogin) return;
+      if (!loginMember?.memNo) return;
+      
+      try {
+        // 본인 소유 여부 확인
+        const checkOwner = await axiosApi.post("/cv/checkOwner", {
+          cvNo,
+          memNo: loginMember?.memNo,
+        });
+
+        if (checkOwner.data) {
+          // 이력시 리스트에서 수정 버튼 눌러서 들어온 경우
+          if(upMode === "update") setMode("update");
+
+          // 소유자 맞으면 상세 조회
+          const detail = await axiosApi.post("/cv/detail", { cvNo });
+          const data = detail.data;
+
+          // 기존 세팅 로직 복붙
+          const { education, military, cvAlias, cvResume, cvImgPath, ...rest } =
+            data;
+
+          // 기본 정보
+          setFormData({
+            cvAlias: cvAlias || "",
+            cvResume: cvResume || "",
+            ...rest,
+          });
+
+          // 증명사진
+          setCvImgPath(cvImgPath || "");
+
+          // 학력
+          setEducation(
+            education || {
+              eduName: "",
+              eduMajor: "",
+              eduStartDate: "",
+              eduEndDate: "",
+              eduCodeNo: "",
+              eduStatusCodeNo: "",
+            }
+          );
+
+          // 병역
+          setMilitary(
+            military || {
+              cvMiliClass: "",
+              cvMiliBranch: "",
+              cvMiliStartDate: "",
+              cvMiliEndDate: "",
+            }
+          );
+          
+          // 동적 sections
+          const newComponents = {};
+          Object.keys(clientKeyMap).forEach((type) => {
+            const list = data[type] || [];
+            newComponents[type] = list.map((item) =>
+              convertToClient(type, item)
+            );
+          });
+
+          setComponents(newComponents);
+        } else {
+          alert("🔪잡았다. 쥐새끼.🐁");
+          navigate("/cv");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("이력서 확인 중 오류가 발생했습니다.");
+        navigate("/cv");
+      }
+    };
+
+    fetchCV();
+  }, [isLoadingLogin, cvNo, loginMember, navigate]);
+
+  // 콘솔console 찍기
   useEffect(() => {
     console.log("모드 =", mode);
     console.log("이미지 경로 =", cvImgPath);
@@ -445,7 +584,7 @@ const WriteCVPage = () => {
           {/* 주소 입력 */}
           <div className="writeCVSection">
             <CVAddress
-              formData={formData}
+              formData={memberAddress}
               onChange={handleInputChange}
               onSearch={handleSearchAddress}
               mode={mode}
@@ -455,8 +594,8 @@ const WriteCVPage = () => {
           {/* 병역 입력 */}
           <div className="writeCVSection">
             <CVMilitary
-              formData={formData}
-              onChange={handleInputChange}
+              formData={military}
+              onChange={handleMilitaryChange}
               mode={mode}
             />
           </div>
@@ -465,8 +604,8 @@ const WriteCVPage = () => {
           <div className="writeCVSection">
             <h2 className="writeCVSection-title">학력</h2>
             <CVEducation
-              formData={formData}
-              onChange={handleInputChange}
+              formData={education}
+              onChange={handleEducationChange}
               mode={mode}
             />
           </div>
@@ -567,7 +706,7 @@ const WriteCVPage = () => {
             <>
               <button
                 className="writeCVStickyBtn writeCVUpdateBtn"
-                onClick={handleUpdate}
+                onClick={() => setMode("update")}
               >
                 수정하기
               </button>
@@ -578,22 +717,37 @@ const WriteCVPage = () => {
                 삭제하기
               </button>
             </>
-          ) : (
+          ) : mode === "update" ? (
+            <>
+              <button
+                className="writeCVStickyBtn writeCVSubmitBtn"
+                onClick={handleUpdate}
+              >
+                수정 완료
+              </button>
+              <button
+                className="writeCVStickyBtn writeCVCancleBtn"
+                onClick={() => setMode("view")}
+              >
+                미리보기
+              </button>
+            </>
+          ) : mode === "add" ? (
             <>
               <button
                 className="writeCVStickyBtn writeCVSubmitBtn"
                 onClick={handleSubmit}
               >
-                작성완료
+                작성 완료
               </button>
               <button
                 className="writeCVStickyBtn writeCVCancleBtn"
-                onClick={() => history.back()}
+                onClick={() => navigate("/cv")}
               >
                 취소하기
               </button>
             </>
-          )}
+          ) : null}
         </div>
         <div className="writeCVStickyRight">
           <button
@@ -608,4 +762,4 @@ const WriteCVPage = () => {
   );
 };
 
-export default WriteCVPage;
+export default CVManagePage;

@@ -9,7 +9,14 @@ export default function FloatButton({ buttons = [] }) {
           className={`float-btn ${btn.className || ""}`}
           onClick={btn.onClick}
         >
-          {btn.icon && <i className={btn.icon}></i>} {btn.label}
+          {/* iconType이 material이면 <span>으로, 아니면 <i>로 렌더링 */}
+          {btn.icon &&
+            (btn.iconType === "material" ? (
+              <span className="material-symbols-outlined">{btn.icon}</span>
+            ) : (
+              <i className={btn.icon}></i>
+            ))}{" "}
+          {btn.label}
         </button>
       ))}
     </div>

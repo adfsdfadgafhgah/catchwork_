@@ -1,7 +1,6 @@
 import { useEffect, useRef, useMemo } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import useMembershipList from "../../../stores/membershipStore";
-import useLoginMember from "../../../stores/loginMember";
+import useMembershipData from "../../../hooks/useMembershipData";
 import { axiosApi } from "../../../api/axiosAPI";
 
 const url = import.meta.env.VITE_BASE_URL;
@@ -16,15 +15,8 @@ function PaymentCheckout() {
   // 결제 대상 멤버십 등급 ID
   const productId = searchParams.get("productId");
 
-  // 로그인 회원 정보
-  const { loginMember, setLoginMember } = useLoginMember();
-  // 멤버십 정보 목록
-  const { membershipList, getMembershipList } = useMembershipList();
-  // 멤버쉽 정보 로드
-  useEffect(() => {
-    getMembershipList();
-    setLoginMember();
-  }, []);
+  // 공통 데이터 훅 사용
+  const { loginMember, membershipList, isLoading } = useMembershipData();
 
   // 현재 선택된 상품 정보 추출 (productId에 해당하는 멤버십 등급)
   const product = useMemo(() => {
@@ -49,8 +41,6 @@ function PaymentCheckout() {
 
   // 실제 결제 요청을 백엔드에 보내는 함수 (빌링키 기반 자동결제 확정)
   async function confirmBilling() {
-    console.log("결제 진행");
-
     const requestData = {
       customerKey: loginMember.memNo,
       amount: product.memGradePrice,
@@ -59,7 +49,6 @@ function PaymentCheckout() {
       customerEmail: loginMember.memEmail,
       customerName: loginMember.memName,
     };
-
     try {
       const response = await axiosApi({
         method: "post",
@@ -69,7 +58,6 @@ function PaymentCheckout() {
         },
         data: requestData,
       });
-
       if (response.status === 200) {
         navigate("/mypage/payment/sucess");
         return response.data;
@@ -78,6 +66,8 @@ function PaymentCheckout() {
       navigate(`/mypage/payment/fail?message=${err.message}&code=${err.code}`);
     }
   }
+
+  if (isLoading) return null;
 
   return (
     <div className="membership-container">

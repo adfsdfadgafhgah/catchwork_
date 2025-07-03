@@ -1,9 +1,7 @@
 .scroll-to-top-btn {
   position: fixed;
-  top: 830px; /* 화면 맨 위에서 830px 위치 */
-  left: 1564px;
+  right: 40px;
   bottom: 40px;
-
   width: 50px;
   height: 50px;
   border: none;

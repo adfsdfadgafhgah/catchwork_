@@ -29,9 +29,6 @@ public class CorpInfoController {
 
 	@Autowired
 	private CorpInfoService service;
-	
-
-
     
 //	  로그인한 멤버에 따라서 저장한 기업인지 아닌지 보여주기   
 //    jwt 토큰
@@ -80,9 +77,8 @@ public class CorpInfoController {
      */
     @GetMapping("{corpNo}")
     public ResponseEntity<?> getCorpDetail(@PathVariable("corpNo") int corpNo,
-                                     @RequestParam(required = false) String memNo) {
-    	
-    	log.info("corpNo: {}", corpNo);//지금 못받는중
+    		  @RequestParam(value = "memNo", required = false) String memNo) {
+    	log.info("corpNo: {}", corpNo); // 로그도 안 찍히면 진입도 안 한 것
     	log.info("memNo: {}", memNo);//못받는중임
     	try {
     		CorpInfo corpInfo = service.selectCorpDetail(corpNo, memNo);

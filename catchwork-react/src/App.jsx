@@ -22,7 +22,8 @@ import FindPWPage from "./pages/member/FindPWPage";
 import RecruitPage from "./pages/major/RecruitListPage";
 import CompanyListPage from "./pages/major/CompanyListPage";
 import BoardPage from "./pages/major/BoardPage";
-import CVPage from "./pages/major/CVListPage";
+import CVListPage from "./pages/major/CVListPage";
+import CVPage from "./pages/major/CVPage";
 
 // 개인 회원
 // 마이페이지
@@ -36,12 +37,13 @@ import IssueBillingKeyPage from "./pages/myPage/membership/IssueBillingKeyPage";
 import PaymentCheckout from "./pages/myPage/membership/PaymentCheckout";
 import PaymentFail from "./pages/myPage/membership/PaymentFail";
 import PaymentSuccess from "./pages/myPage/membership/PaymentSuccess";
-import UpgradeMembership from "./pages/myPage/membership/UpgradeMembership";
-import DowngradeMembership from "./pages/myPage/membership/DowngradeMembership";
+
+//검색
+//import SearchResultPage from "./pages/major/SearchResultPage";
 
 //이력서 제출
 import SubmitCVPage from "./pages/major/SubmitCVPage";
-import WriteCVPage from "./pages/major/WriteCVPage";
+import CVManagePage from "./pages/major/CVManagePage";
 
 // 게시글
 import BoardListPage from "./pages/major/BoardListPage";
@@ -51,7 +53,12 @@ import EditBoardPage from "./pages/major/EditBoardPage";
 
 // 기업 회원
 // 기업 메인
+// 기업 공고
+import CorpRecruitPage from "./pages/corpMajor/CorpRecruitPage";
 import CorpRecruitListPage from "./pages/corpMajor/CorpRecruitListPage";
+import WriteRecruitPage from "./pages/corpMajor/WriteRecruitPage";
+import CorpRecruitDetailPage from "./pages/corpMajor/CorpRecruitDetailPage";
+import EditRecruitPage from "./pages/corpMajor/EditRecruitPage";
 
 // 기업상세
 import CompanyPage from "./pages/major/CompanyPage";
@@ -112,10 +119,14 @@ const router = createBrowserRouter([
             <CVPage />
           </ProtectedRoute>
         ),
+        children: [
+          { index: true, element: <CVListPage /> },
+          /* 이력서 CRUD페이지*/
+          { path: "cvmanage", element: <CVManagePage /> },
+        ],
       },
-      /* 테스트 : 이력서 작성페이지*/
-      { path: "writecvpage", element: <WriteCVPage /> },
 
+      // 개인 공고
       { path: "recruit", element: <RecruitPage /> },
       {
         path: "company",
@@ -137,8 +148,8 @@ const router = createBrowserRouter([
           { path: "edit/:boardNo", element: <EditBoardPage /> },
         ],
       },
-
-      { path: "cv", element: <CVPage /> },
+        
+      //{ path: "search", element: <SearchResultPage /> },
       { path: "submitcv", element: <SubmitCVPage /> },
       { path: "supportlist", element: <SupportListPage /> },
       { path: "writesupport", element: <WriteSupportPage /> },
@@ -166,8 +177,6 @@ const router = createBrowserRouter([
               { path: "checkout", element: <PaymentCheckout /> },
               { path: "fail", element: <PaymentFail /> },
               { path: "sucess", element: <PaymentSuccess /> },
-              { path: "upgrade", element: <UpgradeMembership /> },
-              { path: "downgrade", element: <DowngradeMembership /> },
             ],
           },
         ],
@@ -181,7 +190,17 @@ const router = createBrowserRouter([
  \______| \______/  | _| `._____|| _|    _____| _|    /__/     \__\ \______| |_______|_______/    
                                         |______|                                                  
       */
-      { path: "corp", element: <CorpRecruitListPage /> },
+      // 기업 공고
+      {
+        path: "corprecruit",
+        element: <CorpRecruitPage />,
+        children: [
+          { index: true, element: <CorpRecruitListPage /> },
+          { path: "write", element: <WriteRecruitPage /> },
+          { path: ":recruitNo", element: <CorpRecruitDetailPage /> },
+          { path: "edit/:recruitNo", element: <EditRecruitPage /> },
+        ],
+      },
 
       // 기업 회원
       { path: "corpcvlist", element: <CorpCVListPage /> },

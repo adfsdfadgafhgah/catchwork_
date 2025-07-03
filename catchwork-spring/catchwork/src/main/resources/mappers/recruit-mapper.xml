@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.recruit.model.mapper.RecruitMapper">
+	
+	<!-- 채용공고 작성 -->
+	<insert id="writeRecruit" parameterType="Recruit">
+	<selectKey resultType="int" keyProperty="recruitNo" order="BEFORE">
+    SELECT SEQ_RECRUIT_NO.NEXTVAL FROM DUAL
+  </selectKey>
+    INSERT INTO RECRUIT (
+      RECRUIT_NO,
+      RECRUIT_TITLE,
+      RECRUIT_START_DATE,
+      RECRUIT_END_DATE,
+      RECRUIT_JOB_NAME,
+      RECRUIT_JOB_DETAIL,
+      RECRUIT_EDU,
+      RECRUIT_CAREER,
+      RECRUIT_HEADCOUNT,
+      RECRUIT_TYPE,
+      RECRUIT_JOB_AREA,
+      RECRUIT_SALARY,
+      RECRUIT_RESULT_DATE,
+      RECRUIT_DOCX,
+      RECRUIT_APPLY,
+      RECRUIT_CORP_URL,
+      RECRUIT_HIRE_DETAIL,
+      RECRUIT_ETC,
+      RECRUIT_STATUS,
+      RECRUIT_WRITE_DATE,
+      MEM_NO
+    )
+    VALUES (
+      #{recruitNo},
+      #{recruitTitle},
+      #{recruitStartDate},
+      #{recruitEndDate},
+      #{recruitJobName},
+      #{recruitJobDetail},
+      #{recruitEdu},
+      #{recruitCareer},
+      #{recruitHeadcount},
+      #{recruitType},
+      #{recruitJobArea},
+      #{recruitSalary},
+      #{recruitResultDate},
+      #{recruitDocx},
+      #{recruitApply},
+      #{recruitCorpUrl},
+      #{recruitHireDetail},
+      #{recruitEtc},
+      0,
+      SYSDATE,
+      #{memNo}
+    )
+  </insert>
+	
+		<!-- 채용공고 상세 -->
+		<select id="getRecruitDetail" parameterType="map" resultType="Recruit">
+	    SELECT 
+	    R.RECRUIT_NO,
+	    R.RECRUIT_TITLE,
+	    TO_CHAR(R.RECRUIT_START_DATE, 'YYYY-MM-DD') AS RECRUIT_START_DATE,
+	    TO_CHAR(R.RECRUIT_END_DATE, 'YYYY-MM-DD') AS RECRUIT_END_DATE,
+	    R.RECRUIT_JOB_NAME,
+	    R.RECRUIT_JOB_DETAIL,
+	    R.RECRUIT_EDU,
+	    R.RECRUIT_CAREER,
+	    R.RECRUIT_HEADCOUNT,
+	    R.RECRUIT_TYPE,
+	    R.RECRUIT_JOB_AREA,
+	    R.RECRUIT_SALARY,
+	    TO_CHAR(R.RECRUIT_RESULT_DATE, 'YYYY-MM-DD') AS RECRUIT_RESULT_DATE,
+	    R.RECRUIT_DOCX,
+	    R.RECRUIT_APPLY,
+	    R.RECRUIT_CORP_URL,
+	    R.RECRUIT_HIRE_DETAIL,
+	    R.RECRUIT_ETC,
+	    R.RECRUIT_STATUS,
+	    TO_CHAR(R.RECRUIT_WRITE_DATE, 'YYYY-MM-DD') AS RECRUIT_WRITE_DATE,
+	    R.MEM_NO,
+	
+	    CI.CORP_LOGO AS corpLogo,
+	    CI.CORP_NAME AS corpName,
+	    CI.CORP_TYPE AS corpType,
+	
+	    NVL(LC.LIKE_COUNT, 0) AS likeCount,
+	
+	    CASE
+	      WHEN EXISTS (
+	        SELECT 1 FROM FAV_RECRUIT FR
+	        WHERE FR.RECRUIT_NO = R.RECRUIT_NO
+	          AND FR.MEM_NO = #{memNo}
+	      ) THEN 1 ELSE 0
+	    END AS likedByCurrentUser
+	
+	  FROM RECRUIT R
+	  JOIN CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
+	  JOIN CORP_INFO CI ON CM.CORP_NO = CI.CORP_NO
+	  LEFT JOIN (
+	    SELECT RECRUIT_NO, COUNT(*) AS LIKE_COUNT
+	    FROM FAV_RECRUIT
+	    GROUP BY RECRUIT_NO
+	  ) LC ON R.RECRUIT_NO = LC.RECRUIT_NO
+	  WHERE R.RECRUIT_NO = #{recruitNo}
+	  </select>
+  
+	 <!-- 채용공고 목록 -->
+	<select id="selectRecruitList" resultType="Recruit" parameterType="map">
+	SELECT
+	    R.*,
+	    
+	    -- 기업 정보
+	    CI.CORP_NAME,
+	    CI.CORP_TYPE,
+	    CI.CORP_LOGO,
+	    
+	    -- 좋아요 수
+	    (SELECT COUNT(*) FROM FAV_RECRUIT F WHERE F.RECRUIT_NO = R.RECRUIT_NO) AS likeCount,
+	    
+	    -- 로그인 유저의 좋아요 여부
+	    (SELECT COUNT(*)
+	     FROM FAV_RECRUIT F
+	     WHERE F.RECRUIT_NO = R.RECRUIT_NO
+	       AND F.MEM_NO = #{memNo}) AS likedByCurrentUser
+	
+	FROM RECRUIT R
+	JOIN CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
+	JOIN CORP_INFO CI ON CM.CORP_NO = CI.CORP_NO
+	
+	<where>
+	  <choose>
+	  
+	    <!-- 채용중: 아직 마감되지 않은 상태 -->
+	    <when test="status == 'open'">
+	      R.RECRUIT_STATUS = 0
+	      AND TRUNC(R.RECRUIT_END_DATE) <![CDATA[ >= ]]> TRUNC(SYSDATE)
+	    </when>
+	    
+	    <!-- 마감됨: 마감일이 지났거나 상태가 3 -->
+	    <when test="status == 'closed'">
+	      (R.RECRUIT_STATUS = 3 OR TRUNC(R.RECRUIT_END_DATE) <![CDATA[ < ]]> TRUNC(SYSDATE))
+	    </when>
+	    
+	    <!-- 전체: 마감/진행 중인 것들 -->
+	    <otherwise>
+	      R.RECRUIT_STATUS IN (0, 3)
+	    </otherwise>
+	    
+	  </choose>
+
+	  <if test="writer == 'me' and memNo != null">
+	    AND R.MEM_NO = #{memNo}
+	  </if>
+	
+	  <if test="query != null and query != ''">
+	    AND (
+	      LOWER(R.RECRUIT_TITLE) LIKE '%' || LOWER(#{query}) || '%'
+	      OR LOWER(CI.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%'
+	      OR LOWER(R.RECRUIT_JOB_NAME) LIKE '%' || LOWER(#{query}) || '%'
+	    )
+	  </if>
+	</where>
+
+	<choose>
+	    <when test="sort == 'latest'">
+	        ORDER BY R.RECRUIT_WRITE_DATE DESC
+	    </when>
+	    <when test="sort == 'oldest'">
+	        ORDER BY R.RECRUIT_WRITE_DATE ASC
+	    </when>
+	    <when test="sort == 'views'">
+	        ORDER BY R.RECRUIT_READ_COUNT DESC
+	    </when>
+	    <when test="sort == 'likes'">
+	        ORDER BY likeCount DESC
+	    </when>
+	    <otherwise>
+	        ORDER BY R.RECRUIT_WRITE_DATE DESC
+	    </otherwise>
+	</choose>
+	</select>
+
+
+	<!-- 좋아요 존재 여부 확인 -->
+	<select id="checkRecruitLike" resultType="boolean">
+	  SELECT CASE WHEN EXISTS (
+	    SELECT 1 FROM FAV_RECRUIT
+	    WHERE MEM_NO = #{memNo}
+	      AND RECRUIT_NO = #{recruitNo}
+	  ) THEN 1 ELSE 0 END
+	  FROM DUAL
+	</select>
+
+	<!-- 좋아요 등록 -->
+	<insert id="insertRecruitLike">
+	  INSERT INTO FAV_RECRUIT (MEM_NO, RECRUIT_NO)
+	  VALUES (#{memNo}, #{recruitNo})
+	</insert>
+
+	<!-- 좋아요 삭제 -->
+	<delete id="deleteRecruitLike">
+	  DELETE FROM FAV_RECRUIT
+	  WHERE MEM_NO = #{memNo}
+	    AND RECRUIT_NO = #{recruitNo}
+	</delete>
+
+	<!-- 작성자 확인 -->
+	<select id="findWriterByRecruitNo" resultType="string">
+	  SELECT MEM_NO
+	  FROM RECRUIT
+	  WHERE RECRUIT_NO = #{recruitNo}
+	</select>
+
+	<!-- 채용공고 삭제 (상태 변경) -->
+	<update id="deleteRecruit">
+	  UPDATE RECRUIT
+	  SET RECRUIT_STATUS = 1
+	  WHERE RECRUIT_NO = #{recruitNo}
+	    AND MEM_NO = #{memNo, jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 공고 마감처리 -->
+	<update id="updateRecruitStatusToClosed">
+	  UPDATE RECRUIT
+	  SET RECRUIT_STATUS = 3
+	  WHERE RECRUIT_NO = #{recruitNo}
+	</update>
+	
+	<!-- 채용공고 수정 -->
+	<update id="editRecruit" parameterType="Recruit">
+	UPDATE RECRUIT
+	SET
+	    RECRUIT_TITLE = #{recruitTitle},
+	    <if test="recruitStartDate != null and recruitStartDate != ''">
+	        RECRUIT_START_DATE = TO_DATE(SUBSTR(#{recruitStartDate}, 1, 10), 'YYYY-MM-DD'),
+	    </if>
+	    <if test="recruitStartDate == null or recruitStartDate == ''">
+	        RECRUIT_START_DATE = NULL,
+	    </if>
+	    <if test="recruitEndDate != null and recruitEndDate != ''">
+	        RECRUIT_END_DATE = TO_DATE(SUBSTR(#{recruitEndDate}, 1, 10), 'YYYY-MM-DD'),
+	    </if>
+	    <if test="recruitEndDate == null or recruitEndDate == ''">
+	        RECRUIT_END_DATE = NULL,
+	    </if>
+	    RECRUIT_JOB_NAME = #{recruitJobName},
+	    RECRUIT_JOB_DETAIL = #{recruitJobDetail},
+	    RECRUIT_EDU = #{recruitEdu},
+	    RECRUIT_CAREER = #{recruitCareer},
+	    RECRUIT_HEADCOUNT = #{recruitHeadcount},
+	    RECRUIT_TYPE = #{recruitType},
+	    RECRUIT_JOB_AREA = #{recruitJobArea},
+	    RECRUIT_SALARY = #{recruitSalary},
+	    <if test="recruitResultDate != null and recruitResultDate != ''">
+	        RECRUIT_RESULT_DATE = TO_DATE(SUBSTR(#{recruitResultDate}, 1, 10), 'YYYY-MM-DD'),
+	    </if>
+	    <if test="recruitResultDate == null or recruitResultDate == ''">
+	        RECRUIT_RESULT_DATE = NULL,
+	    </if>
+	    RECRUIT_DOCX = #{recruitDocx},
+	    RECRUIT_APPLY = #{recruitApply},
+	    RECRUIT_CORP_URL = #{recruitCorpUrl},
+	    RECRUIT_HIRE_DETAIL = #{recruitHireDetail},
+	    RECRUIT_ETC = #{recruitEtc}
+	WHERE RECRUIT_NO = #{recruitNo}
+	  AND MEM_NO = #{memNo}
+	</update>
+
+</mapper>

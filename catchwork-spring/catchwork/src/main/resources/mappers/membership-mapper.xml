@@ -4,7 +4,13 @@
 <mapper	namespace="com.example.demo.myPage.membership.model.mapper.MembershipMapper">
 
 <select id="getMembershipList">
-	SELECT * FROM "MEMBER_GRADE"
+SELECT * FROM "MEMBER_GRADE"
+</select>
+
+<select id="getSubscription">
+SELECT * 
+FROM "SUBSCRIPTION" 
+WHERE MEM_NO = #{memNo}
 </select>
 
 </mapper>

@@ -20,56 +20,130 @@ import com.example.demo.cv.model.dto.CVTraining;
 
 @Mapper
 public interface CVMapper {
+
+	/** 이력서 주인 확인
+	 * @param cvNo
+	 * @param memNo
+	 * @return
+	 */
+	int checkCVOwner(@Param("cvNo") int cvNo, @Param("memNo") String memNo);
 	
+	/** 이력서 리스트 조회
+	 * @param memNo
+	 * @return
+	 */
+	List<CV> selectCVList(String memNo);
+
+	
+	// 병역 -> 학력 -> 경력 -> 수상 -> 자격증 -> 어학 -> 대외활동 -> 교육이수 -> 포트폴리오
+	
+    // ==========================================
+    // 조회(SELECT)
+    // ==========================================
+	/** 이력서 조회
+	 * @param cvNo
+	 * @return
+	 */
+	CV selectCV(int cvNo);
+	
+	CVMilitary selectMilitary(int cvNo);
+	
+	CVEducation selectEducation(int cvNo);
+	
+	List<CVExperience> selectExperience(int cvNo);
+	
+	List<CVAward> selectAward(int cvNo);
+	
+	List<CVQualify> selectQualify(int cvNo);
+	
+	List<CVLanguage> selectLanguage(int cvNo);
+	
+	List<CVOuter> selectOuter(int cvNo);
+	
+	List<CVTraining> selectTraining(int cvNo);
+	
+	List<CVPortfolio> selectPortfolio(int cvNo);
+	
+    // ==========================================
+    // 추가(INSERT)
+    // ==========================================
 	/** 이력서 추가
 	 * @param cv
 	 */
 	void addCV(CV cv);
 
-	/** 병역 추가
-	 * @param military
-	 */
 	void addMilitary(CVMilitary military);
 
-	/** 학력 추가
-	 * @param education
-	 */
 	void addEducation(CVEducation education);
 
-	/** 경력 추가
-	 * @param experience
-	 */
 	void addExperience(CVExperience experience);
 
-	/** 수상 추가
-	 * @param award
-	 */
 	void addAward(CVAward award);
 
-	/** 자격증 추가
-	 * @param qualify
-	 */
 	void addQualify(CVQualify qualify);
 
-	/** 어학 추가
-	 * @param language
-	 */
 	void addLanguage(CVLanguage language);
 
-	/** 대외 추가
-	 * @param outer
-	 */
 	void addOuter(CVOuter outer);
 
-	/** 교육 추가
-	 * @param training
-	 */
 	void addTraining(CVTraining training);
 
-	/** 포폴 추가
-	 * @param portfolio
-	 */
 	void addPortfolio(CVPortfolio portfolio);
+	
+    // ==========================================
+    // 수정(UPDATE)
+    // ==========================================
+	/** 이력서 수정
+	 * @param cv
+	 */
+	void updateCV(CV cv);
+
+	void updateMilitary(CVMilitary military);
+
+	void updateEducation(CVEducation education);
+
+	void updateExperience(CVExperience experience);
+
+	void updateAward(CVAward award);
+
+	void updateQualify(CVQualify qualify);
+
+	void updateLanguage(CVLanguage language);
+
+	void updateOuter(CVOuter outer);
+
+	void updateTraining(CVTraining training);
+
+	void updatePortfolio(CVPortfolio portfolio);
+	
+	
+    // ==========================================
+    // 삭제(DELETE)
+    // ==========================================
+	/** 이력서 삭제
+	 * @param cvNo
+	 */
+	void deleteCV(int cvNo);
+
+	void deleteMilitary(int cvNo);
+
+	void deleteEducation(int cvNo);
+
+	void deleteExperience(int cvNo);
+
+	void deleteAward(int cvNo);
+
+	void deleteQualify(int cvNo);
+
+	void deleteLanguage(int cvNo);
+
+	void deleteOuter(int cvNo);
+
+	void deleteTraining(int cvNo);
+
+	void deletePortfolio(int cvNo);
+
+
 	
 // 	// 회원번호(memNo)로 이력서 목록 조회
 //     List<CV> selectCVList(@Param("memNo") String memNo);
