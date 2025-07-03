@@ -4,15 +4,32 @@
 <mapper	namespace="com.example.demo.company.model.mapper.FavCorpMapper">
 
 
-    <!-- 관심기업 등록 -->
-    <insert id="insertFavCorp">
-     	INSERT INTO FAV_CORP (MEM_NO, CORP_NO)
-        VALUES (#{memNo}, #{corpNo})
-    </insert>
 
-    <!-- 관심기업 삭제 -->
-    <delete id="deleteFavCorp">
-        DELETE FROM FAV_CORP
-        WHERE MEM_NO = #{memNo} AND CORP_NO = #{corpNo}
-    </delete>
+<!-- 관심 등록 여부 확인 -->
+<select id="isSaved" resultType="int" parameterType="FavCorp">
+SELECT COUNT(*) 
+  FROM fav_corp 
+  WHERE mem_no = #{memNo} AND corp_no = #{corpNo}
+</select>
+
+
+<!-- 관심 기업 등록 -->
+<insert id="insertFavCorp" parameterType="FavCorp">
+  INSERT INTO FAV_CORP (MEM_NO, CORP_NO)
+  VALUES (#{memNo}, #{corpNo})
+</insert>
+
+<!-- 관심 기업 삭제 -->
+<delete id="deleteFavCorp" parameterType="FavCorp">
+  DELETE FROM FAV_CORP
+  WHERE MEM_NO = #{memNo} AND CORP_NO = #{corpNo}
+</delete>
+
+<!-- 기업별 총 관심 수 -->
+<select id="totalFav" parameterType="int" resultType="int">
+  SELECT COUNT(*)
+  FROM FAV_CORP
+  WHERE CORP_NO = #{corpNo}
+</select>
+    
 </mapper>

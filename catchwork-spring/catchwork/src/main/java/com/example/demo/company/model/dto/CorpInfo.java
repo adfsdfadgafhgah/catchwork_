@@ -16,7 +16,7 @@ public class CorpInfo {
 	
 	//기업정보 테이블
 	private int corpNo;                // 기업_시퀀스_번호 (PK)
-    private int corpRegNo;             // 기업_사업자등록번호
+    private String corpRegNo;             // 기업_사업자등록번호 **String 으로 수정**
     private String corpType;            // 기업_형태
     private String corpName;            // 기업_회사명
     private String corpLogo;            // 기업_로고
@@ -35,12 +35,12 @@ public class CorpInfo {
  	private String memNo;
     
     //관심 공고
-    private int liked; // 1 = 관심등록함, 0 = 아님
+    private int isSaved; // 1 = 관심등록함, 0 = 아님
 
     
     //추가정보
     private int recruitCount;			//공고 개수
-    private int favCount;				//관심 개수
+    private int favs;				//관심 개수
     private int views;					//조회수
     
     

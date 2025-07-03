@@ -39,6 +39,9 @@ import PaymentSuccess from "./pages/myPage/membership/PaymentSuccess";
 import UpgradeMembership from "./pages/myPage/membership/UpgradeMembership";
 import DowngradeMembership from "./pages/myPage/membership/DowngradeMembership";
 
+//검색
+//import SearchResultPage from "./pages/major/SearchResultPage";
+
 //이력서 제출
 import SubmitCVPage from "./pages/major/SubmitCVPage";
 import WriteCVPage from "./pages/major/WriteCVPage";
@@ -137,7 +140,7 @@ const router = createBrowserRouter([
           { path: "edit/:boardNo", element: <EditBoardPage /> },
         ],
       },
-
+      //{ path: "search", element: <SearchResultPage /> },
       { path: "cv", element: <CVPage /> },
       { path: "submitcv", element: <SubmitCVPage /> },
       { path: "supportlist", element: <SupportListPage /> },

@@ -5,129 +5,16 @@ import CompanyItem from "../../components/company/CompanyItem";
 import "./CompanyListPage.css";
 import { axiosApi } from "../../api/axiosAPI";
 
-//const CompanyListPage = () => {
-// const [companyList, setCompanyList] = useState([
-//   // 가데이터 넣어서 확인하는중임
-//   {
-//     corpNo: 1,
-//     corpName: "KH 정보교육원 종로",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 1,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 2,
-//     corpName: "KH 정보교육원 강남",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 2,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 3,
-//     corpName: "KH 정보교육원 의정부",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 3,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 4,
-//     corpName: "KH 정보교육원 인천",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 4,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 5,
-//     corpName: "KH 정보교육원 신촌",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 5,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 6,
-//     corpName: "KH 정보교육원 노원",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 6,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 1,
-//     corpName: "KH 정보교육원 종로",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 1,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 2,
-//     corpName: "KH 정보교육원 강남",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 2,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 3,
-//     corpName: "KH 정보교육원 의정부",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 3,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 4,
-//     corpName: "KH 정보교육원 인천",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 4,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 5,
-//     corpName: "KH 정보교육원 신촌",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 5,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 6,
-//     corpName: "KH 정보교육원 노원",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 6,
-//     views: 120,
-//     favs: 70,
-//   },
-// ]);
 const CompanyListPage = () => {
   const [companyList, setCompanyList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
 
   //기업 목록
-
   const getCorpList = async () => {
     setLoading(true);
     try {
-      const memNo = "49d354c4-bd52-4cdb-8fe5-a7ff69454b16";
+      const memNo = "81ee03e6-82ee-41e5-a8f5-1835574510b2";
       const params = { memNo };
 
       if (searchTerm && searchTerm.trim()) {
