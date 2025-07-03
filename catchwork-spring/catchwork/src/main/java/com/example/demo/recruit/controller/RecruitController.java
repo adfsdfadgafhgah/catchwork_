@@ -156,6 +156,9 @@ public class RecruitController {
 	@PutMapping("edit/{recruitNo}")
 	public ResponseEntity<?> editRecruit(@PathVariable("recruitNo") int recruitNo, 
 										 @RequestBody Recruit recruit) {
+		System.out.println("수정 요청: recruitNo=" + recruitNo);
+		System.out.println("DTO recruitNo=" + recruit.getRecruitNo());
+		System.out.println("DTO memNo=" + recruit.getMemNo());
 	    try {
 	    	recruit.setRecruitNo(recruitNo); // 경로 변수로 넘어온 boardNo를 DTO에 주입
 	        int result = recruitService.editRecruit(recruit);
@@ -165,6 +168,7 @@ public class RecruitController {
 	            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("수정 실패");
 	        }
 	    } catch (Exception e) {
+	    	e.printStackTrace();
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류 발생");
 	    }
 	}

@@ -61,8 +61,8 @@
 	    SELECT 
 	    R.RECRUIT_NO,
 	    R.RECRUIT_TITLE,
-	    R.RECRUIT_START_DATE,
-	    R.RECRUIT_END_DATE,
+	    TO_CHAR(R.RECRUIT_START_DATE, 'YYYY-MM-DD') AS RECRUIT_START_DATE,
+	    TO_CHAR(R.RECRUIT_END_DATE, 'YYYY-MM-DD') AS RECRUIT_END_DATE,
 	    R.RECRUIT_JOB_NAME,
 	    R.RECRUIT_JOB_DETAIL,
 	    R.RECRUIT_EDU,
@@ -71,14 +71,14 @@
 	    R.RECRUIT_TYPE,
 	    R.RECRUIT_JOB_AREA,
 	    R.RECRUIT_SALARY,
-	    R.RECRUIT_RESULT_DATE,
+	    TO_CHAR(R.RECRUIT_RESULT_DATE, 'YYYY-MM-DD') AS RECRUIT_RESULT_DATE,
 	    R.RECRUIT_DOCX,
 	    R.RECRUIT_APPLY,
 	    R.RECRUIT_CORP_URL,
 	    R.RECRUIT_HIRE_DETAIL,
 	    R.RECRUIT_ETC,
 	    R.RECRUIT_STATUS,
-	    R.RECRUIT_WRITE_DATE,
+	    TO_CHAR(R.RECRUIT_WRITE_DATE, 'YYYY-MM-DD') AS RECRUIT_WRITE_DATE,
 	    R.MEM_NO,
 	
 	    CI.CORP_LOGO AS corpLogo,
@@ -229,28 +229,43 @@
 	</update>
 	
 	<!-- 채용공고 수정 -->
-    <update id="editRecruit" parameterType="Recruit">
-        UPDATE RECRUIT
-        SET
-            RECRUIT_TITLE = #{recruitTitle},
-            RECRUIT_START_DATE = #{recruitStartDate},
-            RECRUIT_END_DATE = #{recruitEndDate},
-            RECRUIT_JOB_NAME = #{recruitJobName},
-            RECRUIT_JOB_DETAIL = #{recruitJobDetail},
-            RECRUIT_EDU = #{recruitEdu},
-            RECRUIT_CAREER = #{recruitCareer},
-            RECRUIT_HEADCOUNT = #{recruitHeadcount},
-            RECRUIT_TYPE = #{recruitType},
-            RECRUIT_JOB_AREA = #{recruitJobArea},
-            RECRUIT_SALARY = #{recruitSalary},
-            RECRUIT_RESULT_DATE = #{recruitResultDate},
-            RECRUIT_DOCX = #{recruitDocx},
-            RECRUIT_APPLY = #{recruitApply},
-            RECRUIT_CORP_URL = #{recruitCorpUrl},
-            RECRUIT_HIRE_DETAIL = #{recruitHireDetail},
-            RECRUIT_ETC = #{recruitEtc}
-        WHERE RECRUIT_NO = #{recruitNo}
-          AND MEM_NO = #{memNo} <!-- 본인 확인용 -->
-    </update>
+	<update id="editRecruit" parameterType="Recruit">
+	UPDATE RECRUIT
+	SET
+	    RECRUIT_TITLE = #{recruitTitle},
+	    <if test="recruitStartDate != null and recruitStartDate != ''">
+	        RECRUIT_START_DATE = TO_DATE(SUBSTR(#{recruitStartDate}, 1, 10), 'YYYY-MM-DD'),
+	    </if>
+	    <if test="recruitStartDate == null or recruitStartDate == ''">
+	        RECRUIT_START_DATE = NULL,
+	    </if>
+	    <if test="recruitEndDate != null and recruitEndDate != ''">
+	        RECRUIT_END_DATE = TO_DATE(SUBSTR(#{recruitEndDate}, 1, 10), 'YYYY-MM-DD'),
+	    </if>
+	    <if test="recruitEndDate == null or recruitEndDate == ''">
+	        RECRUIT_END_DATE = NULL,
+	    </if>
+	    RECRUIT_JOB_NAME = #{recruitJobName},
+	    RECRUIT_JOB_DETAIL = #{recruitJobDetail},
+	    RECRUIT_EDU = #{recruitEdu},
+	    RECRUIT_CAREER = #{recruitCareer},
+	    RECRUIT_HEADCOUNT = #{recruitHeadcount},
+	    RECRUIT_TYPE = #{recruitType},
+	    RECRUIT_JOB_AREA = #{recruitJobArea},
+	    RECRUIT_SALARY = #{recruitSalary},
+	    <if test="recruitResultDate != null and recruitResultDate != ''">
+	        RECRUIT_RESULT_DATE = TO_DATE(SUBSTR(#{recruitResultDate}, 1, 10), 'YYYY-MM-DD'),
+	    </if>
+	    <if test="recruitResultDate == null or recruitResultDate == ''">
+	        RECRUIT_RESULT_DATE = NULL,
+	    </if>
+	    RECRUIT_DOCX = #{recruitDocx},
+	    RECRUIT_APPLY = #{recruitApply},
+	    RECRUIT_CORP_URL = #{recruitCorpUrl},
+	    RECRUIT_HIRE_DETAIL = #{recruitHireDetail},
+	    RECRUIT_ETC = #{recruitEtc}
+	WHERE RECRUIT_NO = #{recruitNo}
+	  AND MEM_NO = #{memNo}
+	</update>
 
 </mapper>
