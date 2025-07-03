@@ -13,11 +13,6 @@ public class SupportServiceImpl implements SupportService {
 
     @Autowired
     private SupportMapper supportMapper;
-
-//    @Override
-//    public List<Support> getSupportList() {
-//        return supportMapper.selectSupportList();
-//    }
     
     // 문의하기 리스트 
     @Override
@@ -28,12 +23,12 @@ public class SupportServiceImpl implements SupportService {
             System.out.println("📝 " + s);
         }
         return list;
-    }
-    
-    // 문의하기 디테일
+    }    
+
+    // 문의하기 디테일 아이디
     @Override
-    public Support findById(int id) {
-        return supportMapper.selectSupportById(id);
+    public Support findById(int supportNo) {
+        return supportMapper.selectSupportById(supportNo);
     }
     
     // 문의하기 작성
