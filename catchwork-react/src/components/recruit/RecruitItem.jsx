@@ -39,7 +39,7 @@ export default function RecruitItem({ recruit, onLikeToggle }) {
     }
 
     try {
-      const resp = await axiosApi.post("/corprecruit/like", {
+      const resp = await axiosApi.post("/corpRecruit/like", {
         recruitNo: recruit.recruitNo,
         memNo: loginMember.memNo,
       });
@@ -63,7 +63,7 @@ export default function RecruitItem({ recruit, onLikeToggle }) {
   };
 
   return (
-    <Link to={`/corprecruit/${recruit.recruitNo}`} className={styles.card}>
+    <Link to={`/corpRecruit/${recruit.recruitNo}`} className={styles.card}>
       <div className={styles.logoArea}>
         <img
           src={

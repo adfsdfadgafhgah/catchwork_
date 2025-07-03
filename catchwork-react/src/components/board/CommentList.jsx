@@ -18,7 +18,7 @@ export default function CommentList({ boardNo }) {
       const resp = await axiosApi.get(`/comment/list`, {
         params: { boardNo },
       });
-      console.log("✅ 댓글 fetch 성공:", resp.data); // 🔥 찍어봐
+      // console.log("✅ 댓글 fetch 성공:", resp.data); // 🔥 찍어봐
       setComments(resp.data); // 서버에서 정렬된 데이터가 오면 가장 좋음
     } catch (err) {
       console.error("❌ 댓글 fetch 실패:", err);
@@ -33,12 +33,12 @@ export default function CommentList({ boardNo }) {
 
   useEffect(() => {
     comments.forEach((c, i) => {
-      console.log(
-        `[${i}] commentNo=${
-          c.commentNo
-        }, parentCommentNo=(${typeof c.parentCommentNo})`,
-        c.parentCommentNo
-      );
+      // console.log(
+      //   `[${i}] commentNo=${
+      //     c.commentNo
+      //   }, parentCommentNo=(${typeof c.parentCommentNo})`,
+      //   c.parentCommentNo
+      // );
     });
   }, [comments]);
 

@@ -148,7 +148,7 @@ const router = createBrowserRouter([
           { path: "edit/:boardNo", element: <EditBoardPage /> },
         ],
       },
-        
+
       //{ path: "search", element: <SearchResultPage /> },
       { path: "submitcv", element: <SubmitCVPage /> },
       { path: "supportlist", element: <SupportListPage /> },
@@ -192,7 +192,7 @@ const router = createBrowserRouter([
       */
       // 기업 공고
       {
-        path: "corprecruit",
+        path: "corpRecruit",
         element: <CorpRecruitPage />,
         children: [
           { index: true, element: <CorpRecruitListPage /> },

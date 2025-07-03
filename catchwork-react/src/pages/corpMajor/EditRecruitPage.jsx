@@ -44,7 +44,7 @@ export default function EditRecruitPage() {
   useEffect(() => {
     const fetchRecruit = async () => {
       try {
-        const resp = await axiosApi.get(`/corprecruit/detail/${recruitNo}`, {
+        const resp = await axiosApi.get(`/corpRecruit/detail/${recruitNo}`, {
           params: { memNo: loginMember?.memNo },
         });
 
@@ -71,7 +71,7 @@ export default function EditRecruitPage() {
       } catch (err) {
         console.error("공고 불러오기 실패:", err);
         alert("공고 정보를 불러오는 중 오류 발생");
-        navigate("/corprecruit");
+        navigate("/corpRecruit");
       }
     };
 
@@ -99,13 +99,13 @@ export default function EditRecruitPage() {
       };
 
       const resp = await axiosApi.put(
-        `/corprecruit/edit/${recruitNo}`,
+        `/corpRecruit/edit/${recruitNo}`,
         submitData
       );
 
       if (resp.status === 200) {
         alert("수정 완료!");
-        navigate(`/corprecruit/${recruitNo}`);
+        navigate(`/corpRecruit/${recruitNo}`);
       } else {
         alert("수정 실패");
       }
@@ -116,7 +116,7 @@ export default function EditRecruitPage() {
   };
 
   const handleCancel = () => {
-    navigate(`/corprecruit/${recruitNo}`);
+    navigate(`/corpRecruit/${recruitNo}`);
   };
 
   return (

@@ -28,14 +28,13 @@ public class Board {
 	// MEMBER 테이블 조인
 	private String memNo;
 	private String memNickname;
-	private Member member;
+	private String memProfilePath;
+	
 	
 	// 목록 조회 시 필요한 것
 	private int commentCount;
 	private int likeCount;
 	
-	// 게시글 작성자 프로필 이미지
-	private String memProfilePath;
 	
 	
 	// 좋아요 여부 확인

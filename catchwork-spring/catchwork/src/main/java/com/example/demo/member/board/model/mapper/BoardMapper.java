@@ -18,13 +18,9 @@ public interface BoardMapper {
 	 * @param query
 	 * @return
 	 */
-	List<Board> selectBoardsByLatest(@Param("query") String query, @Param("memNo") String memNo);
-	
-	List<Board> selectBoardsByOldest(@Param("query") String query, @Param("memNo") String memNo);
-	
-	List<Board> selectBoardsByLikes(@Param("query") String query, @Param("memNo") String memNo);
-	
-	List<Board> selectBoardsByComments(@Param("query") String query, @Param("memNo") String memNo);
+	List<Board> selectBoardList(@Param("sort") String sort, @Param("query") String query, @Param("memNo") String memNo);
+
+
 	
 	//-----------------------------------------------------------------
 
@@ -93,6 +89,12 @@ public interface BoardMapper {
 	 * @return
 	 */
 	int deleteBoard(@Param("boardNo") int boardNo, @Param("memNo") String memNo);
+
+	/** 게시글 조회수 증가
+	 * @author BAEBAE
+	 * @param boardNo
+	 */
+	void readCount(int boardNo);
 
 	
 

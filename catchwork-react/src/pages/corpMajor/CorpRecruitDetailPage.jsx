@@ -6,6 +6,7 @@ import useLoginMember from "../../stores/loginMember";
 import SectionHeader from "../../components/common/SectionHeader";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
+import DeadlineTimer from "../../components/common/DeadlineTimer";
 
 export default function CorpRecruitDetailPage() {
   const { recruitNo } = useParams();
@@ -26,22 +27,46 @@ export default function CorpRecruitDetailPage() {
     }
   }, []);
 
-  // 공고 detail 조회
+  // 공고 상세 조회 + 조회수 증가
   useEffect(() => {
-    const fetchRecruit = async () => {
+    const key = `viewed_recruit_${recruitNo}`;
+    const now = new Date();
+    const today = now.toDateString();
+    const lastViewed = localStorage.getItem(key);
+
+    const fetchDetail = async () => {
       try {
-        const resp = await axiosApi.get(`/corprecruit/detail/${recruitNo}`, {
+        const resp = await axiosApi.get(`/corpRecruit/detail/${recruitNo}`, {
           params: { memNo: loginMember?.memNo },
         });
         const data = resp.data;
-        setRecruit(resp.data);
+        setRecruit(data);
         setLiked(data.likedByCurrentUser);
         setLikeCount(data.likeCount);
       } catch (err) {
-        console.error("공고 조회 실패", err);
+        console.error("❌ 상세 조회 실패:", err);
       }
     };
-    fetchRecruit();
+
+    const increaseThenFetch = async () => {
+      try {
+        // 조회수 증가 로직
+        if (!lastViewed || new Date(lastViewed).toDateString() !== today) {
+          localStorage.setItem(key, now.toISOString());
+          await axiosApi.get(`/corpRecruit/recruitReadCount/${recruitNo}`);
+          console.log("📈 조회수 증가 후 상세 다시 조회");
+        } else {
+          console.log("✅ 오늘 이미 조회함");
+        }
+
+        // 항상 상세 재조회
+        await fetchDetail();
+      } catch (err) {
+        console.error("❌ 전체 로직 실패:", err);
+      }
+    };
+
+    increaseThenFetch();
   }, [recruitNo, loginMember?.memNo]);
 
   // 공고 마감 핸들러
@@ -49,13 +74,13 @@ export default function CorpRecruitDetailPage() {
     if (!window.confirm("이 공고를 마감처리하시겠습니까?")) return;
 
     try {
-      const resp = await axiosApi.put(`/corprecruit/end/${recruitNo}`, {
+      const resp = await axiosApi.put(`/corpRecruit/end/${recruitNo}`, {
         memNo: loginMember.memNo,
       });
 
       if (resp.status === 200) {
         alert("마감처리 되었습니다.");
-        navigate("/corprecruit"); // 목록으로 이동
+        navigate("/corpRecruit"); // 목록으로 이동
       } else {
         alert("마감처리에 실패했습니다.");
       }
@@ -67,7 +92,7 @@ export default function CorpRecruitDetailPage() {
 
   // 공고 수정 페이지로 핸들러
   const handleEdit = () => {
-    navigate(`/corprecruit/edit/${recruitNo}`);
+    navigate(`/corpRecruit/edit/${recruitNo}`);
   };
 
   // 공고 삭제 핸들러
@@ -75,13 +100,13 @@ export default function CorpRecruitDetailPage() {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
 
     try {
-      const resp = await axiosApi.delete(`/corprecruit/delete/${recruitNo}`, {
+      const resp = await axiosApi.delete(`/corpRecruit/delete/${recruitNo}`, {
         data: { memNo: loginMember.memNo },
       });
 
       if (resp.status === 200) {
         alert("삭제되었습니다.");
-        navigate("/corprecruit"); // 삭제 후 목록으로 이동
+        navigate("/corpRecruit"); // 삭제 후 목록으로 이동
       } else {
         alert("삭제에 실패했습니다.");
       }
@@ -102,7 +127,7 @@ export default function CorpRecruitDetailPage() {
     setLikeLoading(true);
 
     try {
-      const resp = await axiosApi.post("corprecruit/like", {
+      const resp = await axiosApi.post("corpRecruit/like", {
         recruitNo: recruit.recruitNo,
         memNo: loginMember.memNo,
       });
@@ -220,10 +245,9 @@ export default function CorpRecruitDetailPage() {
         <p>{recruit.recruitEtc}</p>
       </section>
 
-      <p className={styles.expireInfo}>
-        공고 마감까지 남은 시간:{" "}
-        <span className={styles.highlight}>20일 07:23:06</span>
-      </p>
+      <div className={styles.deadlineTimer}>
+        <DeadlineTimer recruitEndDate={recruit.recruitEndDate} />
+      </div>
 
       {loginMember?.memNo === recruit.memNo ? (
         <FloatButton

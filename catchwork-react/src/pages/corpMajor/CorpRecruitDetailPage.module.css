@@ -142,3 +142,8 @@
   color: red;
   font-weight: bold;
 }
+
+.deadlineTimer {
+  text-align: center;
+  margin-top: 20px;
+}

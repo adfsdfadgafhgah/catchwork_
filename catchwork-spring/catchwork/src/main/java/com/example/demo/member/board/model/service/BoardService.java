@@ -56,4 +56,10 @@ public interface BoardService {
 	 */
 	boolean deleteBoard(int boardNo, String memNo);
 
+	/** 게시글 조회수 증가
+	 * @author BAEBAE
+	 * @param boardNo
+	 */
+	void readCount(int boardNo);
+
 }
