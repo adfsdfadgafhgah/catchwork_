@@ -128,3 +128,15 @@
   transform: scale(1.2);
   accent-color: var(--main-color);
 }
+.cv-group {
+  margin-bottom: 32px;
+}
+
+.cv-group-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 24px 0 12px;
+  padding-left: 10px;
+  border-left: 4px solid var(--main-color);
+  color: var(--main-color-dark);
+}

@@ -11,30 +11,31 @@ public class FavCorpServiceImpl implements FavCorpService{
 		@Autowired
 	    private FavCorpMapper mapper;
 
+		
+		/**
+	     * 관심 등록 유무
+	     */
+	    @Override
+	    public int isSaved(FavCorp favCorp) {
+	    	return  mapper.isSaved(favCorp);
+	    }
+		
 		/**
 		 * 관심 등록
 		 */
 		@Override
-	    public int insertFavCorp(FavCorp fav) {
-	        return mapper.insertFavCorp(fav);
+	    public int insertFavCorp(FavCorp favCorp) {
+	        return mapper.insertFavCorp(favCorp);
 	    }
 
 		/**
 		 * 관심 삭제
 		 */
 		@Override
-	    public int deleteFavCorp(FavCorp fav) {
-	        return mapper.deleteFavCorp(fav);
-	    }
+		public int deleteFavCorp(FavCorp favCorp) {
+			return mapper.deleteFavCorp(favCorp);
+		}
 		
-	    /**
-	     * 관심 등록 유무
-	     */
-	    @Override
-	    public boolean isFavCorp(FavCorp fav) {
-	    	return  mapper.isFavCorp(fav);
-	    }
-	    
 	    /**
 	     * 기업별 총 관심 수
 	     */
@@ -42,6 +43,7 @@ public class FavCorpServiceImpl implements FavCorpService{
 	    public int totalFav(int corpNo) {
 	        return mapper.totalFav(corpNo);
 	    }
+
 
 
 }

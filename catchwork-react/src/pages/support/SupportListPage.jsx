@@ -10,7 +10,7 @@ const SupportListPage = () => {
   const [supportItems, setSupportItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const itemsPerPage = 10; // 페이지당 항목 수
+  const itemsPerPage = 10; // 페이지당 항목 수  
 
   useEffect(() => {
     const fetchSupportData = async () => {
@@ -41,14 +41,15 @@ const SupportListPage = () => {
   };
 
   return (
-    <div className="support-list-container">
-      <div className="support-header">
-        <h2>문의 목록</h2>
-        <button className="button-common" onClick={goToWrite}>
-          ✏️ 작성하기
-        </button>
-      </div>
-      <div className="title-underline" />
+  <div className="support-list-container">
+  <div className="support-header">
+    <h2>문의 목록</h2>
+    <button className="write-btn-submit" onClick={goToWrite}>
+      <i className="fa-regular fa-pen-to-square"></i> 작성하기
+    </button>
+  </div>
+  <div className="title-underline" />
+
 
       {loading ? (
         <p className="loading-message">로딩 중...</p>

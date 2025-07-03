@@ -3,6 +3,7 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 import "./SubmitCVPage.css";
 import SectionHeader from "../../components/common/SectionHeader";
+import { axiosApi } from "../../api/axiosAPI";
 
 const SubmitCVPage = () => {
   const [resumeList, setResumeList] = useState([]);

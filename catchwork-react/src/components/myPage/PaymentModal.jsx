@@ -7,6 +7,8 @@ const PaymentModal = ({
   type,
   onConfirm,
   loading = false,
+  balance,
+  targetPrice,
 }) => {
   if (!isOpen) return null;
 
@@ -19,22 +21,32 @@ const PaymentModal = ({
           confirmText: "업그레이드",
           cancelText: "취소",
           confirmClass: "upgrade",
+          balance: balance ?? 0,
+          targetPrice: targetPrice ?? 0,
         };
       case "downgrade":
         return {
           title: "멤버십 다운그레이드",
-          message: "실버 플랜으로 다운그레이드하시겠습니까?",
+          message: `실버 플랜으로 다운그레이드하시겠습니까? \n\n* 실버 플랜으로 변경하시는 경우, \n다음 결제일부터 플랜 혜택이 변경됩니다.`,
           confirmText: "다운그레이드",
           cancelText: "취소",
           confirmClass: "downgrade",
         };
       case "cancel":
         return {
-          title: "구독 해지",
-          message: "정말로 구독을 해지하시겠습니까?",
+          title: "멤버십 해지",
+          message: "정말로 플랜을 해지하시겠습니까?",
           confirmText: "해지",
           cancelText: "취소",
           confirmClass: "cancel",
+        };
+      case "restore":
+        return {
+          title: "멤버십 복구",
+          message: "정말로 플랜을 복구하시겠습니까?",
+          confirmText: "복구",
+          cancelText: "취소",
+          confirmClass: "restore",
         };
       default:
         return {
@@ -72,6 +84,13 @@ const PaymentModal = ({
         </div>
         <div className="modal-body">
           <p>{content.message}</p>
+          {content.confirmClass === "upgrade" && (
+            <p>
+              잔여 이용 금액 : {content.balance} 원
+              <br />
+              추가 결제 금액 : {content.targetPrice - content.balance} 원
+            </p>
+          )}
         </div>
         <div className="modal-footer">
           <button
