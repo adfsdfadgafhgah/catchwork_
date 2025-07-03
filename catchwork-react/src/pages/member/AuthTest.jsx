@@ -101,6 +101,20 @@ const AuthTest = () => {
     }
   };
 
+  const checkToken = async () => {
+    try {
+      const res = await axiosApi.get("check-token", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+        withCredentials: true,
+      });
+      alert(res.data.message); // "유효함"
+    } catch (err) {
+      alert("유효하지 않음");
+    }
+  };
+
   return (
     <div>
       <h2>회원가입/로그인 테스트</h2>
@@ -112,6 +126,9 @@ const AuthTest = () => {
       <br></br>
       <button onClick={signout}>로그아웃</button>
       <br></br>
+      <button onClick={checkToken}>토큰 확인</button>
+      <br></br>
+
       <pre>{result}</pre>
     </div>
   );

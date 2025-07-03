@@ -1,30 +1,44 @@
 package com.example.demo.member.controller;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.auth.model.entity.RefreshTokenEntity;
+import com.example.demo.auth.model.repository.RefreshTokenRepository;
 import com.example.demo.member.model.dto.Member;
 import com.example.demo.member.model.service.MemberService;
+import com.example.demo.util.JWTUtil;
 
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 public class MemberController {
 
+    private final JWTUtil jwtUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
+
 //	@Autowired
 	private final MemberService service;
 	
-	public MemberController(MemberService service) {	
-		this.service = service;
+	public MemberController(MemberService service, JWTUtil jwtUtil, RefreshTokenRepository refreshTokenRepository) {	
+		this.service = service;	
+		this.jwtUtil = jwtUtil;
+		this.refreshTokenRepository = refreshTokenRepository;
 	}
 	
 	/**
@@ -73,6 +87,107 @@ public class MemberController {
 	    cookie.setSecure(true);
 	    response.addCookie(cookie);
 	    return ResponseEntity.ok("로그아웃 성공");
+	}
+	
+	/**
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@PostMapping("/reissue")
+	public ResponseEntity<?> reissueToken(HttpServletRequest request, HttpServletResponse response) {
+		System.out.println("reissue controller");
+		
+	    // 쿠키에서 refreshToken 추출
+	    String refreshToken = null;
+	    if (request.getCookies() != null) {
+	        for (Cookie cookie : request.getCookies()) {
+	            if ("refreshToken".equals(cookie.getName())) {
+	                refreshToken = cookie.getValue();
+	                break;
+	            }
+	        }
+	    }
+	    
+	    // refreshToken 유효성 검사
+	    if (refreshToken == null || jwtUtil.isExpired(refreshToken)) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Refresh token expired or missing");
+	    }
+
+	    // refreshToken에서 memNo 추출
+	    String memNo = jwtUtil.getMemNo(refreshToken);
+	    
+	    // DB에서 저장된 refreshToken 조회 및 비교
+	    Optional<RefreshTokenEntity> savedTokenOpt = refreshTokenRepository.findByMemNo(memNo);
+	    System.out.println("DB refreshToken : "+savedTokenOpt);
+
+	    // debug
+	    System.out.println(savedTokenOpt.get().getRefreshToken());
+	    System.out.println(refreshToken);
+	    
+	    // 뭐라고 해야할 까
+	    if (savedTokenOpt.isEmpty() || !savedTokenOpt.get().getRefreshToken().equals(refreshToken)) {
+	    	// 쿠키 삭제 (refreshToken 무효 처리)
+	    	Cookie deleteCookie = new Cookie("refreshToken", null);
+	    	deleteCookie.setHttpOnly(true);
+	    	deleteCookie.setPath("/");
+	    	deleteCookie.setMaxAge(0); // 즉시 만료
+	    	response.addCookie(deleteCookie);
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid refresh token");
+	    }
+	    
+	    // accessToken/refreshToken 재발급
+	    Member member = service.getLoginMember(memNo);
+	    String newAccessToken = jwtUtil.createJwt(
+		        member.getMemNo(), member.getMemNickname(), member.getMemType(), 5 * 1000L	// 5 sec (test)
+//		        member.getMemNo(), member.getMemNickname(), member.getMemType(), 15 * 60 * 1000L	// 15 min
+	    );
+
+	    // Refresh Token
+	    String newRefreshToken = jwtUtil.createRefreshToken(memNo, 10 * 1000L); // 10 sec (test)
+//	    String newRefreshToken = jwtUtil.createRefreshToken(memNo, 7 * 24 * 60 * 60 * 1000L); // 7D
+	    // 만료 시간 계산해서 DB에 직접 삽입
+        LocalDateTime expiry = LocalDateTime.now().plusSeconds(10); // 10 sec (test)
+//        LocalDateTime expiry = LocalDateTime.now().plusDays(7); // 7일 유효
+        
+	    // DB 업데이트
+	    RefreshTokenEntity updatedToken = new RefreshTokenEntity(memNo, newRefreshToken, expiry);
+	    refreshTokenRepository.save(updatedToken);
+	    
+	    // 쿠키에 새 refreshToken 저장
+	    Cookie cookie = new Cookie("refreshToken", newRefreshToken);
+	    cookie.setHttpOnly(true);
+	    cookie.setPath("/");
+	    cookie.setMaxAge(7 * 24 * 60 * 60); // 7일
+	    response.addCookie(cookie);
+	    
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "Bearer " + newAccessToken);
+        
+        // 새 액세스 토큰 헤더에 추가하여 응답
+        return ResponseEntity.ok().headers(headers).body("Access token reissued");
+	}
+
+
+	// token refresh 확인용
+	@GetMapping("/check-token")
+	public ResponseEntity<?> checkToken(@RequestHeader("Authorization") String authHeader) {
+	    try {
+	        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "Authorization header 누락"));
+	        }
+
+	        String token = authHeader.substring(7);
+	        boolean valid = !jwtUtil.isExpired(token);
+
+	        if (valid) {
+	            return ResponseEntity.ok(Map.of("message", "유효함"));
+	        } else {
+	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "만료됨"));
+	        }
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("message", "검증 실패", "error", e.getMessage()));
+	    }
 	}
 
 
