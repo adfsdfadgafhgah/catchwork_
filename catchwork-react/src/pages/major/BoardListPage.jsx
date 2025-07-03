@@ -22,7 +22,7 @@ export default function BoardListPage() {
 
   useEffect(() => {
     if (!loginMember?.memNo) {
-      setLoginMember(); // 로그인 정보가 없을 때만 세팅
+      setLoginMember(); // 로그인 정보 세팅
     }
   }, []);
 

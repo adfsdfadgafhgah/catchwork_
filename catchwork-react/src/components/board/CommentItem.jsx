@@ -64,7 +64,7 @@ export default function CommentItem({
           <div className={CommentCss.header}>
             <div className={CommentCss.writerInfo}>
               {/* 대댓글이면 ㄴ자 선 보이게 */}
-              {comment.parentCommentNo !== null && (
+              {comment.parentCommentNo > 0 && (
                 <div className={CommentCss.replyLine}></div>
               )}
               <img
@@ -83,43 +83,53 @@ export default function CommentItem({
             </span>
           </div>
 
-          <div className={CommentCss.content}>{comment.commentContent}</div>
+          {/* ✅ 댓글 내용 or 삭제된 댓글 표시 */}
+          {comment.commentStatus === 1 ? (
+            <div className={CommentCss.deleted}>삭제된 댓글입니다.</div>
+          ) : (
+            <div className={CommentCss.content}>{comment.commentContent}</div>
+          )}
 
           <div className={CommentCss.actions}>
             {/* 말풍선: 부모 댓글에만 노출 */}
-            {(comment.parentCommentNo === null ||
-              comment.parentCommentNo === 0) && (
-              <button
-                className={CommentCss.actionBtn}
-                onClick={() => setIsReplyOpen((prev) => !prev)}
-              >
-                <i className="fa-regular fa-comment-dots" />
-
-                {childComments.length}
-              </button>
-            )}
-            {isWriter ? (
-              <>
+            {comment.commentStatus === 0 &&
+              (comment.parentCommentNo === null ||
+                comment.parentCommentNo === 0) && (
                 <button
                   className={CommentCss.actionBtn}
-                  onClick={() => setIsEditing(true)}
+                  onClick={() => setIsReplyOpen((prev) => !prev)}
                 >
-                  수정
+                  <i className="fa-regular fa-comment-dots" />
+
+                  {childComments.length}
                 </button>
-                <button className={CommentCss.actionBtn} onClick={handleDelete}>
-                  삭제
+              )}
+            {comment.commentStatus === 0 &&
+              (isWriter ? (
+                <>
+                  <button
+                    className={CommentCss.actionBtn}
+                    onClick={() => setIsEditing(true)}
+                  >
+                    수정
+                  </button>
+                  <button
+                    className={CommentCss.actionBtn}
+                    onClick={handleDelete}
+                  >
+                    삭제
+                  </button>
+                </>
+              ) : (
+                <button className={CommentCss.actionBtn} onClick={handleReport}>
+                  <span
+                    className={`material-symbols-outlined ${CommentCss.iconSmall}`}
+                  >
+                    siren
+                  </span>
+                  신고
                 </button>
-              </>
-            ) : (
-              <button className={CommentCss.actionBtn} onClick={handleReport}>
-                <span
-                  className={`material-symbols-outlined ${CommentCss.iconSmall}`}
-                >
-                  siren
-                </span>
-                신고
-              </button>
-            )}
+              ))}
           </div>
         </div>
       )}

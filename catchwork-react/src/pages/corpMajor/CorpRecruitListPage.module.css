@@ -1,0 +1,50 @@
+.recruitListPage {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 0 16px;
+}
+
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  gap: 12px;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 20px;
+  padding-top: 20px;
+}
+
+.sortSelect {
+  padding: 6px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--main-color);
+  border-radius: 999px;
+  padding: 4px 10px;
+}
+
+.searchBox i {
+  margin-right: 8px;
+  color: var(--main-color);
+}
+
+.searchBox input {
+  border: none;
+  outline: none;
+  width: 200px;
+}
+
+.noResult {
+  font-size: 0.95rem;
+  color: var(--gray01);
+  text-align: center;
+  padding: 40px 0;
+}

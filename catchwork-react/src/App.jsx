@@ -53,7 +53,12 @@ import EditBoardPage from "./pages/major/EditBoardPage";
 
 // 기업 회원
 // 기업 메인
+// 기업 공고
+import CorpRecruitPage from "./pages/corpMajor/CorpRecruitPage";
 import CorpRecruitListPage from "./pages/corpMajor/CorpRecruitListPage";
+import WriteRecruitPage from "./pages/corpMajor/WriteRecruitPage";
+import CorpRecruitDetailPage from "./pages/corpMajor/CorpRecruitDetailPage";
+import EditRecruitPage from "./pages/corpMajor/EditRecruitPage";
 
 // 기업상세
 import CompanyPage from "./pages/major/CompanyPage";
@@ -121,6 +126,7 @@ const router = createBrowserRouter([
         ],
       },
 
+      // 개인 공고
       { path: "recruit", element: <RecruitPage /> },
       {
         path: "company",
@@ -184,7 +190,17 @@ const router = createBrowserRouter([
  \______| \______/  | _| `._____|| _|    _____| _|    /__/     \__\ \______| |_______|_______/    
                                         |______|                                                  
       */
-      { path: "corp", element: <CorpRecruitListPage /> },
+      // 기업 공고
+      {
+        path: "corprecruit",
+        element: <CorpRecruitPage />,
+        children: [
+          { index: true, element: <CorpRecruitListPage /> },
+          { path: "write", element: <WriteRecruitPage /> },
+          { path: ":recruitNo", element: <CorpRecruitDetailPage /> },
+          { path: "edit/:recruitNo", element: <EditRecruitPage /> },
+        ],
+      },
 
       // 기업 회원
       { path: "corpcvlist", element: <CorpCVListPage /> },
