@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import useLoginMember from "../../stores/loginMember";
+import { useOutletContext } from "react-router-dom";
 import "./MyInfoPage.css";
 
 function MyInfo() {
-  const { loginMember, setLoginMember } = useLoginMember();
+  const { loginMember, setLoginMember } = useOutletContext();
 
   useEffect(() => {
     setLoginMember();
@@ -34,7 +34,7 @@ function MyInfo() {
 
         <div className="info-content">
           <span className="info-label">전화번호</span>
-          <span className="info-value">{loginMember.memPhone}</span>
+          <span className="info-value">{loginMember.memTel}</span>
         </div>
 
         <div className="info-content">
@@ -44,7 +44,7 @@ function MyInfo() {
 
         <div className="info-content">
           <span className="info-label">생년월일</span>
-          <span className="info-value">{loginMember.memBirth}</span>
+          <span className="info-value">{loginMember.memBirthday}</span>
         </div>
 
         <div className="info-content">
@@ -54,7 +54,7 @@ function MyInfo() {
 
         <div className="info-content">
           <span className="info-label">주소</span>
-          <span className="info-value">{loginMember.memAddress}</span>
+          <span className="info-value">{loginMember.memAddr}</span>
         </div>
       </div>
     </div>

@@ -9,7 +9,6 @@ function generateRandomString() {
 
 const usePaymentModal = (
   loginMember,
-  setLoginMember,
   membershipList,
   getMembershipList,
   getSubscription
@@ -26,14 +25,11 @@ const usePaymentModal = (
     loading: false // 로딩 상태
   });
 
-  const isMemberLoaded = useRef(false); // 로그인 유저 정보 로딩 여부
   const isMembershipListLoaded = useRef(false); // 멤버십 리스트 로딩 여부
 
   useEffect(() => {
-    if (!isMemberLoaded.current || !isMembershipListLoaded.current) {
-      setLoginMember(); // 로그인 유저 정보 갱신
+    if (!isMembershipListLoaded.current) {
       getMembershipList(); // 멤버십 리스트 갱신
-      isMemberLoaded.current = true; // 로그인 유저 정보 로딩 완료
       isMembershipListLoaded.current = true; // 멤버십 리스트 로딩 완료
     }
   }, []);
@@ -111,8 +107,6 @@ const usePaymentModal = (
           throw new Error('알 수 없는 모달 타입입니다.');
       }
 
-      // 회원 정보 갱신
-      await setLoginMember();
       // 구독 정보 갱신
       await getSubscription(loginMember.memNo);
       closeModal();
@@ -203,22 +197,22 @@ const usePaymentModal = (
     });
 
     if (response.status === 200) {
-      alert("구독이 성공적으로 해지되었습니다.");
+      alert("멤버십이 성공적으로 해지되었습니다.");
     } else {
-      throw new Error("구독 해지 처리에 실패했습니다.");
+      throw new Error("해지 처리에 실패했습니다.");
     }
   };
 
-  // 구독 복구 처리
+  // 복구 처리
   const handleRestore = async () => {
     const response = await axiosApi.put("/tosspayment/restore", {
-      memNo: loginMember.memNo,
+      memNo: loginMember.memNo
     });
 
     if (response.status === 200) {
-      alert("구독이 성공적으로 복구되었습니다.");
+      alert("멤버십이 성공적으로 복구되었습니다.");
     } else {
-      throw new Error("구독 복구 처리에 실패했습니다.")
+      throw new Error("복구 처리에 실패했습니다.");
     }
   };
 
@@ -228,7 +222,7 @@ const usePaymentModal = (
     closeModal,
     handleModalConfirm,
     balance,
-    targetPrice: modalState.targetGrade !== null ? membershipList[modalState.targetGrade]?.memGradePrice : 0
+    targetPrice: modalState.targetGrade ? membershipList[modalState.targetGrade]?.memGradePrice : 0
   };
 };
 
