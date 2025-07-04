@@ -161,6 +161,22 @@ public class BoardController {
     	return ResponseEntity.ok().body(Collections.singletonMap("success", result));
     }
     
+    /** 게시글 조회수 증가
+     * @author BAEBAE
+     * @param boardNo
+     * @return
+     */
+    @GetMapping("readCount/{boardNo}")
+    public ResponseEntity<?> readCount(@PathVariable("boardNo") int boardNo) {
+        try {
+            boardService.readCount(boardNo);
+            return ResponseEntity.ok().body("조회수 증가 성공");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("조회수 증가 실패");
+        }
+    }
+    
     
 //    /** 게시글 이미지 업로드
 //     * @author BAEBAE

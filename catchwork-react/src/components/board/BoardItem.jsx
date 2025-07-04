@@ -52,7 +52,7 @@ export default function BoardItem({ board, onLikeToggle }) {
         memNo: loginMember.memNo,
       });
 
-      console.log("좋아요 응답:", resp.data);
+      // console.log("좋아요 응답:", resp.data);
 
       if (resp.data.result === "liked") {
         setLiked(true);

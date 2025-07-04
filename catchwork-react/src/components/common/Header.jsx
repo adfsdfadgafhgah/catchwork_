@@ -88,7 +88,9 @@ const Header = () => {
           <div className="user-info">
             {memType !== null ? (
               <>
-                <span>{memNickname} 님</span>
+                <button onClick={() => navigate("/myPage")}>
+                  {memNickname} 님
+                </button>
                 <button onClick={handleSignOut}>로그아웃</button>
               </>
             ) : (

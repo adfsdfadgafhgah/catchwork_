@@ -1,11 +1,18 @@
 import { useEffect, useRef, useMemo } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import {
+  useNavigate,
+  useSearchParams,
+  useOutletContext,
+} from "react-router-dom";
 import useMembershipData from "../../../hooks/useMembershipData";
 import { axiosApi } from "../../../api/axiosAPI";
 
 const url = import.meta.env.VITE_BASE_URL;
 
 function PaymentCheckout() {
+  // outlet context에서 loginMember 받아오기
+  const { loginMember } = useOutletContext();
+
   // 페이지 이동용
   const navigate = useNavigate();
   // 중복 결제 요청 방지 플래그
@@ -15,8 +22,8 @@ function PaymentCheckout() {
   // 결제 대상 멤버십 등급 ID
   const productId = searchParams.get("productId");
 
-  // 공통 데이터 훅 사용
-  const { loginMember, membershipList, isLoading } = useMembershipData();
+  // 공통 데이터 훅 사용 (loginMember를 매개변수로 전달)
+  const { membershipList, isLoading } = useMembershipData(loginMember);
 
   // 현재 선택된 상품 정보 추출 (productId에 해당하는 멤버십 등급)
   const product = useMemo(() => {
@@ -32,7 +39,7 @@ function PaymentCheckout() {
     isPayed.current = true;
 
     confirmBilling();
-  }, [product, loginMember.memNo]);
+  }, [product, loginMember?.memNo]);
 
   // 결제 내역 구분키를 난수로 생성
   function generateRandomString() {

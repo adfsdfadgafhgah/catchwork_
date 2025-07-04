@@ -1,6 +1,8 @@
 package com.example.demo.member.myPage.membership.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -48,18 +50,19 @@ public class MembershipController {
 //		System.out.println(memNo);
 		try {
 			Subscription subscription = service.getSubscription(memNo);
-			
+
 			if (subscription != null) {
 				return ResponseEntity.status(HttpStatus.OK).body(subscription);
 			}
-			
-			return ResponseEntity.status(HttpStatus.OK).body("have no subscription data");
-			
+
+			Map<String, Object> response = new HashMap<>();
+			response.put("memGrade", 0);
+			response.put("subStatus", 0);
+			return ResponseEntity.ok(response);
+
 		} catch (Exception e) {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
 		}
 	}
-	
-	
 
 }

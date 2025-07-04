@@ -14,6 +14,7 @@ export default function WriteBoardPage() {
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const navigate = useNavigate();
   const { loginMember, setLoginMember } = useLoginMember();
+  const [isFormValid, setIsFormValid] = useState(false);
 
   useEffect(() => {
     if (!loginMember?.memNo) {
@@ -30,6 +31,12 @@ export default function WriteBoardPage() {
       editorInstance.changeMode("markdown", true);
     }
   }, []);
+
+  useEffect(() => {
+    const contentMarkdown =
+      editorRef.current?.getInstance()?.getMarkdown() || "";
+    setIsFormValid(title.trim() !== "" && contentMarkdown.trim() !== "");
+  }, [title]);
 
   // 썸네일 업로드 핸들러
   const handleThumbnailUpload = async (file) => {
@@ -105,6 +112,14 @@ export default function WriteBoardPage() {
           initialValue=" "
           placeholder="내용을 입력해주세요"
           useCommandShortcut={true}
+          onChange={() => {
+            const contentMarkdown = editorRef.current
+              .getInstance()
+              .getMarkdown();
+            setIsFormValid(
+              title.trim() !== "" && contentMarkdown.trim() !== ""
+            );
+          }}
           hooks={{
             // 이미지 업로드 처리
             addImageBlobHook: async (blob, callback) => {
@@ -134,7 +149,11 @@ export default function WriteBoardPage() {
         <button className="write-btn-cancel" onClick={handleCancel}>
           <i className="fa-solid fa-xmark"></i> 취소하기
         </button>
-        <button className="write-btn-submit" onClick={handleSubmit}>
+        <button
+          className="write-btn-submit"
+          onClick={handleSubmit}
+          disabled={!isFormValid}
+        >
           <i className="fa-regular fa-pen-to-square"></i> 작성하기
         </button>
       </div>
