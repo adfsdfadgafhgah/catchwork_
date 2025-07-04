@@ -32,7 +32,7 @@ export default function RecruitItem({ recruit, onLikeToggle }) {
   // 마감 여부 판단
   const isClosed =
     recruit.recruitStatus === 3 ||
-    new Date(recruit.recruitEndDate) < new Date();
+    new Date() > new Date(`${recruit.recruitEndDate}T23:59:59`);
 
   return (
     <Link to={`/corpRecruit/${recruit.recruitNo}`} className={styles.card}>

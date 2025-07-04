@@ -1,6 +1,6 @@
 .float-button-container {
   position: sticky;
-  bottom: 0;
+  bottom: 40px;
   margin: 16px auto; /* 가운데 정렬 */
   display: flex;
   align-items: center;
@@ -38,7 +38,6 @@
 .float-btn:hover {
   color: var(--main-color);
 }
-
 
 /* .float-button-container .float-btn-cancel,
 .float-button-container .float-btn-edit {

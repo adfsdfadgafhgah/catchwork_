@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,4 +55,15 @@ public class CorpInfoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("수정 실패");
         }
     }
+	
+	/** 공고 작성페이지에서 기업정보 가져오기
+	 * @author BAEBAE
+	 * @param memNo
+	 * @return
+	 */
+	@GetMapping("info/{memNo}")
+	public ResponseEntity<CorpInfo> getCorpInfo(@PathVariable("memNo") String memNo) {
+	    CorpInfo corpInfo = corpInfoService.getCorpInfoByMemNo(memNo);
+	    return ResponseEntity.ok(corpInfo);
+	}
 }

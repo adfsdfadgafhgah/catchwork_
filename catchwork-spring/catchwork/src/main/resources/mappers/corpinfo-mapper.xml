@@ -50,4 +50,28 @@
 		WHERE CORP_NO = #{corpNo}
 	</update>
 
+<!-- 공고 작성 페이지에서 기업 정보 조회 -->
+<select id="selectCorpInfoByMemNo">
+  SELECT *
+  FROM (
+    SELECT 
+      CORP_NO,
+      CORP_NAME,
+      CORP_LOGO,
+      CORP_TYPE,
+      CORP_BENEFIT,
+	    CORP_BENEFIT_DETAIL
+    FROM CORP_INFO
+    WHERE CORP_NO = (
+      SELECT CORP_NO
+      FROM MEMBER
+      WHERE MEM_NO = #{memNo}
+    )
+  )
+  WHERE ROWNUM = 1
+</select>
+
+
+
+
 </mapper>

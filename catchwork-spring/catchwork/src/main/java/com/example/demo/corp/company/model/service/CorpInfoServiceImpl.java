@@ -27,5 +27,14 @@ public class CorpInfoServiceImpl implements CorpInfoService{
     public int updateCorpInfo(CorpInfo corpInfo) {
         return mapper.updateCorpInfo(corpInfo);
     }
+
+	/** 공고 작성페이지에서 기업 정보 가져오기
+	 * @author BAEBAE
+	 */
+	@Override
+	public CorpInfo getCorpInfoByMemNo(String memNo) {
+		
+		return mapper.selectCorpInfoByMemNo(memNo);
+	}
 	
 }

@@ -12,5 +12,7 @@ public interface CorpInfoService {
 	CorpInfo selectCorpDetailByMemNo(String memNo);
 	
 	int updateCorpInfo(CorpInfo corpInfo);
+
+	CorpInfo getCorpInfoByMemNo(String memNo);
 	
 }
