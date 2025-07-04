@@ -38,7 +38,7 @@ const CompanyDetailPage = () => {
     const getCorpDetail = async () => {
       setLoading(true);
       try {
-        const url = `/corpcompany/detail`;
+        const url = `/company/${corpNo}`;
         const params = loginMember?.memNo ? { memNo: loginMember.memNo } : {};
 
         const res = await axiosApi.get(url, { params });
