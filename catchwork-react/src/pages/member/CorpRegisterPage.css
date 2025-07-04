@@ -60,7 +60,11 @@
   font-size: 12px;
   margin-top: 2px;
 }
-
+.error-text::before {
+  content: "⚠";
+  margin-right: 4px;
+  font-size: 14px;
+}
 .success-text {
   color: var(--main-color);
   font-size: 12px;

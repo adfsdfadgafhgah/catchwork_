@@ -4,10 +4,7 @@ import {
   checkDuplicateNickname,
   searchAddress,
 } from "../api/signupAPI";
-import {
-  generateRandomNickname,
-  validateForm,
-} from "../pages/member/utils/signupUtil";
+import { validateForm } from "../pages/member/utils/signupUtil";
 
 const memberFormHandler = (initialValues) => {
   const [formData, setFormData] = useState(initialValues);
@@ -116,12 +113,6 @@ const memberFormHandler = (initialValues) => {
     searchAddress(handleAddressSelect);
   };
 
-  // 닉네임 생성
-  const handleGenerateNickname = () => {
-    const nickname = generateRandomNickname();
-    setField("memNickname", nickname);
-  };
-
   const validateForm = () => {
     const keysToCheck = Object.keys(validity);
     const results = keysToCheck.map((key) => validateField(key, formData[key]));
@@ -141,7 +132,6 @@ const memberFormHandler = (initialValues) => {
     handleCheckId,
     handleCheckNickname,
     triggerAddressSearch,
-    handleGenerateNickname,
     validateForm,
   };
 };

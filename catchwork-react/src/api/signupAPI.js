@@ -5,39 +5,7 @@ import axios from "axios"; // 외부용
  * 회원가입 요청
  **********************/
 export const postSignUp = async (formData) => {
-  const dataToSend = { ...formData };
-
-  // 비밀번호 확인 제거
-  delete dataToSend.memPwConfirm;
-
-  // 개인회원일 경우 기업회원 입력 값 제거거
-  if (dataToSend.memType === 0) {
-    delete dataToSend.companyName;
-    delete dataToSend.businessNo;
-    delete dataToSend.ceoName;
-  }
-
-  if (dataToSend.memBirthday && new Date(dataToSend.memBirthday) > new Date()) {
-    dataToSend.memBirthday = new Date().toISOString().split("T")[0];
-  }
-
-  // 전화번호 하이픈 제거
-  // if (dataToSend.memTel) {
-  //   dataToSend.memTel = dataToSend.memTel.replace(/-/g, "");
-  // }
-
-  // SMS flag Y/N 변환환
-  dataToSend.memSmsFl = dataToSend.memSmsFl ? "Y" : "N";
-
-  // 주소 병합 처리 (주소^^^상세주소)
-  if (dataToSend.memAddr && dataToSend.detailAddress) {
-    dataToSend.memAddr = `${dataToSend.memAddr}^^^${dataToSend.detailAddress}`;
-    delete dataToSend.detailAddress;
-  }
-
-  // 디버깅용
-  // console.log(dataToSend);
-  return await axiosApi.post("/signup", dataToSend);
+  return await axiosApi.post("/signup", formData);
 };
 
 /**********************
@@ -86,3 +54,10 @@ export const searchAddress = (onComplete) => {
 //   const res = await axios.post("/verify-code", { tel, code }); // 서버에서 검증 로직 필요
 //   return res.data.success;
 // };
+
+/**********************
+ * 기업대표 가입 요청
+ **********************/
+export const postCEOSignUp = async (formData) => {
+  return await axiosApi.post("/ceosignup", formData);
+};

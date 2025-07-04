@@ -78,6 +78,14 @@ public class MemberController {
 	    }
 	}
 	
+	@PostMapping("/ceosignup")
+	public String ceosignup(@RequestBody Member inputMember) {
+		System.out.println("ceosignup controller");
+        return "test";
+	}
+	
+	
+	
 	@PostMapping("/signout")
 	public ResponseEntity<?> logout(HttpServletResponse response) {
 	    Cookie cookie = new Cookie("refreshToken", null);

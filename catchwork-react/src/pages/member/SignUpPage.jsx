@@ -3,13 +3,9 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import "./SignUpPage.css";
 import {
   postSignUp,
-  checkDuplicateId,
-  checkDuplicateNickname,
-  searchAddress,
   // sendVerificationCode, // 필요 시 주석 해제
 } from "../../api/signupAPI";
-import memberFormHandler from "../../hooks/memberFormHandler";
-import { validateForm } from "./utils/signupUtil";
+import useSignUpFormHandler from "../../hooks/useSignUpFormHandler";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -17,7 +13,28 @@ const SignUpPage = () => {
   const userType =
     searchParams.get("type") === "corporate" ? "corporate" : "personal";
 
-  // 폼 핸들러
+  // config 사용해서 useSignUpForm을 Handle하기
+  const config = {
+    fields: [
+      "memId",
+      "memPw",
+      "memPwConfirm",
+      "memEmail",
+      "memTel",
+      "memName",
+      "memNickname",
+      "memBirthday",
+      "memGender",
+      "memAddr",
+    ],
+    idField: "memId",
+    pwField: "memPw",
+    pwConfirmField: "memPwConfirm",
+    nicknameField: "memNickname",
+    telField: "memTel",
+    addrField: "memAddr",
+  };
+
   const {
     formData,
     handleChange,
@@ -26,35 +43,71 @@ const SignUpPage = () => {
     handleCheckId,
     handleCheckNickname,
     triggerAddressSearch,
-    handleGenerateNickname,
     validateForm,
-  } = memberFormHandler({
-    memId: "",
-    memPw: "",
-    memPwConfirm: "",
-    memEmail: "",
-    memTel: "",
-    memName: "",
-    memNickname: "",
-    memBirthday: "",
-    memGender: "",
-    memGrade: 0,
-    memAddr: "",
-    detailAddress: "",
-    memType: userType === "corporate" ? 1 : 0,
-    companyName: "",
-    businessNo: "",
-    ceoName: "",
-    memSmsFl: false,
-  });
+  } = useSignUpFormHandler(
+    {
+      memId: "",
+      memPw: "",
+      memPwConfirm: "",
+      memEmail: "",
+      memTel: "",
+      memName: "",
+      memNickname: "",
+      memBirthday: "",
+      memGender: "",
+      memGrade: 0,
+      memAddr: "",
+      detailAddress: "",
+      memType: userType === "corporate" ? 1 : 0,
+      companyName: "",
+      businessNo: "",
+      ceoName: "",
+      memSmsFl: false,
+    },
+    config
+  );
 
-  // 제출출
+  // 제출
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm(formData, userType)) return;
+    if (!validateForm()) return;
+    const dataToSend = { ...formData };
 
+    // 비밀번호 확인 제거
+    delete dataToSend.memPwConfirm;
+
+    // 개인회원일 경우 기업회원 입력 값 제거
+    if (dataToSend.memType === 0) {
+      delete dataToSend.companyName;
+      delete dataToSend.businessNo;
+      delete dataToSend.ceoName;
+    }
+
+    if (
+      dataToSend.memBirthday &&
+      new Date(dataToSend.memBirthday) > new Date()
+    ) {
+      dataToSend.memBirthday = new Date().toISOString().split("T")[0];
+    }
+
+    // 전화번호 하이픈 제거
+    // if (dataToSend.memTel) {
+    //   dataToSend.memTel = dataToSend.memTel.replace(/-/g, "");
+    // }
+
+    // SMS flag Y/N 변환환
+    dataToSend.memSmsFl = dataToSend.memSmsFl ? "Y" : "N";
+
+    // 주소 병합 처리 (주소^^^상세주소)
+    if (dataToSend.memAddr && dataToSend.detailAddress) {
+      dataToSend.memAddr = `${dataToSend.memAddr}^^^${dataToSend.detailAddress}`;
+      delete dataToSend.detailAddress;
+    }
+
+    // 디버깅용
+    // console.log(dataToSend);
     try {
-      await postSignUp(formData);
+      await postSignUp(dataToSend);
       alert("회원가입이 완료되었습니다.");
       navigate("/signin");
     } catch (err) {
@@ -163,13 +216,6 @@ const SignUpPage = () => {
               />
               SMS 수신 동의
             </label>
-            {/* 인증번호 발송 필요 시 활성화 */}
-            <button
-              type="button"
-              onClick={() => sendVerificationCode(formData.memTel)}
-            >
-              인증번호 발송
-            </button>
           </label>
           <label>
             이름
@@ -205,9 +251,6 @@ const SignUpPage = () => {
             <p>
               <button type="button" onClick={handleCheckNickname}>
                 중복 확인
-              </button>
-              <button type="button" onClick={handleGenerateNickname}>
-                닉네임 생성기
               </button>
             </p>
           </label>
