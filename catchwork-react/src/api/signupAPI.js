@@ -22,13 +22,21 @@ export const postSignUp = async (formData) => {
   }
 
   // 전화번호 하이픈 제거
-  if (dataToSend.memTel) {
-    dataToSend.memTel = dataToSend.memTel.replace(/-/g, "");
-  }
+  // if (dataToSend.memTel) {
+  //   dataToSend.memTel = dataToSend.memTel.replace(/-/g, "");
+  // }
+
   // SMS flag Y/N 변환환
   dataToSend.memSmsFl = dataToSend.memSmsFl ? "Y" : "N";
 
-  console.log(dataToSend);
+  // 주소 병합 처리 (주소^^^상세주소)
+  if (dataToSend.memAddr && dataToSend.detailAddress) {
+    dataToSend.memAddr = `${dataToSend.memAddr}^^^${dataToSend.detailAddress}`;
+    delete dataToSend.detailAddress;
+  }
+
+  // 디버깅용
+  // console.log(dataToSend);
   return await axiosApi.post("/signup", dataToSend);
 };
 
@@ -49,14 +57,11 @@ export const checkDuplicateNickname = async (nickname) => {
 };
 
 /**********************
- * 주소 검색 (다음 우편번호 서비스)
+ * 주소 검색
  **********************/
-export const searchAddress = () => {
+export const searchAddress = (onComplete) => {
   new window.daum.Postcode({
-    oncomplete: function (data) {
-      // 선택된 주소 처리 로직은 컴포넌트에서 정의
-      console.log("선택된 주소:", data);
-    },
+    oncomplete: onComplete,
   }).open();
 };
 

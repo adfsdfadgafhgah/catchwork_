@@ -1,29 +1,24 @@
 import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { axiosApi } from "../../../api/axiosAPI";
+import useMembershipData from "../../../hooks/useMembershipData";
 
 function IssueBillingKeyPage() {
   const navigate = useNavigate();
-
   const [searchParams] = useSearchParams();
-
   const isIssueBillingKey = useRef(false);
-
   const productId = searchParams.get("productId");
   const customerKey = searchParams.get("customerKey");
   const authKey = searchParams.get("authKey");
 
-  // 잘못된 접근 시, 오류 페이지로 이동
+  // 공통 데이터 훅 사용
+  const { loginMember, membershipList, isLoading } = useMembershipData();
+
   useEffect(() => {
     if (!customerKey || !authKey || !productId) {
       navigate("/mypage/payment/fail?message=잘못된 접근&code=400");
     }
   }, [customerKey, authKey, productId, navigate]);
-
-  // 렌더링 직전에 잘못된 조건일 경우는 아무것도 보여주지 않게 처리
-  if (!customerKey || !authKey || !productId) {
-    return null;
-  }
 
   useEffect(() => {
     // @docs https://docs.tosspayments.com/reference#authkey
@@ -44,15 +39,12 @@ function IssueBillingKeyPage() {
           },
           data: requestData,
         });
-
         if (resp.status === 200) {
-          {
-            if (confirm("구독하시겠습니까?")) {
-              navigate(`/mypage/payment/checkout?productId=${productId}`);
-            } else {
-              alert("결제를 취소하셨습니다.");
-              navigate("/mypage/membership");
-            }
+          if (confirm("구독하시겠습니까?")) {
+            navigate(`/mypage/payment/checkout?productId=${productId}`);
+          } else {
+            alert("결제를 취소하셨습니다.");
+            navigate("/mypage/membership");
           }
           return resp.data;
         }

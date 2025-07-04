@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios"; // axios 추가
+import axios from "axios";
 import "./SupportListPage.css";
 import { useNavigate } from "react-router-dom";
-import Pagination from "../../components/common/Pagination"; // 페이지네이션 컴포넌트
+import Pagination from "../../components/common/Pagination";
 
 const SupportListPage = () => {
   const navigate = useNavigate();
@@ -10,13 +10,24 @@ const SupportListPage = () => {
   const [supportItems, setSupportItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const itemsPerPage = 10; // 페이지당 항목 수
+  const itemsPerPage = 10;
 
   useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      alert("로그인을 먼저 해주세요!");
+      navigate("/signin");
+      return;
+    }
+
     const fetchSupportData = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/support/list");
-        setSupportItems(response.data); // 응답 데이터 설정
+        const response = await axios.get("http://localhost:8080/support/list", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setSupportItems(response.data);
       } catch (err) {
         setError(err.response?.data?.message || err.message || "데이터를 가져오는 중 오류 발생");
       } finally {
@@ -25,7 +36,7 @@ const SupportListPage = () => {
     };
 
     fetchSupportData();
-  }, []);
+  }, [navigate]);
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -44,8 +55,8 @@ const SupportListPage = () => {
     <div className="support-list-container">
       <div className="support-header">
         <h2>문의 목록</h2>
-        <button className="button-common" onClick={goToWrite}>
-          ✏️ 작성하기
+        <button className="write-btn-submit" onClick={goToWrite}>
+          <i className="fa-regular fa-pen-to-square"></i> 작성하기
         </button>
       </div>
       <div className="title-underline" />

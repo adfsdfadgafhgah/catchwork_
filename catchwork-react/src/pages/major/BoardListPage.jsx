@@ -22,7 +22,7 @@ export default function BoardListPage() {
 
   useEffect(() => {
     if (!loginMember?.memNo) {
-      setLoginMember(); // 로그인 정보가 없을 때만 세팅
+      setLoginMember(); // 로그인 정보 세팅
     }
   }, []);
 
@@ -102,6 +102,7 @@ export default function BoardListPage() {
         >
           <option value="latest">최신순</option>
           <option value="oldest">오래된순</option>
+          <option value="views">조회수순</option>
           <option value="likes">좋아요순</option>
           <option value="comments">댓글순</option>
         </select>

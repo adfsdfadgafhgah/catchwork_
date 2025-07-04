@@ -1,0 +1,136 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--white);
+  border-radius: 12px;
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-decoration: none;
+  width: 300px;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.logoArea {
+  background-color: var(--sub-color);
+  padding: 20px;
+  text-align: center;
+}
+
+.corpLogo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.contentArea {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.titleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.recruitTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--deep-gray);
+}
+
+.closedBadge {
+  border: 1px solid var(--main-color);
+  color: var(--main-color);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  padding: 2px 8px;
+}
+
+.corpName {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--deep-gray);
+}
+
+.locationCategory {
+  font-size: 0.8rem;
+  color: var(--gray01);
+}
+
+.deadline {
+  font-size: 0.8rem;
+  color: var(--gray01);
+}
+
+.footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  font-size: 0.8rem;
+  margin-top: 10px;
+}
+
+.footer i {
+  margin-right: 4px;
+}
+
+/* 마감여부 뱃지 */
+.recruitStatus {
+  display: inline-block;
+  white-space: nowrap;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 12px;
+  border: 1px solid;
+  width: fit-content; /* ✅ 글자 너비만큼만 차지하게 */
+  max-width: 100%; /* ✅ 혹시 너무 커질 경우 대비 */
+  box-sizing: border-box; /* ✅ padding 포함 계산 */
+  line-height: 1.2;
+}
+
+.open {
+  color: var(--main-color);
+  border: 1px solid var(--main-color);
+  background-color: #fff;
+}
+
+.closed {
+  color: #f44336;
+  border: 1px solid #f44336;
+  background-color: #fff;
+}
+
+/* 📱 반응형 스타일 */
+@media screen and (max-width: 768px) {
+  .card {
+    width: 100%;
+  }
+
+  .corpLogo {
+    width: 50px;
+    height: 50px;
+  }
+
+  .recruitTitle {
+    font-size: 0.95rem;
+  }
+
+  .corpName {
+    font-size: 0.85rem;
+  }
+
+  .locationCategory,
+  .deadline,
+  .footer {
+    font-size: 0.75rem;
+  }
+}

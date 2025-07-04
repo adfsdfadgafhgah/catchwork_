@@ -16,20 +16,23 @@ const CompanyItem = ({ company }) => {
         {/* 기업형태 + 모집중인 공고 */}
         <p className="company-info">
           {company.corpType} &nbsp; | &nbsp; 모집중인 채용공고{" "}
-          {company.recruitCount}
+          {Number(company.recruitCount) ?? 0}
         </p>
 
         {/* 메타 정보 */}
         <div className="company-meta">
-          <span className="material-symbols-outlined">visibility</span>
-          <span>{company.views}</span>
-          <span
-            className="bookmark-icon material-symbols-outlined"
-            style={{ color: company.liked === 1 ? "black" : "inherit" }}
-          >
-            bookmark
-          </span>
-          <span>{company.favs}</span>
+          <div className="company-bookmark-area">
+            <div className="bookmark">
+              <i
+                className={
+                  company.isSaved === 1
+                    ? "fa-solid fa-bookmark"
+                    : "fa-regular fa-bookmark"
+                }
+              ></i>{" "}
+              {company.favs ?? 0}
+            </div>
+          </div>
         </div>
       </div>
     </Link>

@@ -1,0 +1,149 @@
+.detailPageWrap {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 16px;
+  color: #222;
+  line-height: 1.6;
+  background-color: white;
+}
+
+.corpHeader {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+  padding-top: 32px;
+}
+
+.corpLogo {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #ddd;
+}
+
+.corpInfoText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.corpName {
+  font-size: 24px;
+  color: var(--main-color);
+}
+
+.corpType {
+  font-size: 14px;
+  color: #888;
+}
+
+.recruitTitle {
+  font-size: 22px;
+  font-weight: 600;
+  margin: 16px 0 8px;
+}
+
+.recruitDates {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+.jobSection {
+  margin-bottom: 32px;
+}
+
+.jobName {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.jobDetail {
+  font-size: 15px;
+  white-space: pre-wrap;
+}
+
+.recruitConditions {
+  margin-bottom: 32px;
+}
+
+.recruitConditions table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #fafafa;
+}
+
+.recruitConditions th,
+.recruitConditions td {
+  border: 1px solid #eee;
+  padding: 12px;
+  text-align: left;
+  font-size: 14px;
+}
+
+.recruitConditions th {
+  background-color: #f2f2f2;
+  width: 100px;
+  color: #333;
+}
+
+.recruitButtons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.recruitButtons button {
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: none;
+  background-color: var(--main-color, #0366d6);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.recruitButtons button:hover {
+  background-color: #024ea0;
+}
+
+.recruitButtons .delete {
+  background-color: #e74c3c;
+}
+
+.recruitButtons .delete:hover {
+  background-color: #c0392b;
+}
+
+.detailSections {
+  margin-bottom: 40px;
+}
+
+.sectionTitle {
+  font-weight: 600;
+  font-size: 16px;
+  margin-top: 24px;
+  margin-bottom: 6px;
+}
+
+.expireInfo {
+  font-size: 14px;
+  text-align: center;
+  margin-top: 32px;
+  color: #888;
+}
+
+.highlight {
+  color: red;
+  font-weight: bold;
+}
+
+.deadlineTimer {
+  text-align: center;
+  margin-top: 20px;
+}

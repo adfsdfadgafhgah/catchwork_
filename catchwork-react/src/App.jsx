@@ -13,35 +13,46 @@ import MainPage from "./pages/major/MainPage";
 // 로그인/회원가입
 import SignInPage from "./pages/member/SignInPage";
 import SignUpPage from "./pages/member/SignUpPage";
+import CorpRegisterPage from "./pages/member/CorpRegisterPage";
 
 // Id,PW 찾기
 import FindIdPage from "./pages/member/FindIdPage";
 import FindPWPage from "./pages/member/FindPWPage";
 
 // 네비게이션
-import RecruitPage from "./pages/major/RecruitListPage";
+import MemberRecruitPage from "./pages/major/MemberRecruitPage";
 import CompanyListPage from "./pages/major/CompanyListPage";
 import BoardPage from "./pages/major/BoardPage";
-import CVPage from "./pages/major/CVListPage";
+import CVListPage from "./pages/major/CVListPage";
+import CVPage from "./pages/major/CVPage";
 
 // 개인 회원
 // 마이페이지
 import MyPage from "./pages/myPage/MyPage";
 import MyInfo from "./pages/myPage/MyInfoPage";
 import MyRecruitPage from "./pages/myPage/MyRecruitPage";
+import FavRecruitPage from "./pages/myPage/FavRecruitPage";
+import FavCompanyPage from "./pages/myPage/FavCompanyPage";
+import FavBoardPage from "./pages/myPage/FavBoardPage";
 import MembershipPage from "./pages/myPage/MembershipPage";
+import MyBoardListPage from "./pages/myPage/MyBoardListPage";
+import MyCommentListPage from "./pages/myPage/MyCommentListPage";
+import EditMyInfoPage from "./pages/myPage/EditMyInfoPage";
+import ChangePwPage from "./pages/myPage/ChangePwPage";
+import WithdrawPage from "./pages/myPage/WithdrawPage";
 
 // 멤버십
 import IssueBillingKeyPage from "./pages/myPage/membership/IssueBillingKeyPage";
 import PaymentCheckout from "./pages/myPage/membership/PaymentCheckout";
 import PaymentFail from "./pages/myPage/membership/PaymentFail";
 import PaymentSuccess from "./pages/myPage/membership/PaymentSuccess";
-import UpgradeMembership from "./pages/myPage/membership/UpgradeMembership";
-import DowngradeMembership from "./pages/myPage/membership/DowngradeMembership";
+
+//검색
+//import SearchResultPage from "./pages/major/SearchResultPage";
 
 //이력서 제출
 import SubmitCVPage from "./pages/major/SubmitCVPage";
-import WriteCVPage from "./pages/major/WriteCVPage";
+import CVManagePage from "./pages/major/CVManagePage";
 
 // 게시글
 import BoardListPage from "./pages/major/BoardListPage";
@@ -49,9 +60,18 @@ import BoardDetailPage from "./pages/major/BoardDetailPage";
 import WriteBoardPage from "./pages/major/WriteBoardPage";
 import EditBoardPage from "./pages/major/EditBoardPage";
 
+// 개인 공고
+import MemberRecruitListPage from "./pages/major/MemberRecruitListPage";
+import MemberRecruitDetailPage from "./pages/major/MemberRecruitDetailPage";
+
 // 기업 회원
 // 기업 메인
+// 기업 공고
+import CorpRecruitPage from "./pages/corpMajor/CorpRecruitPage";
 import CorpRecruitListPage from "./pages/corpMajor/CorpRecruitListPage";
+import WriteRecruitPage from "./pages/corpMajor/WriteRecruitPage";
+import CorpRecruitDetailPage from "./pages/corpMajor/CorpRecruitDetailPage";
+import EditRecruitPage from "./pages/corpMajor/EditRecruitPage";
 
 // 기업상세
 import CompanyPage from "./pages/major/CompanyPage";
@@ -95,14 +115,12 @@ const router = createBrowserRouter([
       // 로그인/회원가입
       { path: "signin", element: <SignInPage /> },
       { path: "signup", element: <SignUpPage /> },
+      { path: "CorpRegisterPage", element: <CorpRegisterPage /> },
       { path: "auth", element: <AuthTest /> },
+
       // Id,PW 찾기
       { path: "findid", element: <FindIdPage /> },
       { path: "findpw", element: <FindPWPage /> },
-
-      { path: "recruit", element: <RecruitPage /> },
-
-      { path: "board", element: <BoardPage /> },
 
       // 로그인 필요, 개인회원 전용 예시
       {
@@ -112,11 +130,24 @@ const router = createBrowserRouter([
             <CVPage />
           </ProtectedRoute>
         ),
+        children: [
+          { index: true, element: <CVListPage /> },
+          /* 이력서 CRUD페이지*/
+          { path: "cvmanage", element: <CVManagePage /> },
+        ],
       },
-      /* 테스트 : 이력서 작성페이지*/
-      { path: "writecvpage", element: <WriteCVPage /> },
 
-      { path: "recruit", element: <RecruitPage /> },
+      // 개인 공고
+      {
+        path: "memberRecruit",
+        element: <MemberRecruitPage />,
+        children: [
+          { index: true, element: <MemberRecruitListPage /> },
+          { path: ":recruitNo", element: <MemberRecruitDetailPage /> },
+        ],
+      },
+
+      // 개인 기업
       {
         path: "company",
         element: <CompanyPage />,
@@ -138,7 +169,7 @@ const router = createBrowserRouter([
         ],
       },
 
-      { path: "cv", element: <CVPage /> },
+      //{ path: "search", element: <SearchResultPage /> },
       { path: "submitcv", element: <SubmitCVPage /> },
       { path: "supportlist", element: <SupportListPage /> },
       { path: "writesupport", element: <WriteSupportPage /> },
@@ -150,15 +181,27 @@ const router = createBrowserRouter([
       },
       {
         path: "/mypage",
-        element: <MyPage />,
+        element: (
+          <ProtectedRoute allowedType={0}>
+            <MyPage />
+          </ProtectedRoute>
+        ),
         children: [
           { index: true, element: <MyInfo /> },
           { path: "home", element: <MyInfo /> },
           { path: "myrecruit", element: <MyRecruitPage /> },
+          { path: "favrecruit", element: <FavRecruitPage /> },
+          { path: "favcompany", element: <FavCompanyPage /> },
+          { path: "favboard", element: <FavBoardPage /> },
+          { path: "myboard", element: <MyBoardListPage /> },
+          { path: "mycomment", element: <MyCommentListPage /> },
           {
             path: "membership",
             element: <MembershipPage />,
           },
+          { path: "editmyinfo", element: <EditMyInfoPage /> },
+          { path: "changepw", element: <ChangePwPage /> },
+          { path: "withdraw", element: <WithdrawPage /> },
           {
             path: "payment",
             children: [
@@ -166,8 +209,6 @@ const router = createBrowserRouter([
               { path: "checkout", element: <PaymentCheckout /> },
               { path: "fail", element: <PaymentFail /> },
               { path: "sucess", element: <PaymentSuccess /> },
-              { path: "upgrade", element: <UpgradeMembership /> },
-              { path: "downgrade", element: <DowngradeMembership /> },
             ],
           },
         ],
@@ -181,16 +222,29 @@ const router = createBrowserRouter([
  \______| \______/  | _| `._____|| _|    _____| _|    /__/     \__\ \______| |_______|_______/    
                                         |______|                                                  
       */
-      { path: "corp", element: <CorpRecruitListPage /> },
+      // 기업 공고
+      {
+        path: "corpRecruit",
+        element: <CorpRecruitPage />,
+        children: [
+          { index: true, element: <CorpRecruitListPage /> },
+          { path: "write", element: <WriteRecruitPage /> },
+          { path: ":recruitNo", element: <CorpRecruitDetailPage /> },
+          { path: "edit/:recruitNo", element: <EditRecruitPage /> },
+        ],
+      },
 
       // 기업 회원
       { path: "corpcvlist", element: <CorpCVListPage /> },
+
+      //기업 상세, 수정
       {
-        path: "corpcompanydetail",
+        path: "corpcompany",
         element: <CorpCompanyPage />,
         children: [
-          { path: ":corpNo", element: <CorpCompanyDetailPage /> },
-          { path: ":corpNo/edit", element: <EditCompanyPage /> },
+          { index: true, element: <CorpCompanyDetailPage /> },
+          { path: "detail", element: <CorpCompanyDetailPage /> },
+          { path: "update", element: <EditCompanyPage /> },
         ],
       },
 

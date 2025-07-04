@@ -1,70 +1,98 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
 <mapper namespace="com.example.demo.support.model.mapper.SupportMapper">
-	 <resultMap id="supportResultMap" type="com.example.demo.support.model.dto.Support">
-        <id property="supportNo" column="supportNo"/>
-        <result property="supportTitle" column="supportTitle"/>
-        <result property="supportContent" column="supportContent"/>
-        <result property="supportAnswer" column="supportAnswer"/>
-        <result property="supportStatus" column="supportStatus"/>
-        <result property="memNo" column="memNo"/>
-        <result property="adminNo" column="adminNo"/>
-        <result property="supportCategoryCode" column="supportCategoryCode"/>
-        <result property="supportCategoryName" column="supportCategoryName"/>
-    </resultMap>
 
-    <select id="selectSupportList" resultMap="supportResultMap">
-        SELECT 
-            S.SUPPORT_NO AS supportNo,
-            S.SUPPORT_CONTENT AS supportContent,
-            S.SUPPORT_ANSWER AS supportAnswer,
-            S.SUPPORT_STATUS AS supportStatus,
-            S.MEM_NO AS memNo,
-            S.ADMIN_NO AS adminNo,
-            C.SUPPORT_CATEGORY_NAME AS supportCategoryName,
-            S.SUPPORT_CATEGORY_CODE AS supportCategoryCode
-        FROM SUPPORT S
-        JOIN SUPPORT_CATEGORY C ON S.SUPPORT_CATEGORY_CODE = C.SUPPORT_CATEGORY_CODE
-        ORDER BY S.SUPPORT_NO DESC
-    </select>
+<resultMap id="SupportResultMap" type="com.example.demo.support.model.dto.Support">
+  <id property="supportNo" column="SUPPORT_NO" />
+  <result property="supportTitle" column="SUPPORT_TITLE" />
+  <result property="supportContent" column="SUPPORT_CONTENT" />
+  <result property="supportAnswer" column="SUPPORT_ANSWER" />
+  <result property="supportStatus" column="SUPPORT_STATUS" />
+  <result property="supportDate" column="SUPPORT_DATE" />
+  <result property="supportCategoryCode" column="SUPPORT_CATEGORY_CODE" />
+  <result property="supportCategoryName" column="SUPPORT_CATEGORY_NAME" />
+  <result property="memNo" column="MEM_NO" />
+  <result property="adminNo" column="ADMIN_NO" />
+  <result property="supportDate" column="SUPPORT_DATE" javaType="java.lang.String"/> 
+</resultMap>
 
-    <select id="selectSupportById" parameterType="int" resultMap="supportResultMap">
-        SELECT 
-            S.SUPPORT_NO AS supportNo,
-            S.SUPPORT_CONTENT AS supportContent,
-            S.SUPPORT_ANSWER AS supportAnswer,
-            S.SUPPORT_STATUS AS supportStatus,
-            S.MEM_NO AS memNo,
-            S.ADMIN_NO AS adminNo,
-            C.SUPPORT_CATEGORY_NAME AS supportCategoryName,
-            S.SUPPORT_CATEGORY_CODE AS supportCategoryCode
-        FROM SUPPORT S
-        JOIN SUPPORT_CATEGORY C ON S.SUPPORT_CATEGORY_CODE = C.SUPPORT_CATEGORY_CODE
-        WHERE S.SUPPORT_NO = #{id}
-    </select>
 
-    <insert id="insertSupport" parameterType="com.example.demo.support.model.dto.Support">
-        INSERT INTO SUPPORT (
-            SUPPORT_NO,
-            SUPPORT_CATEGORY_CODE,
-            SUPPORT_TITLE,    
-            SUPPORT_CONTENT,
-            SUPPORT_STATUS,
-            MEM_NO,
-            ADMIN_NO,
-            SUPPORT_ANSWER
-        ) VALUES (
-            SUPPORT_SEQ.NEXTVAL,
-            #{supportCategoryCode},
-            #{supportTitle},  
-            #{supportContent},
-            'N',
-            #{memNo},
-            NULL,
-            NULL
-        )
-    </insert>
+	<!-- 문의하기 리스트 나옴 카테고리까지 나온다 끼얏후 최신순으로 보임 -->
+	<select id="selectSupportList" resultMap="SupportResultMap">
+  	 SELECT
+      	S.SUPPORT_NO,
+     	S.SUPPORT_TITLE,
+     	S.SUPPORT_CONTENT,
+     	S.SUPPORT_ANSWER,
+   	 	S.SUPPORT_STATUS,
+     	S.MEM_NO,
+      	S.ADMIN_NO,
+     	S.SUPPORT_CATEGORY_CODE,
+     	C.SUPPORT_CATEGORY_NAME,
+     	TO_CHAR(S.SUPPORT_DATE, 'YYYY-MM-DD') AS SUPPORT_DATE   <!-- 년 월 일 조회 -->
+  	 FROM SUPPORT S
+ 	 LEFT JOIN SUPPORT_CATEGORY C
+     ON S.SUPPORT_CATEGORY_CODE = C.SUPPORT_CATEGORY_CODE
+  	 ORDER BY S.SUPPORT_NO DESC
+	</select>
+	
+	<!-- 자신이 작성한 문의 -->
+	<select id="selectSupportListByMemNo" resultMap="SupportResultMap" parameterType="String">
+	  SELECT
+	    S.SUPPORT_NO,
+	    S.SUPPORT_TITLE,
+	    S.SUPPORT_CONTENT,
+	    S.SUPPORT_ANSWER,
+	    S.SUPPORT_STATUS,
+	    S.MEM_NO,
+	    S.ADMIN_NO,
+	    S.SUPPORT_CATEGORY_CODE,
+	    C.SUPPORT_CATEGORY_NAME,
+	    TO_CHAR(S.SUPPORT_DATE, 'YYYY-MM-DD') AS SUPPORT_DATE
+	  FROM SUPPORT S
+	  LEFT JOIN SUPPORT_CATEGORY C
+	    ON S.SUPPORT_CATEGORY_CODE = C.SUPPORT_CATEGORY_CODE
+	  WHERE S.MEM_NO = #{memNo}
+	  ORDER BY S.SUPPORT_NO DESC
+	</select>
+	
+	<!-- 문의하기 디테일 나옴 -->
+	<select id="selectSupportById" parameterType="int">
+  	 SELECT 
+    	S.SUPPORT_NO,
+    	S.SUPPORT_TITLE,
+    	S.SUPPORT_CONTENT,
+    	S.SUPPORT_ANSWER,
+    	S.SUPPORT_STATUS,
+    	S.MEM_NO,
+    	S.ADMIN_NO,
+    	S.SUPPORT_CATEGORY_CODE,
+    	C.SUPPORT_CATEGORY_NAME,
+    	S.SUPPORT_DATE
+  	 FROM SUPPORT S
+  	 LEFT JOIN SUPPORT_CATEGORY C
+     ON S.SUPPORT_CATEGORY_CODE = C.SUPPORT_CATEGORY_CODE
+ 	 WHERE S.SUPPORT_NO = #{supportNo}
+	</select>
+	
+	<!-- 문의하기 작성 -->
+	<insert id="insertSupport" parameterType="Support">
+    	INSERT INTO SUPPORT (
+         SUPPORT_NO,
+         SUPPORT_TITLE,
+         SUPPORT_CONTENT,
+         SUPPORT_CATEGORY_CODE,
+         MEM_NO,
+         SUPPORT_DATE
+    	) VALUES (
+         SUPPORT_SEQ.NEXTVAL,
+         #{supportTitle},
+         #{supportContent},
+         #{supportCategoryCode},
+         #{memNo},
+         SYSDATE           
+    	)
+	</insert>
 </mapper>

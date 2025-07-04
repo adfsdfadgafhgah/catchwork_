@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper	namespace="com.example.demo.member.model.mapper.MemberMapper">
+<mapper	namespace="com.example.demo.auth.model.mapper.MemberMapper">
 
 <!-- 로그인 회원의 정보 조회 -->
 <select id="getLoginMember">

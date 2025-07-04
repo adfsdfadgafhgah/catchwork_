@@ -4,139 +4,40 @@ import SectionHeader from "../../components/common/SectionHeader";
 import CompanyItem from "../../components/company/CompanyItem";
 import "./CompanyListPage.css";
 import { axiosApi } from "../../api/axiosAPI";
+import useLoginMember from "../../stores/loginMember";
 
-//const CompanyListPage = () => {
-// const [companyList, setCompanyList] = useState([
-//   // 가데이터 넣어서 확인하는중임
-//   {
-//     corpNo: 1,
-//     corpName: "KH 정보교육원 종로",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 1,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 2,
-//     corpName: "KH 정보교육원 강남",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 2,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 3,
-//     corpName: "KH 정보교육원 의정부",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 3,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 4,
-//     corpName: "KH 정보교육원 인천",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 4,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 5,
-//     corpName: "KH 정보교육원 신촌",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 5,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 6,
-//     corpName: "KH 정보교육원 노원",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 6,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 1,
-//     corpName: "KH 정보교육원 종로",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 1,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 2,
-//     corpName: "KH 정보교육원 강남",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 2,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 3,
-//     corpName: "KH 정보교육원 의정부",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 3,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 4,
-//     corpName: "KH 정보교육원 인천",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 4,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 5,
-//     corpName: "KH 정보교육원 신촌",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 5,
-//     views: 120,
-//     favs: 70,
-//   },
-//   {
-//     corpNo: 6,
-//     corpName: "KH 정보교육원 노원",
-//     corpType: "중소기업",
-//     corpLogo: "/src/assets/icon.png",
-//     recruitCount: 6,
-//     views: 120,
-//     favs: 70,
-//   },
-// ]);
 const CompanyListPage = () => {
+  const { loginMember, setLoginMember } = useLoginMember(); // 로그인 유저 정보
   const [companyList, setCompanyList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
 
-  //기업 목록
+  // 최초 마운트 시 정보 fetch
+  useEffect(() => {
+    if (!loginMember || !loginMember.memNo) {
+      setLoginMember();
+    }
+  }, []);
 
+  //기업 목록
   const getCorpList = async () => {
     setLoading(true);
+
     try {
-      const memNo = "49d354c4-bd52-4cdb-8fe5-a7ff69454b16";
-      const params = { memNo };
+      const params = {};
+
+      if (loginMember && loginMember.memNo) {
+        params.memNo = loginMember.memNo; // 로그인한 경우만 memNo 전달
+      }
 
       if (searchTerm && searchTerm.trim()) {
-        params.query = searchTerm.trim();
+        params.query = searchTerm.trim(); //검색어 전달
       }
 
       const res = await axiosApi.get("/company", { params });
 
       if (res.status === 200) {
+        console.log("보내는 params(loginMember):", params); //로그인멤버가 자꾸 null로 떠서 추가함
         console.log("기업 목록 데이터 확인:", res.data);
         setCompanyList(res.data);
       } else if (res.status === 204) {
@@ -155,8 +56,8 @@ const CompanyListPage = () => {
 
   // 검색어 바뀔 때마다 요청 보내기
   useEffect(() => {
-    getCorpList();
-  }, [searchTerm]);
+    getCorpList(); // 항상 호출
+  }, [searchTerm, loginMember]);
 
   return (
     <>

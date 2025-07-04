@@ -1,196 +1,65 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SectionHeader from "../../components/common/SectionHeader";
 import Pagination from "../../components/common/Pagination";
+import { axiosApi } from "../../api/axiosAPI";
 import "./CorpCvListPage.css";
+// 수정 후 ✅
+import { getCareerRange } from "../../utils/getCareerRange";
 
 const CorpCvListPage = () => {
-  const [cvList, setCvList] = useState([
-    {
-      recruitCvNo: 20,
-      recruitCvPdfTitle: "이윤진 이력서 최근 경력사항 수정본",
-      date: "2025.06.23",
-      recruitCvEdu: "박사",
-      recruitCvCareer: "7-9",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 19,
-      recruitCvPdfTitle: "허배령 이력서",
-      date: "2025.06.22",
-      recruitCvEdu: "박사",
-      recruitCvCareer: "1-3",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 18,
-      recruitCvPdfTitle: "신입 이력서 최종",
-      date: "2025.06.20",
-      recruitCvEdu: "석사",
-      recruitCvCareer: "4-6",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 17,
-      recruitCvPdfTitle: "원기찬_최종_최종",
-      date: "2025.06.18",
-      recruitCvEdu: "석사",
-      recruitCvCareer: "7-9",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 16,
-      recruitCvPdfTitle: "조민장 이력서 입니다",
-      date: "2025.06.16",
-      recruitCvEdu: "학사",
-      recruitCvCareer: "1-3",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 15,
-      recruitCvPdfTitle: "김성원 백엔드 개발자 이력서",
-      date: "2025.06.14",
-      recruitCvEdu: "학사",
-      recruitCvCareer: "4-6",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 14,
-      recruitCvPdfTitle: "김영민 프론트엔드 개발자 이력서",
-      date: "2025.06.12",
-      recruitCvEdu: "전문학사",
-      recruitCvCareer: "10-15",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 13,
-      recruitCvPdfTitle: "최재이 이력서_최종",
-      date: "2025.06.10",
-      recruitCvEdu: "전문학사",
-      recruitCvCareer: "10-15",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 12,
-      recruitCvPdfTitle: "허재호 개발자 이력서",
-      date: "2025.06.08",
-      recruitCvEdu: "고졸",
-      recruitCvCareer: "16-20",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 11,
-      recruitCvPdfTitle: "신입자 이력서_최최최종",
-      date: "2025.06.05",
-      recruitCvEdu: "고졸",
-      recruitCvCareer: "21+",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 10,
-      recruitCvPdfTitle: "이블랑 이력서 최근 경력사항 수정본",
-      date: "2025.06.23",
-      recruitCvEdu: "박사",
-      recruitCvCareer: "7-9",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 9,
-      recruitCvPdfTitle: "진진 이력서",
-      date: "2025.06.22",
-      recruitCvEdu: "박사",
-      recruitCvCareer: "1-3",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 8,
-      recruitCvPdfTitle: "만두 이력서 최종",
-      date: "2025.06.20",
-      recruitCvEdu: "석사",
-      recruitCvCareer: "4-6",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 7,
-      recruitCvPdfTitle: "원기찬_최종_최종",
-      date: "2025.06.18",
-      recruitCvEdu: "석사",
-      recruitCvCareer: "7-9",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 6,
-      recruitCvPdfTitle: "한화 이력서 입니다",
-      date: "2025.06.16",
-      recruitCvEdu: "학사",
-      recruitCvCareer: "1-3",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 5,
-      recruitCvPdfTitle: "이글스 백엔드 개발자 이력서",
-      date: "2025.06.14",
-      recruitCvEdu: "학사",
-      recruitCvCareer: "4-6",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 4,
-      recruitCvPdfTitle: "최강한화 프론트엔드 개발자 이력서",
-      date: "2025.06.12",
-      recruitCvEdu: "전문학사",
-      recruitCvCareer: "10-15",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 3,
-      recruitCvPdfTitle: "마리한화 이력서_최종",
-      date: "2025.06.10",
-      recruitCvEdu: "전문학사",
-      recruitCvCareer: "10-15",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 2,
-      recruitCvPdfTitle: "수리 개발자 이력서",
-      date: "2025.06.08",
-      recruitCvEdu: "고졸",
-      recruitCvCareer: "16-20",
-      isDownloaded: false,
-    },
-    {
-      recruitCvNo: 1,
-      recruitCvPdfTitle: "성심당 이력서_최최최종",
-      date: "2025.06.05",
-      recruitCvEdu: "고졸",
-      recruitCvCareer: "21+",
-      isDownloaded: false,
-    },
-  ]);
-
+  const [cvList, setCvList] = useState([]);
+  const [filteredList, setFilteredList] = useState([]);
   const [selectedEdu, setSelectedEdu] = useState("");
   const [selectedExp, setSelectedExp] = useState("");
-  const [filteredList, setFilteredList] = useState(cvList);
   const [selectedCvNos, setSelectedCvNos] = useState([]);
   const [showCheckbox, setShowCheckbox] = useState(false);
-
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; //한페이지에 보여지는 이력서 갯수
 
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredList.slice(indexOfFirstItem, indexOfLastItem);
+  useEffect(() => {
+    fetchCvList();
+  }, []);
 
-  const totalPages = Math.ceil(filteredList.length / itemsPerPage);
+  const fetchCvList = async () => {
+    try {
+      const res = await axiosApi.get("/corpcv/list");
+      const formatted = res.data.map((cv) => ({
+        ...cv,
+        isDownloaded: cv.recruitCvCheckFl === "Y",
+        date: cv.recruitCvDate || "",
+      }));
+      setCvList(formatted);
+      setFilteredList(formatted);
+    } catch (err) {
+      console.error("이력서 목록 불러오기 실패", err);
+    }
+  };
 
-  const handleFilter = () => {
-    const result = cvList.filter((cv) => {
-      const eduMatch = selectedEdu === "" || cv.recruitCvEdu === selectedEdu;
-      const expMatch = selectedExp === "" || cv.recruitCvCareer === selectedExp;
-      return eduMatch && expMatch;
-    });
-    setFilteredList(result);
-    setSelectedCvNos([]);
-    setCurrentPage(1);
+  const handleFilter = async () => {
+    try {
+      const { careerMin, careerMax } = getCareerRange(selectedExp);
+
+      const params = {};
+      if (selectedEdu !== "") params.edu = selectedEdu;
+      if (careerMin !== null && careerMax !== null) {
+        params.careerMin = careerMin;
+        params.careerMax = careerMax;
+      }
+
+      const res = await axiosApi.get("/corpcv/filter", { params });
+      const formatted = res.data.map((cv) => ({
+        ...cv,
+        isDownloaded: cv.recruitCvCheckFl === "Y",
+        date: cv.recruitCvDate || "",
+      }));
+      setCvList(formatted);
+      setFilteredList(formatted);
+      setCurrentPage(1);
+      setSelectedCvNos([]);
+    } catch (err) {
+      console.error("필터링된 이력서 불러오기 실패", err);
+      alert("이력서 목록 불러오기에 실패했습니다.");
+    }
   };
 
   const handleCheckboxChange = (cvNo) => {
@@ -199,31 +68,34 @@ const CorpCvListPage = () => {
     );
   };
 
-  const handleDownload = (cvNo, cvTitle) => {
-    fetch(`/api/cv/download/${cvNo}`, { method: "GET" })
-      .then((res) => res.blob())
-      .then((blob) => {
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.download = `${cvTitle}.pdf`;
-        a.href = url;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
+  const handleDownload = async (cvNo, cvTitle) => {
+    try {
+      const res = await axiosApi.get(`/corpcv/download/${cvNo}`, {
+        responseType: "blob",
+      });
 
-        setCvList((prevList) =>
-          prevList.map((cv) =>
-            cv.recruitCvNo === cvNo ? { ...cv, isDownloaded: true } : cv
-          )
-        );
-        setFilteredList((prevList) =>
-          prevList.map((cv) =>
-            cv.recruitCvNo === cvNo ? { ...cv, isDownloaded: true } : cv
-          )
-        );
-      })
-      .catch((err) => console.error("다운로드 실패", err));
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${cvTitle}.pdf`;
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+
+      setCvList((prevList) =>
+        prevList.map((cv) =>
+          cv.recruitCvNo === cvNo ? { ...cv, isDownloaded: true } : cv
+        )
+      );
+      setFilteredList((prevList) =>
+        prevList.map((cv) =>
+          cv.recruitCvNo === cvNo ? { ...cv, isDownloaded: true } : cv
+        )
+      );
+    } catch (err) {
+      console.error("다운로드 실패", err);
+      alert("다운로드 중 오류가 발생했습니다.");
+    }
   };
 
   const handleBulkDownload = () => {
@@ -254,7 +126,12 @@ const CorpCvListPage = () => {
       setSelectedCvNos([]);
     }
   };
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredList.slice(indexOfFirstItem, indexOfLastItem);
+  const totalPages = Math.ceil(filteredList.length / itemsPerPage);
 
+  const { careerMin, careerMax } = getCareerRange(selectedExp);
   return (
     <main className="container">
       <SectionHeader title="이력서 목록 조회" />
@@ -270,11 +147,11 @@ const CorpCvListPage = () => {
               onChange={(e) => setSelectedEdu(e.target.value)}
             >
               <option value="">학력 선택</option>
-              <option value="고졸">고졸</option>
-              <option value="전문학사">전문학사</option>
-              <option value="학사">학사</option>
-              <option value="석사">석사</option>
-              <option value="박사">박사</option>
+              <option value="0">고졸</option>
+              <option value="1">전문학사</option>
+              <option value="2">학사</option>
+              <option value="3">석사</option>
+              <option value="4">박사</option>
             </select>
 
             {/* 경력 필터 */}
@@ -331,7 +208,7 @@ const CorpCvListPage = () => {
                   />
                 )}
               </th>
-              <th>번호</th>
+              <th>공고 제목</th>
               <th>제목</th>
               <th>작성일</th>
               <th>다운로드</th>
@@ -352,7 +229,7 @@ const CorpCvListPage = () => {
                     />
                   )}
                 </td>
-                <td>{cv.recruitCvNo}</td>
+                <td>{cv.recruitTitle}</td>
                 <td>{cv.recruitCvPdfTitle}</td>
                 <td>{cv.date}</td>
                 <td>

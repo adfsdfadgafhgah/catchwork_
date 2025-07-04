@@ -1,25 +1,27 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import { useLocation } from "react-router-dom";
 import "./SubmitCVPage.css";
 import SectionHeader from "../../components/common/SectionHeader";
+import { axiosApi } from "../../api/axiosAPI";
 
 const SubmitCVPage = () => {
   const [resumeList, setResumeList] = useState([]);
   const [selectedResume, setSelectedResume] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const { state } = useLocation(); // ✅ state에서 recruitNo 추출
+  const { state } = useLocation(); // state에서 recruitNo 추출
   const recruitNo = state?.recruitNo;
+
   //실제 로그인한 회원 번호로 대체
   const memNo = "d7b41663-bb55-42e0-a533-4e6c09a18097";
 
+  // 이력서 목록 조회
   useEffect(() => {
     const fetchResumes = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:8080/cvlist?memNo=${memNo}`
-        );
+        const response = await axiosApi.get("/cvlist", {
+          params: { memNo },
+        });
         setResumeList(response.data);
       } catch (err) {
         console.error("이력서 목록 불러오기 실패", err);
@@ -31,6 +33,8 @@ const SubmitCVPage = () => {
 
     fetchResumes();
   }, []);
+
+  //제출 처리
   const handleSubmit = async () => {
     if (selectedResume === null) {
       alert("이력서를 선택하세요!");
@@ -38,7 +42,7 @@ const SubmitCVPage = () => {
     }
 
     try {
-      await axios.post("http://localhost:8080/submitcv", {
+      await axiosApi.post("/submitcv", {
         memNo,
         cvNo: selectedResume,
         recruitNo,
@@ -50,6 +54,7 @@ const SubmitCVPage = () => {
       alert("제출 실패");
     }
   };
+
   // recruitNo 없을 경우 잘못된 접근으로 처리
   if (!recruitNo) {
     return (

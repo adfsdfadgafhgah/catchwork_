@@ -8,16 +8,27 @@ import {
   searchAddress,
   // sendVerificationCode, // 필요 시 주석 해제
 } from "../../api/signupAPI";
-import useFormHandler from "../../hooks/useFormHandler";
-import { validateForm, generateRandomNickname } from "./utils/signupUtil";
+import memberFormHandler from "../../hooks/memberFormHandler";
+import { validateForm } from "./utils/signupUtil";
 
 const SignUpPage = () => {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const userType =
     searchParams.get("type") === "corporate" ? "corporate" : "personal";
 
-  const { formData, handleChange, setField, validity } = useFormHandler({
+  // 폼 핸들러
+  const {
+    formData,
+    handleChange,
+    setField,
+    validity,
+    handleCheckId,
+    handleCheckNickname,
+    triggerAddressSearch,
+    handleGenerateNickname,
+    validateForm,
+  } = memberFormHandler({
     memId: "",
     memPw: "",
     memPwConfirm: "",
@@ -37,6 +48,7 @@ const SignUpPage = () => {
     memSmsFl: false,
   });
 
+  // 제출출
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm(formData, userType)) return;
@@ -49,27 +61,6 @@ const SignUpPage = () => {
       alert("회원가입 실패: " + (err.response?.data?.message || err.message));
       console.error(err.response?.data || err.message);
     }
-  };
-
-  const handleCheckId = async () => {
-    if (!formData.memId.trim()) return alert("아이디를 입력해주세요.");
-    const available = await checkDuplicateId(formData.memId);
-    alert(
-      available ? "사용 가능한 아이디입니다." : "이미 사용 중인 아이디입니다."
-    );
-  };
-
-  const handleCheckNickname = async () => {
-    if (!formData.memNickname.trim()) return alert("닉네임을 입력해주세요.");
-    const available = await checkDuplicateNickname(formData.memNickname);
-    alert(
-      available ? "사용 가능한 닉네임입니다." : "이미 사용 중인 닉네임입니다."
-    );
-  };
-
-  const handleGenerateNickname = () => {
-    const nickname = generateRandomNickname();
-    setField("memNickname", nickname);
   };
 
   return (
@@ -227,7 +218,13 @@ const SignUpPage = () => {
               type="date"
               value={formData.memBirthday}
               onChange={handleChange}
+              style={{
+                borderColor: validity.memBirthday === false ? "red" : undefined,
+              }}
             />
+            {validity.memBirthday === false && (
+              <small style={{ color: "red" }}>생년월일을 선택해주세요.</small>
+            )}
           </label>
           <div className="gender-group">
             <span>성별</span>
@@ -251,9 +248,15 @@ const SignUpPage = () => {
               />{" "}
               여
             </label>
+            {validity.memGender === false && (
+              <small style={{ color: "red" }}>성별을 선택해주세요.</small>
+            )}
           </div>
         </>
 
+        {/* *********************
+         * 기업 회원가입 필드
+         ********************* */}
         {userType === "corporate" && (
           <>
             <label>
@@ -283,16 +286,25 @@ const SignUpPage = () => {
           </>
         )}
 
+        {/* ********************* */}
+
         <label>
           주소
           <input
             name="memAddr"
             value={formData.memAddr}
             onChange={handleChange}
+            readOnly
+            style={{
+              borderColor: validity.memAddr === false ? "red" : undefined,
+            }}
           />
-          <button type="button" onClick={searchAddress}>
+          <button type="button" onClick={triggerAddressSearch}>
             주소 찾기
           </button>
+          {validity.memAddr === false && (
+            <small style={{ color: "red" }}>주소를 입력해주세요.</small>
+          )}
         </label>
         <input
           name="detailAddress"

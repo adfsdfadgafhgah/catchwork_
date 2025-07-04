@@ -1,148 +1,99 @@
-import { useParams, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import SectionHeader from "../../components/common/SectionHeader";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
+import useLoginMember from "../../stores/loginMember";
+import { axiosApi } from "../../api/axiosAPI";
 import "./EditCompanyPage.css";
 
-const dummyCompanyList = [
-  {
-    corpNo: "1",
-    corpName: "KH 정보교육원 종로",
-    corpLogo: "/src/assets/icon.png",
-    corpType: "중소기업",
-    corpRegNo: "123-45-67890",
-    corpCeoName: "양진선",
-    corpAddr: "서울특별시 중구 남대문로 120 그레이츠 청계(구 대일빌딩) 2F,3F",
-    corpOpenDate: "2017-04-01",
-    corpHomeLink: "http://khacademy.co.kr",
-    corpBm: "IT 교육, 개발자 양성",
-    corpDetail:
-      "1998년에 개원한 KH정보교육원은 대한민국 최초로 IT교육의 새로운 기준을 제시하며 실업자 취업교육을 시작하였습니다...",
-    corpBenefit: "자기개발비 지원/강의 교재비 지원/교육지원비/명절 상여금",
-    corpBenefitDetail:
-      "헬스장 지원/중식 제공/사내 동호회/생일자 상품권/연차 제도/정기 워크숍/퇴직연금/경조사비 지원",
-  },
-
-  {
-    corpNo: "2",
-    corpName: "KH 정보교육원 강남",
-    corpLogo: "/src/assets/icon.png",
-    corpType: "중소기업",
-    corpRegNo: "123-45-67890", // ✅ 사업자번호 추가
-    corpCeoName: "양진선",
-    corpAddr: "서울특별시 강남구 테헤란로 212 4F",
-    corpOpenDate: "2018-02-15",
-    corpHomeLink: "http://khacademy-gangnam.co.kr",
-    corpBm: "IT 교육, 디자인 교육",
-    corpDetail:
-      "KH정보교육원 강남지점은 강남 중심지에서 IT 전문 교육을 제공하고 있습니다...",
-    corpBenefit: "자기개발비 지원/도서 구매 지원/교육비 지원",
-    corpBenefitDetail:
-      "헬스장 지원/중식 제공/생일자 상품권/연차 제도/경조사비 지원",
-  },
-  {
-    corpNo: "3",
-    corpName: "KH 정보교육원 의정부",
-    corpLogo: "/src/assets/icon.png",
-    corpType: "중소기업",
-    corpRegNo: "123-45-67890", // ✅ 사업자번호 추가
-    corpCeoName: "허배령",
-    corpAddr: "경기도 의정부시 어룡역 근처 부근 민락동",
-    corpOpenDate: "2018-02-15",
-    corpHomeLink: "http://khacademy-uijeongbu.co.kr",
-    corpBm: "게시판 crud",
-    corpDetail:
-      "KH정보교육원 의정부는 의정부 유일한 KH정보 교육원이며 어룡역에서 경전철로 환승후 회룡역에서 1호선으로 갈아탄 후 와야합니다",
-    corpBenefit: "자기개발비 지원/도서 구매 지원/교육비 지원",
-    corpBenefitDetail:
-      "헬스장 지원/중식 제공/생일자 상품권/연차 제도/경조사비 지원",
-  },
-  {
-    corpNo: "4",
-    corpName: "KH 정보교육원 인천",
-    corpLogo: "/src/assets/icon.png",
-    corpType: "중소기업",
-    corpRegNo: "123-45-67890", // ✅ 사업자번호 추가
-    corpCeoName: "허재호",
-    corpAddr: "인천광역시 옥련동",
-    corpOpenDate: "2018-02-15",
-    corpHomeLink: "http://khacademy-inchon.co.kr",
-    corpBm: "IT 교육, 디자인 교육,디자인 CSS, 이구아나 밥주기",
-    corpDetail: "재호는 요즘 여자친구 선물 걱정에 잠을 못이룹니다 ",
-    corpBenefit: "자기개발비 지원/도서 구매 지원/교육비 지원",
-    corpBenefitDetail:
-      "헬스장 지원/중식 제공/생일자 상품권/연차 제도/경조사비 지원",
-  },
-  {
-    corpNo: "5",
-    corpName: "KH 정보교육원 신촌",
-    corpLogo: "/src/assets/icon.png",
-    corpType: "중소기업",
-    corpRegNo: "123-45-67890", // ✅ 사업자번호 추가
-    corpCeoName: "신명하",
-    corpAddr: "서울특별시 신촌어쩌구 저쩌구",
-    corpOpenDate: "2018-02-15",
-    corpHomeLink: "http://khacademy-shinchon.co.kr",
-    corpBm: "IT 교육, 디자인 교육",
-    corpDetail: "신명하는 맨날 새벽 다섯시까지 잠안자고 웹툰본대요...",
-    corpBenefit: "자기개발비 지원/도서 구매 지원/교육비 지원",
-    corpBenefitDetail:
-      "헬스장 지원/중식 제공/생일자 상품권/연차 제도/경조사비 지원",
-  },
-  {
-    corpNo: "6",
-    corpName: "KH 정보교육원 노원",
-    corpLogo: "/src/assets/icon.png",
-    corpType: "중소기업",
-    corpRegNo: "123-45-67890", // ✅ 사업자번호 추가
-    corpCeoName: "이윤진",
-    corpAddr: "서울특별시 노원구 테헤란로 212 4F",
-    corpOpenDate: "2018-02-15",
-    corpHomeLink: "http://khacademy-nowon.co.kr",
-    corpBm: "IT 교육, 디자인 교육",
-    corpDetail:
-      "KH정보교육원 노원점은 노도강에 위치하여 근처 학생들에게 인기가 좋다.",
-    corpBenefit: "자기개발비 지원/도서 구매 지원/교육비 지원",
-    corpBenefitDetail:
-      "헬스장 지원/중식 제공/생일자 상품권/연차 제도/경조사비 지원",
-  },
-];
-
 const EditCompanyPage = () => {
-  const { corpNo } = useParams();
   const navigate = useNavigate();
-  const company = dummyCompanyList.find((item) => item.corpNo === corpNo);
+  const { loginMember, setLoginMember } = useLoginMember();
 
-  if (!company) {
+  const [company, setCompany] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [corpNo, setCorpNo] = useState("");
+  const [corpName, setCorpName] = useState("");
+  const [corpType, setCorpType] = useState("");
+  const [corpCeoName, setCorpCeoName] = useState("");
+  const [corpAddr, setCorpAddr] = useState("");
+  const [corpOpenDate, setCorpOpenDate] = useState("");
+  const [corpHomeLink, setCorpHomeLink] = useState("");
+  const [corpBm, setCorpBm] = useState("");
+  const [corpDetail, setCorpDetail] = useState("");
+  const [corpBenefit, setCorpBenefit] = useState("");
+  const [corpBenefitDetail, setCorpBenefitDetail] = useState("");
+
+  useEffect(() => {
+    setLoginMember(); // 로그인 정보 설정
+  }, []);
+
+  //기업 정보
+  // 기업 정보 불러오기
+  useEffect(() => {
+    const fetchCompany = async () => {
+      if (!loginMember?.memNo) return;
+
+      try {
+        const res = await axiosApi.get("/corpcompany/detail", {
+          params: { memNo: loginMember.memNo },
+        });
+        console.log("✅ 기업 정보:", res.data);
+        setCompany(res.data);
+      } catch (err) {
+        console.error("기업 정보 불러오기 실패", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCompany();
+  }, [loginMember]);
+
+  //불러온 기업 정보로 state 초기화
+  useEffect(() => {
+    if (company) {
+      setCorpNo(company.corpNo);
+      setCorpName(company.corpName || "");
+      setCorpType(company.corpType || "");
+      setCorpCeoName(company.corpCeoName || "");
+      setCorpAddr(company.corpAddr || "");
+      setCorpOpenDate(company.corpOpenDate || "");
+      setCorpHomeLink(company.corpHomeLink || "");
+      setCorpBm(company.corpBm || "");
+      setCorpDetail(company.corpDetail || "");
+      setCorpBenefit(company.corpBenefit || "");
+      setCorpBenefitDetail(company.corpBenefitDetail || "");
+    }
+  }, [company]);
+
+  //로딩 상태
+  if (loading) {
     return (
       <main className="container">
         <SectionHeader title="기업 정보 수정" />
-        <p className="company-not-found">존재하지 않는 기업입니다.</p>
+        <p>불러오는 중입니다...</p>
       </main>
     );
   }
 
-  const [corpName, setCorpName] = useState(company?.corpName || "");
-  const [corpType, setCorpType] = useState(company?.corpType || "");
-  //corpNo는 위에서 선언함
-  const [corpCeoName, setCorpCeoName] = useState(company?.corpCeoName || "");
-  const [corpAddr, setCorpAddr] = useState(company?.corpAddr || "");
-  const [corpOpenDate, setCorpOpenDate] = useState(company?.corpOpenDate || "");
-  const [corpHomeLink, setCorpHomeLink] = useState(company?.corpHomeLink || "");
-  const [corpBm, setCorpBm] = useState(company?.corpBm || "");
-  const [corpDetail, setCorpDetail] = useState(company?.corpDetail || "");
-  const [corpBenefit, setCorpBenefit] = useState(company?.corpBenefit || "");
-  const [corpBenefitDetail, setCorpBenefitDetail] = useState(
-    company?.corpBenefitDetail || ""
-  );
+  //기업 정보 없음
+  if (!company) {
+    return (
+      <main className="container">
+        <SectionHeader title="기업 정보 수정" />
+        <p>존재하지 않는 기업입니다.</p>
+      </main>
+    );
+  }
+
+  //취소버튼 누르면 디테일 페이지로 이동
   const handleCancel = () => {
-    // 현재 corpNo 를 이용해 원래 디테일 페이지로 이동
-    navigate(`/corpcompanydetail/${corpNo}`);
+    navigate(`/corpcompany/detail`);
   };
 
-  const handleEdit = () => {
-    // 서버 요청 대신 콘솔 출력 (나중에 fetch/post 연결 가능)
+  const handleEdit = async () => {
     console.log("=== 수정된 기업정보 ===");
     console.log({
       corpName,
@@ -157,9 +108,27 @@ const EditCompanyPage = () => {
       corpBenefit,
       corpBenefitDetail,
     });
+    try {
+      await axiosApi.post("/corpcompany/update", {
+        corpNo,
+        corpName,
+        corpType,
+        corpCeoName,
+        corpAddr,
+        corpOpenDate,
+        corpHomeLink,
+        corpBm,
+        corpDetail,
+        corpBenefit,
+        corpBenefitDetail,
+      });
 
-    alert("수정이 성공되었습니다.");
-    navigate(`/corpcompanydetail/${corpNo}`);
+      alert("수정이 완료되었습니다.");
+      navigate("/corpcompany/detail");
+    } catch (error) {
+      console.error("수정 실패:", error);
+      alert("수정 중 오류가 발생했습니다.");
+    }
   };
 
   return (

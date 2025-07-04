@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.demo.report.model.mapper.ReportMapper">
+
+  <insert id="insertReport" parameterType="com.example.demo.report.model.dto.Report">
+    INSERT INTO REPORT (
+      REPORT_NO,
+      REPORT_TARGET_NO,
+      REPORT_TARGET_TYPE,
+      REPORT_CONTENT,
+      REPORT_CATEGORY_CODE,
+      MEM_NO,
+      REPORT_STATUS,
+      REPORT_DATE
+    ) VALUES (
+      REPORT_SEQ.NEXTVAL,
+      #{reportTargetNo},
+      #{reportTargetType},
+      #{reportContent},
+      #{reportCategoryCode},
+      #{memNo},
+      'N',
+      SYSDATE
+    )
+  </insert>
+
+</mapper>

@@ -1,0 +1,49 @@
+.cvItem {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.cvTitle {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+}
+
+.cvActions {
+  display: flex;
+  gap: 8px;
+}
+
+.cvButton {
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.editButton {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+.editButton:hover {
+  background-color: #45a049;
+}
+
+.deleteButton {
+  background-color: #f44336;
+  color: #fff;
+}
+
+.deleteButton:hover {
+  background-color: #d32f2f;
+}

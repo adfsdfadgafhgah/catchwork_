@@ -1,17 +1,13 @@
+import { useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
 import "./MyInfoPage.css";
 
 function MyInfo() {
-  // 사용자 정보 (예시 데이터)
-  const userInfo = {
-    id: "hbr0901",
-    email: "heowing94@gmail.com",
-    phone: "010-8983-5149",
-    name: "허배령",
-    nickname: "으후루꾸꾸루후으으후",
-    birth: "1994.09.01",
-    gender: "남",
-    address: "경기도 의정부시 용현로 143",
-  };
+  const { loginMember, setLoginMember } = useOutletContext();
+
+  useEffect(() => {
+    setLoginMember();
+  }, []);
 
   return (
     <div className="myinfo-container">
@@ -21,44 +17,44 @@ function MyInfo() {
         </div>
 
         <div className="profile-info">
-          <h1>{userInfo.nickname}</h1>
+          <h1>{loginMember.memNickname}</h1>
         </div>
       </div>
 
       <div className="info-card">
         <div className="info-content">
           <span className="info-label">아이디</span>
-          <span className="info-value font-medium">{userInfo.id}</span>
+          <span className="info-value font-medium">{loginMember.memId}</span>
         </div>
 
         <div className="info-content">
           <span className="info-label">이메일</span>
-          <span className="info-value">{userInfo.email}</span>
+          <span className="info-value">{loginMember.memEmail}</span>
         </div>
 
         <div className="info-content">
           <span className="info-label">전화번호</span>
-          <span className="info-value">{userInfo.phone}</span>
+          <span className="info-value">{loginMember.memTel}</span>
         </div>
 
         <div className="info-content">
           <span className="info-label">이름</span>
-          <span className="info-value font-medium">{userInfo.name}</span>
+          <span className="info-value font-medium">{loginMember.memName}</span>
         </div>
 
         <div className="info-content">
           <span className="info-label">생년월일</span>
-          <span className="info-value">{userInfo.birth}</span>
+          <span className="info-value">{loginMember.memBirthday}</span>
         </div>
 
         <div className="info-content">
           <span className="info-label">성별</span>
-          <span className="info-value">{userInfo.gender}</span>
+          <span className="info-value">{loginMember.memGender}</span>
         </div>
 
         <div className="info-content">
           <span className="info-label">주소</span>
-          <span className="info-value">{userInfo.address}</span>
+          <span className="info-value">{loginMember.memAddr}</span>
         </div>
       </div>
     </div>
