@@ -16,6 +16,12 @@ public interface SupportMapper {
     List<Support> selectSupportList(); // 전체 문의 보기
     
     
+    /** 내가 작성한 문의
+     * @author 명하
+     * @param memNo
+     * @return
+     */
+    List<Support> selectSupportListByMemNo(String memNo);
     
 
     /** 문의하기 디테일 아이디로 찾기
@@ -23,7 +29,7 @@ public interface SupportMapper {
      * @param supportNo
      * @return
      */
-    Support selectSupportById(int supportNo); // 이 메서드가 있을 것
+    Support selectSupportById(int supportNo);
     
 
     

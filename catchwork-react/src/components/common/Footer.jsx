@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from "react-router-dom";
 import './Footer.css';
 import icon from '../../assets/icon.png'
 
@@ -9,7 +10,7 @@ const Footer = () => {
         <a href="#">개인정보처리방침</a>
         <a href="#">이용약관</a>
         <span>Copyright © CATCH. All rights reserved.</span>
-        <a href="/supportlist" className="highlight">문의하기</a>
+        <Link to="/supportlist" className="highlight"> 문의하기</Link>
         <a href="#">기업제휴</a>
       </div>
       <div className="footer-bottom">

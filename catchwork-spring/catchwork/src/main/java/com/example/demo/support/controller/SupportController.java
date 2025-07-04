@@ -30,8 +30,15 @@ public class SupportController {
     // 문의하기 리스트 
     // 근데 콘솔창에 두번씩 뜬다 와이그럴까    
     @GetMapping("/list")
-    public ResponseEntity<List<Support>> getSupportList() {
-        List<Support> list = supportService.getSupportList();
+    public ResponseEntity<List<Support>> getSupportList(@AuthenticationPrincipal CustomUserDetails userDetails) {
+        if (userDetails == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        String memNo = userDetails.getUsername(); // 또는 getMemNo() 확인
+        System.out.println("로그인된 사용자 memNo = " + memNo);
+
+        List<Support> list = supportService.getSupportListByMemNo(memNo);
         return ResponseEntity.ok(list);
     }
     
