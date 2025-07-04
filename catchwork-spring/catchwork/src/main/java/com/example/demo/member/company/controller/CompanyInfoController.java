@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.member.board.model.service.BoardService;
-import com.example.demo.member.company.model.dto.CorpInfo;
-import com.example.demo.member.company.model.service.CorpInfoService;
+import com.example.demo.member.company.model.dto.CompanyInfo;
+import com.example.demo.member.company.model.service.CompanyInfoService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,28 +25,16 @@ import lombok.extern.slf4j.Slf4j;
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("company")
-public class CorpInfoController {
+public class CompanyInfoController {
 
 	@Autowired
-	private CorpInfoService service;
+	private CompanyInfoService companyInfoService;
     
-//	  로그인한 멤버에 따라서 저장한 기업인지 아닌지 보여주기   
-//    jwt 토큰
-//    @GetMapping("")
-//    public List<CorpInfo> getCorpList(HttpServletRequest request) {
-//        Integer memNo = jwtUtil.extractMemNo(request); // JWT에서 추출
-//        return service.selectCorpList(memNo);
-//    }
-    
-    
-
-	
-    
-    /** 3번째 시도
+    /**
      * 기업 정보 목록을 조회하는 API
      * @param query 검색어 (선택 사항)
-     * @param memNo 회원번호 (선택 사항)
-     * @return 기업 정보 리스트
+     * @param memNo 회원번호 (선택 사항): 로그인 안해도 목록 조회 되어야 함
+     * @return 기업 목록 리스트
      */
     @GetMapping("")
     public ResponseEntity<?> selectCompanyList(
@@ -55,7 +43,7 @@ public class CorpInfoController {
     	
     	 log.info("기업 목록 조회 요청. 검색어: {}, memNo: {}", query, memNo);
     	 
-        try {  List<CorpInfo> companyList = service.selectCorpList(query, memNo);
+        try {  List<CompanyInfo> companyList = companyInfoService.selectCompanyList(query, memNo);
         
             if (companyList.isEmpty()) {
                 log.info("조회된 기업 정보가 없습니다.");
@@ -81,7 +69,7 @@ public class CorpInfoController {
     	log.info("corpNo: {}", corpNo); // 로그도 안 찍히면 진입도 안 한 것
     	log.info("memNo: {}", memNo);//못받는중임
     	try {
-    		CorpInfo corpInfo = service.selectCorpDetail(corpNo, memNo);
+    		CompanyInfo corpInfo = companyInfoService.selectCompanyDetail(corpNo, memNo);
     		return ResponseEntity.ok(corpInfo);
     	}catch(Exception e) {
     		e.printStackTrace();

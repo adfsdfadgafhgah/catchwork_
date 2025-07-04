@@ -1,4 +1,5 @@
 .company-item {
+  height: 100%;
   border: var(--stroke-color2);
   border-radius: 12px;
   overflow: hidden;
@@ -48,11 +49,13 @@
 /* 메타 정보 */
 .company-meta {
   display: flex;
-  justify-content: center;
+  justify-content: flex-end; /* ← 핵심 */
   align-items: center;
   margin-top: 12px;
   gap: 12px;
   font-size: 13px;
+  width: 100%; /* ← 필요! */
+  padding: 0 12px;
 }
 .company-item-link {
   text-decoration: none;
@@ -63,4 +66,19 @@
 .company-item-link * {
   text-decoration: none !important;
   color: inherit !important;
+}
+.company-bookmark-area {
+  margin-top: auto;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding: 0 12px;
+}
+
+.bookmark {
+  font-size: 14px;
+  color: var(--main-color);
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }

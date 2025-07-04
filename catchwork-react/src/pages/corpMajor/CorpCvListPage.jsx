@@ -46,7 +46,7 @@ const CorpCvListPage = () => {
         params.careerMax = careerMax;
       }
 
-      const res = await axiosApi.get("/corp/cv", { params });
+      const res = await axiosApi.get("/corpcv/filter", { params });
       const formatted = res.data.map((cv) => ({
         ...cv,
         isDownloaded: cv.recruitCvCheckFl === "Y",

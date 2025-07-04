@@ -53,8 +53,8 @@
   JOIN 
     recruit r ON rc.recruit_no = r.recruit_no
   <where>
-    <if test="edu != null and edu != ''">
-      AND rc.recruit_cv_edu = #{edu}
+    <if test="recruitCvEdu != null and recruitCvEdu != ''">
+      AND rc.recruit_cv_edu = #{recruitCvEdu}
     </if>
     <if test="careerMin != null and careerMax != null">
       AND rc.recruit_cv_career BETWEEN #{careerMin} AND #{careerMax}

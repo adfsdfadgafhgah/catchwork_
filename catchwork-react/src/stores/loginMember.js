@@ -9,21 +9,20 @@ const useLoginMember = create((set) => ({
     try {
       const memNo = useAuthStore.getState().memNo;
       if (!memNo) {
-        set({isLoadingLogin : true});
+        set({ isLoadingLogin: true });
         return;
       }
-      const resp = await axiosApi.post("/member/getLoginMember", { memNo }
-      );
+      const resp = await axiosApi.post("/member/getLoginMember", { memNo });
 
       if (resp.status === 200) {
         set({ loginMember: resp.data, isLoadingLogin: true });
       } else {
-        set({isLoadingLogin: true});
+        set({ isLoadingLogin: true });
       }
     } catch (error) {
       console.error("Failed to fetch loginMember:", error);
     }
-  }
+  },
 }));
 
 export default useLoginMember;

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.example.demo.auth.model.entity.CorpInfoEntity;
 
 @Repository
-public interface CorpInfoRepository extends JpaRepository<CorpInfoEntity, String> {
+public interface CorpInfoRepository extends JpaRepository<CorpInfoEntity, Long> {
     boolean existsByCorpRegNo(String corpRegNo);
 }

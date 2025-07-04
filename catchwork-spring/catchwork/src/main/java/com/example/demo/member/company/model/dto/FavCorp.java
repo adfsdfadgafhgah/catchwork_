@@ -15,5 +15,4 @@ public class FavCorp {
 	private String memNo;   // 회원 시퀀스 번호
     private int corpNo;  // 기업 시퀀스 번호
     
-    
 }

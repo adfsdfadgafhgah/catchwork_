@@ -236,12 +236,15 @@ const router = createBrowserRouter([
 
       // 기업 회원
       { path: "corpcvlist", element: <CorpCVListPage /> },
+
+      //기업 상세, 수정
       {
-        path: "corpcompanydetail",
+        path: "corpcompany",
         element: <CorpCompanyPage />,
         children: [
-          { path: ":corpNo", element: <CorpCompanyDetailPage /> },
-          { path: ":corpNo/edit", element: <EditCompanyPage /> },
+          { index: true, element: <CorpCompanyDetailPage /> },
+          { path: "detail", element: <CorpCompanyDetailPage /> },
+          { path: "update", element: <EditCompanyPage /> },
         ],
       },
 

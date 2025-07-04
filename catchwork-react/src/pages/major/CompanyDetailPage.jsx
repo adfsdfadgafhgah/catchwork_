@@ -4,27 +4,34 @@ import SectionHeader from "../../components/common/SectionHeader";
 import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 import "./CompanyDetailPage.css";
 import { axiosApi } from "../../api/axiosAPI";
+import useLoginMember from "../../stores/loginMember";
 
 //명하 신고하기모달창
 import ReportModalPage from "../support/ReportModalPage";
 
-// 로그인한 멤버 번호 가져오기
-//const loginMemberSeq = getLoginMemberSeq();
-
 const CompanyDetailPage = () => {
+  const { loginMember, setLoginMember } = useLoginMember(); // 로그인 유저 정보
   const { corpNo } = useParams();
   const [company, setCompany] = useState(null);
   const [showReportModal, setShowReportModal] = useState(false);
   const [loading, setLoading] = useState(true);
 
+  // 최초 마운트 시 정보 fetch
+  useEffect(() => {
+    setLoginMember();
+  }, []);
+
   const handleOpenReport = () => {
+    if (!loginMember || !loginMember.memNo) {
+      alert("로그인 후 이용 가능합니다.");
+      return;
+    }
     setShowReportModal(true);
   };
 
   const handleCloseReport = () => {
     setShowReportModal(false);
   };
-  const loginMemberNo = "81ee03e6-82ee-41e5-a8f5-1835574510b2";
 
   //기업 상세 정보
   useEffect(() => {
@@ -32,7 +39,7 @@ const CompanyDetailPage = () => {
       setLoading(true);
       try {
         const url = `/company/${corpNo}`;
-        const params = loginMemberNo ? { memNo: loginMemberNo } : {};
+        const params = loginMember?.memNo ? { memNo: loginMember.memNo } : {};
 
         const res = await axiosApi.get(url, { params });
 
@@ -56,14 +63,18 @@ const CompanyDetailPage = () => {
     };
 
     getCorpDetail();
-  }, [corpNo]);
+  }, [corpNo, loginMember]); //loginMember가 바뀌면 재호출
 
   // 관심 기업 토글 처리
   const handleToggleFavorite = async () => {
+    if (!loginMember || !loginMember.memNo) {
+      alert("로그인 후 이용 가능합니다.");
+      return;
+    }
     try {
       const payload = {
         corpNo: parseInt(corpNo),
-        memNo: loginMemberNo,
+        memNo: loginMember.memNo,
       };
 
       const res = await axiosApi.post("/company/toggle-favorite", payload);
