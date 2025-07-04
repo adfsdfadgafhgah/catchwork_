@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("cv")
+@RequestMapping("memberCV")
 public class CVController {
 	
 
