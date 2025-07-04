@@ -10,4 +10,8 @@ public interface MemberMapper {
 	// 로그인 회원의 정보 조회
 	Member getLoginMember(String memNo);
 
+	String selectMemberNameByNo(int memNo);
+
+	String selectCorporateNameByNo(int corpNo);
+
 }

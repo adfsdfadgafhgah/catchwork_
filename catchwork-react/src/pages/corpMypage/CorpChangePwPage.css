@@ -2,7 +2,6 @@
 .corp-page-container {
   display: flex;
   min-height: 100vh;
-  font-family: 'Malgun Gothic', 'Apple SD Gothic Neo', sans-serif;
 }
 
 .main-content {
@@ -11,6 +10,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
+  background-color: white;
 }
 
 /* 메인 내용 컨테이너 */
@@ -18,7 +18,7 @@
   width: 100%;
   max-width: 600px;
   padding: 0;
-  margin-left: 0;
+  margin-left: 0; 
 }
 
 .page-title {
@@ -58,15 +58,14 @@
   border: none;
   border-bottom: 1px solid #ccc;
   outline: none;
-  transition: border-color 0.2s ease;
 }
 
 .form-input:focus {
-  border-bottom: 2px solid #46b5ab;
+  border-bottom: 2px solid var(--main-color);
 }
 
 .form-input::placeholder {
-  color: #9ca3af;
+  color: var(--stroke-color2);
   font-size: 14px;
 }
 
@@ -102,8 +101,9 @@
 }
 
 .submit-btn:hover {
-  color: #46b5ab;
-  border-color: #46b5ab;
+  color: var(--main-color);
+  border-color: var(--main-color);
+  
 }
 
 .submit-btn:disabled {

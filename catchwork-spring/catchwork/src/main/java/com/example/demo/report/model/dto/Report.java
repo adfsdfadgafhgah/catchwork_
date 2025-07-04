@@ -1,7 +1,6 @@
 package com.example.demo.report.model.dto;
 
 import java.util.Date;
-
 import lombok.Data;
 
 @Data
@@ -13,8 +12,5 @@ public class Report {
     private String reportStatus;
     private Date reportDate;
     private int reportCategoryCode;
-    private String reportCategoryName; 
-    private String memNo;
-    
-    
+    private String memNo;  // 로그인한 사용자 번호
 }

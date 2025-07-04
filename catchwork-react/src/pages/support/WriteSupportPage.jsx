@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
 import "./WriteSupportPage.css";
 import { useNavigate } from "react-router-dom";
+import { axiosApi } from "../../api/axiosAPI";
 
 export default function WriteSupportPage() {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ export default function WriteSupportPage() {
     }
 
     try {
-      await axios.post(
+      await axiosApi.post(
         "http://localhost:8080/support/write",
         {
           supportTitle: title,

@@ -22,5 +22,7 @@ public class Support {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
     private String supportDate;				// 문의 작성일
     
+    private int seqNo; 						// 문의 회원별 순번
+    
 
 }

@@ -1,11 +1,11 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<!DOCTYPE mapper
-  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.demo.corp.myPage.model.mapper.CorpMyPageMapper">
 
-    <select id="findCorpInfoById" parameterType="String">
+	<!-- 로그인된 기업회원 마이페이지 -->
+    <select id="findCorpInfoById" resultType="com.example.demo.corp.myPage.model.dto.CorpMyPage">
         SELECT 
             COMPANY_NAME AS company,
             CORP_ID AS corpId,
