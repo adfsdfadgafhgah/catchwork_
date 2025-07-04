@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import axios from "axios";
+import { axiosApi } from "../../api/axiosAPI";
 import "./ReportModalPage.css";
 
-// 카테고리 이름 -> 코드 매핑
 const categoryCodeMap = {
   "욕설/비방": 1,
   "성희롱/혐오": 2,
@@ -12,7 +11,7 @@ const categoryCodeMap = {
   "기타": 6,
 };
 
-const ReportModalPage = ({ target, onClose, memNo }) => {
+const ReportModalPage = ({ targetNo, onClose }) => {
   const [category, setCategory] = useState("");
   const [content, setContent] = useState("");
 
@@ -22,28 +21,22 @@ const ReportModalPage = ({ target, onClose, memNo }) => {
       return;
     }
 
-    const token = localStorage.getItem("accessToken"); 
-    if (!token) {
-      alert("로그인이 필요합니다.");
+    if (!targetNo || typeof targetNo !== "string") {
+      alert("신고 대상이 올바르지 않습니다.");
       return;
     }
 
     try {
-      await axios.post(
-        "http://localhost:8080/reportmodal",
-        {
-          reportTargetNo: target,                      // 신고 대상 번호
-          reportTargetType: "MEMBER",                  //  회원 신고
-          reportCategoryCode: categoryCodeMap[category], // 카테고리 코드
-          reportContent: content,
-          memNo: memNo,                                // 로그인한 사용자 번호
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,        
-          },
-        }
-      );
+      const postData = {
+        reportTargetNo: targetNo,         // 문자열 회원번호
+        reportTargetType: "MEMBER",       // 고정
+        reportCategoryCode: categoryCodeMap[category],
+        reportContent: content,
+      };
+
+      console.log("신고 전송 데이터:", postData);
+
+      await axiosApi.post("/reportmodal", postData);
 
       alert("신고가 성공적으로 접수되었습니다.");
       onClose();
@@ -53,6 +46,8 @@ const ReportModalPage = ({ target, onClose, memNo }) => {
     }
   };
 
+  console.log("target : ", targetNo);
+
   return (
     <div className="modal-overlay">
       <div className="report-modal-box">
@@ -61,15 +56,12 @@ const ReportModalPage = ({ target, onClose, memNo }) => {
 
         <div className="form-group">
           <label>신고 대상</label>
-          <div className="readonly-display">{target}</div>
+          <div className="readonly-display">{targetNo}</div>
         </div>
 
         <div className="form-group">
           <label>신고 카테고리</label>
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
+          <select value={category} onChange={(e) => setCategory(e.target.value)}>
             <option value="" disabled>신고 사유를 선택해주세요</option>
             <option>욕설/비방</option>
             <option>성희롱/혐오</option>

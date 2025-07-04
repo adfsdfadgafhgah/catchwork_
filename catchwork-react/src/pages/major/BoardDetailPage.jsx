@@ -237,7 +237,9 @@ export default function BoardDetailPage() {
           targetNo={boardNo}
           targetType="board"
           onClose={handleCloseReport}
+          memberNo={loginMember.memNo}
         />
+        
       )}
     </>
   );

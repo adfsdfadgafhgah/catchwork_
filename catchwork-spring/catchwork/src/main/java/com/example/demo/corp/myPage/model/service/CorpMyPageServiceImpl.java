@@ -13,9 +13,9 @@ public class CorpMyPageServiceImpl implements CorpMyPageService {
 
     private final CorpMyPageMapper corpMyPageMapper;
 
+    // 로그인된 기업회원 마이페이지
     @Override
     public CorpMyPage getCorpMyPage(String corpId) {
         return corpMyPageMapper.findCorpInfoById(corpId);
     }
-
 }
