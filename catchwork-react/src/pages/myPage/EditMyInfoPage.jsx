@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
-import useFormHandler from "../../hooks/useFormHandler";
+import memberFormHandler from "../../hooks/memberFormHandler";
 import "./EditMyInfoPage.css";
 import { axiosApi } from "../../api/axiosAPI";
 
@@ -25,9 +25,9 @@ const EditMyInfoPage = () => {
     return date.substring(0, 10);
   }
 
-  // useFormHandler로 폼 상태 및 유효성 관리
+  // memberFormHandler 폼 상태 및 유효성 관리
   const { formData, setFormData, handleChange, setField, validity } =
-    useFormHandler({
+    memberFormHandler({
       memTel: loginMember?.memTel || "",
       memName: loginMember?.memName || "",
       memNickname: loginMember?.memNickname || "",
