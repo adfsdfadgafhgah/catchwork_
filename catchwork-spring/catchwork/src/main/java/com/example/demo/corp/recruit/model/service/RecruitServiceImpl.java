@@ -43,8 +43,8 @@ public class RecruitServiceImpl implements RecruitService {
 	@Override
 	public List<Recruit> getRecruitList(String status, String sort, String writer, String query, String memNo) {
 		
-		// 마감된 공고 상태 업데이트
-//	    recruitMapper.recruitStatusToClosed();
+		// 자동 마감 처리 (endDate < 오늘이면서 아직 status = 0인 공고들 → 3으로 바꾸기)
+	    recruitMapper.autoCloseRecruit();
 	    
 		Map<String, Object> paramMap = new HashMap<>();
 	    paramMap.put("status", status);
@@ -107,6 +107,14 @@ public class RecruitServiceImpl implements RecruitService {
 	@Override
 	public int editRecruit(Recruit recruit) {
 		return recruitMapper.editRecruit(recruit);
+	}
+
+	/** 채용공고 조회수 증가
+	 * @author BAEBAE
+	 */
+	@Override
+	public void recruitReadCount(int recruitNo) {
+		recruitMapper.recruitReadCount(recruitNo);
 	}
 
 }

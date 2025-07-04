@@ -1,18 +1,11 @@
-package com.example.demo.corp.recruit.model.service;
+package com.example.demo.member.recruit.model.service;
 
 import java.util.List;
 
 import com.example.demo.corp.recruit.model.dto.Recruit;
 
-public interface RecruitService {
-
-	/** 채용공고 작성
-	 * @author BAEBAE
-	 * @param recruit
-	 * @return
-	 */
-	int writeRecruit(Recruit recruit);
-
+public interface MemRecruitService {
+	
 	/** 채용공고 상세
 	 * @author BAEBAE
 	 * @param recruitNo
@@ -38,29 +31,6 @@ public interface RecruitService {
 	 * @return
 	 */
 	String toggleRecruitLike(String memNo, int recruitNo);
-
-	/** 채용공고 삭제
-	 * @author BAEBAE
-	 * @param recruitNo
-	 * @param memNo
-	 * @return
-	 */
-	boolean deleteRecruit(int recruitNo, String memNo);
-
-	/** 공고 마감처리
-	 * @author BAEBAE
-	 * @param recruitNo
-	 * @param memNo
-	 * @return
-	 */
-	boolean endRecruit(int recruitNo, String memNo);
-
-	/** 채용공고 수정
-	 * @author BAEBAE
-	 * @param recruit
-	 * @return
-	 */
-	int editRecruit(Recruit recruit);
 
 	/** 채용공고 조회수 증가
 	 * @author BAEBAE

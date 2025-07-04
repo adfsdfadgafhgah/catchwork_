@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
 import useLoginMember from "../../stores/loginMember";
 
-export default function RecruitItem({ recruit, onLikeToggle }) {
+export default function MemberRecruitItem({ recruit, onLikeToggle }) {
   const { loginMember, setLoginMember } = useLoginMember();
   const [likeCount, setLikeCount] = useState(recruit.likeCount || 0);
   const [liked, setLiked] = useState(false);
@@ -29,13 +29,46 @@ export default function RecruitItem({ recruit, onLikeToggle }) {
     }
   }, [recruit.likeCount, recruit.likedByCurrentUser, loginMember?.memNo]);
 
+  const toggleLike = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!loginMember?.memNo) {
+      alert("로그인 후 이용해 주세요.");
+      return;
+    }
+
+    try {
+      const resp = await axiosApi.post("/memberRecruit/like", {
+        recruitNo: recruit.recruitNo,
+        memNo: loginMember.memNo,
+      });
+
+      if (resp.data.result === "liked") {
+        setLiked(true);
+        setLikeCount((prev) => prev + 1);
+      } else if (resp.data.result === "unliked") {
+        setLiked(false);
+        setLikeCount((prev) => prev - 1);
+      }
+
+      // 부모 컴포넌트에 변경사항 알림
+      if (onLikeToggle) {
+        onLikeToggle();
+      }
+    } catch (err) {
+      console.error("좋아요 처리 실패:", err);
+      alert("좋아요 처리 중 오류가 발생했습니다.");
+    }
+  };
+
   // 마감 여부 판단
   const isClosed =
     recruit.recruitStatus === 3 ||
     new Date(recruit.recruitEndDate) < new Date();
 
   return (
-    <Link to={`/corpRecruit/${recruit.recruitNo}`} className={styles.card}>
+    <Link to={`/memberRecruit/${recruit.recruitNo}`} className={styles.card}>
       <div className={styles.logoArea}>
         <img
           src={
@@ -72,7 +105,7 @@ export default function RecruitItem({ recruit, onLikeToggle }) {
             <i className="fa-regular fa-eye" /> {recruit.recruitReadCount}
           </span>
 
-          <span>
+          <span onClick={toggleLike} style={{ cursor: "pointer" }}>
             <i
               className={`fa-heart ${liked ? "fa-solid" : "fa-regular"}`}
               style={{ color: liked ? "var(--main-color)" : "gray" }}

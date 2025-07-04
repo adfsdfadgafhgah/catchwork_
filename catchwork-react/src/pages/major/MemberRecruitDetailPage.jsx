@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
-import styles from "./CorpRecruitDetailPage.module.css";
+import styles from "../corpMajor/CorpRecruitDetailPage.module.css";
 import useLoginMember from "../../stores/loginMember";
 import SectionHeader from "../../components/common/SectionHeader";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import DeadlineTimer from "../../components/common/DeadlineTimer";
+import ReportModalPage from "../support/ReportModalPage";
 
-export default function CorpRecruitDetailPage() {
+export default function MemberRecruitDetailPage() {
   const { recruitNo } = useParams();
   const navigate = useNavigate();
   const [recruit, setRecruit] = useState(null);
@@ -16,6 +17,8 @@ export default function CorpRecruitDetailPage() {
   const [liked, setLiked] = useState(false); // 좋아요 기능
   const [likeCount, setLikeCount] = useState(0); // 좋아요 기능
   const [likeLoading, setLikeLoading] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportTarget, setReportTarget] = useState("");
 
   // loginMember 가져오기
   useEffect(() => {
@@ -36,7 +39,7 @@ export default function CorpRecruitDetailPage() {
 
     const fetchDetail = async () => {
       try {
-        const resp = await axiosApi.get(`/corpRecruit/detail/${recruitNo}`, {
+        const resp = await axiosApi.get(`/memberRecruit/detail/${recruitNo}`, {
           params: { memNo: loginMember?.memNo },
         });
         const data = resp.data;
@@ -53,7 +56,7 @@ export default function CorpRecruitDetailPage() {
         // 조회수 증가 로직
         if (!lastViewed || new Date(lastViewed).toDateString() !== today) {
           localStorage.setItem(key, now.toISOString());
-          await axiosApi.get(`/corpRecruit/recruitReadCount/${recruitNo}`);
+          await axiosApi.get(`/memberRecruit/recruitReadCount/${recruitNo}`);
           console.log("📈 조회수 증가 후 상세 다시 조회");
         } else {
           console.log("✅ 오늘 이미 조회함");
@@ -69,56 +72,48 @@ export default function CorpRecruitDetailPage() {
     increaseThenFetch();
   }, [recruitNo, loginMember?.memNo]);
 
-  // 공고 마감 핸들러
-  const handleEnd = async () => {
-    if (!window.confirm("이 공고를 마감처리하시겠습니까?")) return;
+  // 좋아요 토글 함수 추가
+  const toggleLike = async () => {
+    if (!loginMember) {
+      alert("로그인 후 이용 가능합니다.");
+      return;
+    }
+
+    if (likeLoading) return;
+    setLikeLoading(true);
 
     try {
-      const resp = await axiosApi.put(`/corpRecruit/end/${recruitNo}`, {
+      const resp = await axiosApi.post("/memberRecruit/like", {
+        recruitNo: recruit.recruitNo,
         memNo: loginMember.memNo,
       });
 
-      if (resp.status === 200) {
-        alert("마감처리 되었습니다.");
-        navigate("/corpRecruit"); // 목록으로 이동
+      if (resp.data.result === "liked") {
+        setLiked(true);
+        setLikeCount((prev) => prev + 1);
       } else {
-        alert("마감처리에 실패했습니다.");
+        setLiked(false);
+        setLikeCount((prev) => prev - 1);
       }
     } catch (err) {
-      console.error("마감처리 실패:", err);
-      alert("오류가 발생했습니다.");
+      console.error("좋아요 실패:", err);
+    } finally {
+      setLikeLoading(false);
     }
   };
 
-  // 공고 수정 페이지로 핸들러
-  const handleEdit = () => {
+  // 이력서 제출 페이지로 이동 핸들러
+  const handleSubmit = () => {
     navigate(`/corpRecruit/edit/${recruitNo}`);
   };
 
-  // 신고 모달창으로 핸들러
-  const handleReport = () => {
-    navigate(`/corpRecruit/edit/${recruitNo}`);
+  const handleReport = (target) => {
+    setReportTarget(target);
+    setShowReportModal(true);
   };
 
-  // 공고 삭제 핸들러
-  const handleDelete = async () => {
-    if (!window.confirm("정말 삭제하시겠습니까?")) return;
-
-    try {
-      const resp = await axiosApi.delete(`/corpRecruit/delete/${recruitNo}`, {
-        data: { memNo: loginMember.memNo },
-      });
-
-      if (resp.status === 200) {
-        alert("삭제되었습니다.");
-        navigate("/corpRecruit"); // 삭제 후 목록으로 이동
-      } else {
-        alert("삭제에 실패했습니다.");
-      }
-    } catch (err) {
-      console.error("삭제 실패:", err);
-      alert("오류가 발생했습니다.");
-    }
+  const handleCloseReport = () => {
+    setShowReportModal(false);
   };
 
   if (!recruit) return <div>로딩 중...</div>;
@@ -156,7 +151,7 @@ export default function CorpRecruitDetailPage() {
               &nbsp;&nbsp;
             </span>
 
-            <span>
+            <span onClick={toggleLike} style={{ cursor: "pointer" }}>
               <i
                 className={`fa-heart ${liked ? "fa-solid" : "fa-regular"}`}
                 style={{ color: liked ? "var(--main-color)" : "gray" }}
@@ -220,25 +215,20 @@ export default function CorpRecruitDetailPage() {
         <p>{recruit.recruitEtc}</p>
       </section>
 
+      {/* 모달 조건부 렌더링 */}
+      {showReportModal && (
+        <ReportModalPage target={reportTarget} onClose={handleCloseReport} />
+      )}
+
       <div className={styles.deadlineTimer}>
         <DeadlineTimer recruitEndDate={recruit.recruitEndDate} />
-      </div>
 
-      {loginMember?.memNo === recruit.memNo ? (
         <FloatButton
-          buttons={
-            recruit.recruitStatus === 3
-              ? FLOAT_BUTTON_PRESETS.deleteOnly(handleDelete)
-              : FLOAT_BUTTON_PRESETS.endAndEditAndDelete(
-                  handleEnd,
-                  handleEdit,
-                  handleDelete
-                )
-          }
+          buttons={FLOAT_BUTTON_PRESETS.submitAndReport(handleSubmit, () =>
+            handleReport(`[${recruit.corpName}] ${recruit.recruitTitle}`)
+          )}
         />
-      ) : (
-        <FloatButton buttons={FLOAT_BUTTON_PRESETS.reportOnly(handleReport)} />
-      )}
+      </div>
     </div>
   );
 }

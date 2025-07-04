@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
-import RecruitList from "../../components/recruit/RecruitList";
-import styles from "./CorpRecruitListPage.module.css";
+import MemberRecruitList from "../../components/recruit/MemberRecruitList";
+import styles from "../corpMajor/CorpRecruitListPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
 import { useNavigate } from "react-router-dom";
-import FloatButton from "../../components/common/FloatButton";
-import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import useLoginMember from "../../stores/loginMember";
 
-export default function CorpRecruitListPage() {
+export default function MemberRecruitListPage() {
   const [recruits, setRecruits] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -36,7 +34,7 @@ export default function CorpRecruitListPage() {
   const fetchRecruitList = async () => {
     try {
       setIsLoading(true);
-      const resp = await axiosApi.get("/corpRecruit/list", {
+      const resp = await axiosApi.get("/memberRecruit/list", {
         params: {
           sort: sortOrder,
           status: statusFilter,
@@ -155,19 +153,20 @@ export default function CorpRecruitListPage() {
       {/* 검색 결과 유무에 따른 조건 렌더링 */}
       {isSearchMode ? (
         filteredRecruits.length > 0 ? (
-          <RecruitList recruits={filteredRecruits} loginMember={loginMember} />
+          <MemberRecruitList
+            recruits={filteredRecruits}
+            loginMember={loginMember}
+          />
         ) : (
           <p className={styles.noResult}>검색 결과가 없습니다.</p>
         )
       ) : (
-        <RecruitList
+        <MemberRecruitList
           key={loginMember?.memNo}
           recruits={recruits}
           loginMember={loginMember}
         />
       )}
-
-      <FloatButton buttons={FLOAT_BUTTON_PRESETS.writeOnly(handleWrite)} />
     </div>
   );
 }

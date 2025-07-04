@@ -23,17 +23,7 @@ public class BoardServiceImpl implements BoardService {
 	 */
     @Override
     public List<Board> selectBoardList(String sort, String query, String memNo) {
-        switch (sort) {
-            case "oldest":
-                return boardMapper.selectBoardsByOldest(query, memNo);
-            case "likes":
-                return boardMapper.selectBoardsByLikes(query, memNo);
-            case "comments":
-                return boardMapper.selectBoardsByComments(query, memNo);
-            case "latest":
-            default:
-                return boardMapper.selectBoardsByLatest(query, memNo);
-        }
+    	return boardMapper.selectBoardList(sort, query, memNo);
     }
 
 
@@ -64,8 +54,6 @@ public class BoardServiceImpl implements BoardService {
 	        board.setLikedByCurrentUser(liked);
 	    }
 	    
-	    System.out.println("▶ board.member.memNo = " + (board.getMember() != null ? board.getMember().getMemNo() : "null"));
-		
 		return board;
 	}
 
@@ -123,6 +111,16 @@ public class BoardServiceImpl implements BoardService {
 		}
 		int rows = boardMapper.deleteBoard(boardNo, memNo);
 		return rows > 0;
+	}
+
+
+
+	/** 게시글 조회수 증가
+	 * @author BAEBAE
+	 */
+	@Override
+	public void readCount(int boardNo) {
+		boardMapper.readCount(boardNo);
 	}
 
 
