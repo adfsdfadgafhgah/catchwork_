@@ -2,6 +2,8 @@ package com.example.demo.member.company.model.dto;
 
 import java.util.Date;
 
+import org.apache.ibatis.type.Alias;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Alias("CompanyCorpInfo")
 public class CorpInfo {
 	
 	//기업정보 테이블

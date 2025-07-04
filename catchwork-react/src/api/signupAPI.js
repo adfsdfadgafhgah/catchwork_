@@ -22,9 +22,10 @@ export const postSignUp = async (formData) => {
   }
 
   // 전화번호 하이픈 제거
-  if (dataToSend.memTel) {
-    dataToSend.memTel = dataToSend.memTel.replace(/-/g, "");
-  }
+  // if (dataToSend.memTel) {
+  //   dataToSend.memTel = dataToSend.memTel.replace(/-/g, "");
+  // }
+
   // SMS flag Y/N 변환환
   dataToSend.memSmsFl = dataToSend.memSmsFl ? "Y" : "N";
 
@@ -60,11 +61,7 @@ export const checkDuplicateNickname = async (nickname) => {
  **********************/
 export const searchAddress = (onComplete) => {
   new window.daum.Postcode({
-    oncomplete: function (data) {
-      if (onComplete) {
-        setTimeout(() => onComplete(data), 0);
-      }
-    },
+    oncomplete: onComplete,
   }).open();
 };
 

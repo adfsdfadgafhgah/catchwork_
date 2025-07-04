@@ -218,54 +218,6 @@ public class MemberController {
 	 *
 	 * @author Won
 	 */
-/*
-	@PostMapping("/signin")
-	public ResponseEntity<?> signin(@RequestBody Member inputMember,
-	                               HttpServletRequest request,
-	                               HttpServletResponse response,
-	                               HttpSession session,
-	                               @RequestParam(value = "saveId", required = false) String saveId) {
-	    try {
-	        Object result = service.signin(inputMember);
-	        
-	        // 로그인 실패 처리
-	        if (result instanceof String) {
-	            String errorCode = (String) result;
-	            String message = getSigninErrorMessage(errorCode);
-	            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-	                    .body(Map.of("message", message));
-	        }
-	        
-	        // 로그인 성공 처리 (JWT 토큰 반환)
-	        if (result instanceof String && isValidJWT((String) result)) {
-	            String token = (String) result;
-	            
-	            // 아이디 저장 쿠키 설정
-	            setCookieForSaveId(response, inputMember.getMemId(), saveId);
-	            
-	            // 이전 페이지 가져오기 및 제거
-	            String prevPage = (String) session.getAttribute("prevPage");
-	            session.removeAttribute("prevPage");
-	            
-	            // 응답 JSON 구성
-	            Map<String, Object> responseBody = createSigninResponse(token, prevPage);
-	            
-	            return ResponseEntity.ok(responseBody);
-	        }
-	        
-	        // 예상치 못한 반환값 처리
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body(Map.of("message", "로그인 처리 중 알 수 없는 오류가 발생했습니다."));
-	                
-	    } catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                .body(Map.of("error", "로그인 중 예외 발생", "details", e.getMessage()));
-	    }
-	}
- */
-	
-	
-	
 	
 	
 	/**
@@ -284,50 +236,6 @@ public class MemberController {
 	    }
 	}
 	
-	
-	
-
-//	/**
-//	 * 로그인 에러 코드에 따른 메시지 반환
-//	 */
-//	private String getSigninErrorMessage(String errorCode) {
-//	    switch (errorCode) {
-//	        case "INVALID_INPUT":
-//	            return "아이디와 비밀번호를 모두 입력해주세요.";
-//	        case "USER_NOT_FOUND":
-//	        case "INVALID_PASSWORD":
-//	            return "아이디 또는 비밀번호가 일치하지 않습니다.";
-//	        default:
-//	            return "로그인 처리 중 오류가 발생했습니다.";
-//	    }
-//	}
-//
-//	/**
-//	 * 아이디 저장 쿠키 설정
-//	 */
-//	private void setCookieForSaveId(HttpServletResponse response, String memId, String saveId) {
-//	    Cookie cookie = new Cookie("saveId", memId);
-//	    cookie.setPath("/");
-//	    if (saveId != null) {
-//	        cookie.setMaxAge(60 * 60 * 24 * 30); // 30일
-//	    } else {
-//	        cookie.setMaxAge(0); // 쿠키 삭제
-//	    }
-//	    response.addCookie(cookie);
-//	}
-//
-//	/**
-//	 * 로그인 성공 응답 JSON 생성
-//	 */
-//	private Map<String, Object> createSigninResponse(String token, String prevPage) {
-//	    if (prevPage != null) {
-//	        return Map.of("token", token, "redirectUrl", prevPage);
-//	    } else {
-//	        return Map.of("token", token);
-//	    }
-//	}
-
-
 		
 	/** 로그인 회원의 정보 조회
 	 * @param memNo
