@@ -32,6 +32,8 @@
 	    CI.CORP_LOGO AS corpLogo,
 	    CI.CORP_NAME AS corpName,
 	    CI.CORP_TYPE AS corpType,
+			CI.CORP_BENEFIT AS corpBenefit,
+			CI.CORP_BENEFIT_DETAIL AS corpBenefitDetail,
 	
 	    NVL(LC.LIKE_COUNT, 0) AS likeCount,
 	
@@ -84,6 +86,8 @@
 	    CI.CORP_NAME,
 	    CI.CORP_TYPE,
 	    CI.CORP_LOGO,
+			CI.CORP_BENEFIT,
+			CI.CORP_BENEFIT_DETAIL,
 	    
 	    -- 좋아요 수
 	    (SELECT COUNT(*) FROM FAV_RECRUIT F WHERE F.RECRUIT_NO = R.RECRUIT_NO) AS likeCount,

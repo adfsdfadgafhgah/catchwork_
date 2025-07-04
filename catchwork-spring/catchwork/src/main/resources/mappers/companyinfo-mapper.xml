@@ -1,73 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper	namespace="com.example.demo.member.company.model.mapper.CompanyInfoMapper">
+<mapper
+	namespace="com.example.demo.member.company.model.mapper.CompanyInfoMapper">
 
-    <resultMap id="companyInfoResultMap" type="com.example.demo.member.company.model.dto.CompanyInfo">
-        <id property="corpNo" column="CORP_NO"/>
-        <result property="corpRegNo" column="CORP_REG_NO"/>
-        <result property="corpType" column="CORP_TYPE"/>
-        <result property="corpName" column="CORP_NAME"/>
-        <result property="corpLogo" column="CORP_LOGO"/>
-        <result property="corpCeoName" column="CORP_CEO_NAME"/>
-        <result property="corpAddr" column="CORP_ADDR"/>
-        <result property="corpOpenDate" column="CORP_OPEN_DATE"/>
-        <result property="corpHomeLink" column="CORP_HOME_LINK"/>
-        <result property="corpBm" column="CORP_BM"/>
-        <result property="corpDetail" column="CORP_DETAIL"/>
-        <result property="corpBenefit" column="CORP_BENEFIT"/>
-        <result property="corpBenefitDetail" column="CORP_BENEFIT_DETAIL"/>
-        <result property="corpBanFl" column="CORP_BAN_FL"/>
-        <result property="corpBanDate" column="CORP_BAN_DATE"/>
-        <result property="recruitCount" column="RECRUIT_COUNT"/>
-        <result property="favs" column="TOTAL_FAVS"/>
-		<result property="memNo" column="MEM_NO"/>
-		<result property="isSaved" column="IS_SAVED"/>
-    </resultMap>
-
- 
-<select id="selectCompanyListWithRecruitInfo" resultMap="companyInfoResultMap" parameterType="map">
-
-SELECT 
-    ci.*, 
-    (SELECT COUNT(*) FROM RECRUIT r JOIN CORP_MEM cm ON r.MEM_NO = cm.MEM_NO
-     WHERE cm.CORP_NO = ci.CORP_NO AND r.RECRUIT_STATUS = 0) AS RECRUIT_COUNT,
-    (SELECT COUNT(*) FROM FAV_CORP fc WHERE fc.CORP_NO = ci.CORP_NO) AS TOTAL_FAVS,
-
-    <if test="memNo != null">
-        (SELECT COUNT(*) FROM FAV_CORP fc WHERE fc.CORP_NO = ci.CORP_NO AND fc.MEM_NO = #{memNo}) AS IS_SAVED,
-        #{memNo} AS MEM_NO
-    </if>
-    <if test="memNo == null">
-        0 AS isSaved,
-        NULL AS MEM_NO
-    </if>
-
-FROM CORP_INFO ci
-<where>
-    <if test="query != null and query != ''">
-        ci.CORP_NAME LIKE CONCAT('%', #{query}, '%')
-    </if>
-</where>
-</select>
+	<resultMap id="companyInfoResultMap"
+		type="com.example.demo.member.company.model.dto.CompanyInfo">
+		<id property="corpNo" column="CORP_NO" />
+		<result property="corpRegNo" column="CORP_REG_NO" />
+		<result property="corpType" column="CORP_TYPE" />
+		<result property="corpName" column="CORP_NAME" />
+		<result property="corpLogo" column="CORP_LOGO" />
+		<result property="corpCeoName" column="CORP_CEO_NAME" />
+		<result property="corpAddr" column="CORP_ADDR" />
+		<result property="corpOpenDate" column="CORP_OPEN_DATE" />
+		<result property="corpHomeLink" column="CORP_HOME_LINK" />
+		<result property="corpBm" column="CORP_BM" />
+		<result property="corpDetail" column="CORP_DETAIL" />
+		<result property="corpBenefit" column="CORP_BENEFIT" />
+		<result property="corpBenefitDetail"
+			column="CORP_BENEFIT_DETAIL" />
+		<result property="corpBanFl" column="CORP_BAN_FL" />
+		<result property="corpBanDate" column="CORP_BAN_DATE" />
+		<result property="recruitCount" column="RECRUIT_COUNT" />
+		<result property="favs" column="TOTAL_FAVS" />
+		<result property="memNo" column="MEM_NO" />
+		<result property="isSaved" column="IS_SAVED" />
+	</resultMap>
 
 
+	<select id="selectCompanyListWithRecruitInfo"
+		resultMap="companyInfoResultMap" parameterType="map">
+
+		SELECT
+		ci.*,
+		(SELECT COUNT(*) FROM RECRUIT r JOIN CORP_MEM cm ON r.MEM_NO = cm.MEM_NO
+		WHERE cm.CORP_NO = ci.CORP_NO AND r.RECRUIT_STATUS = 0) AS
+		RECRUIT_COUNT,
+		(SELECT COUNT(*) FROM FAV_CORP fc WHERE fc.CORP_NO = ci.CORP_NO) AS
+		TOTAL_FAVS,
+
+		<if test="memNo != null">
+			(SELECT COUNT(*) FROM FAV_CORP fc WHERE fc.CORP_NO = ci.CORP_NO AND
+			fc.MEM_NO = #{memNo}) AS IS_SAVED,
+			#{memNo} AS MEM_NO
+		</if>
+		<if test="memNo == null">
+			0 AS isSaved,
+			NULL AS MEM_NO
+		</if>
+
+		FROM CORP_INFO ci
+		<where>
+			<if test="query != null and query != ''">
+				ci.CORP_NAME LIKE CONCAT('%', #{query}, '%')
+			</if>
+		</where>
+	</select>
 
 
 
-<select id="selectCompanyDetail" resultMap="companyInfoResultMap" parameterType="map">
-SELECT 
-    ci.*,
-    COALESCE((SELECT COUNT(*)FROM RECRUIT r JOIN CORP_MEM cm ON cm.MEM_NO = r.MEM_NO
-    WHERE cm.CORP_NO = ci.CORP_NO AND r.RECRUIT_STATUS = 0 ), 0) AS RECRUIT_COUNT,
-    (SELECT COUNT(*) FROM FAV_CORP fc  WHERE fc.CORP_NO = ci.CORP_NO) AS TOTAL_FAVS,
-    (SELECT COUNT(*) 
-     FROM FAV_CORP fc 
-     WHERE fc.CORP_NO = ci.CORP_NO AND fc.MEM_NO = #{memNo}) AS IS_SAVED,
-      #{memNo} AS MEM_NO
-FROM CORP_INFO ci
-WHERE ci.CORP_NO = #{corpNo}
-</select>
+
+
+	<select id="selectCompanyDetail"
+		resultMap="companyInfoResultMap" parameterType="map">
+		SELECT
+		ci.*,
+		COALESCE((SELECT COUNT(*)FROM RECRUIT r JOIN CORP_MEM cm ON cm.MEM_NO = r.MEM_NO
+		WHERE cm.CORP_NO = ci.CORP_NO AND r.RECRUIT_STATUS = 0 ), 0) AS
+		RECRUIT_COUNT,
+		(SELECT COUNT(*) FROM FAV_CORP fc WHERE fc.CORP_NO = ci.CORP_NO) AS
+		TOTAL_FAVS,
+		(SELECT COUNT(*)
+		FROM FAV_CORP fc
+		WHERE fc.CORP_NO = ci.CORP_NO AND fc.MEM_NO = #{memNo}) AS IS_SAVED,
+		#{memNo} AS MEM_NO
+		FROM CORP_INFO ci
+		WHERE ci.CORP_NO = #{corpNo}
+	</select>
 
 
 

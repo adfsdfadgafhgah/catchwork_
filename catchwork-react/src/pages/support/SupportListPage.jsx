@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import "./SupportListPage.css";
 import { useNavigate } from "react-router-dom";
 import Pagination from "../../components/common/Pagination";
+import { axiosApi } from "../../api/axiosAPI";
 
 const SupportListPage = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const SupportListPage = () => {
 
     const fetchSupportData = async () => {
       try {
-        const response = await axios.get("http://localhost:8080/support/list", {
+        const response = await axiosApi.get("http://localhost:8080/support/list", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -80,8 +80,8 @@ const SupportListPage = () => {
             <tbody>
               {currentItems.length > 0 ? (
                 currentItems.map((item) => (
-                  <tr key={item.supportNo}>
-                    <td>{item.supportNo}</td>
+                <tr key={item.supportNo}>
+                    <td>{item.seqNo}</td> {/* ← 수정된 부분! */}
                     <td>{item.supportCategoryName}</td>
                     <td
                       className="title"
@@ -100,7 +100,7 @@ const SupportListPage = () => {
                     >
                       {item.supportStatus === "Y" ? "답변 완료" : "답변 대기"}
                     </td>
-                  </tr>
+                </tr>
                 ))
               ) : (
                 <tr>

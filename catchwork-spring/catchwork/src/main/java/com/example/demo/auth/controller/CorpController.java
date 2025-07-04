@@ -1,5 +1,6 @@
 package com.example.demo.auth.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,8 +28,12 @@ public class CorpController {
     }
 
     @PostMapping("/corpegnocheck")
-    public ResponseEntity<String> checkCorpregno(@RequestBody CorpInfo corp) {
-        boolean valid = corpService.checkCorpRegNo(corp);
-        return ResponseEntity.ok(valid ? "유효" : "무효");
+    public ResponseEntity<Boolean> checkCorpregno(@RequestBody CorpInfo corp) {
+        try {
+            boolean valid = corpService.checkCorpRegNo(corp);
+            return ResponseEntity.ok(valid); // 200 OK + true/false
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500 에러
+        }
     }
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import "./SupportDetailPage.css";
+import { axiosApi } from "../../api/axiosAPI";
 
 const SupportDetailPage = () => {
   const { id } = useParams();
@@ -12,7 +12,7 @@ const SupportDetailPage = () => {
   useEffect(() => {
     const fetchSupportDetail = async () => {
       try {
-        const response = await axios.get(`http://localhost:8080/support/detail/${id}`);
+        const response = await axiosApi.get(`http://localhost:8080/support/detail/${id}`);
         setSupport(response.data);
       } catch (err) {
         setError(err.response?.data?.message || err.message || "데이터를 가져오는 중 오류 발생");

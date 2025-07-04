@@ -1,0 +1,19 @@
+/* 메인 레이아웃 */
+.mypage-container {
+  display: flex;
+  height: 100%;
+  min-height: 720px;
+  margin: 0 auto;
+  position: relative;
+}
+
+/* 메인 콘텐츠 */
+.mypage-content {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  flex: 1;
+  max-width: 1080px;
+  margin: 0 auto;
+}

@@ -7,6 +7,7 @@ import SectionHeader from "../../components/common/SectionHeader";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import DeadlineTimer from "../../components/common/DeadlineTimer";
+import ReportModalPage from "../support/ReportModalPage";
 
 export default function CorpRecruitDetailPage() {
   const { recruitNo } = useParams();
@@ -16,6 +17,8 @@ export default function CorpRecruitDetailPage() {
   const [liked, setLiked] = useState(false); // 좋아요 기능
   const [likeCount, setLikeCount] = useState(0); // 좋아요 기능
   const [likeLoading, setLikeLoading] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportTarget, setReportTarget] = useState("");
 
   // loginMember 가져오기
   useEffect(() => {
@@ -95,9 +98,15 @@ export default function CorpRecruitDetailPage() {
     navigate(`/corpRecruit/edit/${recruitNo}`);
   };
 
-  // 신고 모달창으로 핸들러
-  const handleReport = () => {
-    navigate(`/corpRecruit/edit/${recruitNo}`);
+  // 신고 모달창 핸들러
+  const handleReport = (target) => {
+    setReportTarget(target);
+    setShowReportModal(true);
+  };
+
+  // 신고 모달창 끄기 핸들러
+  const handleCloseReport = () => {
+    setShowReportModal(false);
   };
 
   // 공고 삭제 핸들러
@@ -214,7 +223,8 @@ export default function CorpRecruitDetailPage() {
         <p>{recruit.recruitHireDetail}</p>
 
         <h4 className={styles.sectionTitle}>복리후생</h4>
-        <p>{recruit.recruitBenefit}</p>
+        <p>{recruit.corpBenefit}</p>
+        <p>{recruit.corpBenefitDetail}</p>
 
         <h4 className={styles.sectionTitle}>기타 사항</h4>
         <p>{recruit.recruitEtc}</p>
@@ -223,6 +233,11 @@ export default function CorpRecruitDetailPage() {
       <div className={styles.deadlineTimer}>
         <DeadlineTimer recruitEndDate={recruit.recruitEndDate} />
       </div>
+
+      {/* 모달 조건부 렌더링 */}
+      {showReportModal && (
+        <ReportModalPage target={reportTarget} onClose={handleCloseReport} />
+      )}
 
       {loginMember?.memNo === recruit.memNo ? (
         <FloatButton
@@ -237,7 +252,11 @@ export default function CorpRecruitDetailPage() {
           }
         />
       ) : (
-        <FloatButton buttons={FLOAT_BUTTON_PRESETS.reportOnly(handleReport)} />
+        <FloatButton
+          buttons={FLOAT_BUTTON_PRESETS.reportOnly(() =>
+            handleReport(`[${recruit.corpName}] ${recruit.recruitTitle}`)
+          )}
+        />
       )}
     </div>
   );

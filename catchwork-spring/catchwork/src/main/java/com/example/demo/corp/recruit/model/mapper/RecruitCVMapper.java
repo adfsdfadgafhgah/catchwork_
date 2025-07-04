@@ -9,15 +9,25 @@ import com.example.demo.corp.recruit.model.dto.RecruitCV;
 @Mapper
 public interface RecruitCVMapper {
 	
-	//전체 조회
-	 List<RecruitCV> selectAllRecruitCV();
+	 /**전체 이력서 조회
+	 * @author JIN
+	 * @return
+	 */
+	List<RecruitCV> selectAllRecruitCV();
 	 
-	//학력/경력 필터링 조회
-	 List<RecruitCV> getCvList(RecruitCV filter);
+	 /**학력,경력 필터링 조회
+	 * @author JIN
+	 * @param filter
+	 * @return
+	 */
+	List<RecruitCV> getCVList(RecruitCV filter);
 
-
-	 //파일 경로 저장
-	 String selectCvFilePath(int cvNo);
-	 
+	
+	/** 파일 경로 저장(7/4 하는중)
+	 * @author JIN
+	 * @param cvNo
+	 * @return
+	 */
+	String selectCVFilePath(int cvNo);
 	 
 }

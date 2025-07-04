@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import useLoginMember from "../../stores/loginMember";
+import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 
 export default function BoardListPage() {
   const [boards, setBoards] = useState([]); // 게시글 목록 조회
@@ -134,6 +135,8 @@ export default function BoardListPage() {
       )}
 
       <FloatButton buttons={FLOAT_BUTTON_PRESETS.writeOnly(handleWrite)} />
+
+      <ScrollToTopButton />
     </div>
   );
 }

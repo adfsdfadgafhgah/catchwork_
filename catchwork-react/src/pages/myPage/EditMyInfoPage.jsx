@@ -5,19 +5,12 @@ import "./EditMyInfoPage.css";
 import { axiosApi } from "../../api/axiosAPI";
 
 const EditMyInfoPage = () => {
-  const imgUrl = import.meta.env.VITE_FILE_CV_IMG_URL;
+  const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
   const navigate = useNavigate();
-  const fileInputRef = useRef(null);
-  const [previewSrc, setPreviewSrc] = useState("");
   const { loginMember } = useOutletContext();
-
-  // 프로필 이미지 업로드 버튼 클릭 시
-  const handleClick = () => {
-    fileInputRef.current.click();
-  };
-
-  // 주소 파싱: '주소^^^상세주소' 형태 분리
-  const [addr, detailAddr] = (loginMember?.memAddr || "").split("^^^");
+  const [previewSrc, setPreviewSrc] = useState("");
+  const [imgFile, setImgFile] = useState(null);
+  const fileInputRef = useRef(null);
 
   // 날짜 형식 변환
   function dateOnly(date) {
@@ -25,23 +18,34 @@ const EditMyInfoPage = () => {
     return date.substring(0, 10);
   }
 
-  // memberFormHandler 폼 상태 및 유효성 관리
-  const { formData, setFormData, handleChange, setField, validity } =
-    memberFormHandler({
-      memTel: loginMember?.memTel || "",
-      memName: loginMember?.memName || "",
-      memNickname: loginMember?.memNickname || "",
-      memBirthday: dateOnly(loginMember?.memBirthday) || "",
-      memGender: loginMember?.memGender || "",
-      memAddr: addr || "",
-      detailAddress: detailAddr || "",
-      memSmsFl: loginMember?.memSmsFl || false,
-      memEmail: loginMember?.memEmail || "",
-      profileImgPath: loginMember?.profileImgPath || "",
-      profileImg: null,
-    });
+  // 주소 파싱: '주소^^^상세주소' 형태 분리
+  const [addr, detailAddr] = (loginMember?.memAddr || "").split("^^^");
+  // 폼 상태 및 유효성 관리
+  const {
+    formData,
+    setFormData,
+    handleChange,
+    setField,
+    validity,
+    handleCheckNickname,
+    triggerAddressSearch,
+    validateForm,
+  } = memberFormHandler({
+    memTel: loginMember?.memTel || "",
+    memName: loginMember?.memName || "",
+    memNickname: loginMember?.memNickname || "",
+    memBirthday: dateOnly(loginMember?.memBirthday) || "",
+    memGender: loginMember?.memGender || "",
+    memAddr: addr || "",
+    detailAddress: detailAddr || "",
+    memSmsFl: loginMember?.memSmsFl || false,
+    memEmail: loginMember?.memEmail || "",
+    // 테스트용 임시 비밀번호 유효성 검사 통과 값
+    memPw: "payment1!",
+    memPwConfirm: "payment1!",
+  });
 
-  // loginMember가 바뀔 때마다 formData를 동기화
+  // loginMember가 바뀔 때마다&&새로고침 시 formData를 동기화
   useEffect(() => {
     const [addr, detailAddr] = (loginMember?.memAddr || "").split("^^^");
     setFormData((prev) => ({
@@ -55,12 +59,24 @@ const EditMyInfoPage = () => {
       detailAddress: detailAddr || "",
       memSmsFl: loginMember?.memSmsFl || false,
       memEmail: loginMember?.memEmail || "",
-      // profileImg는 사용자가 직접 업로드한 경우만 변경
+      // 테스트용 임시 비밀번호 유효성 검사 통과 값
+      memPw: "payment1!",
+      memPwConfirm: "payment1!",
     }));
   }, [loginMember]);
 
+  const isValid =
+    formData.memTel &&
+    formData.memName &&
+    formData.memNickname &&
+    formData.memBirthday &&
+    formData.memGender &&
+    formData.memAddr &&
+    formData.detailAddress &&
+    formData.memEmail;
+
+  // previewSrc가 바뀔 때마다 기존 URL 정리
   useEffect(() => {
-    // previewSrc가 바뀔 때마다 기존 URL 정리
     return () => {
       if (previewSrc) {
         URL.revokeObjectURL(previewSrc);
@@ -70,88 +86,103 @@ const EditMyInfoPage = () => {
 
   // 프로필 이미지 업로드 핸들러
   const handleFileChange = async (e) => {
-    // 파일 선택 시
     const file = e.target.files[0];
     if (file) {
-      // 미리보기 이미지 설정
       const previewUrl = URL.createObjectURL(file);
       setPreviewSrc(previewUrl);
-
-      const imgRequestData = {
-        memNo: loginMember.memNo,
-        file: file,
-      };
-
-      try {
-        // 프로필 이미지 업로드
-        const resp = await axiosApi.post(
-          "/mypage/uploadProfileImg",
-          imgRequestData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
-
-        // 업로드 성공 시
-        if (resp.status === 200) {
-          setFormData((prev) => ({
-            ...prev,
-            profileImgPath: resp.data, // 응답 받은 리네임된 경로 저장
-          }));
-        }
-      } catch (error) {
-        console.error("프로필 이미지 업로드 실패", error);
-        alert("프로필 이미지 업로드 중 오류 발생");
-      }
+      setImgFile(file);
     }
   };
 
-  // 필수값 및 유효성 체크
-  const isValid =
-    validity.memTel &&
-    validity.memName &&
-    validity.memNickname &&
-    formData.memBirthday.trim() &&
-    formData.memGender.trim() &&
-    formData.memAddr.trim() &&
-    formData.detailAddress.trim() &&
-    validity.memEmail;
+  // 프로필 이미지 업로드 버튼 클릭 시
+  const handleClick = () => {
+    fileInputRef.current.click();
+  };
 
-  // 주소 찾기(임시)
-  const searchAddress = () => {
-    alert("주소 검색 기능은 구현 필요");
+  // 프로필 이미지 업로드 핸들러
+  const handleFileUpload = async () => {
+    try {
+      // 프로필 이미지 업로드
+      const resp = await axiosApi.post(
+        "/mypage/uploadProfileImg",
+        { imgFile, memNo: loginMember.memNo },
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      // 업로드 성공 시
+      if (resp.status === 200) {
+        navigate("/myPage/editMyInfo");
+      }
+    } catch (error) {
+      console.error("프로필 이미지 업로드 실패", error);
+      alert("프로필 이미지 업로드 중 오류 발생");
+    }
   };
 
   // 수정하기 버튼 클릭 시
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isValid) return;
-    // 서버 제출 시 memAddr = memAddr + '^^^' + detailAddress로 합쳐서 제출
-    const submitData = {
-      ...formData,
-      memAddr: formData.memAddr + "^^^" + formData.detailAddress,
+
+    // 디버깅용
+    console.log("수정하기 버튼 클릭");
+    console.log(formData.memPw);
+    console.log(formData.memPwConfirm);
+
+    // 유효성 검사
+    if (!validateForm()) {
+      alert("입력 정보를 확인해주세요.");
+      return;
+    }
+
+    // 디버깅용
+    console.log("유효성 검사 완료");
+
+    // 주소 병합
+    const addrData = formData.memAddr + "^^^" + formData.detailAddress;
+
+    // 요청 데이터 생성
+    const requestData = {
+      memNo: loginMember.memNo,
+      memNickname: formData.memNickname,
+      memName: formData.memName,
+      memTel: formData.memTel,
+      memEmail: formData.memEmail,
+      memBirthday: formData.memBirthday,
+      memAddr: addrData,
+      memGender: formData.memGender,
+      memSmsFl: formData.memSmsFl,
     };
 
+    // 디버깅용
+    console.log(requestData);
+
     try {
-      const resp = await axiosApi.post("/mypage/updateMemberInfo", submitData);
+      const resp = await axiosApi.post("/mypage/updateMemberInfo", requestData);
+
+      if (resp.status === 200) {
+        handleFileUpload();
+      }
     } catch (error) {
       console.error("회원 정보 수정 실패", error);
       alert("회원 정보 수정 중 오류 발생");
     }
   };
 
+  if (!loginMember || !loginMember.memId) {
+    return <div>로딩 중...</div>;
+  }
+
   return (
-    <div className="editmyinfo-container">
-      <form onSubmit={handleSubmit}>
-        <div className="editmyinfo-form">
+    <div className="edit-myinfo-container">
+      <form onSubmit={handleSubmit} className="edit-myinfo-form">
+        <div className="edit-myinfo-container">
           {/* 프로필 이미지 */}
           <div className="profile-section">
-            <div className="profile-img">
-              {formData.profileImg ? (
-                <img
-                  src={URL.createObjectURL(formData.profileImg)}
-                  alt="프로필"
-                />
+            <div className="edit-profile-img">
+              {previewSrc ? (
+                <img src={previewSrc} alt="프로필" onClick={handleClick} />
               ) : (
                 <i className="fas fa-user"></i>
               )}
@@ -159,12 +190,29 @@ const EditMyInfoPage = () => {
                 type="file"
                 name="profileImg"
                 accept="image/*"
+                ref={fileInputRef}
                 onChange={handleFileChange}
               />
             </div>
-            <div className="profile-info">
-              <h1>{formData.memNickname}</h1>
-            </div>
+            {/* 테스트용 임시 비밀번호 유효성 검사 통과 값 */}
+            <input
+              name="memPw"
+              type="password"
+              value={formData.memPw}
+              onChange={handleChange}
+              style={{
+                borderColor: validity.memPw === false ? "red" : undefined,
+              }}
+            />
+            <input
+              name="memPwConfirm"
+              type="password"
+              value={formData.memPwConfirm}
+              onChange={handleChange}
+              style={{
+                borderColor: validity.memPw === false ? "red" : undefined,
+              }}
+            />
           </div>
 
           {/* 기본 정보 */}
@@ -197,7 +245,7 @@ const EditMyInfoPage = () => {
               </div>
             </div>
 
-            <div className="info-content">
+            <label className="info-content">
               <span className="info-label">전화번호</span>
               <div className="input-wrapper">
                 <input
@@ -215,7 +263,15 @@ const EditMyInfoPage = () => {
                   </small>
                 )}
               </div>
-            </div>
+              <button
+                type="button"
+                onClick={() => sendVerificationCode(formData.memTel)}
+                className="check-button"
+                disabled={!formData.memTel}
+              >
+                인증번호 발송
+              </button>
+            </label>
 
             <div className="info-content">
               <span className="info-label">SMS 수신</span>
@@ -252,7 +308,7 @@ const EditMyInfoPage = () => {
               </div>
             </div>
 
-            <div className="info-content">
+            <label className="info-content">
               <span className="info-label">닉네임</span>
               <div className="input-wrapper">
                 <input
@@ -271,7 +327,15 @@ const EditMyInfoPage = () => {
                   </small>
                 )}
               </div>
-            </div>
+              <button
+                type="button"
+                onClick={handleCheckNickname}
+                disabled={!formData.memNickname}
+                className="check-button"
+              >
+                중복 확인
+              </button>
+            </label>
 
             <div className="info-content">
               <span className="info-label">생년월일</span>
@@ -326,7 +390,11 @@ const EditMyInfoPage = () => {
                     required
                     placeholder="주소를 입력해주세요"
                   />
-                  <button type="button" onClick={searchAddress}>
+                  <button
+                    type="button"
+                    onClick={triggerAddressSearch}
+                    className="address-button"
+                  >
                     주소 찾기
                   </button>
                 </div>
@@ -342,9 +410,11 @@ const EditMyInfoPage = () => {
           </div>
         </div>
 
-        <button type="submit" disabled={!isValid} className="submit-button">
-          수정하기
-        </button>
+        <div className="submit-button-container">
+          <button type="submit" disabled={!isValid} className="submit-button">
+            수정하기
+          </button>
+        </div>
       </form>
     </div>
   );

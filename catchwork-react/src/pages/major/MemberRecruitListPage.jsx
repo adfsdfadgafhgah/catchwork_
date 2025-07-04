@@ -5,6 +5,7 @@ import styles from "../corpMajor/CorpRecruitListPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
 import { useNavigate } from "react-router-dom";
 import useLoginMember from "../../stores/loginMember";
+import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 
 export default function MemberRecruitListPage() {
   const [recruits, setRecruits] = useState([]);
@@ -167,6 +168,8 @@ export default function MemberRecruitListPage() {
           loginMember={loginMember}
         />
       )}
+
+      <ScrollToTopButton />
     </div>
   );
 }

@@ -14,6 +14,7 @@ import MainPage from "./pages/major/MainPage";
 import SignInPage from "./pages/member/SignInPage";
 import SignUpPage from "./pages/member/SignUpPage";
 import CorpRegisterPage from "./pages/member/CorpRegisterPage";
+import CeoSignUpPage from "./pages/member/CeoSignUpPage";
 
 // Id,PW 찾기
 import FindIdPage from "./pages/member/FindIdPage";
@@ -89,13 +90,13 @@ import CorpConfirmEditPage from "./pages/corpMypage/CorpConfirmEditPage";
 import CorpChangePwPage from "./pages/corpMypage/CorpChangePwPage";
 import CorpWithdrawPage from "./pages/corpMypage/CorpWithdrawPage";
 
-//기업 제출된 이력서 목록
-import CorpCVListPage from "./pages/corpMajor/CorpCVListPage";
-
 //기업 정보, 기업 정보 수정
 import CorpCompanyDetailPage from "./pages/corpMajor/CorpCompanyDetailPage";
 import EditCompanyPage from "./pages/corpMajor/EditCompanyPage";
 import CorpCompanyPage from "./pages/corpMajor/CorpCompanyPage";
+
+//기업 제출된 이력서 목록
+import CorpCVListPage from "./pages/corpMajor/CorpCVListPage";
 
 // 신고하기
 import ReportModalPage from "./pages/support/ReportModalPage";
@@ -115,7 +116,8 @@ const router = createBrowserRouter([
       // 로그인/회원가입
       { path: "signin", element: <SignInPage /> },
       { path: "signup", element: <SignUpPage /> },
-      { path: "CorpRegisterPage", element: <CorpRegisterPage /> },
+      { path: "corpregister", element: <CorpRegisterPage /> },
+      { path: "ceosignup", element: <CeoSignUpPage /> },
       { path: "auth", element: <AuthTest /> },
 
       // Id,PW 찾기
@@ -139,7 +141,7 @@ const router = createBrowserRouter([
 
       // 개인 공고
       {
-        path: "memberRecruit",
+        path: "memberrecruit",
         element: <MemberRecruitPage />,
         children: [
           { index: true, element: <MemberRecruitListPage /> },
@@ -222,9 +224,10 @@ const router = createBrowserRouter([
  \______| \______/  | _| `._____|| _|    _____| _|    /__/     \__\ \______| |_______|_______/    
                                         |______|                                                  
       */
+
       // 기업 공고
       {
-        path: "corpRecruit",
+        path: "corprecruit",
         element: <CorpRecruitPage />,
         children: [
           { index: true, element: <CorpRecruitListPage /> },
@@ -234,10 +237,7 @@ const router = createBrowserRouter([
         ],
       },
 
-      // 기업 회원
-      { path: "corpcvlist", element: <CorpCVListPage /> },
-
-      //기업 상세, 수정
+      //기업 정보 상세, 수정
       {
         path: "corpcompany",
         element: <CorpCompanyPage />,
@@ -247,6 +247,9 @@ const router = createBrowserRouter([
           { path: "update", element: <EditCompanyPage /> },
         ],
       },
+
+      // 기업 이력서
+      { path: "corpcvlist", element: <CorpCVListPage /> },
 
       // 기업 마이 페이지
       { path: "corpmypage", element: <CorpMyPage /> },
