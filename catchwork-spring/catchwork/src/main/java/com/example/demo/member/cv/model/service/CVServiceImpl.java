@@ -1,11 +1,15 @@
 package com.example.demo.member.cv.model.service;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.corp.recruit.model.dto.RecruitCV;
 import com.example.demo.member.cv.model.dto.CV;
 import com.example.demo.member.cv.model.dto.CVAward;
 import com.example.demo.member.cv.model.dto.CVEducation;
@@ -19,7 +23,6 @@ import com.example.demo.member.cv.model.dto.CVTraining;
 import com.example.demo.member.cv.model.mapper.CVMapper;
 
 import lombok.RequiredArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -29,6 +32,10 @@ public class CVServiceImpl implements CVService {
 
 	@Autowired
 	private CVMapper mapper;
+	
+	// pdf 저장경로 생성
+	@Value("${file.upload.cv-pdf-path}")
+	private String uploadDir;
 
 	// 이력서 주인 확인
 	@Override
@@ -238,6 +245,42 @@ public class CVServiceImpl implements CVService {
 		// 부모 테이블 CV 삭제
 		mapper.deleteCV(cvNo);
 	}
+
+	// 이력서 pdf 업로드
+	@Override
+	public RecruitCV uploadCVPdf(MultipartFile file,
+	                             int recruitCVEdu,
+	                             int recruitCVCareer,
+	                             String recruitCVPdfTitle,
+	                             String memNo,
+	                             int recruitNo) throws Exception {
+
+	    // 1. 저장경로 설정
+	    File dir = new File(uploadDir);
+	    if (!dir.exists()) dir.mkdirs();
+
+	    // 2. 실제 저장 파일 경로
+	    String filePath = uploadDir + File.separator + recruitCVPdfTitle;
+
+	    // 3. 업로드된 파일 → 서버에 저장
+	    file.transferTo(new File(filePath));
+
+	    // 4. DTO 생성
+	    RecruitCV recruitCV = RecruitCV.builder()
+	            .recruitCVEdu(recruitCVEdu)
+	            .recruitCVCareer(recruitCVCareer)
+	            .recruitCVPdfTitle(recruitCVPdfTitle)
+	            .recruitCVPdfPath(filePath)
+	            .memNo(String.valueOf(memNo))
+	            .recruitNo(recruitNo)
+	            .build();
+
+	    // 5. Mapper 호출 → DB INSERT
+	    mapper.uploadCVPdf(recruitCV);
+
+	    return recruitCV;
+	}
+
 
 }
 // 	private final CVMapper mapper;

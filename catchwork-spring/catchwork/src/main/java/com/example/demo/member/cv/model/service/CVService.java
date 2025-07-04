@@ -2,6 +2,9 @@ package com.example.demo.member.cv.model.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.example.demo.corp.recruit.model.dto.RecruitCV;
 import com.example.demo.member.cv.model.dto.CV;
 
 public interface CVService {
@@ -44,6 +47,22 @@ public interface CVService {
 	 * @throws Exception
 	 */
 	void deleteCV(int cvNo) throws Exception;
+
+	/** 이력서 PDF 업로드
+	 * @param file
+	 * @param recruitCVEdu
+	 * @param recruitCVCareer
+	 * @param recruitCVPdfTitle
+	 * @param memNo
+	 * @param recruitNo
+	 * @return RecruitCV DTO
+	 */
+	RecruitCV uploadCVPdf(MultipartFile file, 
+			int recruitCVEdu, 
+			int recruitCVCareer, 
+			String recruitCVPdfTitle, 
+			String memNo, 
+			int recruitNo) throws Exception;
 
 
 

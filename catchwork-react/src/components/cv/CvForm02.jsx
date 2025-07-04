@@ -12,7 +12,7 @@ const CVForm02 = ({ index, type, data, labels, onRemove, onChange, mode }) => {
 
   return (
     <div className={styles.section}>
-      {mode !== "view" && (
+      {mode !== "view" && mode !== "submit" && (
         <FormRemoveButton onClick={onRemove} />
       )}
       <div className={styles.inner}>

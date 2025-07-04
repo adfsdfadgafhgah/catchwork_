@@ -7,7 +7,7 @@ import styles from "./CVLanguage.module.css"; // 스타일
 const CVLanguage = ({ index, onRemove, showRemove, data, onChange, mode }) => {
   return (
     <div className={styles.section}>
-      {mode !== "view" && (
+      {mode !== "view" &&  mode !== "submit" && (
         <FormRemoveButton onClick={onRemove} />
       )}
       <div className={styles.inner}>
