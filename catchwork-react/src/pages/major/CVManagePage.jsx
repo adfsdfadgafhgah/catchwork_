@@ -41,7 +41,7 @@ const CVManagePage = () => {
 
   // 이력서 번호 있으면 가져오기(detail)
   const cvNo = query.get("cvNo");
-  const upMode = query.get("mode")
+  const upMode = query.get("mode");
 
   // 작성/보기/수정 모드 상태
   const [mode, setMode] = useState(cvNo ? "view" : "add");
@@ -415,7 +415,7 @@ const CVManagePage = () => {
   }, []);
 
   useEffect(() => {
-    if(!isLoadingLogin) return;
+    if (!isLoadingLogin) return;
 
     if (!loginMember.memNo) {
       alert("로그인이 필요합니다.");
@@ -436,7 +436,7 @@ const CVManagePage = () => {
       if (!cvNo) return;
       if (!isLoadingLogin) return;
       if (!loginMember?.memNo) return;
-      
+
       try {
         // 본인 소유 여부 확인
         const checkOwner = await axiosApi.post("/cv/checkOwner", {
@@ -446,7 +446,7 @@ const CVManagePage = () => {
 
         if (checkOwner.data) {
           // 이력시 리스트에서 수정 버튼 눌러서 들어온 경우
-          if(upMode === "update") setMode("update");
+          if (upMode === "update") setMode("update");
 
           // 소유자 맞으면 상세 조회
           const detail = await axiosApi.post("/cv/detail", { cvNo });
@@ -487,7 +487,7 @@ const CVManagePage = () => {
               cvMiliEndDate: "",
             }
           );
-          
+
           // 동적 sections
           const newComponents = {};
           Object.keys(clientKeyMap).forEach((type) => {

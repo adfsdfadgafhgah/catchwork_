@@ -1,10 +1,8 @@
 import { useEffect, useState } from "react";
-import useLoginMember from "../stores/loginMember";
 import useMembershipList from "../stores/membershipStore";
 import { axiosApi } from "../api/axiosAPI";
 
-export default function useMembershipData() {
-  const { loginMember, setLoginMember } = useLoginMember();
+export default function useMembershipData(loginMember) {
   const { membershipList, getMembershipList } = useMembershipList();
   const [subscription, setSubscription] = useState();
   const [isLoading, setIsLoading] = useState(true);
@@ -25,18 +23,21 @@ export default function useMembershipData() {
 
   useEffect(() => {
     async function fetchAll() {
+      if (!loginMember?.memNo) return;
+
       setIsLoading(true);
-      await setLoginMember();
       await getMembershipList();
+      await getSubscription(loginMember.memNo);
       setIsLoading(false);
     }
     fetchAll();
-  }, []);
+  }, [loginMember?.memNo]);
 
-  // loginMember가 바뀌면 구독 정보 갱신
-  useEffect(() => {
-    if (loginMember.memNo && !isLoading) getSubscription(loginMember.memNo);
-  }, [loginMember.memNo, isLoading]);
-
-  return { loginMember, membershipList, subscription, isLoading };
+  return {
+    membershipList,
+    subscription,
+    isLoading,
+    getSubscription,
+    getMembershipList
+  };
 } 

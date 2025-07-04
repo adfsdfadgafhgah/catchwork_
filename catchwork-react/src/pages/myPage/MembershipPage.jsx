@@ -1,55 +1,37 @@
 import { useEffect, useState } from "react";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 import "./MembershipPage.css";
 import { axiosApi } from "../../api/axiosAPI";
 import MembershipList from "../../components/myPage/MembershipList";
-import useLoginMember from "../../stores/loginMember";
 import PaymentModal from "../../components/myPage/PaymentModal";
 import usePaymentModal from "./../../hooks/paymentModal";
-import useMembershipList from "../../stores/membershipStore";
+import useMembershipData from "../../hooks/useMembershipData";
 
 // 환경변수에서 clientKey 가져오기
 const clientKey = import.meta.env.VITE_CLIENT_KEY;
 
 function MembershipPage() {
+  const { loginMember, setLoginMember } = useOutletContext(); // outlet context에서 loginMember 받아오기
   const navigate = useNavigate();
   const [payment, setPayment] = useState(null); // TossPayments 인스턴스
-  const { loginMember, setLoginMember } = useLoginMember(); // 로그인 유저 정보
-  const { membershipList, getMembershipList } = useMembershipList(); // 멤버십 리스트
-  const [subscription, setSubscription] = useState(); // 구독 정보
-  const [isLoading, setIsLoading] = useState(true); // 로딩 상태
 
-  // 구독 정보 fetch
-  const getSubscription = async (memNo) => {
-    try {
-      const resp = await axiosApi.post("/membership/getSubscription", {
-        memNo,
-      });
-      if (resp.status === 200) setSubscription(resp.data);
-    } catch (error) {
-      console.error(error);
+  // useMembershipData에서 모든 데이터와 함수들을 받아옴
+  const {
+    membershipList,
+    subscription,
+    isLoading,
+    getSubscription,
+    getMembershipList,
+  } = useMembershipData(loginMember);
+
+  useEffect(() => {
+    setLoginMember();
+    if (loginMember?.memNo) {
+      getSubscription(loginMember.memNo);
     }
-  };
-
-  // 모든 정보 fetch
-  const fetchAll = async () => {
-    setIsLoading(true);
-    await setLoginMember();
-    await getMembershipList();
-    setIsLoading(false);
-  };
-
-  // 최초 마운트 시 정보 fetch
-  useEffect(() => {
-    fetchAll();
-  }, []);
-
-  // loginMember가 바뀌면 구독 정보 갱신
-  useEffect(() => {
-    if (loginMember.memNo && !isLoading) getSubscription(loginMember.memNo);
-  }, [loginMember.memNo, isLoading]);
+  }, [loginMember?.memGrade, subscription?.memGrade]);
 
   // TossPayments 위젯 초기화
   useEffect(() => {
@@ -78,7 +60,6 @@ function MembershipPage() {
     targetPrice, // 결제 금액
   } = usePaymentModal(
     loginMember, // 로그인 유저 정보
-    setLoginMember, // 로그인 유저 정보 갱신
     membershipList, // 멤버십 리스트 정보
     getMembershipList, // 멤버십 리스트 갱신
     getSubscription // 구독 정보 갱신
@@ -179,7 +160,7 @@ function MembershipPage() {
         />
       </div>
 
-      {subscription.memGrade !== 0 && (
+      {subscription.memGrade !== 0 && subscription.memGrade !== undefined && (
         <button onClick={() => openModal("cancel")}>해지하기</button>
       )}
     </div>

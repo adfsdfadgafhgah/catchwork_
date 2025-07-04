@@ -65,27 +65,30 @@ const SideBar = () => {
             </button>
             {expandedMenu.fav && (
               <div className="sub-nav">
-                <button
+                <NavLink
                   className={`sub-nav-item ${
                     location.pathname === "/mypage/favrecruit" ? "active" : ""
                   }`}
+                  to="/mypage/favrecruit"
                 >
                   관심 공고
-                </button>
-                <button
+                </NavLink>
+                <NavLink
                   className={`sub-nav-item ${
                     location.pathname === "/mypage/favcompany" ? "active" : ""
                   }`}
+                  to="/mypage/favcompany"
                 >
                   관심 기업
-                </button>
-                <button
+                </NavLink>
+                <NavLink
                   className={`sub-nav-item ${
                     location.pathname === "/mypage/favboard" ? "active" : ""
                   }`}
+                  to="/mypage/favboard"
                 >
                   관심 후기
-                </button>
+                </NavLink>
               </div>
             )}
           </div>
@@ -93,7 +96,7 @@ const SideBar = () => {
           {/* 내가 쓴 목록 */}
           <div>
             <button
-              onClick={() => toggleMenu("myPosts")}
+              onClick={() => toggleMenu("myContents")}
               className="nav-item nav-item-expandable"
             >
               <span>내가 쓴 목록</span>
@@ -107,20 +110,22 @@ const SideBar = () => {
             </button>
             {expandedMenu.myContents && (
               <div className="sub-nav">
-                <button
+                <NavLink
                   className={`sub-nav-item ${
                     location.pathname === "/mypage/myboard" ? "active" : ""
                   }`}
+                  to="/mypage/myboard"
                 >
                   내가 쓴 게시글
-                </button>
-                <button
+                </NavLink>
+                <NavLink
                   className={`sub-nav-item ${
                     location.pathname === "/mypage/mycomment" ? "active" : ""
                   }`}
+                  to="/mypage/mycomment"
                 >
                   내가 쓴 댓글
-                </button>
+                </NavLink>
               </div>
             )}
           </div>
@@ -151,27 +156,30 @@ const SideBar = () => {
             </button>
             {expandedMenu.account && (
               <div className="sub-nav">
-                <button
+                <NavLink
                   className={`sub-nav-item ${
                     location.pathname === "/mypage/eitmyinfo" ? "active" : ""
                   }`}
+                  to="/mypage/editmyinfo"
                 >
                   내 정보 변경
-                </button>
-                <button
+                </NavLink>
+                <NavLink
                   className={`sub-nav-item ${
                     location.pathname === "/mypage/changepw" ? "active" : ""
                   }`}
+                  to="/mypage/changepw"
                 >
                   비밀번호 변경
-                </button>
-                <button
+                </NavLink>
+                <NavLink
                   className={`sub-nav-item ${
                     location.pathname === "/mypage/withdraw" ? "active" : ""
                   }`}
+                  to="/mypage/withdraw"
                 >
                   회원 탈퇴
-                </button>
+                </NavLink>
               </div>
             )}
           </div>

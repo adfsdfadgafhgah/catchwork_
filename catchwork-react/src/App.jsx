@@ -30,7 +30,15 @@ import CVPage from "./pages/major/CVPage";
 import MyPage from "./pages/myPage/MyPage";
 import MyInfo from "./pages/myPage/MyInfoPage";
 import MyRecruitPage from "./pages/myPage/MyRecruitPage";
+import FavRecruitPage from "./pages/myPage/FavRecruitPage";
+import FavCompanyPage from "./pages/myPage/FavCompanyPage";
+import FavBoardPage from "./pages/myPage/FavBoardPage";
 import MembershipPage from "./pages/myPage/MembershipPage";
+import MyBoardListPage from "./pages/myPage/MyBoardListPage";
+import MyCommentListPage from "./pages/myPage/MyCommentListPage";
+import EditMyInfoPage from "./pages/myPage/EditMyInfoPage";
+import ChangePwPage from "./pages/myPage/ChangePwPage";
+import WithdrawPage from "./pages/myPage/WithdrawPage";
 
 // 멤버십
 import IssueBillingKeyPage from "./pages/myPage/membership/IssueBillingKeyPage";
@@ -148,7 +156,7 @@ const router = createBrowserRouter([
           { path: "edit/:boardNo", element: <EditBoardPage /> },
         ],
       },
-        
+
       //{ path: "search", element: <SearchResultPage /> },
       { path: "submitcv", element: <SubmitCVPage /> },
       { path: "supportlist", element: <SupportListPage /> },
@@ -161,15 +169,27 @@ const router = createBrowserRouter([
       },
       {
         path: "/mypage",
-        element: <MyPage />,
+        element: (
+          <ProtectedRoute allowedType={0}>
+            <MyPage />
+          </ProtectedRoute>
+        ),
         children: [
           { index: true, element: <MyInfo /> },
           { path: "home", element: <MyInfo /> },
           { path: "myrecruit", element: <MyRecruitPage /> },
+          { path: "favrecruit", element: <FavRecruitPage /> },
+          { path: "favcompany", element: <FavCompanyPage /> },
+          { path: "favboard", element: <FavBoardPage /> },
+          { path: "myboard", element: <MyBoardListPage /> },
+          { path: "mycomment", element: <MyCommentListPage /> },
           {
             path: "membership",
             element: <MembershipPage />,
           },
+          { path: "editmyinfo", element: <EditMyInfoPage /> },
+          { path: "changepw", element: <ChangePwPage /> },
+          { path: "withdraw", element: <WithdrawPage /> },
           {
             path: "payment",
             children: [
