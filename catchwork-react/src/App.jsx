@@ -139,7 +139,7 @@ const router = createBrowserRouter([
 
       // 개인 공고
       {
-        path: "memberRecruit",
+        path: "memberrecruit",
         element: <MemberRecruitPage />,
         children: [
           { index: true, element: <MemberRecruitListPage /> },
@@ -225,7 +225,7 @@ const router = createBrowserRouter([
 
       // 기업 공고
       {
-        path: "corpRecruit",
+        path: "corprecruit",
         element: <CorpRecruitPage />,
         children: [
           { index: true, element: <CorpRecruitListPage /> },

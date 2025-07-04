@@ -69,23 +69,23 @@ export const FLOAT_BUTTON_PRESETS = {
       label: "신고하기",
       icon: "siren",
       iconType: "material",
-      onclick: onReport,
+      onClick: () => onReport("채용공고 신고"),
       className: "float-btn-report",
     },
   ],
-  
+
   submitAndReport: (onSubmit, onReport) => [
     {
       label: "이력서 제출하기",
       icon: "fa-regular fa-file-lines",
-      onclick: onSubmit,
+      onClick: onSubmit,
       className: "float-btn-submit",
     },
     {
       label: "신고하기",
       icon: "siren",
       iconType: "material",
-      onclick: () => onReport("채용공고 신고"),
+      onClick: () => onReport("채용공고 신고"),
       className: "float-btn-report",
     },
   ],

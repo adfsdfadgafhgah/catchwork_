@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import useLoginMember from "../../stores/loginMember";
+import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 
 export default function CorpRecruitListPage() {
   const [recruits, setRecruits] = useState([]);
@@ -52,7 +53,7 @@ export default function CorpRecruitListPage() {
         if (statusFilter === "closed") {
           const now = new Date();
           const filtered = list.filter((recruit) => {
-            const endDate = new Date(recruit.recruitEndDate);
+            const endDate = new Date(`${recruit.recruitEndDate}T23:59:59`);
             return (
               recruit.recruitStatus === 3 ||
               (recruit.recruitStatus === 0 && endDate < now)
@@ -168,6 +169,8 @@ export default function CorpRecruitListPage() {
       )}
 
       <FloatButton buttons={FLOAT_BUTTON_PRESETS.writeOnly(handleWrite)} />
+
+      <ScrollToTopButton />
     </div>
   );
 }

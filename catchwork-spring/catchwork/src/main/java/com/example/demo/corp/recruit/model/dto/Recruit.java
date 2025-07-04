@@ -40,6 +40,9 @@ public class Recruit {
 	private String corpRegNo;
 	private String corpMemRoleCheck;
 	private String corpMemDept;
+	private String corpBenefit;
+	private String corpBenefitDetail;
+	
 	
 	private String corpLogo;
 	private String corpType;

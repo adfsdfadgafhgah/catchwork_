@@ -104,14 +104,16 @@ export default function MemberRecruitDetailPage() {
 
   // 이력서 제출 페이지로 이동 핸들러
   const handleSubmit = () => {
-    navigate(`/corpRecruit/edit/${recruitNo}`);
+    navigate(`/cv?recruitNo=${recruitNo}`);
   };
 
+  // 신고 모달창 핸들러
   const handleReport = (target) => {
     setReportTarget(target);
     setShowReportModal(true);
   };
 
+  // 신고 모달창 끄기 핸들러
   const handleCloseReport = () => {
     setShowReportModal(false);
   };
@@ -209,7 +211,8 @@ export default function MemberRecruitDetailPage() {
         <p>{recruit.recruitHireDetail}</p>
 
         <h4 className={styles.sectionTitle}>복리후생</h4>
-        <p>{recruit.recruitBenefit}</p>
+        <p>{recruit.corpBenefit}</p>
+        <p>{recruit.corpBenefitDetail}</p>
 
         <h4 className={styles.sectionTitle}>기타 사항</h4>
         <p>{recruit.recruitEtc}</p>
@@ -222,13 +225,13 @@ export default function MemberRecruitDetailPage() {
 
       <div className={styles.deadlineTimer}>
         <DeadlineTimer recruitEndDate={recruit.recruitEndDate} />
-
-        <FloatButton
-          buttons={FLOAT_BUTTON_PRESETS.submitAndReport(handleSubmit, () =>
-            handleReport(`[${recruit.corpName}] ${recruit.recruitTitle}`)
-          )}
-        />
       </div>
+
+      <FloatButton
+        buttons={FLOAT_BUTTON_PRESETS.submitAndReport(handleSubmit, () =>
+          handleReport(`[${recruit.corpName}] ${recruit.recruitTitle}`)
+        )}
+      />
     </div>
   );
 }
