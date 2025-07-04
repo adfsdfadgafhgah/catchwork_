@@ -23,11 +23,12 @@ public class CorpInfoController {
 	@Autowired
 	private CorpInfoService corpInfoService;
     
-    
-    /**
-     * 기업 조회 
-     * ex) /corpcompanydetail
-     */
+	/**기업 조회
+	 * ex) /corpcompanydetail
+	 * @author JIN
+	 * @param memNo
+	 * @return
+	 */
 	@GetMapping("detail")
 	public ResponseEntity<?> getMyCorpDetail(@RequestParam("memNo") String memNo) {
 	    log.info("📌 로그인한 회원 memNo: {}", memNo);
@@ -44,6 +45,11 @@ public class CorpInfoController {
 	    }
 	}
 	
+	/** 기업 정보 수정
+	 * @author JIN
+	 * @param corpInfo
+	 * @return
+	 */
 	@PostMapping("update")
 	public ResponseEntity<String> updateCorpInfo(@RequestBody CorpInfo corpInfo) {
         int result = corpInfoService.updateCorpInfo(corpInfo);

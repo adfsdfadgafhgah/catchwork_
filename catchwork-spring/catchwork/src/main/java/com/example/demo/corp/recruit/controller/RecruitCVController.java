@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.corp.recruit.model.dto.RecruitCV;
@@ -32,9 +31,12 @@ public class RecruitCVController {
 		@Autowired
 	    private RecruitCVService service;
 
-		//전체 목록 조회
+		/**이력서 전체 목록 조회
+		 * @author JIN
+		 * @return
+		 */
 		@GetMapping("list")
-	    public ResponseEntity<?> getCvList() {
+	    public ResponseEntity<?> getCVList() {
 	        try {
 	            log.info("[GET] /list - 전체 이력서 목록 조회 요청");
 	            List<RecruitCV> list = service.getAllRecruitCV();
@@ -47,16 +49,15 @@ public class RecruitCVController {
 	        }
 	    }
 	    
-	    
-	    
-	 //필터링 목록 조회
+	    /** 조건 필터링된 이력서 목록 조회
+	     * @author JIN
+	     * @param filter
+	     * @return
+	     */
 	    @GetMapping("filter")
-	    public ResponseEntity<?> getCvList(RecruitCV filter) {
-
-	      
-
+	    public ResponseEntity<?> getCVList(RecruitCV filter) {
 	        try {
-	        	 List<RecruitCV> filteredList = service.getCvList(filter);
+	        	 List<RecruitCV> filteredList = service.getCVList(filter);
 	            log.info("필터링 결과 이력서 수: {}", filteredList.size());
 	            return ResponseEntity.ok(filteredList);
 	        } catch (Exception e) {
@@ -66,15 +67,16 @@ public class RecruitCVController {
 	        }
 	    }
 
-	    
-	    
-	    
-	    //이력서 다운로드
+	    /** 이력서 다운로드 ( 7/4 현재 안되는중)
+	     * @author JIN
+	     * @param cvNo
+	     * @return
+	     */
 	    @GetMapping("/download/{cvNo}")
-	    public ResponseEntity<byte[]> downloadCv(@PathVariable int cvNo) {
+	    public ResponseEntity<byte[]> downloadCV(@PathVariable int cvNo) {
 	    	try {
 	    		// 1. 파일 경로 조회 (DB에서 파일명 또는 전체 경로 조회)
-	    		String filePath = service.getCvFilePath(cvNo); // 예: /files/cv1234.pdf
+	    		String filePath = service.getCVFilePath(cvNo); // 예: /files/cv1234.pdf
 
 	    		File file = new File(filePath);
 	    		if (!file.exists()) {
@@ -96,7 +98,6 @@ public class RecruitCVController {
 		                              .filename(filename)
 		                              .build()
 		        		);
-
 		        return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
 	    	} catch (Exception e) {
 	    		e.printStackTrace();

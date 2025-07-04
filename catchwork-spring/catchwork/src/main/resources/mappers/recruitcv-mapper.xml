@@ -1,75 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper	namespace="com.example.demo.corp.recruit.model.mapper.RecruitCVMapper">
+<mapper
+	namespace="com.example.demo.corp.recruit.model.mapper.RecruitCVMapper">
 
- <!-- resultMap 정의 -->
-  <resultMap id="recruitCVMap" type="com.example.demo.corp.recruit.model.dto.RecruitCV">
-    <id property="recruitCvNo" column="recruit_cv_no"/>
-    <result property="recruitCvEdu" column="recruit_cv_edu"/>
-    <result property="recruitCvCareer" column="recruit_cv_career"/>
-    <result property="recruitCvPdfTitle" column="recruit_cv_pdf_title"/>
-    <result property="recruitCvDate" column="recruit_cv_date"/>
-    <result property="recruitCvCheckFl" column="recruit_cv_check_fl"/>
-    <result property="memNo" column="mem_no"/>
-    <result property="recruitNo" column="recruit_no"/>
-    <result property="recruitTitle" column="recruit_title"/>
-</resultMap>
+	<!-- resultMap 정의 -->
+	<resultMap id="recruitCVMap"
+		type="com.example.demo.corp.recruit.model.dto.RecruitCV">
+		<id property="recruitCVNo" column="recruit_cv_no" />
+		<result property="recruitCVEdu" column="recruit_cv_edu" />
+		<result property="recruitCVCareer" column="recruit_cv_career" />
+		<result property="recruitCVPdfTitle"
+			column="recruit_cv_pdf_title" />
+		<result property="recruitCVDate" column="recruit_cv_date" />
+		<result property="recruitCVCheckFl"
+			column="recruit_cv_check_fl" />
+		<result property="memNo" column="mem_no" />
+		<result property="recruitNo" column="recruit_no" />
+		<result property="recruitTitle" column="recruit_title" />
+	</resultMap>
 
-  
-  <!-- 전체 결과 조회 -->
-<select id="selectAllRecruitCV" resultMap="recruitCVMap">
-        SELECT
-            RC.RECRUIT_CV_NO,
-            R.RECRUIT_TITLE,
-            RC.RECRUIT_CV_PDF_TITLE,
-            RC.RECRUIT_CV_PDF_PATH,
-            TO_CHAR(RC.RECRUIT_CV_DATE, 'YYYY.MM.DD') AS recruit_cv_date,
-            RC.RECRUIT_CV_EDU,
-            RC.RECRUIT_CV_CAREER,
-            RC.RECRUIT_CV_CHECK_FL
-        FROM
-            RECRUIT_CV RC
-        JOIN
-            RECRUIT R ON RC.RECRUIT_NO = R.RECRUIT_NO
-        ORDER BY
-            RC.RECRUIT_CV_NO DESC
-    </select>
-    
-     <!-- 필터링 (학력, 경력) -->
- <select id="getCvList">
-  SELECT 
-    rc.recruit_cv_no,
-    rc.recruit_cv_edu,
-    rc.recruit_cv_career,
-    rc.recruit_cv_pdf_title,
-    rc.recruit_cv_date,
-    rc.recruit_cv_check_fl,
-    rc.mem_no,
-    rc.recruit_no,
-    r.recruit_title
-  FROM 
-    recruit_cv rc
-  JOIN 
-    recruit r ON rc.recruit_no = r.recruit_no
-  <where>
-    <if test="recruitCvEdu != null and recruitCvEdu != ''">
-      AND rc.recruit_cv_edu = #{recruitCvEdu}
-    </if>
-    <if test="careerMin != null and careerMax != null">
-      AND rc.recruit_cv_career BETWEEN #{careerMin} AND #{careerMax}
-    </if>
-  </where>
-</select>
-    
-    
 
-    
-  
-  <!-- 경로 저장 -->
-  <select id="selectCvFilePath" resultType="String" parameterType="int">
-    SELECT RECRUIT_CV_FILE_PATH
-    FROM RECRUIT_CV
-    WHERE RECRUIT_CV_NO = #{cvNo}
-</select>
+	<!-- 전체 결과 조회 -->
+	<select id="selectAllRecruitCV" resultMap="recruitCVMap">
+		SELECT
+		RC.RECRUIT_CV_NO,
+		R.RECRUIT_TITLE,
+		RC.RECRUIT_CV_PDF_TITLE,
+		RC.RECRUIT_CV_PDF_PATH,
+		TO_CHAR(RC.RECRUIT_CV_DATE, 'YYYY.MM.DD') AS recruit_cv_date,
+		RC.RECRUIT_CV_EDU,
+		RC.RECRUIT_CV_CAREER,
+		RC.RECRUIT_CV_CHECK_FL
+		FROM
+		RECRUIT_CV RC
+		JOIN
+		RECRUIT R ON RC.RECRUIT_NO = R.RECRUIT_NO
+		ORDER BY
+		R.RECRUIT_TITLE ASC,
+		RC.RECRUIT_CV_NO DESC
+	</select>
+
+	<!-- 필터링 (학력, 경력) -->
+	<select id="getCVList">
+		SELECT
+		RC.RECRUIT_CV_NO,
+		RC.RECRUIT_CV_EDU,
+		RC.RECRUIT_CV_CAREER,
+		RC.RECRUIT_CV_PDF_TITLE,
+		RC.RECRUIT_CV_DATE,
+		RC.RECRUIT_CV_CHECK_FL,
+		RC.MEM_NO,
+		RC.RECRUIT_NO,
+		R.RECRUIT_TITLE
+		FROM
+		RECRUIT_CV RC
+		JOIN
+		RECRUIT R ON RC.RECRUIT_NO = R.RECRUIT_NO
+		<where>
+			<if test="recruitCVEdu != null">
+				AND RC.RECRUIT_CV_EDU = #{recruitCVEdu}
+			</if>
+			<if test="careerMin != null and careerMax != null">
+				AND RC.RECRUIT_CV_CAREER BETWEEN #{careerMin} AND #{careerMax}
+			</if>
+		</where>
+	</select>
+
+
+	<!-- 경로 저장 -->
+	<select id="selectCVFilePath" resultType="String"
+		parameterType="int">
+		SELECT RECRUIT_CV_FILE_PATH
+		FROM RECRUIT_CV
+		WHERE RECRUIT_CV_NO = #{cvNo}
+	</select>
 </mapper>
