@@ -13,9 +13,9 @@
   gap: 12px;
   width: fit-content;
   margin-top: 40px;
+  overflow: hidden;
 }
 
-/* 추가: 공통 버튼 스타일 */
 .float-btn {
   bottom: 0;
   border: none;
@@ -27,7 +27,18 @@
   gap: 6px;
   padding: 8px 16px;
   color: var(--text-color);
+  background-color: var(--white);
 }
+
+.float-btn i,
+.float-btn span.material-symbols-outlined {
+  color: inherit;
+}
+
+.float-btn:hover {
+  color: var(--main-color);
+}
+
 
 /* .float-button-container .float-btn-cancel,
 .float-button-container .float-btn-edit {

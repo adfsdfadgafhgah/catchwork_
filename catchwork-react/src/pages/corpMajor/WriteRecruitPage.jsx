@@ -64,11 +64,11 @@ export default function WriteRecruitPage() {
     };
 
     try {
-      const resp = await axiosApi.post("/corprecruit/write", submitData);
+      const resp = await axiosApi.post("/corpRecruit/write", submitData);
       console.log("백엔드 응답:", resp.data);
       const newRecruitNo = resp.data.recruitNo;
       alert("공고 등록 완료!");
-      navigate(`/corprecruit/${newRecruitNo}`);
+      navigate(`/corpRecruit/${newRecruitNo}`);
     } catch (err) {
       console.error("등록 실패:", err);
       alert("오류 발생");

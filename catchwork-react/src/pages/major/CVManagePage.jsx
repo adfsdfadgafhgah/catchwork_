@@ -17,6 +17,10 @@ import CVForm01 from "../../components/cv/CVForm01";
 import CVForm02 from "../../components/cv/CVForm02";
 import CVLanguage from "../../components/cv/CVLanguage";
 
+// 버튼 컴포넌트 import
+import FloatButton from "../../components/common/FloatButton";
+import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
+
 // 로그인 회원 정보
 import useLoginMember from "../../stores/loginMember";
 
@@ -41,7 +45,8 @@ const CVManagePage = () => {
 
   // 이력서 번호 있으면 가져오기(detail)
   const cvNo = query.get("cvNo");
-  const upMode = query.get("mode");
+  const queryMode = query.get("mode");
+  const recruitNo = query.get("recruitNo");
 
   // 작성/보기/수정 모드 상태
   const [mode, setMode] = useState(cvNo ? "view" : "add");
@@ -219,7 +224,7 @@ const CVManagePage = () => {
     imgFormData.append("memName", memberInfo.memName);
     setIsUploading(true);
     try {
-      const res = await axiosApi.post("/cv/img/upload", imgFormData, {
+      const res = await axiosApi.post("/memberCV/img/upload", imgFormData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       setCvImgPath(res.data); // 응답 받은 리네임된 경로 저장
@@ -311,7 +316,7 @@ const CVManagePage = () => {
   const handleUpdate = async () => {
     const payload = payloadRename();
     await axiosApi
-      .post("/cv/update", payload)
+      .post("/memberCV/update", payload)
       .then(() => alert("수정 완료"))
       .catch((err) => {
         console.error("수정 실패", err.response?.data || err.message);
@@ -331,7 +336,7 @@ const CVManagePage = () => {
     }
 
     try {
-      await axiosApi.post("/cv/delete", { cvNo });
+      await axiosApi.post("/memberCV/delete", { cvNo });
       alert("삭제 완료");
       navigate("/cv");
     } catch (error) {
@@ -341,16 +346,19 @@ const CVManagePage = () => {
   };
 
   // 이력서 저장 요청
-  const handleSubmit = async () => {
+  const handleAdd = async () => {
     const payload = payloadRename();
     await axiosApi
-      .post("/cv/add", payload)
+      .post("/memberCV/add", payload)
       .then(() => alert("저장 완료"))
       .catch((err) => {
         console.error("저장 실패", err.response?.data || err.message);
         alert("저장 중 오류가 발생했습니다");
       });
   };
+
+  // 이력서 제출 요청
+  const handleSubmit = async () => {};
 
   // DTO 생각 안한 Bottle God의 작품
   const payloadRename = () => {
@@ -409,6 +417,28 @@ const CVManagePage = () => {
     return result;
   };
 
+  const floatButtons = (() => {
+    switch (mode) {
+      case "view":
+        return FLOAT_BUTTON_PRESETS.cvView(
+          () => setMode("update"),
+          handleDelete
+        );
+      case "update":
+        return FLOAT_BUTTON_PRESETS.cvUpdate(handleUpdate, () =>
+          setMode("view")
+        );
+      case "add":
+        return FLOAT_BUTTON_PRESETS.cvAdd(handleAdd, () => navigate("/cv"));
+      case "submit":
+        return FLOAT_BUTTON_PRESETS.cvSubmit(handleSubmit, () =>
+          navigate(`/cv?recruitNo=${recruitNo}`)
+        );
+      default:
+        return [];
+    }
+  })();
+
   // 로그인 여부 검사
   useEffect(() => {
     setLoginMember();
@@ -439,17 +469,17 @@ const CVManagePage = () => {
 
       try {
         // 본인 소유 여부 확인
-        const checkOwner = await axiosApi.post("/cv/checkOwner", {
+        const checkOwner = await axiosApi.post("/memberCV/checkOwner", {
           cvNo,
           memNo: loginMember?.memNo,
         });
 
         if (checkOwner.data) {
-          // 이력시 리스트에서 수정 버튼 눌러서 들어온 경우
-          if (upMode === "update") setMode("update");
+          // 이력시 리스트에서 모드를 들고 들어온 경우
+          if (queryMode) setMode(queryMode);
 
           // 소유자 맞으면 상세 조회
-          const detail = await axiosApi.post("/cv/detail", { cvNo });
+          const detail = await axiosApi.post("/memberCV/detail", { cvNo });
           const data = detail.data;
 
           // 기존 세팅 로직 복붙
@@ -631,7 +661,7 @@ const CVManagePage = () => {
                   onChange={handleComponentChange}
                 />
               ))}
-              {mode !== "view" && (
+              {mode !== "view" && mode !== "submit" && (
                 <FormAddButton onClick={() => addComponent(type)} />
               )}
             </div>
@@ -653,7 +683,7 @@ const CVManagePage = () => {
                 onChange={handleComponentChange}
               />
             ))}
-            {mode !== "view" && (
+            {mode !== "view" && mode !== "submit" && (
               <FormAddButton onClick={() => addComponent("language")} />
             )}
           </div>
@@ -682,7 +712,7 @@ const CVManagePage = () => {
                   onChange={handleComponentChange}
                 />
               ))}
-              {mode !== "view" && (
+              {mode !== "view" && mode !== "submit" && (
                 <FormAddButton onClick={() => addComponent(type)} />
               )}
             </div>
@@ -699,56 +729,9 @@ const CVManagePage = () => {
         </div>
       </div>
 
-      {/* 제출 버튼 */}
+      {/* 버튼 */}
       <div className="writeCVSticky">
-        <div className="writeCVStickyCenter">
-          {mode === "view" ? (
-            <>
-              <button
-                className="writeCVStickyBtn writeCVUpdateBtn"
-                onClick={() => setMode("update")}
-              >
-                수정하기
-              </button>
-              <button
-                className="writeCVStickyBtn writeCVDeleteBtn"
-                onClick={handleDelete}
-              >
-                삭제하기
-              </button>
-            </>
-          ) : mode === "update" ? (
-            <>
-              <button
-                className="writeCVStickyBtn writeCVSubmitBtn"
-                onClick={handleUpdate}
-              >
-                수정 완료
-              </button>
-              <button
-                className="writeCVStickyBtn writeCVCancleBtn"
-                onClick={() => setMode("view")}
-              >
-                미리보기
-              </button>
-            </>
-          ) : mode === "add" ? (
-            <>
-              <button
-                className="writeCVStickyBtn writeCVSubmitBtn"
-                onClick={handleSubmit}
-              >
-                작성 완료
-              </button>
-              <button
-                className="writeCVStickyBtn writeCVCancleBtn"
-                onClick={() => navigate("/cv")}
-              >
-                취소하기
-              </button>
-            </>
-          ) : null}
-        </div>
+        <FloatButton buttons={floatButtons} />
         <div className="writeCVStickyRight">
           <button
             className="writeCVStickyBtn writeCVUpBtn"

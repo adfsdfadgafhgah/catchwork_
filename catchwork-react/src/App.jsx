@@ -19,7 +19,7 @@ import FindIdPage from "./pages/member/FindIdPage";
 import FindPWPage from "./pages/member/FindPWPage";
 
 // 네비게이션
-import RecruitPage from "./pages/major/RecruitListPage";
+import MemberRecruitPage from "./pages/major/MemberRecruitPage";
 import CompanyListPage from "./pages/major/CompanyListPage";
 import BoardPage from "./pages/major/BoardPage";
 import CVListPage from "./pages/major/CVListPage";
@@ -58,6 +58,10 @@ import BoardListPage from "./pages/major/BoardListPage";
 import BoardDetailPage from "./pages/major/BoardDetailPage";
 import WriteBoardPage from "./pages/major/WriteBoardPage";
 import EditBoardPage from "./pages/major/EditBoardPage";
+
+// 개인 공고
+import MemberRecruitListPage from "./pages/major/MemberRecruitListPage";
+import MemberRecruitDetailPage from "./pages/major/MemberRecruitDetailPage";
 
 // 기업 회원
 // 기업 메인
@@ -115,10 +119,6 @@ const router = createBrowserRouter([
       { path: "findid", element: <FindIdPage /> },
       { path: "findpw", element: <FindPWPage /> },
 
-      { path: "recruit", element: <RecruitPage /> },
-
-      { path: "board", element: <BoardPage /> },
-
       // 로그인 필요, 개인회원 전용 예시
       {
         path: "cv",
@@ -135,7 +135,16 @@ const router = createBrowserRouter([
       },
 
       // 개인 공고
-      { path: "recruit", element: <RecruitPage /> },
+      {
+        path: "memberRecruit",
+        element: <MemberRecruitPage />,
+        children: [
+          { index: true, element: <MemberRecruitListPage /> },
+          { path: ":recruitNo", element: <MemberRecruitDetailPage /> },
+        ],
+      },
+
+      // 개인 기업
       {
         path: "company",
         element: <CompanyPage />,
@@ -212,7 +221,7 @@ const router = createBrowserRouter([
       */
       // 기업 공고
       {
-        path: "corprecruit",
+        path: "corpRecruit",
         element: <CorpRecruitPage />,
         children: [
           { index: true, element: <CorpRecruitListPage /> },

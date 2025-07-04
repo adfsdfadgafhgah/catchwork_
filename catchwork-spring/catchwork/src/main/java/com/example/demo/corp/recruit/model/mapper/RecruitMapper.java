@@ -77,4 +77,15 @@ public interface RecruitMapper {
 	 * @return
 	 */
 	int editRecruit(Recruit recruit);
+
+	/** 채용공고 조회수 증가
+	 * @author BAEBAE
+	 * @param recruitNo
+	 */
+	void recruitReadCount(int recruitNo);
+
+	/** 채용공고 자동 마감
+	 * @author BAEBAE
+	 */
+	void autoCloseRecruit();
 }
