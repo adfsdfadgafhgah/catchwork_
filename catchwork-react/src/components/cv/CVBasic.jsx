@@ -3,7 +3,7 @@ import { Camera, Loader } from "lucide-react";
 import styles from "./CVBasic.module.css";
 import defaultImg from "../../assets/icon.png";
 
-const CVBasic = ({ memberInfo, cvImgPath, onImageUpload, isUploading }) => {
+const CVBasic = ({ memberInfo, cvImgPath, onImageUpload, isUploading, mode }) => {
   const fileInputRef = useRef(null);
   const [previewSrc, setPreviewSrc] = useState("");
 
@@ -41,7 +41,7 @@ const CVBasic = ({ memberInfo, cvImgPath, onImageUpload, isUploading }) => {
       <div className={styles.photoSection}>
         <div
           className={styles.photoPlaceholder}
-          onClick={!isUploading ? handleClick : undefined}
+          onClick={!isUploading && mode !== "view" && mode !== "submit" ? handleClick : undefined}
           style={{ opacity: isUploading ? 0.5 : 1 }}
         >
           {isUploading ? (

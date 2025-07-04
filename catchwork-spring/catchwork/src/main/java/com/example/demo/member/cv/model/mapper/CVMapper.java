@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.example.demo.corp.recruit.model.dto.RecruitCV;
 import com.example.demo.member.cv.model.dto.CV;
 import com.example.demo.member.cv.model.dto.CVAward;
 import com.example.demo.member.cv.model.dto.CVEducation;
@@ -140,6 +141,10 @@ public interface CVMapper {
 	void deleteTraining(int cvNo);
 
 	void deletePortfolio(int cvNo);
+
+	
+	// 이력서 pdf 업로드
+	void uploadCVPdf(RecruitCV recruitCV);
 
 
 	

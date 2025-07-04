@@ -31,19 +31,19 @@
 }
 
 .editButton {
-  background-color: #4caf50;
-  color: #fff;
+  background-color: var(--main-color);
+  color: var(--white);
 }
 
 .editButton:hover {
-  background-color: #45a049;
+  background-color: var(--main-color-dark);
 }
 
 .deleteButton {
-  background-color: #f44336;
-  color: #fff;
+  background-color: #68aaa5;
+  color: var(--white);
 }
 
 .deleteButton:hover {
-  background-color: #d32f2f;
+  background-color: var(--main-color-dark);
 }

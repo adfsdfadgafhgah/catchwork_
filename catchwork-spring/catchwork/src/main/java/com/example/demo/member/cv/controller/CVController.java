@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.corp.recruit.model.dto.RecruitCV;
 import com.example.demo.member.cv.model.dto.CV;
 import com.example.demo.member.cv.model.dto.CVCheck;
 import com.example.demo.member.cv.model.service.CVService;
@@ -179,6 +181,35 @@ public class CVController {
 	    }
 	}
 	
+	@PostMapping("/pdf/upload")
+	public ResponseEntity<?> uploadCVPdf(
+	        @RequestParam("file") MultipartFile file,
+	        @RequestParam("recruitCVEdu") int recruitCVEdu,
+	        @RequestParam("recruitCVCareer") int recruitCVCareer,
+	        @RequestParam("recruitCVPdfTitle") String recruitCVPdfTitle,
+	        @RequestParam("memNo") String memNo,
+	        @RequestParam("recruitNo") int recruitNo
+	) {
+	    try {
+	        // 서비스 호출 → 파일 저장 + DB INSERT
+	        RecruitCV recruitCV = service.uploadCVPdf(
+	                file,
+	                recruitCVEdu,
+	                recruitCVCareer,
+	                recruitCVPdfTitle,
+	                memNo,
+	                recruitNo
+	        );
+
+	        // 성공 시 DTO 반환
+	        return ResponseEntity.ok(recruitCV);
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	                .body("PDF 업로드 실패: " + e.getMessage());
+	    }
+	}
+
 //	//윤진 submit cv
 //	@PostMapping("/submitcv")
 //	public ResponseEntity<?> submitCV(@RequestBody Map<String, Object> data) {

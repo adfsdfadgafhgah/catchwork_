@@ -2,7 +2,7 @@
 import React from "react";
 import styles from "./CVAddress.module.css";
 
-const CVAddress = ({ formData, onChange, onSearch }) => {
+const CVAddress = ({ formData, onChange }) => {
   return (
     <div className={styles.infoSection}>
       {/* 제목 */}
@@ -23,13 +23,6 @@ const CVAddress = ({ formData, onChange, onSearch }) => {
               value={formData.mainAddress}
               onChange={(e) => onChange("mainAddress", e.target.value)}
             />
-            <button
-              type="button"
-              className={styles.addressSearchBtn}
-              onClick={onSearch}
-            >
-              주소찾기
-            </button>
           </div>
           {/* 상세주소 */}
           <input

@@ -556,4 +556,28 @@
 	    WHERE CV_NO = #{cvNo}
 	</delete>
 
+	<insert id="uploadCVPdf">
+	    INSERT INTO RECRUIT_CV (
+			RECRUIT_CV_NO,
+	        RECRUIT_CV_EDU,
+	        RECRUIT_CV_CAREER,
+	        RECRUIT_CV_PDF_TITLE,
+	        RECRUIT_CV_PDF_PATH,
+	        MEM_NO,
+	        RECRUIT_NO,
+	        RECRUIT_CV_DATE,
+	        RECRUIT_CV_CHECK_FL
+	    )
+	    VALUES (
+			SEQ_RECRUIT_CV_NO.NEXTVAL,	-- 시퀀스 번호
+	        #{recruitCVEdu},            -- 지원자 학력
+	        #{recruitCVCareer},         -- 지원자 경력
+	        #{recruitCVPdfTitle},       -- PDF 파일명
+	        #{recruitCVPdfPath},        -- PDF 파일 경로
+	        #{memNo},                   -- 회원 번호
+	        #{recruitNo},               -- 공고 번호
+	        SYSDATE,                    -- 지원 일자
+	        'N'                         -- 다운로드 여부 초기값
+	    )
+	</insert>
 </mapper>

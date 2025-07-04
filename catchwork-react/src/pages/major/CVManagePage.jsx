@@ -3,6 +3,10 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
+// PDF 변환
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+
 // 기본 컴포넌트 import
 import CVTitle from "../../components/cv/CVTitle";
 import CVBasic from "../../components/cv/CVBasic";
@@ -26,6 +30,8 @@ import useLoginMember from "../../stores/loginMember";
 
 // 페이지 전용 CSS import
 import "./CVManagePage.css";
+
+// axios
 import { axiosApi } from "../../api/axiosAPI";
 
 // URL 쿼리 파싱용
@@ -358,7 +364,70 @@ const CVManagePage = () => {
   };
 
   // 이력서 제출 요청
-  const handleSubmit = async () => {};
+  const handleSubmit = async () => {
+    // 1. 캡쳐할 이력서 영역 선택
+    const target = document.querySelector(".resume-container");
+
+    // 2. html → canvas 변환
+    const canvas = await html2canvas(target, {
+      scale: 2, // 해상도 2배
+      useCORS: true, // 외부 이미지 허용
+    });
+
+    // 3. canvas → 이미지 dataURL 변환
+    const imgData = canvas.toDataURL("image/jpeg", 0.7);
+
+    // 4. PDF 생성
+    const pdf = new jsPDF("p", "mm", "a4");
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = pdf.internal.pageSize.getHeight();
+
+    const imgWidth = pdfWidth;
+    const imgHeight = (canvas.height * pageWidth) / canvas.width;
+
+    let heightLeft = imgHeight;
+    let position = 0;
+
+    // 5. 페이지에 이미지 추가
+    pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+    heightLeft -= pdfHeight;
+
+    while (heightLeft > 0) {
+      position -= pdfHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
+      heightLeft -= pdfHeight;
+    }
+
+    // 6. PDF → arraybuffer
+    const pdfOutput = pdf.output("arraybuffer");
+    const blob = new Blob([pdfOutput], { type: "application/pdf" });
+
+    // 7. FormData 준비
+    const formData = new FormData();
+    const memTelRename = memberInfo.memTel.replace(/-/g, "") || "";
+    const pdfTitle = `${memberInfo.memName}_${memTelRename}_${Date.now()}.pdf`;
+    formData.append("recruitCVEdu", education.eduCodeNo); // 지원자 학력
+    formData.append("recruitCVCareer", totalExperienceMonths); // 지원자 경력
+    formData.append("recruitCVPdfTitle", pdfTitle); // 지원자 이력서 pdf 제목
+    formData.append("file", blob, pdfTitle); // 지원자 이력서 pdf 경로
+    formData.append("memNo", loginMember.memNo); // 회원 번호
+    formData.append("recruitNo", recruitNo); // 공고 번호
+
+    try {
+      // 8. 서버에 업로드
+      const res = await axiosApi.post("/memberCV/pdf/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
+      alert("PDF 업로드 성공");
+      navigate("/memberRecruit/" + recruitNo);
+    } catch (e) {
+      console.error(e);
+      alert("PDF 업로드 실패");
+    }
+  };
 
   // DTO 생각 안한 Bottle God의 작품
   const payloadRename = () => {
@@ -416,6 +485,32 @@ const CVManagePage = () => {
     }
     return result;
   };
+
+  
+  // 모든 경력(experience) 섹션들의 기간(개월 수)을 합산한다
+  const totalExperienceMonths = components.experience.reduce((sum, exp) => {
+    // 시작일과 종료일이 모두 존재하고 YYYY-MM 형식일 때만 계산
+    if (
+      exp.startDate &&
+      exp.endDate &&
+      /^\d{4}-\d{2}$/.test(exp.startDate) &&
+      /^\d{4}-\d{2}$/.test(exp.endDate)
+    ) {
+      // "2023-02" → [2023, 2] 숫자 배열로 변환
+      const [startY, startM] = exp.startDate.split("-").map(Number);
+      const [endY, endM] = exp.endDate.split("-").map(Number);
+
+      // 전체 개월 수 계산
+      // (종료년도 - 시작년도) * 12 + (종료월 - 시작월) + 1
+      const months = (endY - startY) * 12 + (endM - startM) + 1;
+
+      // 누적 합산
+      return sum + months;
+    }
+
+    // 유효하지 않은 데이터면 합산하지 않고 기존 합계를 그대로 반환
+    return sum;
+  }, 0);
 
   const floatButtons = (() => {
     switch (mode) {
@@ -476,7 +571,7 @@ const CVManagePage = () => {
 
         if (checkOwner.data) {
           // 이력시 리스트에서 모드를 들고 들어온 경우
-          if (queryMode) setMode(queryMode);
+          if (queryMode) {setMode(queryMode)};
 
           // 소유자 맞으면 상세 조회
           const detail = await axiosApi.post("/memberCV/detail", { cvNo });
@@ -608,6 +703,7 @@ const CVManagePage = () => {
               cvImgPath={cvImgPath}
               onImageUpload={handleUploadImage}
               isUploading={isUploading}
+              mode={mode}
             />
           </div>
 
@@ -694,7 +790,9 @@ const CVManagePage = () => {
             <div className="writeCVSection" key={type}>
               <h2 className="writeCVSection-title">{labels.title}</h2>
               {/* 경력 섹션일 때만 렌더링되는 (최종 경력)*/}
-              {type === "experience" && <div>최종경력 : ㅗ</div>}
+              {type === "experience" && (
+                <div>총 경력 기간 : {totalExperienceMonths}개월</div>
+              )}
               {components[type].length === 0 && (
                 <div className="empty-message">
                   입력된 {labels.title}이 없습니다.
