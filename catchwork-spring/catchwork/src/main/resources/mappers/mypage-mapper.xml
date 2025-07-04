@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper	namespace="com.example.demo.member.myPage.myInfo.model.mapper.MyInfoMapper">
+
+  <!-- 회원 정보 수정 -->
+  <update id="updateMemberInfo" parameterType="com.example.demo.auth.model.dto.Member">
+    UPDATE MEMBER
+    SET MEM_NICKNAME = #{memNickname}, 
+    MEM_NAME = #{memName}, 
+    MEM_TEL = #{memTel}, 
+    MEM_EMAIL = #{memEmail}, 
+    MEM_BIRTHDAY = #{memBirthday}, 
+    MEM_GENDER = #{memGender}, 
+    MEM_ADDR = #{memAddr}, 
+    MEM_SMS_FL = #{memSmsFl}
+    WHERE MEM_NO = #{memNo}
+  </update>
+
+  <!-- 프로필 이미지 수정 -->
+  <update id="updateProfileImg">
+    UPDATE MEMBER
+    SET MEM_PROFILE_PATH = #{webPath}
+    WHERE MEM_NO = #{memNo}
+  </update>
+
+</mapper>

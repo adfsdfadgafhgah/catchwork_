@@ -126,6 +126,7 @@ const memberFormHandler = (initialValues) => {
 
   return {
     formData,
+    setFormData,
     handleChange,
     setField,
     validity,
