@@ -75,7 +75,7 @@ public class MemberServiceImpl implements MemberService {
 		} catch (Exception e) {
 			// 저장 중 오류 발생 시 예외 던지기
 			System.out.println(e);
-			throw new RuntimeException("회원 정보 저장 중 오류가 발생했습니다.", e);
+			throw new RuntimeException("회원 정보 저장 중 오류 발생", e);
 		}
 	}
 

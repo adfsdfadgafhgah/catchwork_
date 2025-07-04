@@ -36,7 +36,7 @@ export default function CorpRecruitListPage() {
   const fetchRecruitList = async () => {
     try {
       setIsLoading(true);
-      const resp = await axiosApi.get("/corprecruit/list", {
+      const resp = await axiosApi.get("/corpRecruit/list", {
         params: {
           sort: sortOrder,
           status: statusFilter,
@@ -47,7 +47,21 @@ export default function CorpRecruitListPage() {
       });
 
       if (resp.status === 200) {
-        setRecruits(resp.data);
+        const list = resp.data;
+
+        if (statusFilter === "closed") {
+          const now = new Date();
+          const filtered = list.filter((recruit) => {
+            const endDate = new Date(recruit.recruitEndDate);
+            return (
+              recruit.recruitStatus === 3 ||
+              (recruit.recruitStatus === 0 && endDate < now)
+            );
+          });
+          setRecruits(filtered);
+        } else {
+          setRecruits(list);
+        }
       }
     } catch (err) {
       console.error("채용공고 목록 조회 실패:", err);
@@ -85,7 +99,7 @@ export default function CorpRecruitListPage() {
       navigate("/signin");
       return;
     }
-    navigate("/corprecruit/write");
+    navigate("/corpRecruit/write");
   };
 
   if (isLoading) {

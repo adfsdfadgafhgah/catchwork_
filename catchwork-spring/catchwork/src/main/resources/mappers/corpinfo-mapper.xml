@@ -1,51 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.demo.corp.company.model.mapper.CorpInfoMapper">
+<mapper
+	namespace="com.example.demo.corp.company.model.mapper.CorpInfoMapper">
 
- <!-- memNo로 기업 상세 조회 -->
-  <select id="selectCorpByMemNo" resultType="com.example.demo.corp.company.model.dto.CorpInfo">
-    SELECT 
-      ci.CORP_NO,
-      ci.CORP_REG_NO,
-      ci.CORP_TYPE,
-      ci.CORP_NAME,
-      ci.CORP_LOGO,
-      ci.CORP_CEO_NAME,
-      ci.CORP_ADDR,
-      TO_CHAR(ci.CORP_OPEN_DATE, 'YYYY-MM-DD') AS corp_open_date,
-      ci.CORP_HOME_LINK,
-      ci.CORP_BM,
-      ci.CORP_DETAIL,
-      ci.CORP_BENEFIT,
-      ci.CORP_BENEFIT_DETAIL,
-      ci.CORP_BAN_FL,
-      ci.CORP_BAN_DATE,
-      cm.MEM_NO
-    FROM 
-      CORP_INFO ci
-    JOIN 
-      CORP_MEM cm ON ci.CORP_NO = cm.CORP_NO
-    WHERE 
-      cm.MEM_NO = #{memNo}
-  </select>
-  
-  <!-- 기업 정보 수정 -->
-  <update id="updateCorpInfo" parameterType="com.example.demo.corp.company.model.dto.CorpInfo">
-  UPDATE CORP_INFO
-        SET
-            CORP_NAME = #{corpName},
-            CORP_TYPE = #{corpType},
-            CORP_CEO_NAME = #{corpCeoName},
-            CORP_ADDR = #{corpAddr},
-            CORP_OPEN_DATE = #{corpOpenDate},
-            CORP_HOME_LINK = #{corpHomeLink},
-            CORP_BM = #{corpBm},
-            CORP_DETAIL = #{corpDetail},
-            CORP_BENEFIT = #{corpBenefit},
-            CORP_BENEFIT_DETAIL = #{corpBenefitDetail}
-        WHERE CORP_NO = #{corpNo}
-</update>
-  
+	<!-- memNo로 기업 상세 조회 -->
+	<select id="selectCorpByMemNo"
+		resultType="com.example.demo.corp.company.model.dto.CorpInfo">
+		SELECT
+		ci.CORP_NO,
+		ci.CORP_REG_NO,
+		ci.CORP_TYPE,
+		ci.CORP_NAME,
+		ci.CORP_LOGO,
+		ci.CORP_CEO_NAME,
+		ci.CORP_ADDR,
+		TO_CHAR(ci.CORP_OPEN_DATE, 'YYYY-MM-DD') AS corp_open_date,
+		ci.CORP_HOME_LINK,
+		ci.CORP_BM,
+		ci.CORP_DETAIL,
+		ci.CORP_BENEFIT,
+		ci.CORP_BENEFIT_DETAIL,
+		ci.CORP_BAN_FL,
+		ci.CORP_BAN_DATE,
+		cm.MEM_NO
+		FROM
+		CORP_INFO ci
+		JOIN
+		CORP_MEM cm ON ci.CORP_NO = cm.CORP_NO
+		WHERE
+		cm.MEM_NO = #{memNo}
+	</select>
+
+	<!-- 기업 정보 수정 -->
+	<update id="updateCorpInfo"
+		parameterType="com.example.demo.corp.company.model.dto.CorpInfo">
+		UPDATE CORP_INFO
+		SET
+		CORP_NAME = #{corpName},
+		CORP_TYPE = #{corpType},
+		CORP_CEO_NAME = #{corpCeoName},
+		CORP_ADDR = #{corpAddr},
+		CORP_OPEN_DATE = #{corpOpenDate},
+		CORP_HOME_LINK = #{corpHomeLink},
+		CORP_BM = #{corpBm},
+		CORP_DETAIL = #{corpDetail},
+		CORP_BENEFIT = #{corpBenefit},
+		CORP_BENEFIT_DETAIL = #{corpBenefitDetail}
+		WHERE CORP_NO = #{corpNo}
+	</update>
 
 </mapper>
