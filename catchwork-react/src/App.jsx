@@ -14,6 +14,7 @@ import MainPage from "./pages/major/MainPage";
 import SignInPage from "./pages/member/SignInPage";
 import SignUpPage from "./pages/member/SignUpPage";
 import CorpRegisterPage from "./pages/member/CorpRegisterPage";
+import CeoSignUpPage from "./pages/member/CeoSignUpPage";
 
 // Id,PW 찾기
 import FindIdPage from "./pages/member/FindIdPage";
@@ -115,7 +116,8 @@ const router = createBrowserRouter([
       // 로그인/회원가입
       { path: "signin", element: <SignInPage /> },
       { path: "signup", element: <SignUpPage /> },
-      { path: "CorpRegisterPage", element: <CorpRegisterPage /> },
+      { path: "corpregister", element: <CorpRegisterPage /> },
+      { path: "ceosignup", element: <CeoSignUpPage /> },
       { path: "auth", element: <AuthTest /> },
 
       // Id,PW 찾기
