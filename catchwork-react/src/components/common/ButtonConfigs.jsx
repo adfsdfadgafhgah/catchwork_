@@ -73,4 +73,63 @@ export const FLOAT_BUTTON_PRESETS = {
       className: "float-btn-report",
     },
   ],
+
+  // - 이력서 페이지
+  cvView: (onUpdate, onDelete) => [
+    {
+      label: "수정하기",
+      icon: "fa-regular fa-pen-to-square",
+      onClick: onUpdate,
+      className: "float-btn-cv-view float-btn-cv-update",
+    },
+    {
+      label: "삭제하기",
+      icon: "fa-regular fa-trash-can",
+      onClick: onDelete,
+      className: "float-btn-cv-view float-btn-cv-delete",
+    },
+  ],
+  cvUpdate: (onUpdate, onCancel) => [
+    {
+      label: "수정 완료",
+      icon: "fa-regular fa-circle-check",
+      onClick: onUpdate,
+      className: "float-btn-cv-update float-btn-cv-submit",
+    },
+    {
+      label: "미리보기",
+      icon: "fa-solid fa-eye",
+      onClick: onCancel,
+      className: "float-btn-cv-update float-btn-cv-cancel",
+    },
+  ],
+  cvAdd: (onAdd, onCancel) => [
+    {
+      label: "작성 완료",
+      icon: "fa-regular fa-circle-check",
+      onClick: onAdd,
+      className: "float-btn-cv-add float-btn-cv-submit",
+    },
+    {
+      label: "취소하기",
+      icon: "fa-solid fa-xmark",
+      onClick: onCancel,
+      className: "float-btn-cv-add float-btn-cv-cancel",
+    },
+  ],
+  cvSubmit: (onSubmit, onCancel) => [
+    {
+      label: "제출하기",
+      icon: "fa-regular fa-paper-plane",
+      onClick: onSubmit,
+      className: "float-btn-cv-submit float-btn-cv-submit-btn",
+    },
+    {
+      label: "취소하기",
+      icon: "fa-solid fa-xmark",
+      onClick: onCancel,
+      className: "float-btn-cv-submit float-btn-cv-cancel",
+    },
+  ],
+  // 이력서 페이지 -
 };
