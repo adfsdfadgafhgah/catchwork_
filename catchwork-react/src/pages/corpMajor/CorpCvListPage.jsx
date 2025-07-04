@@ -2,36 +2,35 @@ import { useState, useEffect } from "react";
 import SectionHeader from "../../components/common/SectionHeader";
 import Pagination from "../../components/common/Pagination";
 import { axiosApi } from "../../api/axiosAPI";
-import "./CorpCvListPage.css";
-// 수정 후 ✅
-import { getCareerRange } from "../../utils/getCareerRange";
+import "./CorpCVListPage.css";
+import { getCareerRange } from "../../utils/getCareerRange"; //hook으로 옮기기
 
-const CorpCvListPage = () => {
-  const [cvList, setCvList] = useState([]);
+const CorpCVListPage = () => {
+  const [cvList, setCVList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
   const [selectedEdu, setSelectedEdu] = useState("");
   const [selectedExp, setSelectedExp] = useState("");
-  const [selectedCvNos, setSelectedCvNos] = useState([]);
+  const [selectedCVNos, setSelectedCVNos] = useState([]);
   const [showCheckbox, setShowCheckbox] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; //한페이지에 보여지는 이력서 갯수
 
   useEffect(() => {
-    fetchCvList();
+    fetchCVList(); //처음 페이지 진입시 전체 목록 호출
   }, []);
 
-  const fetchCvList = async () => {
+  const fetchCVList = async () => {
     try {
       const res = await axiosApi.get("/corpcv/list");
       const formatted = res.data.map((cv) => ({
         ...cv,
-        isDownloaded: cv.recruitCvCheckFl === "Y",
-        date: cv.recruitCvDate || "",
+        isDownloaded: cv.recruitCVCheckFl === "Y",
+        date: cv.recruitCVDate || "",
       }));
-      setCvList(formatted);
+      setCVList(formatted);
       setFilteredList(formatted);
     } catch (err) {
-      console.error("이력서 목록 불러오기 실패", err);
+      console.error("이력서 전체 목록 불러오기 실패", err);
     }
   };
 
@@ -40,30 +39,36 @@ const CorpCvListPage = () => {
       const { careerMin, careerMax } = getCareerRange(selectedExp);
 
       const params = {};
-      if (selectedEdu !== "") params.edu = selectedEdu;
+      // 학력 필터는 선택된 경우만 추가
+      if (selectedEdu !== "") {
+        params.recruitCVEdu = selectedEdu;
+      }
+
       if (careerMin !== null && careerMax !== null) {
         params.careerMin = careerMin;
         params.careerMax = careerMax;
       }
 
       const res = await axiosApi.get("/corpcv/filter", { params });
+      const rawList = Array.isArray(res.data) ? res.data : []; // ✅ 핵심
       const formatted = res.data.map((cv) => ({
         ...cv,
-        isDownloaded: cv.recruitCvCheckFl === "Y",
-        date: cv.recruitCvDate || "",
+        isDownloaded: cv.recruitCVCheckFl === "Y",
+        date: cv.recruitCVDate || "",
       }));
-      setCvList(formatted);
+      setCVList(formatted);
       setFilteredList(formatted);
       setCurrentPage(1);
-      setSelectedCvNos([]);
+      setSelectedCVNos([]);
     } catch (err) {
       console.error("필터링된 이력서 불러오기 실패", err);
-      alert("이력서 목록 불러오기에 실패했습니다.");
+      setCVList([]); // 실패 시도라도 초기화
+      alert("필터링 된 이력서 목록 불러오기에 실패했습니다.");
     }
   };
 
   const handleCheckboxChange = (cvNo) => {
-    setSelectedCvNos((prev) =>
+    setSelectedCVNos((prev) =>
       prev.includes(cvNo) ? prev.filter((no) => no !== cvNo) : [...prev, cvNo]
     );
   };
@@ -82,14 +87,14 @@ const CorpCvListPage = () => {
       a.remove();
       window.URL.revokeObjectURL(url);
 
-      setCvList((prevList) =>
+      setCVList((prevList) =>
         prevList.map((cv) =>
-          cv.recruitCvNo === cvNo ? { ...cv, isDownloaded: true } : cv
+          cv.recruitCVNo === cvNo ? { ...cv, isDownloaded: true } : cv
         )
       );
       setFilteredList((prevList) =>
         prevList.map((cv) =>
-          cv.recruitCvNo === cvNo ? { ...cv, isDownloaded: true } : cv
+          cv.recruitCVNo === cvNo ? { ...cv, isDownloaded: true } : cv
         )
       );
     } catch (err) {
@@ -99,31 +104,31 @@ const CorpCvListPage = () => {
   };
 
   const handleBulkDownload = () => {
-    if (selectedCvNos.length === 0) {
+    if (selectedCVNos.length === 0) {
       alert("선택된 이력서가 없습니다.");
       return;
     }
-    selectedCvNos.forEach((cvNo) => {
-      const cv = filteredList.find((item) => item.recruitCvNo === cvNo);
+    selectedCVNos.forEach((cvNo) => {
+      const cv = filteredList.find((item) => item.recruitCVNo === cvNo);
       if (cv) {
-        handleDownload(cv.recruitCvNo, cv.recruitCvPdfTitle);
+        handleDownload(cv.recruitCVNo, cv.recruitCVPdfTitle);
       }
     });
   };
 
   const handleCancel = () => {
-    setSelectedCvNos([]);
+    setSelectedCVNos([]);
   };
 
   const isAllSelected =
-    selectedCvNos.length > 0 && selectedCvNos.length === currentItems.length;
+    selectedCVNos.length > 0 && selectedCVNos.length === currentItems.length;
 
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      const allNos = currentItems.map((cv) => cv.recruitCvNo);
-      setSelectedCvNos(allNos);
+      const allNos = currentItems.map((cv) => cv.recruitCVNo);
+      setSelectedCVNos(allNos);
     } else {
-      setSelectedCvNos([]);
+      setSelectedCVNos([]);
     }
   };
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -218,25 +223,25 @@ const CorpCvListPage = () => {
 
           <tbody>
             {currentItems.map((cv) => (
-              <tr key={cv.recruitCvNo}>
+              <tr key={cv.recruitCVNo}>
                 <td style={{ width: "40px", textAlign: "center" }}>
                   {showCheckbox && (
                     <input
                       type="checkbox"
-                      value={cv.recruitCvNo}
-                      checked={selectedCvNos.includes(cv.recruitCvNo)}
-                      onChange={() => handleCheckboxChange(cv.recruitCvNo)}
+                      value={cv.recruitCVNo}
+                      checked={selectedCVNos.includes(cv.recruitCVNo)}
+                      onChange={() => handleCheckboxChange(cv.recruitCVNo)}
                     />
                   )}
                 </td>
                 <td>{cv.recruitTitle}</td>
-                <td>{cv.recruitCvPdfTitle}</td>
+                <td>{cv.recruitCVPdfTitle}</td>
                 <td>{cv.date}</td>
                 <td>
                   <button
                     className="btn-download"
                     onClick={() =>
-                      handleDownload(cv.recruitCvNo, cv.recruitCvPdfTitle)
+                      handleDownload(cv.recruitCVNo, cv.recruitCVPdfTitle)
                     }
                   >
                     다운로드
@@ -256,7 +261,7 @@ const CorpCvListPage = () => {
           totalPages={totalPages}
           onPageChange={(page) => {
             setCurrentPage(page);
-            setSelectedCvNos([]); //체크박스 다시 빈상태로
+            setSelectedCVNos([]); //체크박스 다시 빈상태로
           }}
         />
       )}
@@ -276,4 +281,4 @@ const CorpCvListPage = () => {
   );
 };
 
-export default CorpCvListPage;
+export default CorpCVListPage;

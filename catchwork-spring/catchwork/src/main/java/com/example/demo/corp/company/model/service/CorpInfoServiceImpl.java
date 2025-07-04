@@ -15,14 +15,17 @@ public class CorpInfoServiceImpl implements CorpInfoService{
 	@Autowired
 	private CorpInfoMapper mapper;
 		
-	/**
-	 * memNo에 따라서 기업 정보가 다르니 다르게 보여져야 함
+	/**memNo에 따라서 기업 정보가 다르니 다르게 보여져야 함
+	 * @author JIN
 	 */
 	@Override
 	public CorpInfo selectCorpDetailByMemNo(String memNo) {
 	    return mapper.selectCorpByMemNo(memNo);
 	}
 
+	/** 기업 정보 수정
+	 *@author JIN
+	 */
 	@Override
     public int updateCorpInfo(CorpInfo corpInfo) {
         return mapper.updateCorpInfo(corpInfo);

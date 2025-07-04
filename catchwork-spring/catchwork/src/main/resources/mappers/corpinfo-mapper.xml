@@ -39,6 +39,7 @@
 		SET
 		CORP_NAME = #{corpName},
 		CORP_TYPE = #{corpType},
+		CORP_REG_NO =#{corpRegNo},
 		CORP_CEO_NAME = #{corpCeoName},
 		CORP_ADDR = #{corpAddr},
 		CORP_OPEN_DATE = #{corpOpenDate},

@@ -16,6 +16,7 @@ const EditCompanyPage = () => {
   const [corpNo, setCorpNo] = useState("");
   const [corpName, setCorpName] = useState("");
   const [corpType, setCorpType] = useState("");
+  const [corpRegNo, setCorpRegNo] = useState("");
   const [corpCeoName, setCorpCeoName] = useState("");
   const [corpAddr, setCorpAddr] = useState("");
   const [corpOpenDate, setCorpOpenDate] = useState("");
@@ -30,7 +31,6 @@ const EditCompanyPage = () => {
   }, []);
 
   //기업 정보
-  // 기업 정보 불러오기
   useEffect(() => {
     const fetchCompany = async () => {
       if (!loginMember?.memNo) return;
@@ -57,6 +57,7 @@ const EditCompanyPage = () => {
       setCorpNo(company.corpNo);
       setCorpName(company.corpName || "");
       setCorpType(company.corpType || "");
+      setCorpRegNo(company.corpRegNo || "");
       setCorpCeoName(company.corpCeoName || "");
       setCorpAddr(company.corpAddr || "");
       setCorpOpenDate(company.corpOpenDate || "");
@@ -96,9 +97,10 @@ const EditCompanyPage = () => {
   const handleEdit = async () => {
     console.log("=== 수정된 기업정보 ===");
     console.log({
+      corpNo,
       corpName,
       corpType,
-      corpNo,
+      corpRegNo,
       corpCeoName,
       corpAddr,
       corpOpenDate,
@@ -113,6 +115,7 @@ const EditCompanyPage = () => {
         corpNo,
         corpName,
         corpType,
+        corpRegNo,
         corpCeoName,
         corpAddr,
         corpOpenDate,
@@ -145,34 +148,60 @@ const EditCompanyPage = () => {
             <input
               type="text"
               className="company-name-input"
-              defaultValue={company.corpName}
+              value={corpName}
+              onChange={(e) => setCorpName(e.target.value)}
             />
           </div>
 
           <div className="company-basic-info">
             <div className="info-row">
               <div className="info-label">기업 형태</div>
-              <input type="text" defaultValue={company.corpType} />
+              <input
+                type="text"
+                value={corpType}
+                onChange={(e) => setCorpType(e.target.value)}
+              />
             </div>
             <div className="info-row">
               <div className="info-label">사업자 번호</div>
-              <input type="text" defaultValue={company.corpRegNo} />
+              <input
+                type="text"
+                value={corpRegNo}
+                onChange={(e) => setCorpRegNo(e.target.value)}
+              />
             </div>
+
             <div className="info-row">
               <div className="info-label">대표명</div>
-              <input type="text" defaultValue={company.corpCeoName} />
+              <input
+                type="text"
+                value={corpCeoName}
+                onChange={(e) => setCorpCeoName(e.target.value)}
+              />
             </div>
             <div className="info-row">
               <div className="info-label">주소</div>
-              <input type="text" defaultValue={company.corpAddr} />
+              <input
+                type="text"
+                value={corpAddr}
+                onChange={(e) => setCorpAddr(e.target.value)}
+              />
             </div>
             <div className="info-row">
               <div className="info-label">개업일자</div>
-              <input type="date" defaultValue={company.corpOpenDate} />
+              <input
+                type="date"
+                value={corpOpenDate}
+                onChange={(e) => setCorpOpenDate(e.target.value)}
+              />
             </div>
             <div className="info-row">
               <div className="info-label">홈페이지</div>
-              <input type="text" defaultValue={company.corpHomeLink} />
+              <input
+                type="text"
+                value={corpHomeLink}
+                onChange={(e) => setCorpHomeLink(e.target.value)}
+              />
             </div>
           </div>
         </div>
@@ -180,18 +209,30 @@ const EditCompanyPage = () => {
 
       <div className="company-section">
         <h3>주요사업</h3>
-        <textarea defaultValue={company.corpBm}></textarea>
+        <textarea
+          value={corpBm}
+          onChange={(e) => setCorpBm(e.target.value)}
+        ></textarea>
       </div>
 
       <div className="company-section">
         <h3>기업상세</h3>
-        <textarea defaultValue={company.corpDetail}></textarea>
+        <textarea
+          value={corpDetail}
+          onChange={(e) => setCorpDetail(e.target.value)}
+        ></textarea>
       </div>
 
       <div className="company-section">
         <h3>복리후생</h3>
-        <textarea defaultValue={company.corpBenefit}></textarea>
-        <textarea defaultValue={company.corpBenefitDetail}></textarea>
+        <textarea
+          value={corpBenefit}
+          onChange={(e) => setCorpBenefit(e.target.value)}
+        ></textarea>
+        <textarea
+          value={corpBenefitDetail}
+          onChange={(e) => setCorpBenefitDetail(e.target.value)}
+        ></textarea>
       </div>
       <FloatButton
         buttons={FLOAT_BUTTON_PRESETS.editAndCancel(handleEdit, handleCancel)}

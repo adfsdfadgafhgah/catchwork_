@@ -17,6 +17,11 @@ public interface CorpInfoMapper {
 		 */
 		CorpInfo selectCorpByMemNo(@Param("memNo") String memNo);
 
+		/** 기업 정보 수정
+		 * @author JIN
+		 * @param corpInfo
+		 * @return
+		 */
 		int updateCorpInfo(CorpInfo corpInfo);
 	    
 }
