@@ -82,6 +82,33 @@
   margin-right: 4px;
 }
 
+/* 마감여부 뱃지 */
+.recruitStatus {
+  display: inline-block;
+  white-space: nowrap;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 12px;
+  border: 1px solid;
+  width: fit-content; /* ✅ 글자 너비만큼만 차지하게 */
+  max-width: 100%; /* ✅ 혹시 너무 커질 경우 대비 */
+  box-sizing: border-box; /* ✅ padding 포함 계산 */
+  line-height: 1.2;
+}
+
+.open {
+  color: var(--main-color);
+  border: 1px solid var(--main-color);
+  background-color: #fff;
+}
+
+.closed {
+  color: #f44336;
+  border: 1px solid #f44336;
+  background-color: #fff;
+}
+
 /* 📱 반응형 스타일 */
 @media screen and (max-width: 768px) {
   .card {

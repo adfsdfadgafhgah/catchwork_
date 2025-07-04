@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("corprecruit")
+@RequestMapping("corpRecruit")
 @RequiredArgsConstructor
 public class RecruitController {
 	
@@ -170,6 +170,22 @@ public class RecruitController {
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류 발생");
+	    }
+	}
+	
+	/** 채용공고 조회수 증가
+	 * @author BAEBAE
+	 * @param recruitNo
+	 * @return
+	 */
+	@GetMapping("recruitReadCount/{recruitNo}")
+	public ResponseEntity<?> recruitReadCount(@PathVariable("recruitNo") int recruitNo) {
+	    try {
+	        recruitService.recruitReadCount(recruitNo);
+	        return ResponseEntity.ok("조회수 증가 성공");
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("조회수 증가 실패");
 	    }
 	}
 

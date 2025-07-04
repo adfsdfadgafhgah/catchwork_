@@ -22,6 +22,7 @@ export default function BoardDetailPage() {
   const navigate = useNavigate(); // ← 페이지 이동을 위해 추가
   const [showReportModal, setShowReportModal] = useState(false);
   const [likeLoading, setLikeLoading] = useState(false);
+  const isWriter = loginMember?.memNo && loginMember.memNo === board?.memNo;
 
   // loginMember 가져오기
   useEffect(() => {
@@ -51,6 +52,27 @@ export default function BoardDetailPage() {
 
     fetchDetail();
   }, [boardNo, loginMember?.memNo]);
+
+  // 게시글 조회수 증가
+  useEffect(() => {
+    const key = `viewed_${boardNo}`;
+    const lastViewed = localStorage.getItem(key);
+    const now = new Date();
+
+    if (
+      !lastViewed ||
+      new Date(lastViewed).toDateString() !== now.toDateString()
+    ) {
+      localStorage.setItem(key, now.toISOString()); // react18버전 때문에 조회수 2증가 방지
+      axiosApi
+        .get(`/board/readCount/${boardNo}`)
+        .then(() => {
+          localStorage.setItem(key, now.toISOString());
+          console.log("📈 조회수 증가");
+        })
+        .catch((err) => console.error("조회수 증가 실패:", err));
+    }
+  }, [boardNo]);
 
   // 수정 페이지로!
   const handleEdit = () => {
@@ -126,11 +148,12 @@ export default function BoardDetailPage() {
 
   if (!board) return <h2>Loading...</h2>;
 
-  console.log("🧪 board:", board);
-  console.log("🧪 loginMember:", loginMember);
-  console.log("🧪 board.member.memNo:", board?.member?.memNo);
-  console.log("🧪 loginMember.memNo:", loginMember?.memNo);
-  console.log("🧪 작성자 여부:", loginMember?.memNo === board?.member?.memNo);
+  // 오류 날 시 찍을 콘솔
+  // console.log("🧪 board:", board);
+  // console.log("🧪 loginMember:", loginMember);
+  // console.log("🧪 board.member.memNo:", board?.memNo);
+  // console.log("🧪 loginMember.memNo:", loginMember?.memNo);
+  // console.log("🧪 작성자 여부:", loginMember?.memNo === board?.memNo);
 
   return (
     <>
@@ -141,18 +164,17 @@ export default function BoardDetailPage() {
         {/* 제목 + 수정/삭제 */}
         <div className={BoardCss.headerRow}>
           <h1 className={BoardCss.title}>{board.boardTitle}</h1>
-          {loginMember?.memNo &&
-            board?.member?.memNo &&
-            loginMember.memNo === board.member.memNo && (
-              <div className={BoardCss.actionButtons}>
-                <button className={BoardCss.actionBtn} onClick={handleEdit}>
-                  <i className="fa-regular fa-pen-to-square"></i> 수정하기
-                </button>
-                <button className={BoardCss.actionBtn} onClick={handleDelete}>
-                  <i className="fa-regular fa-trash-can"></i> 삭제하기
-                </button>
-              </div>
-            )}
+
+          {isWriter && (
+            <div className={BoardCss.actionButtons}>
+              <button className={BoardCss.actionBtn} onClick={handleEdit}>
+                <i className="fa-regular fa-pen-to-square"></i> 수정하기
+              </button>
+              <button className={BoardCss.actionBtn} onClick={handleDelete}>
+                <i className="fa-regular fa-trash-can"></i> 삭제하기
+              </button>
+            </div>
+          )}
         </div>
 
         {/* 작성자 정보 + 메타 정보 */}
@@ -160,13 +182,13 @@ export default function BoardDetailPage() {
           <div className={BoardCss.writerInfo}>
             <img
               src={
-                board?.member?.memProfilePath
+                board?.memProfilePath
                   ? `http://localhost:8080/${board.member.memProfilePath}`
                   : "/default-profile.png"
               }
               alt="프로필"
             />
-            <span>{board?.member?.memNickname}</span>
+            <span>{board?.memNickname}</span>
             <span>{formatTimeAgo(board.boardWriteDate)}</span>
           </div>
           <div className={BoardCss.metaInfo}>
@@ -184,7 +206,7 @@ export default function BoardDetailPage() {
             />{" "}
             {likeCount} &nbsp;&nbsp;
             {/* 신고하기 버튼 조건 렌더링 */}
-            {loginMember?.memNo !== board?.member?.memNo && (
+            {!isWriter && (
               <button
                 className={BoardCss.actionBtn}
                 onClick={handleReportClick}

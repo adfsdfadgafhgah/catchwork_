@@ -13,7 +13,7 @@ const HeaderNav = () => {
         {!isCorp && (
           <>
             <NavLink
-              to="/recruit"
+              to="/MemberRecruit"
               className={({ isActive }) => (isActive ? "active" : "")}
             >
               채용공고

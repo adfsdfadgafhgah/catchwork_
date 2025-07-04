@@ -20,10 +20,6 @@ function IssueBillingKeyPage() {
     }
   }, [customerKey, authKey, productId, navigate]);
 
-  if (!customerKey || !authKey || !productId || isLoading) {
-    return null;
-  }
-
   useEffect(() => {
     // @docs https://docs.tosspayments.com/reference#authkey
     // 빌링키 발급

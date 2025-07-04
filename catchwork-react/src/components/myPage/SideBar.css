@@ -81,6 +81,7 @@
   background: none;
   cursor: pointer;
   color: #6b7280;
+  text-decoration: none;
 }
 
 .sub-nav-item:hover {
