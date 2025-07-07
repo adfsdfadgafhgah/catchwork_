@@ -1,13 +1,15 @@
 package com.example.demo.member.board.controller;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,19 +25,23 @@ import com.example.demo.member.board.model.dto.Board;
 import com.example.demo.member.board.model.service.BoardService;
 import com.example.demo.member.board.model.service.ImageUploadService;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-@CrossOrigin(origins = "http://localhost:5173")
+// @CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("board")
-@RequiredArgsConstructor
+// @RequiredArgsConstructor
 public class BoardController {
 
-    private final BoardService boardService;
-    private final ImageUploadService imageUploadService;
+    // private final BoardS`ervice boardService;
+    // private final ImageUploadService imageUploadService;
+
+    @Autowired
+    private BoardService boardService;
+    @Autowired
+    private ImageUploadService imageUploadService;
 
     /**
      * 게시글 목록 조회 (정렬 + 검색)
@@ -130,9 +136,18 @@ public class BoardController {
      * @return
      */
     @PostMapping("write")
-    public ResponseEntity<?> writeBoard(@RequestBody Board board) {
+    public ResponseEntity<?> writeBoard(@RequestParam("boardTitle") String boardTitle,
+                                        @RequestParam("boardContent") String boardContent,
+                                        @RequestParam("memNo") String memNo,
+                                        @RequestParam(value = "thumbnailFile", required = false) MultipartFile thumbnailFile) { 
+
+        Board board = new Board();
+        board.setBoardTitle(boardTitle);
+        board.setBoardContent(boardContent);
+        board.setMemNo(memNo);
+
         try {
-            int result = boardService.writeBoard(board);
+            int result = boardService.writeBoard(board, thumbnailFile);
             if (result > 0) {
                 return ResponseEntity.ok().body(Map.of(
                     "success", true,
@@ -177,20 +192,44 @@ public class BoardController {
         }
     }
     
-    
-//    /** 게시글 이미지 업로드
-//     * @author BAEBAE
-//     * @param imageFile
-//     * @return
-//     */
-//    @PostMapping("image")
-//    public ResponseEntity<?> uploadBoardImage(@RequestParam("image") MultipartFile imageFile) {
-//    	try {
-//    		String url = imageUploadService.upload(imageFile);
-//    		return ResponseEntity.ok(Map.of("url", url));
-//    	} catch (Exception e) {
-//    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("이미지 업로드 실패");
-//    	}
-//    }
+    /* 이미지 처리 컨트롤러 */
+
+    /**
+     * 에디터 이미지 업로드
+     * @param image 파일 객체
+     * @return 업로드된 파일명
+     */
+    @PostMapping("image-upload")
+    public String uploadEditorImage(@RequestParam("image") MultipartFile image) {
+        if (image.isEmpty()) {
+            return "";
+        }
+
+        try {
+            String filename = imageUploadService.uploadEditorImage(image);
+            return filename;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    /**
+     * 디스크에 업로드된 파일을 byte[]로 반환
+     * @param filename 디스크에 업로드된 파일명
+     * @return image byte array
+     */
+    @GetMapping(value = "image-print", produces = { MediaType.IMAGE_GIF_VALUE, MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE })
+    public byte[] printEditorImage(@RequestParam(name = "filename") String filename) {
+//    	System.out.println("메서드 매핑");
+        byte[] imgBytes;
+		try {
+			imgBytes = imageUploadService.printEditorImage(filename);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+        return imgBytes;
+    }
 }
 	

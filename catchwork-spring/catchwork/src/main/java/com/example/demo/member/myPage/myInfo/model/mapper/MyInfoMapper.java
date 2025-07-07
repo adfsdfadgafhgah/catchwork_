@@ -14,5 +14,8 @@ public interface MyInfoMapper {
 
   // 프로필 이미지 수정
   int updateProfileImg(Map<String, Object> map);
+  
+  // 회원 조회
+  Member selectMember(String memNo);
 
 }

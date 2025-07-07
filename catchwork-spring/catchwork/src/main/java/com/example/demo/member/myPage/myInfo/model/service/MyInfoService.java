@@ -10,4 +10,7 @@ public interface MyInfoService {
 
   // 프로필 이미지 수정
   int updateProfileImg(MultipartFile profileImg, String memNo);
+
+  // 비밀번호 확인
+  int verifyPassword(Member loginMember);
 }

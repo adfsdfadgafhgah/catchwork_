@@ -4,7 +4,7 @@
 <mapper	namespace="com.example.demo.member.myPage.myInfo.model.mapper.MyInfoMapper">
 
   <!-- 회원 정보 수정 -->
-  <update id="updateMemberInfo" parameterType="com.example.demo.auth.model.dto.Member">
+  <update id="updateMemberInfo">
     UPDATE MEMBER
     SET MEM_NICKNAME = #{memNickname}, 
     MEM_NAME = #{memName}, 
@@ -24,4 +24,10 @@
     WHERE MEM_NO = #{memNo}
   </update>
 
+  <!-- 회원 조회 -->
+  <select id="selectMember">
+    SELECT MEM_PW
+    FROM MEMBER 
+    WHERE MEM_NO = #{memNo}
+  </select>
 </mapper>

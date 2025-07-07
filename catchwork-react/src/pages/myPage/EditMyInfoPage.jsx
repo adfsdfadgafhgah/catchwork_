@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
-import memberFormHandler from "../../hooks/memberFormHandler";
+import useSignUpFormHandler from "../../hooks/useSignUpFormHandler";
 import "./EditMyInfoPage.css";
 import { axiosApi } from "../../api/axiosAPI";
+import ConfirmPwModal from "../../components/myPage/ConfirmPwModal";
+import defaultImg from "../../assets/icon.png";
 
 const EditMyInfoPage = () => {
   const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
@@ -12,6 +14,32 @@ const EditMyInfoPage = () => {
   const [imgFile, setImgFile] = useState(null);
   const fileInputRef = useRef(null);
 
+  // 비밀번호 확인 모달 상태 관리
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    type: null,
+    loading: false,
+  });
+
+  // 모달 열기
+  const openModal = (type) => {
+    setModalState({
+      isOpen: true,
+      type,
+      loading: false,
+    });
+  };
+
+  // 모달 닫기
+  const closeModal = () => {
+    if (modalState.loading) return; // 로딩 중에는 닫기 방지
+    setModalState({
+      isOpen: false,
+      type: null,
+      loading: false,
+    });
+  };
+
   // 날짜 형식 변환
   function dateOnly(date) {
     if (!date) return "";
@@ -20,7 +48,24 @@ const EditMyInfoPage = () => {
 
   // 주소 파싱: '주소^^^상세주소' 형태 분리
   const [addr, detailAddr] = (loginMember?.memAddr || "").split("^^^");
-  // 폼 상태 및 유효성 관리
+
+  // config 정의
+  const config = {
+    fields: [
+      "memEmail",
+      "memTel",
+      "memName",
+      "memNickname",
+      "memBirthday",
+      "memGender",
+      "memAddr",
+    ],
+    nicknameField: "memNickname",
+    telField: "memTel",
+    addrField: "memAddr",
+  };
+
+  // useSignUpFormHandler 사용
   const {
     formData,
     setFormData,
@@ -30,20 +75,20 @@ const EditMyInfoPage = () => {
     handleCheckNickname,
     triggerAddressSearch,
     validateForm,
-  } = memberFormHandler({
-    memTel: loginMember?.memTel || "",
-    memName: loginMember?.memName || "",
-    memNickname: loginMember?.memNickname || "",
-    memBirthday: dateOnly(loginMember?.memBirthday) || "",
-    memGender: loginMember?.memGender || "",
-    memAddr: addr || "",
-    detailAddress: detailAddr || "",
-    memSmsFl: loginMember?.memSmsFl || false,
-    memEmail: loginMember?.memEmail || "",
-    // 테스트용 임시 비밀번호 유효성 검사 통과 값
-    memPw: "payment1!",
-    memPwConfirm: "payment1!",
-  });
+  } = useSignUpFormHandler(
+    {
+      memEmail: loginMember?.memEmail || "",
+      memTel: loginMember?.memTel || "",
+      memName: loginMember?.memName || "",
+      memNickname: loginMember?.memNickname || "",
+      memBirthday: dateOnly(loginMember?.memBirthday) || "",
+      memGender: loginMember?.memGender || "",
+      memAddr: addr || "",
+      detailAddress: detailAddr || "",
+      memSmsFl: loginMember?.memSmsFl === "Y" ? true : false || false,
+    },
+    config
+  );
 
   // loginMember가 바뀔 때마다&&새로고침 시 formData를 동기화
   useEffect(() => {
@@ -57,23 +102,21 @@ const EditMyInfoPage = () => {
       memGender: loginMember?.memGender || "",
       memAddr: addr || "",
       detailAddress: detailAddr || "",
-      memSmsFl: loginMember?.memSmsFl || false,
+      memSmsFl: loginMember?.memSmsFl === "Y" ? true : false || false,
       memEmail: loginMember?.memEmail || "",
-      // 테스트용 임시 비밀번호 유효성 검사 통과 값
-      memPw: "payment1!",
-      memPwConfirm: "payment1!",
     }));
   }, [loginMember]);
 
+  // 누락 검사
   const isValid =
+    formData.memEmail &&
     formData.memTel &&
     formData.memName &&
     formData.memNickname &&
     formData.memBirthday &&
     formData.memGender &&
     formData.memAddr &&
-    formData.detailAddress &&
-    formData.memEmail;
+    formData.detailAddress;
 
   // previewSrc가 바뀔 때마다 기존 URL 정리
   useEffect(() => {
@@ -94,6 +137,8 @@ const EditMyInfoPage = () => {
     }
   };
 
+  const imgRef = useRef(null);
+
   // 프로필 이미지 업로드 버튼 클릭 시
   const handleClick = () => {
     fileInputRef.current.click();
@@ -113,8 +158,9 @@ const EditMyInfoPage = () => {
 
       // 업로드 성공 시
       if (resp.status === 200) {
-        navigate("/myPage/editMyInfo");
+        navigate("/myPage/home");
       }
+      console.log("resp", resp.status);
     } catch (error) {
       console.error("프로필 이미지 업로드 실패", error);
       alert("프로필 이미지 업로드 중 오류 발생");
@@ -125,20 +171,64 @@ const EditMyInfoPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // 디버깅용
-    console.log("수정하기 버튼 클릭");
-    console.log(formData.memPw);
-    console.log(formData.memPwConfirm);
-
     // 유효성 검사
     if (!validateForm()) {
       alert("입력 정보를 확인해주세요.");
       return;
     }
 
-    // 디버깅용
-    console.log("유효성 검사 완료");
+    // 비밀번호 확인 모달 열기
+    openModal("password");
+  };
 
+  // 비밀번호 확인 API 호출
+  const verifyPassword = async (password) => {
+    try {
+      setModalState((prev) => ({ ...prev, loading: true }));
+
+      const response = await axiosApi.post("/mypage/verifyPassword", {
+        memNo: loginMember.memNo,
+        memPw: password,
+      });
+
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.error("비밀번호 확인 실패", error);
+      throw error;
+    } finally {
+      setModalState((prev) => ({ ...prev, loading: false }));
+    }
+  };
+
+  // 비밀번호 확인 후 실제 submit 로직 수행
+  const handlePasswordConfirm = async (password) => {
+    try {
+      // 비밀번호 확인 API 호출
+      const isPasswordValid = await verifyPassword(password);
+
+      if (isPasswordValid) {
+        // 비밀번호가 일치하는 경우 모달 닫기
+        closeModal();
+        // submit 로직 수행
+        console.log("submit 로직 수행");
+        await performSubmit();
+      } else {
+        alert("비밀번호가 일치하지 않습니다.");
+      }
+    } catch (error) {
+      console.error("비밀번호 확인 실패", error);
+      alert("비밀번호 확인 중 오류가 발생했습니다.");
+      // 에러 발생 시 모달 상태 초기화
+      closeModal();
+    }
+  };
+
+  // 실제 submit 로직
+  const performSubmit = async () => {
     // 주소 병합
     const addrData = formData.memAddr + "^^^" + formData.detailAddress;
 
@@ -149,20 +239,25 @@ const EditMyInfoPage = () => {
       memName: formData.memName,
       memTel: formData.memTel,
       memEmail: formData.memEmail,
-      memBirthday: formData.memBirthday,
+      memBirthday: formData.memBirthday.replaceAll("-", ""),
       memAddr: addrData,
       memGender: formData.memGender,
-      memSmsFl: formData.memSmsFl,
+      memSmsFl: formData.memSmsFl ? "Y" : "N",
     };
 
-    // 디버깅용
-    console.log(requestData);
-
     try {
+      console.log("try 실행");
+      console.log(requestData);
       const resp = await axiosApi.post("/mypage/updateMemberInfo", requestData);
-
+      console.log("resp 실행");
       if (resp.status === 200) {
-        handleFileUpload();
+        if (imgFile) {
+          console.log("imgFile 있음");
+          handleFileUpload();
+        } else {
+          console.log("imgFile 없음");
+        }
+        navigate("/myPage/home");
       }
     } catch (error) {
       console.error("회원 정보 수정 실패", error);
@@ -180,9 +275,19 @@ const EditMyInfoPage = () => {
         <div className="edit-myinfo-container">
           {/* 프로필 이미지 */}
           <div className="profile-section">
-            <div className="edit-profile-img">
-              {previewSrc ? (
-                <img src={previewSrc} alt="프로필" onClick={handleClick} />
+            <div className="edit-profile-img" onClick={handleClick}>
+              {previewSrc || loginMember?.memProfilePath ? (
+                <img
+                  ref={imgRef}
+                  src={
+                    previewSrc
+                      ? previewSrc
+                      : loginMember?.memProfilePath
+                      ? `${imgUrl}/${loginMember.memProfilePath}`
+                      : defaultImg
+                  }
+                  alt="프로필"
+                />
               ) : (
                 <i className="fas fa-user"></i>
               )}
@@ -192,27 +297,9 @@ const EditMyInfoPage = () => {
                 accept="image/*"
                 ref={fileInputRef}
                 onChange={handleFileChange}
+                style={{ display: "none" }}
               />
             </div>
-            {/* 테스트용 임시 비밀번호 유효성 검사 통과 값 */}
-            <input
-              name="memPw"
-              type="password"
-              value={formData.memPw}
-              onChange={handleChange}
-              style={{
-                borderColor: validity.memPw === false ? "red" : undefined,
-              }}
-            />
-            <input
-              name="memPwConfirm"
-              type="password"
-              value={formData.memPwConfirm}
-              onChange={handleChange}
-              style={{
-                borderColor: validity.memPw === false ? "red" : undefined,
-              }}
-            />
           </div>
 
           {/* 기본 정보 */}
@@ -263,14 +350,6 @@ const EditMyInfoPage = () => {
                   </small>
                 )}
               </div>
-              <button
-                type="button"
-                onClick={() => sendVerificationCode(formData.memTel)}
-                className="check-button"
-                disabled={!formData.memTel}
-              >
-                인증번호 발송
-              </button>
             </label>
 
             <div className="info-content">
@@ -411,10 +490,22 @@ const EditMyInfoPage = () => {
         </div>
 
         <div className="submit-button-container">
-          <button type="submit" disabled={!isValid} className="submit-button">
+          <button
+            type="submit"
+            disabled={!isValid}
+            className="submit-button"
+            onClick={handleSubmit}
+          >
             수정하기
           </button>
         </div>
+
+        <ConfirmPwModal
+          isOpen={modalState.isOpen}
+          onClose={closeModal}
+          onConfirm={handlePasswordConfirm}
+          loading={modalState.loading}
+        />
       </form>
     </div>
   );

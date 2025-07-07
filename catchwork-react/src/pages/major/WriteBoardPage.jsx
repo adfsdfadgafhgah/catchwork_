@@ -9,12 +9,13 @@ import { axiosApi } from "../../api/axiosAPI";
 import useLoginMember from "../../stores/loginMember";
 
 export default function WriteBoardPage() {
+  const baseUrl = import.meta.env.VITE_BASE_URL;
   const editorRef = useRef();
   const [title, setTitle] = useState("");
-  const [thumbnailUrl, setThumbnailUrl] = useState("");
   const navigate = useNavigate();
   const { loginMember, setLoginMember } = useLoginMember();
   const [isFormValid, setIsFormValid] = useState(false);
+  const thumbnailUploaderRef = useRef();
 
   useEffect(() => {
     if (!loginMember?.memNo) {
@@ -47,16 +48,9 @@ export default function WriteBoardPage() {
       const resp = await axiosApi.post("/board/thumbnail", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      setThumbnailUrl(resp.data.url);
-      setThumbnailFile(file);
     } catch (err) {
       alert("썸네일 업로드 실패");
     }
-  };
-
-  // 썸네일 삭제
-  const handleRemoveThumbnail = () => {
-    setThumbnailUrl("");
   };
 
   // 글 등록 버튼 클릭 시
@@ -67,13 +61,20 @@ export default function WriteBoardPage() {
     }
 
     const contentMarkdown = editorRef.current.getInstance().getMarkdown();
+    const formData = new FormData();
+    formData.append("boardTitle", title);
+    formData.append("boardContent", contentMarkdown);
+    formData.append("memNo", loginMember.memNo);
+    if (thumbnailUploaderRef.current.getImageFile()) {
+      formData.append(
+        "thumbnailFile",
+        thumbnailUploaderRef.current.getImageFile()
+      );
+    }
 
     try {
-      const resp = await axiosApi.post("/board/write", {
-        boardTitle: title,
-        boardContent: contentMarkdown,
-        boardThumbnailUrl: thumbnailUrl,
-        memNo: loginMember.memNo,
+      const resp = await axiosApi.post("/board/write", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       // 서버에서 boardNo 반환 받았다고 가정
@@ -86,6 +87,7 @@ export default function WriteBoardPage() {
     }
   };
 
+  // 취소 버튼 클릭 시
   const handleCancel = () => {
     navigate("/board"); // 또는 "/board/list" 등 너의 목록 페이지 경로에 맞게
   };
@@ -123,13 +125,28 @@ export default function WriteBoardPage() {
           hooks={{
             // 이미지 업로드 처리
             addImageBlobHook: async (blob, callback) => {
+              // 에디터에 업로드한 이미지를 FormData 형식으로 변환
               const formData = new FormData();
+              // 선택한 이미지가 blob 형식으로 전달되므로 FormData에 추가
               formData.append("image", blob);
               try {
-                const resp = await axiosApi.post("/board/image", formData, {
-                  headers: { "Content-Type": "multipart/form-data" },
-                });
-                callback(resp.data.url, "업로드된 이미지");
+                // 이미지 업로드 요청
+                const resp = await axiosApi.post(
+                  "/board/image-upload",
+                  formData,
+                  {
+                    headers: { "Content-Type": "multipart/form-data" },
+                  }
+                );
+
+                // 이미지 업로드 성공 시 이미지 파일명 반환
+                const fileName = await resp.data;
+                console.log(fileName);
+
+                // 업로드한 이미지 미리보기
+                const renderUrl = `${baseUrl}board/image-print?filename=${fileName}`;
+                console.log(renderUrl);
+                callback(renderUrl, "업로드된 이미지");
               } catch (error) {
                 console.error("이미지 업로드 실패:", error);
                 alert("이미지 업로드 중 오류가 발생했습니다.");
@@ -140,11 +157,7 @@ export default function WriteBoardPage() {
       </div>
 
       {/* 썸네일 업로더 */}
-      <ThumbnailUploader
-        thumbnailUrl={thumbnailUrl}
-        onUpload={handleThumbnailUpload}
-        onRemove={handleRemoveThumbnail}
-      />
+      <ThumbnailUploader ref={thumbnailUploaderRef} />
       <div className="write-btn-area">
         <button className="write-btn-cancel" onClick={handleCancel}>
           <i className="fa-solid fa-xmark"></i> 취소하기

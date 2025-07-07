@@ -2,11 +2,9 @@ package com.example.demo.member.board.model.service;
 
 import java.util.List;
 
-import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.member.board.model.dto.Board;
-
-import lombok.RequiredArgsConstructor;
 
 public interface BoardService {
 
@@ -46,7 +44,7 @@ public interface BoardService {
 	 * @param board
 	 * @return
 	 */
-	int writeBoard(Board board);
+	int writeBoard(Board board, MultipartFile thumbnailFile);
 
 	/** 게시글 삭제
 	 * @author BAEBAE
@@ -61,5 +59,4 @@ public interface BoardService {
 	 * @param boardNo
 	 */
 	void readCount(int boardNo);
-
 }
