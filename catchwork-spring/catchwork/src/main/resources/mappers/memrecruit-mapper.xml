@@ -111,7 +111,7 @@
 	
 	<where>
 	<!-- 기본적으로 진행중 또는 마감된 공고만 -->
-    R.RECRUIT_STATUS IN (0, 3)
+    R.RECRUIT_STATUS IN (0)
 
     <!-- 통합 검색 조건 -->
     <if test="query != null and query != ''">
