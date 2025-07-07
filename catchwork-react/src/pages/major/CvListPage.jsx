@@ -16,12 +16,19 @@ const CVListPage = () => {
 
   // 공고 번호 있으면 가져오기(detail)
   const recruitNo = query.get("recruitNo");
-  const mode = (recruitNo ? "submit" : "edit");
+  const mode = recruitNo ? "submit" : "edit";
+
+  // 멤버십 등급별 이력서 등록 개수
+  const gradeLimits = {
+    0: 1,
+    1: 3,
+    2: 5,
+  };
 
   // 페이지 이동
   const navigate = useNavigate();
   const { loginMember, setLoginMember, isLoadingLogin } = useLoginMember();
-  
+
   const [cvList, setCvList] = useState([]);
   const [isLoadingList, setIsLoadingList] = useState(false);
 
@@ -44,7 +51,9 @@ const CVListPage = () => {
   const fetchCVList = async () => {
     try {
       setIsLoadingList(true);
-      const res = await axiosApi.post("/memberCV/list", { memNo: loginMember.memNo });
+      const res = await axiosApi.post("/memberCV/list", {
+        memNo: loginMember.memNo,
+      });
       setCvList(res.data || []);
     } catch (e) {
       console.error(e);
@@ -57,13 +66,13 @@ const CVListPage = () => {
   // 작성 버튼
   const handleAdd = () => {
     navigate("/cv/cvmanage");
-  }
+  };
 
   // 수정 버튼
   const handleEdit = (cvNo) => {
     navigate(`/cv/cvmanage?cvNo=${cvNo}&mode=update`);
   };
-  
+
   // 삭제 버튼
   const handleDelete = async (cvNo) => {
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
@@ -81,18 +90,31 @@ const CVListPage = () => {
   // 제출 버튼
   const handleSubmit = async (cvNo, recruitNo) => {
     navigate(`/cv/cvmanage?cvNo=${cvNo}&recruitNo=${recruitNo}&mode=submit`);
-  }
+  };
 
   return (
     <div className="cv-list-container">
-      <h1 className="cv-list-title">내 이력서</h1>
-      <span>
-        {mode === "edit" && (
-          <button className="addButton" onClick={() => handleAdd()}>
-            작성하기
-          </button>
-        )}
-      </span>
+      <div className="cv-list-top">
+        <h1 className="cv-list-title">내 이력서</h1>
+        <span>
+          {mode === "edit" && (
+            <>
+              {cvList.length < gradeLimits[loginMember.memGrade || 0] ? (
+                <button className="addButton" onClick={handleAdd}>
+                  작성하기
+                </button>
+              ) : (
+                <button
+                  className="paymentButton"
+                  onClick={() => navigate("/mypage/membership")}
+                >
+                  멤버십 결제
+                </button>
+              )}
+            </>
+          )}
+        </span>
+      </div>
 
       {isLoadingList ? (
         <p>목록을 불러오는 중...</p>
@@ -103,7 +125,7 @@ const CVListPage = () => {
           <CVItem
             key={cv.cvNo}
             cv={cv}
-            recruitNo = {recruitNo}
+            recruitNo={recruitNo}
             mode={mode}
             onEdit={handleEdit}
             onDelete={handleDelete}
