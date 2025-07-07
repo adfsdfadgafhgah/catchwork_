@@ -1,5 +1,7 @@
 package com.example.demo.member.recruit.controller;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -63,13 +65,24 @@ private final MemRecruitService memRecruitService;
 	 */
 	@GetMapping("list")
 	public ResponseEntity<List<Recruit>> getRecruitList(
-	    @RequestParam(name = "status", required = false, defaultValue = "all") String status,
-	    @RequestParam(name = "sort", required = false, defaultValue = "latest") String sort,
-	    @RequestParam(name = "writer", required = false, defaultValue = "all") String writer,
-	    @RequestParam(name = "query", required = false) String query,
-	    @RequestParam(name = "memNo", required = false) String memNo
+			@RequestParam(name = "recruitJobName", required = false) String recruitJobName,
+		    @RequestParam(name = "recruitJobArea", required = false) String recruitJobArea,
+		    @RequestParam(name = "recruitCareer", required = false) String recruitCareer,
+		    @RequestParam(name = "recruitEdu", required = false) String recruitEdu,
+		    @RequestParam(name = "corpType", required = false) String corpType,
+		    @RequestParam(name = "recruitType", required = false) String recruitType,
+		    @RequestParam(name = "query", required = false) String query
+	    
 	) {
-	    List<Recruit> recruitList = memRecruitService.getRecruitList(status, sort, writer, query, memNo);
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("recruitJobName", recruitJobName);
+	    paramMap.put("recruitJobArea", recruitJobArea);
+	    paramMap.put("recruitCareer", recruitCareer);
+	    paramMap.put("recruitEdu", recruitEdu);
+	    paramMap.put("corpType", corpType);
+	    paramMap.put("recruitType", recruitType);
+
+	    List<Recruit> recruitList = memRecruitService.getRecruitList(paramMap);
 	    return ResponseEntity.ok(recruitList);
 	}
 	

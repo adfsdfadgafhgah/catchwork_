@@ -69,7 +69,12 @@ public class CorpInfoController {
 	 */
 	@GetMapping("info/{memNo}")
 	public ResponseEntity<CorpInfo> getCorpInfo(@PathVariable("memNo") String memNo) {
-	    CorpInfo corpInfo = corpInfoService.getCorpInfoByMemNo(memNo);
+		System.out.println("🔍 기업 정보 요청 받음: memNo = " + memNo); // ✅
+	    CorpInfo corpInfo = corpInfoService.getCorpInfoByMember(memNo);
+	    System.out.println("📦 반환할 corpInfo = " + corpInfo); // ✅
+	    if (corpInfo == null) {
+	        return ResponseEntity.notFound().build(); // 404 처리
+	    }
 	    return ResponseEntity.ok(corpInfo);
 	}
 }

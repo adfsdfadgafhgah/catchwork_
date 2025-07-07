@@ -18,6 +18,11 @@ public interface CorpInfoService {
 	 */
 	int updateCorpInfo(CorpInfo corpInfo);
 
-	CorpInfo getCorpInfoByMemNo(String memNo);
+	/** 공고 작성페이지에서 기업정보 가져오기
+	 * @author BAEBAE
+	 * @param corpNo
+	 * @return
+	 */
+	CorpInfo getCorpInfoByMember(String memNo);
 	
 }

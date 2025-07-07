@@ -6,6 +6,7 @@ import { axiosApi } from "../../api/axiosAPI";
 import useLoginMember from "../../stores/loginMember";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
+import KakaoMapPreview from "../../components/common/KakaoMapPreview";
 
 export default function EditRecruitPage() {
   const { recruitNo } = useParams();
@@ -86,6 +87,19 @@ export default function EditRecruitPage() {
       fetchRecruit();
     }
   }, [recruitNo, loginMember]);
+
+  // 카카오맵 주소 핸들러
+  const handleAddressSearch = () => {
+    new window.daum.Postcode({
+      oncomplete: function (data) {
+        const fullAddress = data.address;
+        setFormData((prev) => ({
+          ...prev,
+          recruitJobArea: fullAddress, // 주소를 저장
+        }));
+      },
+    }).open();
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -305,36 +319,35 @@ export default function EditRecruitPage() {
         </div>
       </div>
 
-      {/* 근무지역 연봉 */}
+      {/* 근무지역 */}
       <div className={styles.rowGroup}>
         <label className={styles.label}>근무지역 *</label>
-        <select
-          name="recruitJobArea"
-          value={formData.recruitJobArea}
-          onChange={handleChange}
-          className={styles.input}
-        >
-          <option value="">근무지역 선택</option>
-          <option value="서울특별시">서울특별시</option>
-          <option value="경기도">경기도</option>
-          <option value="인천광역시">인천광역시</option>
-          <option value="세종특별자치시">세종특별자치시</option>
-          <option value="대전광역시">대전광역시</option>
-          <option value="충청남도">충청남도</option>
-          <option value="충청북도">충청북도</option>
-          <option value="전라북도">전라북도</option>
-          <option value="전라남도">전라남도</option>
-          <option value="광주광역시">광주광역시</option>
-          <option value="경상북도">경상북도</option>
-          <option value="대구광역시">대구광역시</option>
-          <option value="울산광역시">울산광역시</option>
-          <option value="경상남도">경상남도</option>
-          <option value="부산광역시">부산광역시</option>
-          <option value="강원도">강원도</option>
-          <option value="제주특별자치도">제주특별자치도</option>
-          <option value="전국">전국</option>
-        </select>
+        <div style={{ display: "flex", gap: "8px", alignItems: "start" }}>
+          <input
+            type="text"
+            name="recruitJobArea"
+            value={formData.recruitJobArea}
+            readOnly
+            className={styles.input}
+            placeholder="근무지 주소를 검색하세요"
+          />
+          <button
+            type="button"
+            onClick={handleAddressSearch}
+            style={{ height: "40px" }}
+          >
+            주소검색
+          </button>
+        </div>
       </div>
+
+      {/* 지도 미리보기 */}
+      {formData.recruitJobArea && (
+        <div>
+          <label>근무지 위치</label>
+          <KakaoMapPreview address={formData.recruitJobArea} />
+        </div>
+      )}
 
       {/* 연봉 */}
       <div className={styles.rowGroup}>

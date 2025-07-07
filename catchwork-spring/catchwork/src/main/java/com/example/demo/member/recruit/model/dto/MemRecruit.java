@@ -37,18 +37,20 @@ public class MemRecruit {
 	private String recruitWriteDate;
 	
 	// 기업 회원 join
-	private String memNo;
 	private int corpNo;
 	private String corpRegNo;
 	private String corpMemRoleCheck;
 	private String corpMemDept;
 	private String corpBenefit;
 	private String corpBenefitDetail;
-	
-	
 	private String corpLogo;
 	private String corpType;
 	private String corpName;
+	
+	// 멤버 타입1 기업회원 정보
+	private String memNo;
+	private String memNickname;
+	private String memProfilePath;
 	
 	private int likeCount;
 	private int likeCheck;

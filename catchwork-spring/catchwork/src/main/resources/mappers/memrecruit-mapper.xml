@@ -32,8 +32,10 @@
 	    CI.CORP_LOGO AS corpLogo,
 	    CI.CORP_NAME AS corpName,
 	    CI.CORP_TYPE AS corpType,
-			CI.CORP_BENEFIT AS corpBenefit,
-			CI.CORP_BENEFIT_DETAIL AS corpBenefitDetail,
+		CI.CORP_BENEFIT AS corpBenefit,
+		CI.CORP_BENEFIT_DETAIL AS corpBenefitDetail,
+		
+		M.MEM_NICKNAME AS memNickname,
 	
 	    NVL(LC.LIKE_COUNT, 0) AS likeCount,
 	
@@ -48,6 +50,7 @@
 	  FROM RECRUIT R
 	  JOIN CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
 	  JOIN CORP_INFO CI ON CM.CORP_NO = CI.CORP_NO
+	  JOIN MEMBER M ON R.MEM_NO = M.MEM_NO
 	  LEFT JOIN (
 	    SELECT RECRUIT_NO, COUNT(*) AS LIKE_COUNT
 	    FROM FAV_RECRUIT
@@ -77,7 +80,7 @@
 	    R.RECRUIT_CORP_URL,
 	    R.RECRUIT_HIRE_DETAIL,
 	    R.RECRUIT_ETC,
-	    R.RECRUIT_READCOUNT,
+	    R.RECRUIT_READCOUNT AS recruitReadCount,
 	    R.RECRUIT_STATUS,
 	    TO_CHAR(R.RECRUIT_WRITE_DATE, 'YYYY-MM-DD') AS RECRUIT_WRITE_DATE,
 	    R.MEM_NO,
@@ -86,8 +89,11 @@
 	    CI.CORP_NAME,
 	    CI.CORP_TYPE,
 	    CI.CORP_LOGO,
-			CI.CORP_BENEFIT,
-			CI.CORP_BENEFIT_DETAIL,
+		CI.CORP_BENEFIT,
+		CI.CORP_BENEFIT_DETAIL,
+			
+		-- 기업회원 정보
+		M.MEM_NICKNAME AS memNickname,
 	    
 	    -- 좋아요 수
 	    (SELECT COUNT(*) FROM FAV_RECRUIT F WHERE F.RECRUIT_NO = R.RECRUIT_NO) AS likeCount,
@@ -101,59 +107,64 @@
 	FROM RECRUIT R
 	JOIN CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
 	JOIN CORP_INFO CI ON CM.CORP_NO = CI.CORP_NO
+	JOIN MEMBER M ON R.MEM_NO = M.MEM_NO
 	
 	<where>
-	  <choose>
-	  
-	    <!-- 채용중: 아직 마감되지 않은 상태 -->
-	    <when test="status == 'open'">
-	      R.RECRUIT_STATUS = 0
-	      AND TRUNC(R.RECRUIT_END_DATE) <![CDATA[ >= ]]> TRUNC(SYSDATE)
-	    </when>
-	    
-	    <!-- 마감됨: 마감일이 지났거나 상태가 3 -->
-	    <when test="status == 'closed'">
-	      (R.RECRUIT_STATUS = 3 OR TRUNC(R.RECRUIT_END_DATE) <![CDATA[ < ]]> TRUNC(SYSDATE))
-	    </when>
-	    
-	    <!-- 전체: 마감/진행 중인 것들 -->
-	    <otherwise>
-	      R.RECRUIT_STATUS IN (0, 3)
-	    </otherwise>
-	    
-	  </choose>
+	<!-- 기본적으로 진행중 또는 마감된 공고만 -->
+    R.RECRUIT_STATUS IN (0, 3)
 
-	  <if test="writer == 'me' and memNo != null">
-	    AND R.MEM_NO = #{memNo}
-	  </if>
-	
-	  <if test="query != null and query != ''">
-	    AND (
-	      LOWER(R.RECRUIT_TITLE) LIKE '%' || LOWER(#{query}) || '%'
-	      OR LOWER(CI.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%'
-	      OR LOWER(R.RECRUIT_JOB_NAME) LIKE '%' || LOWER(#{query}) || '%'
-	    )
-	  </if>
-	</where>
+    <!-- 통합 검색 조건 -->
+    <if test="query != null and query != ''">
+      AND (
+        LOWER(R.RECRUIT_TITLE) LIKE '%' || LOWER(#{query}) || '%' OR
+        LOWER(R.RECRUIT_JOB_NAME) LIKE '%' || LOWER(#{query}) || '%' OR
+        LOWER(R.RECRUIT_JOB_DETAIL) LIKE '%' || LOWER(#{query}) || '%' OR
+        LOWER(R.RECRUIT_JOB_AREA) LIKE '%' || LOWER(#{query}) || '%' OR
+        LOWER(R.RECRUIT_EDU) LIKE '%' || LOWER(#{query}) || '%' OR
+        LOWER(R.RECRUIT_CAREER) LIKE '%' || LOWER(#{query}) || '%' OR
+        LOWER(R.RECRUIT_TYPE) LIKE '%' || LOWER(#{query}) || '%' OR
+        LOWER(R.RECRUIT_SALARY) LIKE '%' || LOWER(#{query}) || '%' OR
+        LOWER(R.RECRUIT_RESULT_DATE) LIKE '%' || LOWER(#{query}) || '%' OR
+        LOWER(R.RECRUIT_DOCX) LIKE '%' || LOWER(#{query}) || '%' OR
+        LOWER(R.RECRUIT_APPLY) LIKE '%' || LOWER(#{query}) || '%' OR
+        LOWER(R.RECRUIT_CORP_URL) LIKE '%' || LOWER(#{query}) || '%' OR
+        LOWER(R.RECRUIT_HIRE_DETAIL) LIKE '%' || LOWER(#{query}) || '%' OR
+        LOWER(R.RECRUIT_ETC) LIKE '%' || LOWER(#{query}) || '%' OR
+        LOWER(CI.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%' OR
+        LOWER(M.MEM_NICKNAME) LIKE '%' || LOWER(#{query}) || '%' OR
+        LOWER(CI.CORP_BENEFIT) LIKE '%' || LOWER(#{query}) || '%' OR
+        LOWER(CI.CORP_BENEFIT_DETAIL) LIKE '%' || LOWER(#{query}) || '%'
+      )
+    </if>
 
-	<choose>
-	    <when test="sort == 'latest'">
-	        ORDER BY R.RECRUIT_WRITE_DATE DESC
-	    </when>
-	    <when test="sort == 'oldest'">
-	        ORDER BY R.RECRUIT_WRITE_DATE ASC
-	    </when>
-	    <when test="sort == 'views'">
-	        ORDER BY R.RECRUIT_READ_COUNT DESC
-	    </when>
-	    <when test="sort == 'likes'">
-	        ORDER BY likeCount DESC
-	    </when>
-	    <otherwise>
-	        ORDER BY R.RECRUIT_WRITE_DATE DESC
-	    </otherwise>
-	</choose>
-	</select>
+    <!-- 필터 조건들 -->
+    <if test="recruitJobName != null and recruitJobName != '' and recruitJobName != 'all'">
+      AND R.RECRUIT_JOB_NAME = #{recruitJobName}
+    </if>
+
+    <if test="recruitJobArea != null and recruitJobArea != '' and recruitJobArea != 'all'">
+      AND R.RECRUIT_JOB_AREA = #{recruitJobArea}
+    </if>
+
+    <if test="recruitCareer != null and recruitCareer != '' and recruitCareer != 'all'">
+      AND R.RECRUIT_CAREER = #{recruitCareer}
+    </if>
+
+    <if test="recruitEdu != null and recruitEdu != '' and recruitEdu != 'all'">
+      AND R.RECRUIT_EDU = #{recruitEdu}
+    </if>
+
+    <if test="corpType != null and corpType != '' and corpType != 'all'">
+      AND CI.CORP_TYPE = #{corpType}
+    </if>
+
+    <if test="recruitType != null and recruitType != '' and recruitType != 'all'">
+      AND R.RECRUIT_TYPE = #{recruitType}
+    </if>
+  </where>
+
+  ORDER BY R.RECRUIT_NO DESC
+</select>
 	
 	<!-- endDate 지나면 자동으로 마감처리 -->
 	<update id="autoCloseRecruit">
