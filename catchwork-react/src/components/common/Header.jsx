@@ -29,9 +29,10 @@ const Header = () => {
   const handleSearch = (e) => {
     if (e.key === "Enter" || e.type === "click") {
       if (searchTerm.trim() !== "") {
-        navigate(
-          `/search?type=corp&query=${encodeURIComponent(searchTerm.trim())}`
-        );
+        // navigate(
+        //   `/search?type=company&query=${encodeURIComponent(searchTerm.trim())}`
+        // );//company page로 바로 이동
+        navigate(`/search?query=${searchTerm.trim()}`);
       }
     }
   };

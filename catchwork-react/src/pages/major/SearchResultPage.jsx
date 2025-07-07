@@ -1,9 +1,11 @@
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
+import { Link } from "react-router-dom";
 import CompanyItem from "../../components/company/CompanyItem";
 import MemberRecruitList from "../../components/recruit/MemberRecruitList";
 import useLoginMember from "../../stores/loginMember";
+import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 import "./SearchResultPage.css";
 
 const SearchResultPage = () => {
@@ -21,6 +23,14 @@ const SearchResultPage = () => {
 
   useEffect(() => {
     if (!query) return;
+
+    console.log("🧩 검색 조건 확인:", {
+      query,
+      type,
+      memNo: loginMember?.memNo,
+      sortOrder,
+      statusFilter,
+    });
     setLoading(true);
     const fetchData = async () => {
       try {
@@ -33,6 +43,7 @@ const SearchResultPage = () => {
               status: statusFilter,
             },
           });
+          console.log("📦 공고 검색 응답:", res.data);
           setRecruitResults(res.data || []);
         } else {
           const res = await axiosApi.get("/search/company", {
@@ -41,6 +52,7 @@ const SearchResultPage = () => {
               memNo: loginMember?.memNo || "",
             },
           });
+          console.log("🏢 기업 검색 응답:", res.data);
           setCompanyResults(res.data || []);
         }
       } catch (err) {
@@ -56,18 +68,18 @@ const SearchResultPage = () => {
     <main className="container">
       {/* 탭 버튼 */}
       <div className="search-tabs">
-        <a
+        <Link
           className={type === "recruit" ? "active" : ""}
-          href={`/search?query=${query}&type=recruit`}
+          to={`/search?query=${query}&type=recruit`}
         >
           채용공고
-        </a>
-        <a
+        </Link>
+        <Link
           className={type === "company" ? "active" : ""}
-          href={`/search?query=${query}&type=company`}
+          to={`/search?query=${query}&type=company`}
         >
           기업정보
-        </a>
+        </Link>
       </div>
 
       {/* 정렬 드롭다운 (채용공고일 때만) */}
@@ -108,6 +120,7 @@ const SearchResultPage = () => {
       ) : (
         <p>검색된 공고가 없습니다.</p>
       )}
+      <ScrollToTopButton />
     </main>
   );
 };

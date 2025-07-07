@@ -24,11 +24,10 @@ const CompanyListPage = () => {
 
   // ❷ loginMember가 실제로 업데이트 되었을 때만 기업 리스트 불러오기
   useEffect(() => {
-    if (loginMember && loginMember.memNo) {
-      console.log("✅ loginMember 세팅됨:", loginMember);
-      getCorpList(); // 🔥 여기서만 호출
-    }
-  }, [loginMember]);
+    // 로그인 여부 상관없이 무조건 요청
+    console.log("loginMember 세팅됨:", loginMember);
+    getCorpList();
+  }, [loginMember]); // loginMember가 업데이트될 때마다 재요청
 
   //기업 목록
   const getCorpList = async () => {

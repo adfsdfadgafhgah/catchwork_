@@ -28,6 +28,6 @@ public interface RecruitCVMapper {
 	 * @param cvNo
 	 * @return
 	 */
-	String selectCVFilePath(int cvNo);
+	String selectCVPDFPath(int cvNo);
 	 
 }
