@@ -149,14 +149,17 @@ const CorpCompanyDetailPage = () => {
           <p>{company.corpBenefitDetail}</p>
         </div>
 
-        <div className="company-footer-buttons">
-          <button onClick={handleWithdraw} className="btn-withdraw">
-            기업 탈퇴하기
-          </button>
-          <button className="btn-edit" onClick={handleEdit}>
-            수정하기
-          </button>
-        </div>
+        {company.corpMemRoleCheck === "Y" && (
+          <div className="company-footer-buttons">
+            <button onClick={handleWithdraw} className="btn-withdraw">
+              기업 탈퇴하기
+            </button>
+            <button className="btn-edit" onClick={handleEdit}>
+              수정하기
+            </button>
+          </div>
+        )}
+
         <Outlet />
       </main>
       <ScrollToTopButton />

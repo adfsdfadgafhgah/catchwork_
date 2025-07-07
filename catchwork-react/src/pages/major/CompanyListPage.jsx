@@ -11,16 +11,28 @@ const CompanyListPage = () => {
   const [companyList, setCompanyList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(false);
+  const [filteredCompanies, setFilteredCompanies] = useState([]);
+  const [isSearchMode, setIsSearchMode] = useState(false);
 
   // 최초 마운트 시 정보 fetch
   useEffect(() => {
     if (!loginMember || !loginMember.memNo) {
+      console.log("💤 loginMember가 아직 없음. setLoginMember 호출");
       setLoginMember();
     }
   }, []);
 
+  // ❷ loginMember가 실제로 업데이트 되었을 때만 기업 리스트 불러오기
+  useEffect(() => {
+    if (loginMember && loginMember.memNo) {
+      console.log("✅ loginMember 세팅됨:", loginMember);
+      getCorpList(); // 🔥 여기서만 호출
+    }
+  }, [loginMember]);
+
   //기업 목록
   const getCorpList = async () => {
+    console.log("🚀 getCorpList() 호출됨");
     setLoading(true);
 
     try {
@@ -56,8 +68,24 @@ const CompanyListPage = () => {
 
   // 검색어 바뀔 때마다 요청 보내기
   useEffect(() => {
-    getCorpList(); // 항상 호출
-  }, [searchTerm, loginMember]);
+    console.log("🔥 useEffect 실행", loginMember, searchTerm);
+
+    if (searchTerm.trim() === "") {
+      setIsSearchMode(false);
+      setFilteredCompanies([]);
+    } else {
+      const lowerSearchTerm = searchTerm.toLowerCase();
+
+      const result = companyList.filter(
+        (company) =>
+          company.corpName?.toLowerCase().includes(lowerSearchTerm) ||
+          company.corpType?.toLowerCase().includes(lowerSearchTerm) ||
+          company.corpAddr?.toLowerCase().includes(lowerSearchTerm)
+      );
+      setFilteredCompanies(result);
+      setIsSearchMode(true);
+    }
+  }, [searchTerm, companyList]);
 
   return (
     <>
@@ -78,6 +106,16 @@ const CompanyListPage = () => {
         {/* 기업 카드 리스트 */}
         {loading ? (
           <p style={{ textAlign: "center" }}>로딩 중...</p>
+        ) : isSearchMode ? (
+          filteredCompanies.length > 0 ? (
+            <div className="company-grid">
+              {filteredCompanies.map((company) => (
+                <CompanyItem key={company.corpNo} company={company} />
+              ))}
+            </div>
+          ) : (
+            <p style={{ textAlign: "center" }}>검색 결과가 없습니다.</p>
+          )
         ) : (
           <div className="company-grid">
             {companyList.length > 0 ? (

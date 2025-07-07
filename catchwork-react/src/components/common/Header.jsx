@@ -29,7 +29,9 @@ const Header = () => {
   const handleSearch = (e) => {
     if (e.key === "Enter" || e.type === "click") {
       if (searchTerm.trim() !== "") {
-        navigate(`/search?query=${encodeURIComponent(searchTerm)}`);
+        navigate(
+          `/search?type=corp&query=${encodeURIComponent(searchTerm.trim())}`
+        );
       }
     }
   };
@@ -72,7 +74,11 @@ const Header = () => {
         {/* 검색창: 로그인/회원가입/기업회원 페이지에서는 미노출 */}
         {!isAuthPage && !isCorpUser && (
           <div className="search-box">
-            <i className="fa-solid fa-magnifying-glass"></i>
+            <i
+              className="fa-solid fa-magnifying-glass"
+              onClick={handleSearch}
+              style={{ cursor: "pointer" }}
+            ></i>
             <input
               type="text"
               placeholder="진중한 취업이야기, 취준진담"
@@ -88,9 +94,13 @@ const Header = () => {
           <div className="user-info">
             {memType !== null ? (
               <>
-               <button onClick={() => navigate(memType === 1 ? "/corpmypage" : "/mypage")}>
-                {memNickname} 님
-               </button>
+                <button
+                  onClick={() =>
+                    navigate(memType === 1 ? "/corpmypage" : "/mypage")
+                  }
+                >
+                  {memNickname} 님
+                </button>
                 <button onClick={handleSignOut}>로그아웃</button>
               </>
             ) : (
