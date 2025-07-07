@@ -84,11 +84,12 @@ import WriteSupportPage from "./pages/support/WriteSupportPage";
 import SupportDetailPage from "./pages/support/SupportDetailPage";
 
 // 기업 마이페이지
-import CorpMyPage from "./pages/corpMypage/CorpMyPage";
-import CorpEditMyInfoPage from "./pages/corpMypage/CorpEditMyInfoPage";
-import CorpConfirmEditPage from "./pages/corpMypage/CorpConfirmEditPage";
-import CorpChangePwPage from "./pages/corpMypage/CorpChangePwPage";
-import CorpWithdrawPage from "./pages/corpMypage/CorpWithdrawPage";
+import CorpMyPage from "./pages/corpMyPage/CorpMyPage"; 
+import CorpMyInfoPage from "./pages/corpMyPage/CorpMyInfoPage";
+import CorpEditMyInfoPage from "./pages/corpMyPage/CorpEditMyInfoPage";
+import CorpConfirmEditPage from "./pages/corpMyPage/CorpConfirmEditPage";
+import CorpChangePwPage from "./pages/corpMyPage/CorpChangePwPage";
+import CorpWithdrawPage from "./pages/corpMyPage/CorpWithdrawPage";
 
 //기업 정보, 기업 정보 수정
 import CorpCompanyDetailPage from "./pages/corpMajor/CorpCompanyDetailPage";
@@ -252,7 +253,18 @@ const router = createBrowserRouter([
       { path: "corpcvlist", element: <CorpCVListPage /> },
 
       // 기업 마이 페이지
-      { path: "corpmypage", element: <CorpMyPage /> },
+      {
+        path: "/corpmypage",
+        element: (
+          <ProtectedRoute allowedType={1}>
+            <CorpMyPage />
+          </ProtectedRoute>
+        ),
+        children: [
+          { index: true, element: <CorpMyInfoPage /> },
+          { path: "home", element: <CorpMyInfoPage /> },
+        ]
+      },
       { path: "corpeditmyinfo", element: <CorpEditMyInfoPage /> },
       { path: "corpconfirmedit", element: <CorpConfirmEditPage /> },
       { path: "corpchangepw", element: <CorpChangePwPage /> },

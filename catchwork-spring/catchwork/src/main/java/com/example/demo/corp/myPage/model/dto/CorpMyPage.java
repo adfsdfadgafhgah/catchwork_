@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class CorpMyPage {
-    private String company;        // 기업명
+    private String companyName;    // 기업명
     private String corpId;         // 기업 ID
     private String corpEmail;      // 이메일
     private String corpPhone;      // 전화번호

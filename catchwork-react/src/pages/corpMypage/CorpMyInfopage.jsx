@@ -1,12 +1,12 @@
-import { useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
-import "./CorpMyInfoPage.css"; // 개인용과 분리된 스타일
+import { useEffect } from "react";
+import "./CorpMyInfoPage.css";
 
-function CorpMyInfo() {
+const CorpMyInfoPage = () => {
   const { loginMember, setLoginMember } = useOutletContext();
 
   useEffect(() => {
-    setLoginMember(); // 로그인 상태 새로 고침
+    setLoginMember(); // 기업 정보 새로고침
   }, []);
 
   return (
@@ -17,7 +17,7 @@ function CorpMyInfo() {
         </div>
 
         <div className="profile-info">
-          <h1>{loginMember.companyName}</h1> {/* 기업명 */}
+          <h1>{loginMember.companyName}</h1>
         </div>
       </div>
 
@@ -29,7 +29,7 @@ function CorpMyInfo() {
 
         <div className="info-content">
           <span className="info-label">아이디</span>
-          <span className="info-value font-medium">{loginMember.memId}</span>
+          <span className="info-value">{loginMember.memId}</span>
         </div>
 
         <div className="info-content">
@@ -44,7 +44,7 @@ function CorpMyInfo() {
 
         <div className="info-content">
           <span className="info-label">이름</span>
-          <span className="info-value font-medium">{loginMember.memName}</span>
+          <span className="info-value">{loginMember.memName}</span>
         </div>
 
         <div className="info-content">
@@ -54,6 +54,6 @@ function CorpMyInfo() {
       </div>
     </div>
   );
-}
+};
 
-export default CorpMyInfo;
+export default CorpMyInfoPage;

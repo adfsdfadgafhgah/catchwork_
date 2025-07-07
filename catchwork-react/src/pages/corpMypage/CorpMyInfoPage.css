@@ -1,19 +1,66 @@
-/* 메인 레이아웃 */
-.mypage-container {
-  display: flex;
-  height: 100%;
-  min-height: 720px;
-  margin: 0 auto;
-  position: relative;
-}
-
-/* 메인 콘텐츠 */
-.mypage-content {
+.myinfo-container {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  height: auto;
+  gap: 40px;
 
-  flex: 1;
-  max-width: 1080px;
-  margin: 0 auto;
+  padding-top: 80px;
+}
+
+/* 프로필 섹션 */
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+
+  padding: 16px 0;
+}
+
+.profile-img {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 200px;
+  height: 200px;
+  background-color: #dbeafe;
+  border-radius: 50%;
+}
+
+.profile-info h1 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+/* 정보 카드 */
+.info-card {
+  display: flex;
+  flex-direction: column;
+  align-self: flex-start;
+  gap: 20px;
+}
+
+.info-content {
+  display: flex;
+  align-items: center;
+}
+
+.info-label {
+  color: #6b7280;
+  font-size: 0.875rem;
+  width: 5rem;
+
+  padding: 12px 8px 12px 0px;
+  margin-right: 8px;
+  border-right: 1px solid #6b7280;
+}
+
+.info-value {
+  color: #1f2937;
+}
+
+.info-value.font-medium {
+  font-weight: 500;
 }

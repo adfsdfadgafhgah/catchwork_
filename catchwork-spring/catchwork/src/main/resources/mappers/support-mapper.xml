@@ -36,13 +36,15 @@
   	 FROM SUPPORT S
  	 LEFT JOIN SUPPORT_CATEGORY C
      ON S.SUPPORT_CATEGORY_CODE = C.SUPPORT_CATEGORY_CODE
-  	 ORDER BY S.SUPPORT_NO DESC
+  	 ORDER BY S.SUPPORT_NO ASC
 	</select>
 	
 	<!-- 자신이 작성한 문의 -->
 	<select id="selectSupportListByMemNo" resultMap="SupportResultMap" parameterType="String">
 	  SELECT
-	    ROW_NUMBER() OVER (ORDER BY S.SUPPORT_NO DESC) AS SEQ_NO, 
+	    (SELECT COUNT(*) FROM SUPPORT WHERE MEM_NO = #{memNo}) 
+	      - ROW_NUMBER() OVER (ORDER BY S.SUPPORT_NO DESC) + 1 AS SEQ_NO, 
+	    S.SUPPORT_NO,
 	    S.SUPPORT_TITLE,
 	    S.SUPPORT_CONTENT,
 	    S.SUPPORT_ANSWER,

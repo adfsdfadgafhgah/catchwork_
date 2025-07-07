@@ -1,20 +1,23 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.example.demo.corp.myPage.model.mapper.CorpMyPageMapper">
 
-	<!-- 로그인된 기업회원 마이페이지 -->
-    <select id="findCorpInfoById" resultType="com.example.demo.corp.myPage.model.dto.CorpMyPage">
-        SELECT 
-            COMPANY_NAME AS company,
-            CORP_ID AS corpId,
-            CORP_EMAIL AS corpEmail,
-            CORP_PHONE AS corpPhone,
-            CORP_NAME AS corpName,
-            CORP_DEPARTMENT AS corpDepartment
-        FROM CORPORATE_MEMBER
-        WHERE CORP_ID = #{corpId}
-    </select>
+  <select id="findCorpInfoById" resultType="com.example.demo.corp.myPage.model.dto.CorpMyPage">
+    SELECT 
+      M.MEM_ID AS corpId,
+      M.MEM_EMAIL AS corpEmail,
+      M.MEM_TEL AS corpPhone,
+      M.MEM_NAME AS corpName,
+      C.CORP_MEM_DEPT AS corpDepartment,
+      CO.COMPANY_NAME AS companyName
+    FROM MEMBER M
+    JOIN CORP_MEM C ON M.MEM_NO = C.MEM_NO
+    JOIN CORP_INFO CO ON C.CORP_NO = CO.CORP_NO
+    WHERE M.MEM_ID = #{corpId}
+      AND M.MEM_TYPE = 1
+  </select>
 
 </mapper>
