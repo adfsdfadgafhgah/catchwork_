@@ -67,6 +67,11 @@ const CorpCVListPage = () => {
     }
   };
 
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredList.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(filteredList.length / itemsPerPage);
   const handleCheckboxChange = (cvNo) => {
     setSelectedCVNos((prev) =>
       prev.includes(cvNo) ? prev.filter((no) => no !== cvNo) : [...prev, cvNo]
@@ -131,10 +136,6 @@ const CorpCVListPage = () => {
       setSelectedCVNos([]);
     }
   };
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredList.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredList.length / itemsPerPage);
 
   const { careerMin, careerMax } = getCareerRange(selectedExp);
   return (
