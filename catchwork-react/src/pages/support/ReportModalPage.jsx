@@ -11,9 +11,21 @@ const categoryCodeMap = {
   "기타": 6,
 };
 
-const ReportModalPage = ({ targetNo, onClose }) => {
+const ReportModalPage = ({
+  targetNo,
+  targetType,
+  onClose,
+  memberNo,
+  targetNickname,
+}) => {
   const [category, setCategory] = useState("");
   const [content, setContent] = useState("");
+
+  // 표시할 신고 대상명 (닉네임 또는 fallback)
+  const displayTargetName =
+    targetNickname && targetNickname.trim() !== ""
+      ? targetNickname
+      : "알 수 없는 대상";
 
   const handleSubmit = async () => {
     if (!category || !content) {
@@ -21,20 +33,26 @@ const ReportModalPage = ({ targetNo, onClose }) => {
       return;
     }
 
-    if (!targetNo || typeof targetNo !== "string") {
+    if (!targetNo) {
       alert("신고 대상이 올바르지 않습니다.");
       return;
     }
 
+    if (!targetNickname || targetNickname.trim() === "") {
+      // 선택 사항: 신고 제출 시 닉네임이 없으면 사용자에게 알림
+      // alert("신고 대상 이름이 없습니다. 다시 시도해주세요.");
+      // return;
+      // 닉네임 없어도 진행하고 싶으면 이 부분은 주석 처리 가능
+    }
+
     try {
       const postData = {
-        reportTargetNo: targetNo,         // 문자열 회원번호
-        reportTargetType: "MEMBER",       // 고정
+        reportTargetNo: String(targetNo), // 숫자든 문자든 문자열로 변환
+        reportTargetType: targetType.toUpperCase(), // "COMMENT", "REPLY", "BOARD", "MEMBER", "CORPORATE"
         reportCategoryCode: categoryCodeMap[category],
         reportContent: content,
+        memNo: memberNo,
       };
-
-      console.log("신고 전송 데이터:", postData);
 
       await axiosApi.post("/reportmodal", postData);
 
@@ -46,8 +64,6 @@ const ReportModalPage = ({ targetNo, onClose }) => {
     }
   };
 
-  console.log("target : ", targetNo);
-
   return (
     <div className="modal-overlay">
       <div className="report-modal-box">
@@ -56,13 +72,15 @@ const ReportModalPage = ({ targetNo, onClose }) => {
 
         <div className="form-group">
           <label>신고 대상</label>
-          <div className="readonly-display">{targetNo}</div>
+          <div className="readonly-display">{displayTargetName}</div>
         </div>
 
         <div className="form-group">
           <label>신고 카테고리</label>
           <select value={category} onChange={(e) => setCategory(e.target.value)}>
-            <option value="" disabled>신고 사유를 선택해주세요</option>
+            <option value="" disabled>
+              신고 사유를 선택해주세요
+            </option>
             <option>욕설/비방</option>
             <option>성희롱/혐오</option>
             <option>스팸/광고</option>

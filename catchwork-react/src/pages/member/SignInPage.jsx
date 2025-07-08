@@ -33,7 +33,7 @@ const SignInPage = () => {
       }
 
       // 로그인 성공 시 페이지 이동
-      navigate(memType === 0 ? "/" : "/corp");
+      navigate(memType === 0 ? "/" : "/");
     } else {
       alert(result.message);
     }

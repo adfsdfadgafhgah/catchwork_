@@ -164,8 +164,10 @@ export default function CommentItem({
       {/* 신고하기 모달 */}
       {showReportModal && (
         <ReportModalPage
-          targetNo={comment.commentNo}
+          targetNo={comment.commentNo.toString()}
           targetType="comment"
+          targetNickname={comment.memNickname}
+          memberNo={loginMember?.memNo}
           onClose={handleCloseReport}
         />
       )}

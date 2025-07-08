@@ -215,6 +215,7 @@ const CompanyDetailPage = () => {
           <ReportModalPage
             targetNo={corpNo}
             targetType="company"
+            targetNickname={company.corpName}  
             onClose={handleCloseReport}
           />
         )}
