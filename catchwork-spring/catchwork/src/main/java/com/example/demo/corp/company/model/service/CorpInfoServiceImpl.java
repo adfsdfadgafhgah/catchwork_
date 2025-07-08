@@ -1,5 +1,7 @@
 package com.example.demo.corp.company.model.service;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,5 +46,10 @@ public class CorpInfoServiceImpl implements CorpInfoService {
 
 		return mapper.selectCorpInfoByMember(memNo);
 	}
+	
+//	@Override
+//	public Map<String, Object> selectCorpNoAndRoleCheck(String memNo) {
+//	    return mapper.selectCorpNoAndRoleCheck(memNo);
+//	}
 
 }

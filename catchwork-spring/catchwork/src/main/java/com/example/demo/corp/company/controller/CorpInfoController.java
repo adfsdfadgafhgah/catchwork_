@@ -2,6 +2,7 @@ package com.example.demo.corp.company.controller;
 
 
 import java.io.File;
+import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -122,4 +123,15 @@ public class CorpInfoController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("corpNo 조회 중 오류 발생");
 	    }
 	}
+	
+
+//	@GetMapping("corpInfo")
+//	public ResponseEntity<Map<String, Object>> getCorpNoAndRoleCheck(@RequestParam("memNo") String memNo) {
+//	    Map<String, Object> corpInfo = corpInfoService.selectCorpNoAndRoleCheck(memNo);
+//	    if (corpInfo == null) {
+//	        return ResponseEntity.notFound().build();
+//	    }
+//	    return ResponseEntity.ok(corpInfo);
+//	}
+
 }

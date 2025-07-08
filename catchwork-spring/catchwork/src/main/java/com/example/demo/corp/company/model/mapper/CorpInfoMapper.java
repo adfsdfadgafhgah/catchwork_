@@ -1,5 +1,7 @@
 package com.example.demo.corp.company.model.mapper;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -33,5 +35,7 @@ public interface CorpInfoMapper {
 	 * @return
 	 */
 	CorpInfo selectCorpInfoByMember(String memNo);
+	
+//	Map<String, Object> selectCorpNoAndRoleCheck(String memNo);
 
 }

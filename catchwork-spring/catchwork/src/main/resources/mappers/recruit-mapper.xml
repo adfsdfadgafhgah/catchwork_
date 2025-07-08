@@ -340,5 +340,7 @@
     SET RECRUIT_READCOUNT = RECRUIT_READCOUNT + 1
     WHERE RECRUIT_NO = #{recruitNo}
 	</update>
+	
+	
 
 </mapper>

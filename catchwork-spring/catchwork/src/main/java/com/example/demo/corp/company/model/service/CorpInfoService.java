@@ -1,5 +1,7 @@
 package com.example.demo.corp.company.model.service;
 
+import java.util.Map;
+
 import com.example.demo.corp.company.model.dto.CorpInfo;
 
 public interface CorpInfoService {
@@ -24,7 +26,8 @@ public interface CorpInfoService {
 	 * @return
 	 */
 	int updateCorpInfo(CorpInfo corpInfo);
-
+	
+//	Map<String, Object> selectCorpNoAndRoleCheck(String memNo);
 	
 	
 }

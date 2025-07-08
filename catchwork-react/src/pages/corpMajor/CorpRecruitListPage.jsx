@@ -23,6 +23,7 @@ export default function CorpRecruitListPage() {
   const [writerFilter, setWriterFilter] = useState("all"); // 전체, 내가쓴공고
   const [corpNo, setCorpNo] = useState();
   const [confirmedSearchTerm, setConfirmedSearchTerm] = useState(""); // 실제 검색에 쓸 값
+  const [corpMemRoleCheck, setCorpMemRoleCheck] = useState("N"); // 'Y'면 대표이사
 
   // 로그인 정보 세팅
   useEffect(() => {
@@ -41,6 +42,7 @@ export default function CorpRecruitListPage() {
           });
           if (resp.status === 200) {
             setCorpNo(resp.data); // corpNo state 세팅
+            setCorpMemRoleCheck(resp.data.corpMemRoleCheck); // 'Y' 또는 'N'
           }
         }
       } catch (err) {
@@ -112,6 +114,10 @@ export default function CorpRecruitListPage() {
     if (!loginMember?.memNo) {
       alert("로그인 후 이용해주세요.");
       navigate("/signin");
+      return;
+    }
+    if (corpMemRoleCheck === "Y") {
+      alert("대표이사 계정은 공고 작성이 불가능합니다.");
       return;
     }
     navigate("/corpRecruit/write");

@@ -190,5 +190,5 @@ public class RecruitController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("조회수 증가 실패");
 	    }
 	}
-
+	
 }
