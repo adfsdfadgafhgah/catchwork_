@@ -41,11 +41,11 @@ public class MemberEntity {
     @Column(name = "MEM_EMAIL", nullable = false, length = 20, unique = true)
     private String memEmail;
 
-    @Column(name = "MEM_BIRTHDAY", nullable = false)
+    @Column(name = "MEM_BIRTHDAY")
     @Temporal(TemporalType.DATE)
     private Date memBirthday;
 
-    @Column(name = "MEM_GENDER", nullable = false, length = 1)
+    @Column(name = "MEM_GENDER", length = 1)
     private String memGender;
 
     @Column(name = "MEM_ADDR", length = 100)
@@ -55,7 +55,7 @@ public class MemberEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date memEnrollDate = new Date();
 
-    @Column(name = "MEM_SMS_FL", nullable = false, length = 1)
+    @Column(name = "MEM_SMS_FL", length = 1)
     private String memSmsFl;
 
     @Column(name = "MEM_TYPE", nullable = false)

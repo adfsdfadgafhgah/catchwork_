@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from "axios";
 import { axiosApi } from "../api/axiosAPI";
 import { searchAddress } from "../api/signupAPI";
 import { useNavigate } from "react-router-dom";

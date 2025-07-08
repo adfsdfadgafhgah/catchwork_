@@ -47,7 +47,7 @@ export default function useSignUpFormHandler(initialValues, config) {
     return value != null && value.toString().trim() !== "";
   };
 
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     let fieldValue = type === "checkbox" ? checked : value;
 
@@ -120,18 +120,25 @@ export default function useSignUpFormHandler(initialValues, config) {
 
   const validateForm = () => {
     const keysToCheck = config.fields;
-    const results = keysToCheck.map((key) => validateField(key, formData[key]));
+    const nullable = config.nullableFields || [];
+
+    const results = keysToCheck.map((key) => {
+      if (nullable.includes(key)) return true;
+      return validateField(key, formData[key]);
+    });
+
     const newValidity = keysToCheck.reduce((acc, key, i) => {
       acc[key] = results[i];
       return acc;
     }, {});
+
     setValidity(newValidity);
     return results.every((r) => r);
   };
 
   return {
     formData,
-    handleChange,
+    handleInputChange,
     setField,
     validity,
     handleCheckId,

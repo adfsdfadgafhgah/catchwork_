@@ -25,5 +25,5 @@ public class CorpInfo {
     private String corpDetail;
     private String corpBenefit;
     private String corpBenefitDetail;
-    private String corpLogo; // ※ 파일이라면 MultipartFile로 분리 필요
+    private String corpLogo; //MultipartFile로 분리 필요
 }

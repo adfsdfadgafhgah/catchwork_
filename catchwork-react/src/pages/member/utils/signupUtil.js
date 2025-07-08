@@ -9,17 +9,14 @@ export const validateForm = (formData, userType) => {
     memNickname: "닉네임",
     memBirthday: "생년월일",
     memGender: "성별",
-    companyName: "회사명",
-    businessNo: "사업자등록번호",
-    ceoName: "대표자명",
-    memAddr: "주소",
+    corpRegNo: "사업자등록번호",
+    corpMemDept: "부서명",
     detailAddress: "상세주소",
   };
 
   for (const [key, label] of Object.entries(requiredFields)) {
     if (
-      (userType === "personal" &&
-        ["companyName", "businessNo", "ceoName"].includes(key)) ||
+      (userType === "personal" && ["corpRegNo", "corpMemDept"].includes(key)) ||
       (userType === "corporate" &&
         ["memEmail", "memNickname", "memBirthday", "memGender"].includes(key))
     )

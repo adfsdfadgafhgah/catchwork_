@@ -38,7 +38,8 @@ public class CorpServiceImpl implements CorpService {
 			return entity;
 		} catch (Exception e) {
 			System.out.println(e);
-			throw new RuntimeException("기업 등록 중 오류 발생", e);		}
+			throw new RuntimeException("기업 등록 중 오류 발생", e);		
+		}
 	}
 
 	@Override
