@@ -64,7 +64,7 @@ const CVManagePage = () => {
   // 작성/보기/수정 모드 상태
   const [mode, setMode] = useState(cvNo ? "view" : "add");
 
-  // 제출 여부(검사 시작)
+  // 제출 여부(정규식 검사 시작)
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   // 기존 컴포넌트 목록 기억
@@ -503,15 +503,10 @@ const CVManagePage = () => {
     setIsSubmitted(true);
 
     // 한 번의 microtask 기다려서 state flush
+    // 상태 수정 이후 바로 실행 막고 상태가 완전히 업데이트 되는걸 기다리게 하는 놈
     await Promise.resolve();
 
     const payload = payloadRename();
-
-    // ✅ 추가 #1
-    console.log("✅ validateAll =", validateAll());
-
-    // ✅ 추가 #2
-    console.log("✅ payload =", payload);
 
     if (!validateAll()) {
       alert("입력을 확인해주세요.");
@@ -520,7 +515,6 @@ const CVManagePage = () => {
 
     try {
       const res = await axiosApi.post("/memberCV/update", payload);
-      console.log("✅ 서버 응답 data =", res.data);
       alert("수정 완료");
       setMode("view");
     } catch (err) {

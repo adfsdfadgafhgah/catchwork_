@@ -70,13 +70,11 @@ const CVLanguage = ({ index, onRemove, showRemove, data, onChange, mode, isSubmi
         </div>
 
         {/* 취득 날짜 */}
-        <div className={styles.row}>
-          <YearMonthPicker
-            mode={mode}
-            value={data.date || ""}
-            onChange={(val) => onChange("language", index, "date", val)}
-          />
-        </div>
+        <YearMonthPicker
+          mode={mode}
+          value={data.date || ""}
+          onChange={(val) => onChange("language", index, "date", val)}
+        />
       </div>
       {isSubmitted && error && <div className="regex">{error}</div>}
     </div>
