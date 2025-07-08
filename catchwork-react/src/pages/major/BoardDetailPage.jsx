@@ -12,8 +12,10 @@ import { formatTimeAgo } from "../../components/common/formatTimeAgo";
 import ReportModalPage from "../support/ReportModalPage";
 import { Viewer } from "@toast-ui/react-editor"; // Toast UI Viewer 추가
 import useLoginMember from "../../stores/loginMember";
+import defaultImg from "../../assets/icon.png";
 
 export default function BoardDetailPage() {
+  const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
   const { boardNo } = useParams();
   const [board, setBoard] = useState(null);
   const { loginMember, setLoginMember } = useLoginMember();
@@ -193,8 +195,8 @@ export default function BoardDetailPage() {
             <img
               src={
                 board?.memProfilePath
-                  ? `http://localhost:8080/${board.member.memProfilePath}`
-                  : "/default-profile.png"
+                  ? `${imgUrl}/${board.memProfilePath}`
+                  : defaultImg
               }
               alt="프로필"
             />

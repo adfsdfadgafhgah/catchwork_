@@ -47,6 +47,7 @@ export default function useSignUpFormHandler(initialValues, config) {
     return value != null && value.toString().trim() !== "";
   };
 
+  // 회원가입 폼 변경 핸들러
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     let fieldValue = type === "checkbox" ? checked : value;
@@ -73,14 +74,15 @@ export default function useSignUpFormHandler(initialValues, config) {
         [name]: validateField(name, fieldValue),
         ...(name === config.pwField && config.pwConfirmField
           ? {
-              [config.pwConfirmField]:
-                formData[config.pwConfirmField] === fieldValue,
-            }
+            [config.pwConfirmField]:
+              formData[config.pwConfirmField] === fieldValue,
+          }
           : {}),
       }));
     }
   };
 
+  // 특정 필드 값 설정
   const setField = (name, value) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
     if (validity.hasOwnProperty(name)) {
@@ -91,6 +93,7 @@ export default function useSignUpFormHandler(initialValues, config) {
     }
   };
 
+  // 아이디 중복 체크
   const handleCheckId = async () => {
     if (!formData[config.idField]?.trim())
       return alert("아이디를 입력해주세요.");
@@ -100,6 +103,7 @@ export default function useSignUpFormHandler(initialValues, config) {
     );
   };
 
+  // 닉네임 중복 체크
   const handleCheckNickname = async () => {
     if (!formData[config.nicknameField]?.trim())
       return alert("닉네임을 입력해주세요.");
@@ -111,6 +115,7 @@ export default function useSignUpFormHandler(initialValues, config) {
     );
   };
 
+  // 주소 입력
   const handleAddressSelect = (data) => {
     setField(config.addrField, data.roadAddress);
   };
@@ -118,6 +123,7 @@ export default function useSignUpFormHandler(initialValues, config) {
     searchAddress(handleAddressSelect);
   };
 
+  // 폼 유효성 검사
   const validateForm = () => {
     const keysToCheck = config.fields;
     const results = keysToCheck.map((key) => validateField(key, formData[key]));
@@ -129,6 +135,7 @@ export default function useSignUpFormHandler(initialValues, config) {
     return results.every((r) => r);
   };
 
+  // 회원가입 폼 핸들러 반환
   return {
     formData,
     handleChange,

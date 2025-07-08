@@ -18,7 +18,7 @@ public class Utility {
     String ext = fileName.substring(fileName.lastIndexOf(".")); // 확장자 추출
     String uuid = UUID.randomUUID().toString().substring(0, 20); // UUID 20자리 생성
 
-    return today + "_" + uuid + "." + ext;
+    return today + "_" + uuid + ext;
   }
 
 }

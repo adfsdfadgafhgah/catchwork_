@@ -145,6 +145,13 @@
 	    #{memNo}
 	  )
 	</insert>
+	
+	<!-- 게시글 썸네일 업로드 -->
+	<update id="uploadBoardThumbnail">
+		UPDATE BOARD
+		SET BOARD_THUMBNAIL_URL = #{thumbnailUrl}
+		WHERE BOARD_NO = #{boardNo}
+	</update>
 
   <!-- 게시글 작성자 조회 -->
   <select id="findWriterByBoardNo" resultType="string">
@@ -167,5 +174,4 @@
     SET BOARD_READ_COUNT = BOARD_READ_COUNT + 1
     WHERE BOARD_NO = #{boardNo}
   </update>
-
 </mapper>
