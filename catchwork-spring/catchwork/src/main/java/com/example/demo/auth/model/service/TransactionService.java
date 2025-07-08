@@ -88,11 +88,10 @@ public class TransactionService {
 	// 3. CORP_MEM 등록
 	public CorpMemEntity registerCorpMem(MemberEntity member, CorpInfoEntity corp, CorpMem dto) {
 		CorpMemEntity corpMem = new CorpMemEntity();
-//        corpMem.setMemNo(member.getMemNo());
-//		corpMem.setMember(member);
+		corpMem.setMemNo(member.getMemNo());
 		corpMem.setCorpInfo(corp);
-		corpMem.setCorpMemDept(dto.getCorpMemDept());
-		corpMem.setCorpMemRoleCheck(dto.getCorpMemRoleCheck());
+		corpMem.setCorpMemRoleCheck("Y");
+		corpMem.setCorpMemDept("대표이사");
 
 		return corpMemRepository.save(corpMem);
 	}

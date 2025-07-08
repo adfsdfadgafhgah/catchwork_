@@ -2,13 +2,6 @@ import { axiosApi } from "./axiosAPI"; // 내부 API
 import axios from "axios"; // 외부용
 
 /**********************
- * 회원가입 요청
- **********************/
-export const postSignUp = async (formData) => {
-  return await axiosApi.post("/signup", formData);
-};
-
-/**********************
  * 아이디 중복확인
  **********************/
 export const checkDuplicateId = async (memId) => {
