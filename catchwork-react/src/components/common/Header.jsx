@@ -29,7 +29,10 @@ const Header = () => {
   const handleSearch = (e) => {
     if (e.key === "Enter" || e.type === "click") {
       if (searchTerm.trim() !== "") {
-        navigate(`/search?query=${encodeURIComponent(searchTerm)}`);
+        // navigate(
+        //   `/search?type=company&query=${encodeURIComponent(searchTerm.trim())}`
+        // );//company page로 바로 이동
+        navigate(`/search?query=${searchTerm.trim()}`);
       }
     }
   };
@@ -72,7 +75,11 @@ const Header = () => {
         {/* 검색창: 로그인/회원가입/기업회원 페이지에서는 미노출 */}
         {!isAuthPage && !isCorpUser && (
           <div className="search-box">
-            <i className="fa-solid fa-magnifying-glass"></i>
+            <i
+              className="fa-solid fa-magnifying-glass"
+              onClick={handleSearch}
+              style={{ cursor: "pointer" }}
+            ></i>
             <input
               type="text"
               placeholder="진중한 취업이야기, 취준진담"

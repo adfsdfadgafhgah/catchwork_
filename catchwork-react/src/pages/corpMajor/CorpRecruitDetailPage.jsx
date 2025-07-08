@@ -8,6 +8,7 @@ import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import DeadlineTimer from "../../components/common/DeadlineTimer";
 import ReportModalPage from "../support/ReportModalPage";
+import KakaoMapPreview from "../../components/common/KakaoMapPreview";
 
 export default function CorpRecruitDetailPage() {
   const { recruitNo } = useParams();
@@ -19,6 +20,7 @@ export default function CorpRecruitDetailPage() {
   const [likeLoading, setLikeLoading] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
   const [reportTarget, setReportTarget] = useState("");
+  const url = import.meta.env.VITE_API_URL;
 
   // loginMember 가져오기
   useEffect(() => {
@@ -141,7 +143,7 @@ export default function CorpRecruitDetailPage() {
         <img
           src={
             recruit.corpLogo
-              ? `http://localhost:8080/${recruit.corpLogo}`
+              ? `${url}/${recruit.corpLogo}`
               : "/default-logo.png"
           }
           alt="기업 로고"
@@ -152,13 +154,13 @@ export default function CorpRecruitDetailPage() {
           <span className={styles.corpType}>{recruit.corpType}</span>
           {/* 채용 제목 */}
           <h2 className={styles.recruitTitle}>
-            [{recruit.corpName}] {recruit.recruitTitle}
+            [{recruit.memNickname}] {recruit.recruitTitle}
           </h2>
           <p className={styles.recruitDates}>
             {recruit.recruitStartDate} ~ {recruit.recruitEndDate}
           </p>
 
-          {/* ✅ 조회수/좋아요 표시 라인 추가 */}
+          {/*  조회수/좋아요 표시 라인 추가 */}
           <div className={styles.engagementInfo}>
             <span>
               <i className="fa-regular fa-eye" /> {recruit.recruitReadCount}{" "}
@@ -207,6 +209,8 @@ export default function CorpRecruitDetailPage() {
           </tbody>
         </table>
       </section>
+
+      <KakaoMapPreview address={recruit.recruitJobArea} />
 
       {/* 상세 정보 섹션 */}
       <section className={styles.detailSections}>

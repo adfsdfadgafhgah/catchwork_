@@ -1,8 +1,10 @@
 import { useEffect } from "react";
 import { useOutletContext } from "react-router-dom";
 import "./MyInfoPage.css";
+import defaultImg from "../../assets/icon.png";
 
 function MyInfo() {
+  const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
   const { loginMember, setLoginMember } = useOutletContext();
 
   useEffect(() => {
@@ -12,8 +14,14 @@ function MyInfo() {
   return (
     <div className="myinfo-container">
       <div className="profile-section">
-        <div className="profile-img">
-          <i className="fas fa-user"></i>
+        <div className="myinfo-profile-img">
+          <img
+            src={
+              loginMember.memProfilePath
+                ? `${imgUrl}/${loginMember.memProfilePath}`
+                : defaultImg
+            }
+          />
         </div>
 
         <div className="profile-info">
@@ -44,7 +52,14 @@ function MyInfo() {
 
         <div className="info-content">
           <span className="info-label">생년월일</span>
-          <span className="info-value">{loginMember.memBirthday}</span>
+          <span className="info-value">
+            {loginMember.memBirthday?.substring(0, 4)}년{" "}
+            {loginMember.memBirthday?.substring(5, 7)}월{" "}
+            {loginMember.memBirthday?.substring(8, 10)}일{" "}
+            {new Date().getFullYear() -
+              loginMember.memBirthday?.substring(0, 4)}
+            세
+          </span>
         </div>
 
         <div className="info-content">
@@ -54,7 +69,14 @@ function MyInfo() {
 
         <div className="info-content">
           <span className="info-label">주소</span>
-          <span className="info-value">{loginMember.memAddr}</span>
+          <span className="info-value">
+            <div className="info-value-line">
+              {loginMember?.memAddr?.split("^^^")[0]}
+            </div>
+            <div className="info-value-line">
+              {loginMember?.memAddr?.split("^^^")[1]}
+            </div>
+          </span>
         </div>
       </div>
     </div>

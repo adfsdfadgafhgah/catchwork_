@@ -1,13 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import YearMonthPicker from "./YearMonthPicker";
 import styles from "./CVMilitary.module.css";
 
-const CVMilitary = ({ formData, onChange }) => {
+const CVMilitary = ({ formData, onChange, isSubmitted }) => {
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (
+      !formData.cvMiliClass ||
+      !formData.cvMiliBranch ||
+      !formData.cvMiliStartDate ||
+      !formData.cvMiliEndDate
+    ) {
+      setError("모든 병역 정보를 입력해주세요.");
+    } else {
+      setError("");
+    }
+  }, [formData]);
+
   return (
     <>
       <h2 className="writeCVSection-title">병역</h2>
       <div className={styles.section}>
-
         {/* 병역 구분 & 군별 */}
         <div className={styles.militaryRow}>
           <select
@@ -49,6 +63,7 @@ const CVMilitary = ({ formData, onChange }) => {
         </div>
       </div>
       <div>여성은 면제 선택</div>
+      {isSubmitted && error && <div className="regex">{error}</div>}
     </>
   );
 };

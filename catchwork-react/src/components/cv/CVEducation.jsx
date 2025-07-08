@@ -1,8 +1,31 @@
-import React from "react"; // React 기본
+import React, { useEffect, useState } from "react";
 import YearMonthPicker from "./YearMonthPicker"; // 연-월 전용 date picker
 import styles from "./CVEducation.module.css"; // 교육 항목 전용 스타일
 
-const CVEducation = ({ formData, onChange, mode }) => {
+const CVEducation = ({ formData, onChange, mode, isSubmitted }) => {
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!formData.eduName?.trim()) {
+      setError("학교명을 입력해주세요.");
+    } else if (formData.eduName.length > 20) {
+      setError("학교명은 최대 20자까지 입력 가능합니다.");
+    } else if (!formData.eduMajor?.trim()) {
+      setError("전공을 입력해주세요.");
+    } else if (formData.eduMajor.length > 20) {
+      setError("전공은 최대 20자까지 입력 가능합니다.");
+    } else if (
+      !formData.eduCodeNo ||
+      !formData.eduStatusCodeNo ||
+      !formData.eduStartDate ||
+      !formData.eduEndDate
+    ) {
+      setError("모든 학력 정보를 입력해주세요.");
+    } else {
+      setError("");
+    }
+  }, [formData]);
+
   return (
     <div className={styles.eduSection}>
       <div className={styles.eduInner}>
@@ -62,7 +85,7 @@ const CVEducation = ({ formData, onChange, mode }) => {
 
           <div className={styles.eduRow}>
             <YearMonthPicker
-              value={formData.eduStartDate  || ""}
+              value={formData.eduStartDate || ""}
               onChange={(val) => onChange("eduStartDate", val)}
             />
           </div>
@@ -75,6 +98,7 @@ const CVEducation = ({ formData, onChange, mode }) => {
           </div>
         </div>
       </div>
+      {isSubmitted && error && <div className="regex">{error}</div>}
     </div>
   );
 };

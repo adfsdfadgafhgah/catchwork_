@@ -34,6 +34,9 @@ public class CorpInfo {
     private String corpBanFl;           // 기업_정지_플래그 String으로 받는게 맞나?
     private Date corpBanDate;           // 기업_정지일
    
+    //기업 최고 담당 인사자
+    private String corpMemRoleCheck;
+
     // MEMBER 테이블 조인
   	private String memNo;
 

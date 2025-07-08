@@ -8,6 +8,7 @@ import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import DeadlineTimer from "../../components/common/DeadlineTimer";
 import ReportModalPage from "../support/ReportModalPage";
+import KakaoMapPreview from "../../components/common/KakaoMapPreview";
 
 export default function MemberRecruitDetailPage() {
   const { recruitNo } = useParams();
@@ -140,7 +141,7 @@ export default function MemberRecruitDetailPage() {
           <span className={styles.corpType}>{recruit.corpType}</span>
           {/* 채용 제목 */}
           <h2 className={styles.recruitTitle}>
-            [{recruit.corpName}] {recruit.recruitTitle}
+            [{recruit.memNickname}] {recruit.recruitTitle}
           </h2>
           <p className={styles.recruitDates}>
             {recruit.recruitStartDate} ~ {recruit.recruitEndDate}
@@ -195,6 +196,8 @@ export default function MemberRecruitDetailPage() {
           </tbody>
         </table>
       </section>
+
+      <KakaoMapPreview address={recruit.recruitJobArea} />
 
       {/* 상세 정보 섹션 */}
       <section className={styles.detailSections}>

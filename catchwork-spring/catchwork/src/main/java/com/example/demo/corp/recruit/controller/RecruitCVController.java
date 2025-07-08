@@ -73,13 +73,15 @@ public class RecruitCVController {
 	     * @return
 	     */
 	    @GetMapping("/download/{cvNo}")
-	    public ResponseEntity<byte[]> downloadCV(@PathVariable int cvNo) {
+	    public ResponseEntity<byte[]> downloadCV(@PathVariable("cvNo") int cvNo) {
 	    	try {
+	    		
 	    		// 1. 파일 경로 조회 (DB에서 파일명 또는 전체 경로 조회)
-	    		String filePath = service.getCVFilePath(cvNo); // 예: /files/cv1234.pdf
+	    		String filePath = service.getCVPDFPath(cvNo); // 예: /files/cv1234.pdf
 
 	    		File file = new File(filePath);
 	    		if (!file.exists()) {
+	    			System.out.println("파일 없음: " + filePath); // 디버깅용 출력
 	    			return ResponseEntity.status(HttpStatus.NOT_FOUND)
                                  .body(null);
 	    		}

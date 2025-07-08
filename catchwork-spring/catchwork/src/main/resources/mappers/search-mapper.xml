@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.member.search.model.mapper.SearchMapper">
+
+
+<!-- 채용공고 검색 -->
+  <select id="searchRecruit" resultType="MemRecruit" parameterType="map">
+    SELECT
+	    R.RECRUIT_NO,
+	    R.RECRUIT_TITLE,
+	    TO_CHAR(R.RECRUIT_START_DATE, 'YYYY-MM-DD') AS RECRUIT_START_DATE,
+	    TO_CHAR(R.RECRUIT_END_DATE, 'YYYY-MM-DD') AS RECRUIT_END_DATE,
+	    R.RECRUIT_JOB_NAME,
+	    R.RECRUIT_JOB_DETAIL,
+	    R.RECRUIT_EDU,
+	    R.RECRUIT_CAREER,
+	    R.RECRUIT_HEADCOUNT,
+	    R.RECRUIT_TYPE,
+	    R.RECRUIT_JOB_AREA,
+	    R.RECRUIT_SALARY,
+	    TO_CHAR(R.RECRUIT_RESULT_DATE, 'YYYY-MM-DD') AS RECRUIT_RESULT_DATE,
+	    R.RECRUIT_DOCX,
+	    R.RECRUIT_APPLY,
+	    R.RECRUIT_CORP_URL,
+	    R.RECRUIT_HIRE_DETAIL,
+	    R.RECRUIT_ETC,
+	    R.RECRUIT_READCOUNT,
+	    R.RECRUIT_STATUS,
+	    TO_CHAR(R.RECRUIT_WRITE_DATE, 'YYYY-MM-DD') AS RECRUIT_WRITE_DATE,
+	    R.MEM_NO,
+	    
+	    -- 기업 정보
+	    CI.CORP_NAME,
+	    CI.CORP_TYPE,
+	    CI.CORP_LOGO,
+			CI.CORP_BENEFIT,
+			CI.CORP_BENEFIT_DETAIL,
+	    
+	    -- 좋아요 수
+	    (SELECT COUNT(*) FROM FAV_RECRUIT F WHERE F.RECRUIT_NO = R.RECRUIT_NO) AS likeCount,
+	    
+	    -- 로그인 유저의 좋아요 여부
+	    (SELECT COUNT(*)
+	     FROM FAV_RECRUIT F
+	     WHERE F.RECRUIT_NO = R.RECRUIT_NO
+	       AND F.MEM_NO = #{memNo}) AS likedByCurrentUser
+	
+	FROM RECRUIT R
+	JOIN CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
+	JOIN CORP_INFO CI ON CM.CORP_NO = CI.CORP_NO
+	
+	<where>
+	  <choose>
+	  
+	    <!-- 채용중: 아직 마감되지 않은 상태 -->
+	    <when test="status == 'open'">
+	      R.RECRUIT_STATUS = 0
+	      AND TRUNC(R.RECRUIT_END_DATE) <![CDATA[ >= ]]> TRUNC(SYSDATE)
+	    </when>
+	    
+	    <!-- 마감됨: 마감일이 지났거나 상태가 3 -->
+	    <when test="status == 'closed'">
+	      (R.RECRUIT_STATUS = 3 OR TRUNC(R.RECRUIT_END_DATE) <![CDATA[ < ]]> TRUNC(SYSDATE))
+	    </when>
+	    
+	    <!-- 전체: 마감/진행 중인 것들 -->
+	    <otherwise>
+	      R.RECRUIT_STATUS IN (0)
+	    </otherwise>
+	    
+	  </choose>
+	
+	  <if test="query != null and query != ''">
+	    AND (
+	      LOWER(R.RECRUIT_TITLE) LIKE '%' || LOWER(#{query}) || '%'
+	      OR LOWER(CI.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%'
+	      OR LOWER(R.RECRUIT_JOB_NAME) LIKE '%' || LOWER(#{query}) || '%'
+	    )
+	  </if>
+	</where>
+
+	<choose>
+	    <when test="sort == 'latest'">
+	        ORDER BY R.RECRUIT_WRITE_DATE DESC
+	    </when>
+	    <when test="sort == 'oldest'">
+	        ORDER BY R.RECRUIT_WRITE_DATE ASC
+	    </when>
+	    <when test="sort == 'views'">
+	        ORDER BY R.RECRUIT_READ_COUNT DESC
+	    </when>
+	    <when test="sort == 'likes'">
+	        ORDER BY likeCount DESC
+	    </when>
+	    <otherwise>
+	        ORDER BY R.RECRUIT_WRITE_DATE DESC
+	    </otherwise>
+	</choose>
+  </select>
+
+
+
+	 <!-- 기업 검색 -->
+  <select id="searchCompany" resultType="com.example.demo.member.company.model.dto.CompanyInfo">
+   SELECT
+    ci.*,
+    (SELECT COUNT(*) FROM RECRUIT r JOIN CORP_MEM cm ON r.MEM_NO = cm.MEM_NO
+     WHERE cm.CORP_NO = ci.CORP_NO AND r.RECRUIT_STATUS = 0) AS RECRUIT_COUNT,
+    (SELECT COUNT(*) FROM FAV_CORP fc WHERE fc.CORP_NO = ci.CORP_NO) AS TOTAL_FAVS,
+    
+    <if test="memNo != null">
+        (SELECT COUNT(*) FROM FAV_CORP fc 
+         WHERE fc.CORP_NO = ci.CORP_NO AND fc.MEM_NO = #{memNo}) AS IS_SAVED,
+        #{memNo} AS MEM_NO
+    </if>
+    <if test="memNo == null">
+        0 AS IS_SAVED,
+        NULL AS MEM_NO
+    </if>
+
+FROM CORP_INFO ci
+
+<where>
+    1=1
+    <if test="query != null and query != ''">
+        AND LOWER(ci.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%'
+    </if>
+</where>
+
+
+ORDER BY ci.CORP_NAME ASC
+</select>
+	
+
+
+
+
+
+</mapper>

@@ -32,7 +32,7 @@ public class ReportController {
         System.out.println(report);
 
         // 유효성 검사
-        if (report.getReportTargetNo() <= 0) {
+        if (report.getReportTargetNo() == null || report.getReportTargetNo().isBlank()) {
             return ResponseEntity.badRequest().body("신고 대상 번호가 유효하지 않습니다.");
         }
         if (report.getReportCategoryCode() <= 0) {

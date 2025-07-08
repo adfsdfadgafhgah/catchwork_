@@ -37,38 +37,38 @@ public class FileConfig implements WebMvcConfigurer {
   // ------------------------------
 
   // 이력서 이미지 관련 경로
-  @Value("${file.upload.cv-img-path}")
-  private String cvImgPath;
+  @Value("${cv-img.resource-handler}")
+  private String cvImgResourceHandler;
 
-  @Value("${file.upload.cv-img-web-path}")
-  private String cvImgWebPath;
+  @Value("${cv-img.resource-location}")
+  private String cvImgResourceLocation;
 
   // ------------------------------
 
   // 프로필 이미지 관련 경로
-  @Value("${file.upload.profile-img-path}")
-  private String profileImgPath;
+  @Value("${profile-img.resource-handler}")
+  private String profileImgResourceHandler;
 
-  @Value("${file.upload.profile-img-web-path}")
-  private String profileImgWebPath;
+  @Value("${profile-img.resource-location}")
+  private String profileImgResourceLocation;
 
   // ------------------------------
 
   // 기업 이미지 관련 경로
-  @Value("${file.upload.company-img-path}")
-  private String companyImgPath;
+  @Value("${company-img.resource-handler}")
+  private String companyImgResourceHandler;
 
-  @Value("${file.upload.company-img-web-path}")
-  private String companyImgWebPath;
+  @Value("${company-img.resource-location}")
+  private String companyImgResourceLocation;
 
   // ------------------------------
 
   // 게시글 이미지 관련 경로
-  @Value("${file.upload.board-img-path}")
-  private String boardImgPath;
+  @Value("${board-img.resource-handler}")
+  private String boardImgResourceHandler;
 
-  @Value("${file.upload.board-img-web-path}")
-  private String boardImgWebPath;
+  @Value("${board-img.resource-location}")
+  private String boardImgResourceLocation;
 
   // ------------------------------
 
@@ -76,13 +76,13 @@ public class FileConfig implements WebMvcConfigurer {
   @Override
   public void addResourceHandlers(ResourceHandlerRegistry registry) {
     // 이력서 이미지 관련 경로
-    registry.addResourceHandler(cvImgWebPath).addResourceLocations(cvImgPath);
+    registry.addResourceHandler(cvImgResourceHandler).addResourceLocations(cvImgResourceLocation);
     // 프로필 이미지 관련 경로
-    registry.addResourceHandler(profileImgWebPath).addResourceLocations(profileImgPath);
+    registry.addResourceHandler(profileImgResourceHandler).addResourceLocations(profileImgResourceLocation);
     // 기업 이미지 관련 경로
-    registry.addResourceHandler(companyImgWebPath).addResourceLocations(companyImgPath);
+    registry.addResourceHandler(companyImgResourceHandler).addResourceLocations(companyImgResourceLocation);
     // 게시글 이미지 관련 경로
-    registry.addResourceHandler(boardImgWebPath).addResourceLocations(boardImgPath);
+    registry.addResourceHandler(boardImgResourceHandler).addResourceLocations(boardImgResourceLocation);
   }
 
   // 이미지 업로드 관련 설정

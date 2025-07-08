@@ -189,6 +189,12 @@ main.container {
   background-color: var(--main-color-dark);
 }
 
+/* 정규식 에러 */
+.regex {
+  color: var(--red);
+  font-size: 12px;
+}
+
 /* 병역 구분, 군별 select 묶음 */
 .military-row {
   display: flex;

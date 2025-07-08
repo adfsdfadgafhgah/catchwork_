@@ -28,10 +28,9 @@
 		<result property="isSaved" column="IS_SAVED" />
 	</resultMap>
 
-
+	<!-- 기업 목록 조회 (검색기능포함)-->
 	<select id="selectCompanyListWithRecruitInfo"
 		resultMap="companyInfoResultMap" parameterType="map">
-
 		SELECT
 		ci.*,
 		(SELECT COUNT(*) FROM RECRUIT r JOIN CORP_MEM cm ON r.MEM_NO = cm.MEM_NO
@@ -39,41 +38,42 @@
 		RECRUIT_COUNT,
 		(SELECT COUNT(*) FROM FAV_CORP fc WHERE fc.CORP_NO = ci.CORP_NO) AS
 		TOTAL_FAVS,
-
 		<if test="memNo != null">
 			(SELECT COUNT(*) FROM FAV_CORP fc WHERE fc.CORP_NO = ci.CORP_NO AND
 			fc.MEM_NO = #{memNo}) AS IS_SAVED,
 			#{memNo} AS MEM_NO
 		</if>
 		<if test="memNo == null">
-			0 AS isSaved,
+			0 AS IS_SAVED,
 			NULL AS MEM_NO
 		</if>
-
 		FROM CORP_INFO ci
 		<where>
+			1=1
 			<if test="query != null and query != ''">
-				ci.CORP_NAME LIKE CONCAT('%', #{query}, '%')
+				AND ci.CORP_NAME LIKE CONCAT('%', #{query}, '%')
 			</if>
 		</where>
+		ORDER BY ci.CORP_NAME ASC
 	</select>
 
-
-
-
-
+	<!-- 기업 상세 -->
 	<select id="selectCompanyDetail"
 		resultMap="companyInfoResultMap" parameterType="map">
 		SELECT
 		ci.*,
-		COALESCE((SELECT COUNT(*)FROM RECRUIT r JOIN CORP_MEM cm ON cm.MEM_NO = r.MEM_NO
-		WHERE cm.CORP_NO = ci.CORP_NO AND r.RECRUIT_STATUS = 0 ), 0) AS
+		COALESCE((SELECT COUNT(*)FROM RECRUIT r JOIN CORP_MEM cm ON cm.MEM_NO
+		= r.MEM_NO
+		WHERE cm.CORP_NO = ci.CORP_NO AND r.RECRUIT_STATUS = 0 ), 0)
+		AS
 		RECRUIT_COUNT,
-		(SELECT COUNT(*) FROM FAV_CORP fc WHERE fc.CORP_NO = ci.CORP_NO) AS
+		(SELECT COUNT(*) FROM FAV_CORP fc WHERE fc.CORP_NO =
+		ci.CORP_NO) AS
 		TOTAL_FAVS,
 		(SELECT COUNT(*)
 		FROM FAV_CORP fc
-		WHERE fc.CORP_NO = ci.CORP_NO AND fc.MEM_NO = #{memNo}) AS IS_SAVED,
+		WHERE
+		fc.CORP_NO = ci.CORP_NO AND fc.MEM_NO = #{memNo}) AS IS_SAVED,
 		#{memNo} AS MEM_NO
 		FROM CORP_INFO ci
 		WHERE ci.CORP_NO = #{corpNo}

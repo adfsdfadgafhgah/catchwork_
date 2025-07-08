@@ -10,4 +10,25 @@ FROM MEMBER
 WHERE MEM_NO = #{memNo}
 </select>
 
+<!-- 기업회원용 로그인 정보 조회 (CORP_NO 포함) -->
+<select id="getCorpLoginMember">
+SELECT 
+    M.MEM_NO,
+    M.MEM_EMAIL,
+    M.MEM_NICKNAME,
+    M.MEM_TYPE,
+    CM.CORP_NO
+FROM MEMBER M
+LEFT JOIN CORP_MEM CM ON M.MEM_NO = CM.MEM_NO
+WHERE M.MEM_NO = #{memNo}
+</select>
+
+<!-- 기업회원 corpNo 조회 -->
+<select id="getCorpNoByMemNo" resultType="int">
+    SELECT CORP_NO
+    FROM CORP_MEM
+    WHERE MEM_NO = #{memNo}
+</select>
+
+
 </mapper>

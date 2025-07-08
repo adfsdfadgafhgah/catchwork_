@@ -1,35 +1,35 @@
 package com.example.demo.corp.myPage.controller;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.auth.model.dto.CustomUserDetails;
 import com.example.demo.corp.myPage.model.dto.CorpMyPage;
 import com.example.demo.corp.myPage.model.service.CorpMyPageService;
 
-import lombok.RequiredArgsConstructor;
-
 @RestController
 @RequestMapping("/corp")
-@RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")  // React 개발서버 주소
 public class CorpMyPageController {
 
-    private final CorpMyPageService corpMyPageService;
+    @Autowired
+    private CorpMyPageService corpMyPageService;
 
-    // 로그인된 기업 회원의 마이페이지 정보 조회
     @GetMapping("/mypage")
-    public ResponseEntity<CorpMyPage> getCorpInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
+    public ResponseEntity<?> getCorpInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
         if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(401).body("로그인이 필요합니다.");
         }
 
-        String corpId = userDetails.getUsername(); // 로그인된 기업 ID
-        CorpMyPage corpInfo = corpMyPageService.getCorpMyPage(corpId);
-        return ResponseEntity.ok(corpInfo);
-    }
+        String corpId = userDetails.getUsername();  // 로그인한 기업 회원 아이디
+        CorpMyPage corpInfo = corpMyPageService.getCorpInfoById(corpId);
 
+        if (corpInfo != null) {
+            return ResponseEntity.ok(corpInfo);
+        } else {
+            return ResponseEntity.status(404).body("기업 정보를 찾을 수 없습니다.");
+        }
+    }
 }

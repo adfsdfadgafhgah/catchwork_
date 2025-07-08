@@ -40,7 +40,7 @@ public class RecruitCVServiceImpl implements RecruitCVService {
 		 * @author JIN
 		 */
 		@Override
-		public String getCVFilePath(int cvNo) {
-		    return mapper.selectCVFilePath(cvNo);
+		public String getCVPDFPath(int cvNo) {
+		    return mapper.selectCVPDFPath(cvNo);// 실제 DB에서 경로 가져옴
 		}
 }

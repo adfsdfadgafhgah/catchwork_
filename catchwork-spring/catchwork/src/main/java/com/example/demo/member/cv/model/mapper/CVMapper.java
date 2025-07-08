@@ -146,6 +146,25 @@ public interface CVMapper {
 	// 이력서 pdf 업로드
 	void uploadCVPdf(RecruitCV recruitCV);
 
+    /** 삭제 (ID 기준) */
+    void deleteExperienceById(String expId);
+    void deleteAwardById(String awardId);
+    void deleteQualifyById(String qualifyId);
+    void deleteLanguageById(String langId);
+    void deleteOuterById(String outerId);
+    void deleteTrainingById(String trainId);
+    void deletePortfolioById(String portId);
+
+    /** 신규 ID 시퀀스 채번 */
+    int nextExpId();
+    int nextAwardId();
+    int nextQualifyId();
+    int nextLangId();
+    int nextOuterId();
+    int nextTrainId();
+    int nextPortId();
+
+
 
 	
 // 	// 회원번호(memNo)로 이력서 목록 조회

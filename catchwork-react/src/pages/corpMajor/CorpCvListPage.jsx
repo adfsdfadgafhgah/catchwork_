@@ -3,7 +3,7 @@ import SectionHeader from "../../components/common/SectionHeader";
 import Pagination from "../../components/common/Pagination";
 import { axiosApi } from "../../api/axiosAPI";
 import "./CorpCVListPage.css";
-import { getCareerRange } from "../../utils/getCareerRange"; //hook으로 옮기기
+import { getCareerRange } from "../../hooks/getCareerRange";
 
 const CorpCVListPage = () => {
   const [cvList, setCVList] = useState([]);
@@ -67,6 +67,11 @@ const CorpCVListPage = () => {
     }
   };
 
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentItems = filteredList.slice(indexOfFirstItem, indexOfLastItem);
+
+  const totalPages = Math.ceil(filteredList.length / itemsPerPage);
   const handleCheckboxChange = (cvNo) => {
     setSelectedCVNos((prev) =>
       prev.includes(cvNo) ? prev.filter((no) => no !== cvNo) : [...prev, cvNo]
@@ -131,10 +136,6 @@ const CorpCVListPage = () => {
       setSelectedCVNos([]);
     }
   };
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredList.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filteredList.length / itemsPerPage);
 
   const { careerMin, careerMax } = getCareerRange(selectedExp);
   return (
