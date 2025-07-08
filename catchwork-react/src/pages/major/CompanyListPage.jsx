@@ -24,10 +24,10 @@ const CompanyListPage = () => {
 
   // loginMember가 실제로 업데이트 되었을 때만 기업 리스트 불러오기
   useEffect(() => {
-    if (loginMember && loginMember.memNo) {
-      console.log("loginMember 세팅됨:", loginMember);
-      getCorpList();
-    }
+    //if (loginMember && loginMember.memNo) { // 이코드 넣었더니 로그인 안하면 목록이 안떠
+    console.log("loginMember 세팅됨:", loginMember);
+    getCorpList();
+    // }
   }, [loginMember]);
 
   //기업 목록
@@ -93,10 +93,12 @@ const CompanyListPage = () => {
         <div className="section-header-with-search">
           <SectionHeader title="기업정보" noBorder />
           <div className="search-box">
-            <button>검색</button>
+            <button>
+              <i className="fa-solid fa-magnifying-glass"></i>
+            </button>
             <input
               type="text"
-              placeholder="진중한 이야기, 취중진담키키"
+              placeholder="진중한 이야기, 취중진담"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />

@@ -34,4 +34,11 @@ public interface RecruitCVMapper {
 	 * @param cvNo
 	 */
 	void updateCVCheckFlag(int cvNo);
+	
+	/** 이력서 삭제
+	 * @author JIN
+	 * @param cvNos
+	 */
+	void deleteCVs(@Param("cvNos") List<Integer> cvNos);
+
 }

@@ -11,8 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -72,7 +74,7 @@ public class RecruitCVController {
 	     * @param cvNo
 	     * @return
 	     */
-	    @GetMapping("/download/{cvNo}")
+	    @GetMapping("download/{cvNo}")
 	    public ResponseEntity<byte[]> downloadCV(@PathVariable("cvNo") int cvNo) {
 	    	try {
 	    		
@@ -110,5 +112,21 @@ public class RecruitCVController {
 	    	}
 	    }
 	    
+	    @DeleteMapping("/delete")
+	    public ResponseEntity<?> deleteCVs(@RequestBody RecruitCV dto) {
+	        try {
+	            List<Integer> cvNos = dto.getCvNos();
+	            if (cvNos == null || cvNos.isEmpty()) {
+	                return ResponseEntity.badRequest().body("삭제할 이력서가 없습니다.");
+	            }
+	            service.deleteCVs(cvNos);
+	            return ResponseEntity.ok().build();
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패: " + e.getMessage());
+	        }
+	    }
+
+
+
 
 }

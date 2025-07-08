@@ -57,13 +57,15 @@
 		FROM
 		RECRUIT_CV RC
 		JOIN
-		RECRUIT R ON RC.RECRUIT_NO = R.RECRUIT_NO
+		RECRUIT R
+		ON RC.RECRUIT_NO = R.RECRUIT_NO
 		<where>
 			<if test="recruitCVEdu != null">
 				AND RC.RECRUIT_CV_EDU = #{recruitCVEdu}
 			</if>
 			<if test="careerMin != null and careerMax != null">
-				AND RC.RECRUIT_CV_CAREER BETWEEN #{careerMin} AND #{careerMax}
+				AND RC.RECRUIT_CV_CAREER BETWEEN #{careerMin} AND
+				#{careerMax}
 			</if>
 		</where>
 
@@ -80,11 +82,23 @@
 		RECRUIT_CV_NO = #{cvNo}
 	</select>
 
+	<!-- 이력서 PDF 다운로드 체크 -->
+	<update id="updateCVCheckFlag">
+		UPDATE RECRUIT_CV
+		SET RECRUIT_CV_CHECK_FL = 'Y'
+		WHERE RECRUIT_CV_NO = #{cvNo}
+	</update>
 
-<update id="updateCVCheckFlag">
-  UPDATE RECRUIT_CV
-  SET RECRUIT_CV_CHECK_FL = 'Y'
-  WHERE RECRUIT_CV_NO = #{cvNo}
-</update>
+	<!-- 이력서 여러개 삭제 -->
+	<delete id="deleteCVs" parameterType="list">
+		DELETE FROM RECRUIT_CV
+		WHERE RECRUIT_CV_NO IN
+		<foreach item="no" collection="cvNos" open="(" separator=","
+			close=")">
+			#{no}
+		</foreach>
+	</delete>
+
+
 
 </mapper>
