@@ -5,20 +5,21 @@
 
 <mapper namespace="com.example.demo.corp.myPage.model.mapper.CorpMyPageMapper">
 
-	<select id="findCorpInfoById" resultType="com.example.demo.corp.myPage.model.dto.CorpMyPage">
+	<select id="findCorpInfoById"
+        parameterType="string"
+        resultType="com.example.demo.corp.myPage.model.dto.CorpMyPage">
 		SELECT
-		    m.mem_id         AS memId,
-		    m.mem_email      AS memEmail,
-		    m.mem_tel        AS memTel,
-		    m.mem_name       AS memName,
+		    m.mem_id AS memId,
+		    m.mem_email AS memEmail,
+		    m.mem_tel AS memTel,
+		    m.mem_name AS memName,
 		    cm.corp_mem_dept AS corpDepartment,
-		    m.mem_no         AS memNo,
-		    m.profile_path   AS memProfilePath,
-		    ci.corp_name     AS corpName
+		    m.mem_no AS memNo,
+		    ci.corp_name AS corpName
 		FROM MEMBER m
 		JOIN CORP_MEM cm ON m.mem_no = cm.mem_no
 		JOIN CORP_INFO ci ON cm.corp_no = ci.corp_no
-		WHERE m.mem_id = ?
+		WHERE m.mem_id = #{memId}
 	</select>
 
 </mapper>

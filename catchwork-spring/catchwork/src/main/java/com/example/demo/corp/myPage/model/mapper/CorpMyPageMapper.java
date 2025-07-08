@@ -8,6 +8,6 @@ import com.example.demo.corp.myPage.model.dto.CorpMyPage;
 @Mapper
 public interface CorpMyPageMapper {
 
-    /** 기업 아이디로 기업 마이페이지 조회 */
-    CorpMyPage findCorpInfoById(String corpId);
+    /** 아이디로 기업 마이페이지 조회 */    
+    CorpMyPage findCorpInfoById(String memId);
 }
