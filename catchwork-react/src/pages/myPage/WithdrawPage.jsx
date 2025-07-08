@@ -1,28 +1,58 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import "./WithdrawPage.css";
+import { axiosApi } from "../../api/axiosAPI";
+import { useAuthStore } from "../../stores/authStore";
 
 const WithdrawPage = () => {
   const navigate = useNavigate();
+  const { loginMember } = useOutletContext();
   const [agree, setAgree] = useState(false);
   const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
+  const [isRead, setIsRead] = useState(false);
+  const { signOut } = useAuthStore();
 
   const isDisabled = !agree || !password;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!agree) {
-      setError("탈퇴 약관에 동의해 주세요.");
-      return;
+
+    if (
+      confirm(
+        "정말 탈퇴하시겠습니까? \n탈퇴 후 데이터에 대한 손실을 책임지지 않습니다."
+      )
+    ) {
+      try {
+        const resp = await axiosApi.put("/myPage/withdraw", {
+          memPw: password,
+          memNo: loginMember.memNo,
+        });
+        if (resp.status === 200) {
+          alert(resp.data);
+          signOut();
+          navigate("/");
+        }
+      } catch (error) {
+        if (error.response) {
+          if (error.response.status === 401) {
+            alert(error.response.data); // 비밀번호 틀림
+          } else {
+            alert("오류가 발생했습니다: " + error.response.status);
+          }
+        } else {
+          alert("네트워크 오류가 발생했습니다.");
+        }
+      }
+    } else {
+      alert("탈퇴를 취소하였습니다.");
     }
-    if (password.length < 8) {
-      setError("비밀번호는 최소 8자 이상이어야 합니다.");
-      return;
+  };
+
+  const handleScroll = (e) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.target;
+    if (scrollTop + clientHeight >= scrollHeight - 5) {
+      setIsRead(true);
     }
-    setError("");
-    alert("계정이 성공적으로 탈퇴되었습니다.");
-    navigate("/login");
   };
 
   const terms = [
@@ -84,7 +114,7 @@ const WithdrawPage = () => {
       ],
     },
     {
-      title: "📌 문의",
+      title: "문의",
       content: [
         "회원 탈퇴 또는 개인정보 관련 문의는 [고객센터] 또는 이메일 (help@catchwork.co.kr) 로 연락해 주세요.",
       ],
@@ -99,9 +129,9 @@ const WithdrawPage = () => {
             계정을 탈퇴하면 모든 데이터가 삭제되며 복구할 수 없습니다. 신중히
             결정해 주세요.
           </p>
-          <div className="withdraw-terms-box">
-            {terms.map((item) => (
-              <div key={item.id} className="terms-text">
+          <div className="withdraw-terms-box" onScroll={handleScroll}>
+            {terms.map((item, index) => (
+              <div key={index} className="terms-text">
                 <p>{item.title}</p>
                 <p>{item.content}</p>
               </div>
@@ -115,6 +145,7 @@ const WithdrawPage = () => {
                 id="agree"
                 checked={agree}
                 onChange={(e) => setAgree(e.target.checked)}
+                disabled={!isRead}
               />
               <label htmlFor="agree">위 약관에 동의합니다.</label>
             </div>
@@ -134,8 +165,6 @@ const WithdrawPage = () => {
               required
             />
           </div>
-
-          {error && <p className="error-message">{error}</p>}
 
           <button
             type="submit"

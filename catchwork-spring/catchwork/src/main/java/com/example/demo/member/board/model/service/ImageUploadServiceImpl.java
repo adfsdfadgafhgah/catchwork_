@@ -117,7 +117,7 @@ public class ImageUploadServiceImpl implements ImageUploadService {
       System.out.println("result: " + result);
     } catch (Exception e) {
       e.printStackTrace();
-      // throw new RuntimeException("썸네일 이미지 업로드 실패");
+      throw new RuntimeException("썸네일 이미지 업로드 실패");
     }
 
     return result;

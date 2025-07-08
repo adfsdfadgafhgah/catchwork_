@@ -69,7 +69,7 @@ const EditMyInfoPage = () => {
   const {
     formData,
     setFormData,
-    handleChange,
+    handleInputChange,
     setField,
     validity,
     handleCheckNickname,
@@ -149,7 +149,7 @@ const EditMyInfoPage = () => {
     try {
       // 프로필 이미지 업로드
       const resp = await axiosApi.post(
-        "/mypage/uploadProfileImg",
+        "/myPage/uploadProfileImg",
         { imgFile, memNo: loginMember.memNo },
         {
           headers: { "Content-Type": "multipart/form-data" },
@@ -186,7 +186,7 @@ const EditMyInfoPage = () => {
     try {
       setModalState((prev) => ({ ...prev, loading: true }));
 
-      const response = await axiosApi.post("/mypage/verifyPassword", {
+      const response = await axiosApi.post("/myPage/verifyPassword", {
         memNo: loginMember.memNo,
         memPw: password,
       });
@@ -248,7 +248,7 @@ const EditMyInfoPage = () => {
     try {
       console.log("try 실행");
       console.log(requestData);
-      const resp = await axiosApi.post("/mypage/updateMemberInfo", requestData);
+      const resp = await axiosApi.post("/myPage/updateMemberInfo", requestData);
       console.log("resp 실행");
       if (resp.status === 200) {
         if (imgFile) {
@@ -317,7 +317,7 @@ const EditMyInfoPage = () => {
                 <input
                   name="memEmail"
                   value={formData.memEmail}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   required
                   style={{
                     borderColor:
@@ -338,7 +338,7 @@ const EditMyInfoPage = () => {
                 <input
                   name="memTel"
                   value={formData.memTel}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   required
                   style={{
                     borderColor: validity.memTel === false ? "red" : undefined,
@@ -373,7 +373,7 @@ const EditMyInfoPage = () => {
                 <input
                   name="memName"
                   value={formData.memName}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   required
                   style={{
                     borderColor: validity.memName === false ? "red" : undefined,
@@ -393,7 +393,7 @@ const EditMyInfoPage = () => {
                 <input
                   name="memNickname"
                   value={formData.memNickname}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   required
                   style={{
                     borderColor:
@@ -423,7 +423,7 @@ const EditMyInfoPage = () => {
                   name="memBirthday"
                   type="date"
                   value={formData.memBirthday}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   required
                 />
               </div>
@@ -438,7 +438,7 @@ const EditMyInfoPage = () => {
                     name="memGender"
                     value="M"
                     checked={formData.memGender === "M"}
-                    onChange={handleChange}
+                    onChange={handleInputChange}
                     required
                   />
                   남
@@ -449,7 +449,7 @@ const EditMyInfoPage = () => {
                     name="memGender"
                     value="F"
                     checked={formData.memGender === "F"}
-                    onChange={handleChange}
+                    onChange={handleInputChange}
                     required
                   />
                   여
@@ -464,7 +464,7 @@ const EditMyInfoPage = () => {
                   <input
                     name="memAddr"
                     value={formData.memAddr}
-                    onChange={handleChange}
+                    onChange={handleInputChange}
                     readOnly
                     required
                     placeholder="주소를 입력해주세요"
@@ -480,7 +480,7 @@ const EditMyInfoPage = () => {
                 <input
                   name="detailAddress"
                   value={formData.detailAddress}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   placeholder="상세주소"
                   required
                 />
