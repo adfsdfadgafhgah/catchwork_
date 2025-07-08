@@ -50,7 +50,7 @@ const CVForm02 = ({ index, type, data, labels, onRemove, onChange, mode, isSubmi
               value={data.startDate || ""}
               onChange={(val) => handleChange("startDate", val)}
             />
-            <span className={styles.dateDash}>-</span>
+            <span className={styles.dateDash}>~</span>
             <YearMonthPicker
               mode={mode}
               value={data.endDate || ""}

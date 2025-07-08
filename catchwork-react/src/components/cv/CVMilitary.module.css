@@ -1,5 +1,19 @@
 .section {
   display: flex;
+  justify-content: space-between;
+}
+
+.militaryLeft {
+  display: flex;
+  width: 50%;
+  gap: 8px;
+}
+
+.militaryRight {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 32%;
 }
 
 .militaryRow {
@@ -18,7 +32,8 @@
   outline: none;
   cursor: pointer;
   color: var(--deep-gray);
-  width: 45%;
+  min-width: 195px;
+  text-align: center;
 }
 
 .militarySelect:focus {
@@ -30,15 +45,12 @@
   color: var(--deep-gray);
 }
 
-.militaryDates {
-  width: 50%;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
 .dateSeparator {
   color: var(--gray01);
   font-size: 16px;
   font-weight: 500;
+}
+
+.militaryWoman {
+  padding: 10px;
 }
