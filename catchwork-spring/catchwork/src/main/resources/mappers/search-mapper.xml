@@ -4,7 +4,7 @@
 <mapper namespace="com.example.demo.member.search.model.mapper.SearchMapper">
 
 
-<!-- 채용공고 검색 -->
+<!-- 채용 공고 검색 -->
   <select id="searchRecruit" resultType="MemRecruit" parameterType="map">
     SELECT
 	    R.RECRUIT_NO,
@@ -51,34 +51,57 @@
 	JOIN CORP_INFO CI ON CM.CORP_NO = CI.CORP_NO
 	
 	<where>
-	  <choose>
-	  
-	    <!-- 채용중: 아직 마감되지 않은 상태 -->
-	    <when test="status == 'open'">
-	      R.RECRUIT_STATUS = 0
-	      AND TRUNC(R.RECRUIT_END_DATE) <![CDATA[ >= ]]> TRUNC(SYSDATE)
-	    </when>
-	    
-	    <!-- 마감됨: 마감일이 지났거나 상태가 3 -->
-	    <when test="status == 'closed'">
-	      (R.RECRUIT_STATUS = 3 OR TRUNC(R.RECRUIT_END_DATE) <![CDATA[ < ]]> TRUNC(SYSDATE))
-	    </when>
-	    
-	    <!-- 전체: 마감/진행 중인 것들 -->
-	    <otherwise>
-	      R.RECRUIT_STATUS IN (0)
-	    </otherwise>
-	    
-	  </choose>
-	
-	  <if test="query != null and query != ''">
-	    AND (
-	      LOWER(R.RECRUIT_TITLE) LIKE '%' || LOWER(#{query}) || '%'
-	      OR LOWER(CI.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%'
-	      OR LOWER(R.RECRUIT_JOB_NAME) LIKE '%' || LOWER(#{query}) || '%'
-	    )
-	  </if>
-	</where>
+  <choose>
+    <!-- 채용중: 아직 마감되지 않은 상태 -->
+    <when test="status == 'open'">
+      R.RECRUIT_STATUS = 0
+      AND TRUNC(R.RECRUIT_END_DATE) <![CDATA[ >= ]]> TRUNC(SYSDATE)
+    </when>
+
+    <!-- 마감됨: 마감일이 지났거나 상태가 3 -->
+    <when test="status == 'closed'">
+      (R.RECRUIT_STATUS = 3 OR TRUNC(R.RECRUIT_END_DATE) <![CDATA[ < ]]> TRUNC(SYSDATE))
+    </when>
+
+    <!-- 전체 -->
+    <otherwise>
+      R.RECRUIT_STATUS IN (0)
+    </otherwise>
+  </choose>
+
+  <!-- 검색어 -->
+  <if test="query != null and query != ''">
+    AND (
+      LOWER(R.RECRUIT_TITLE) LIKE '%' || LOWER(#{query}) || '%'
+      OR LOWER(CI.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%'
+      OR LOWER(R.RECRUIT_JOB_NAME) LIKE '%' || LOWER(#{query}) || '%'
+    )
+  </if>
+
+  <!-- 추가 필터 조건들 -->
+  
+   <if test="recruitJobName != null and recruitJobName != '' and recruitJobName != 'all'">
+      AND R.RECRUIT_JOB_NAME = #{recruitJobName}
+    </if>
+    
+  <if test="recruitCareer != null and recruitCareer != '' and recruitCareer != 'all'">
+    AND R.RECRUIT_CAREER = #{recruitCareer}
+  </if>
+
+  <if test="recruitEdu != null and recruitEdu != '' and recruitEdu != 'all'">
+    AND R.RECRUIT_EDU = #{recruitEdu}
+  </if>
+
+  <if test="recruitType != null and recruitType != '' and recruitType != 'all'">
+    AND R.RECRUIT_TYPE = #{recruitType}
+  </if>
+
+  <if test="corpType != null and corpType != '' and corpType != 'all'">
+    AND CI.CORP_TYPE = #{corpType}
+  </if>
+
+</where>
+
 
 	<choose>
 	    <when test="sort == 'latest'">
@@ -101,36 +124,45 @@
 
 
 
-	 <!-- 기업 검색 -->
-  <select id="searchCompany" resultType="com.example.demo.member.company.model.dto.CompanyInfo">
-   SELECT
-    ci.*,
-    (SELECT COUNT(*) FROM RECRUIT r JOIN CORP_MEM cm ON r.MEM_NO = cm.MEM_NO
-     WHERE cm.CORP_NO = ci.CORP_NO AND r.RECRUIT_STATUS = 0) AS RECRUIT_COUNT,
-    (SELECT COUNT(*) FROM FAV_CORP fc WHERE fc.CORP_NO = ci.CORP_NO) AS TOTAL_FAVS,
-    
-    <if test="memNo != null">
-        (SELECT COUNT(*) FROM FAV_CORP fc 
-         WHERE fc.CORP_NO = ci.CORP_NO AND fc.MEM_NO = #{memNo}) AS IS_SAVED,
-        #{memNo} AS MEM_NO
-    </if>
-    <if test="memNo == null">
-        0 AS IS_SAVED,
-        NULL AS MEM_NO
-    </if>
+
+ <!-- 기업 검색 -->
+<select id="searchCompany" resultType="com.example.demo.member.company.model.dto.CompanyInfo">
+SELECT
+  ci.*,
+
+  -- 진행중인 공고 수
+  (SELECT COUNT(*) 
+     FROM RECRUIT r 
+     JOIN CORP_MEM cm ON r.MEM_NO = cm.MEM_NO
+    WHERE cm.CORP_NO = ci.CORP_NO AND r.RECRUIT_STATUS = 0) AS recruitCount,
+
+  -- 즐겨찾기 수: TOTAL_FAVS
+ (SELECT COUNT(*) FROM FAV_CORP fc WHERE fc.CORP_NO = ci.CORP_NO) AS favs,
+
+  -- 로그인 유저의 즐겨찾기 여부
+  <if test="memNo != null and memNo != ''">
+  (SELECT COUNT(*) FROM FAV_CORP fc 
+   WHERE fc.CORP_NO = ci.CORP_NO AND fc.MEM_NO = #{memNo}) AS isSaved,
+  #{memNo} AS memNo
+</if>
+<if test="memNo == null or memNo == ''">
+  0 AS isSaved,
+  NULL AS memNo
+</if>
+
 
 FROM CORP_INFO ci
 
 <where>
-    1=1
-    <if test="query != null and query != ''">
-        AND LOWER(ci.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%'
-    </if>
+  1=1
+  <if test="query != null and query != ''">
+    AND LOWER(ci.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%'
+  </if>
 </where>
-
 
 ORDER BY ci.CORP_NAME ASC
 </select>
+
 	
 
 

@@ -1,6 +1,7 @@
 package com.example.demo.member.search.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -28,20 +29,12 @@ public class SearchController {
 
     /**search) recruit
      * @author JIN
-     * @param query
-     * @param memNo
-     * @param status
-     * @param sort
+     * @param 
      * @return
      */
 	@GetMapping("/recruit")
-	public List<MemRecruit> searchRecruit(
-	    @RequestParam(name = "query", required = false) String query,
-	    @RequestParam(name = "memNo", required = false) String memNo,
-	    @RequestParam(name = "status", required = false) String status,
-	    @RequestParam(name = "sort", required = false) String sort) {
-
-	    return searchService.searchRecruit(query, memNo, status, sort);
+	public List<MemRecruit> searchRecruit(@RequestParam Map<String, Object> params) {
+	    return searchService.searchRecruit(params);
 	}
 
     

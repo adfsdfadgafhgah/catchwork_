@@ -22,12 +22,16 @@ public interface RecruitCVMapper {
 	 */
 	List<RecruitCV> getCVList(RecruitCV filter);
 
-	
-	/** 파일 경로 저장(7/4 하는중)
+	/** 이력서 PDF 경로 다운로드
 	 * @author JIN
 	 * @param cvNo
 	 * @return
 	 */
 	String selectCVPDFPath(int cvNo);
 	 
+	/** 이력서 PDF 다운 체크
+	 * @author JIN
+	 * @param cvNo
+	 */
+	void updateCVCheckFlag(int cvNo);
 }

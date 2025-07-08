@@ -20,7 +20,6 @@
 		<result property="recruitTitle" column="recruit_title" />
 	</resultMap>
 
-
 	<!-- 전체 결과 조회 -->
 	<select id="selectAllRecruitCV" resultMap="recruitCVMap">
 		SELECT
@@ -28,14 +27,16 @@
 		R.RECRUIT_TITLE,
 		RC.RECRUIT_CV_PDF_TITLE,
 		RC.RECRUIT_CV_PDF_PATH,
-		TO_CHAR(RC.RECRUIT_CV_DATE, 'YYYY.MM.DD') AS recruit_cv_date,
+		TO_CHAR(RC.RECRUIT_CV_DATE, 'YYYY.MM.DD') AS
+		recruit_cv_date,
 		RC.RECRUIT_CV_EDU,
 		RC.RECRUIT_CV_CAREER,
 		RC.RECRUIT_CV_CHECK_FL
 		FROM
 		RECRUIT_CV RC
 		JOIN
-		RECRUIT R ON RC.RECRUIT_NO = R.RECRUIT_NO
+		RECRUIT R ON RC.RECRUIT_NO
+		= R.RECRUIT_NO
 		ORDER BY
 		R.RECRUIT_TITLE ASC,
 		RC.RECRUIT_CV_NO DESC
@@ -43,40 +44,47 @@
 
 	<!-- 필터링 (학력, 경력) -->
 	<select id="getCVList">
-	 SELECT
-    RC.RECRUIT_CV_NO,
-    RC.RECRUIT_CV_EDU,
-    RC.RECRUIT_CV_CAREER,
-    RC.RECRUIT_CV_PDF_TITLE,
-    RC.RECRUIT_CV_DATE,
-    RC.RECRUIT_CV_CHECK_FL,
-    RC.MEM_NO,
-    RC.RECRUIT_NO,
-    R.RECRUIT_TITLE
-  FROM
-    RECRUIT_CV RC
-  JOIN
-    RECRUIT R ON RC.RECRUIT_NO = R.RECRUIT_NO
-  <where>
-    <if test="recruitCVEdu != null">
-      AND RC.RECRUIT_CV_EDU = #{recruitCVEdu}
-    </if>
-    <if test="careerMin != null and careerMax != null">
-      AND RC.RECRUIT_CV_CAREER BETWEEN #{careerMin} AND #{careerMax}
-    </if>
-  </where>
+		SELECT
+		RC.RECRUIT_CV_NO,
+		RC.RECRUIT_CV_EDU,
+		RC.RECRUIT_CV_CAREER,
+		RC.RECRUIT_CV_PDF_TITLE,
+		RC.RECRUIT_CV_DATE,
+		RC.RECRUIT_CV_CHECK_FL,
+		RC.MEM_NO,
+		RC.RECRUIT_NO,
+		R.RECRUIT_TITLE
+		FROM
+		RECRUIT_CV RC
+		JOIN
+		RECRUIT R ON RC.RECRUIT_NO = R.RECRUIT_NO
+		<where>
+			<if test="recruitCVEdu != null">
+				AND RC.RECRUIT_CV_EDU = #{recruitCVEdu}
+			</if>
+			<if test="careerMin != null and careerMax != null">
+				AND RC.RECRUIT_CV_CAREER BETWEEN #{careerMin} AND #{careerMax}
+			</if>
+		</where>
 
-  <!-- 공고 제목 오름차순, 경력 오름차순 -->
-  ORDER BY R.RECRUIT_TITLE ASC, RC.RECRUIT_CV_CAREER ASC
+		<!-- 공고 제목 오름차순, 경력 오름차순 -->
+		ORDER BY R.RECRUIT_TITLE ASC, RC.RECRUIT_CV_CAREER ASC
 	</select>
-
 
 	<!-- 경로 저장 -->
 	<select id="selectCVPDFPath" resultType="String"
 		parameterType="int">
 		SELECT RECRUIT_CV_PDF_PATH
 		FROM RECRUIT_CV
-		WHERE RECRUIT_CV_NO = #{cvNo}
+		WHERE
+		RECRUIT_CV_NO = #{cvNo}
 	</select>
+
+
+<update id="updateCVCheckFlag">
+  UPDATE RECRUIT_CV
+  SET RECRUIT_CV_CHECK_FL = 'Y'
+  WHERE RECRUIT_CV_NO = #{cvNo}
+</update>
 
 </mapper>

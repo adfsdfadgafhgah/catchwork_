@@ -14,6 +14,15 @@ public class CorpInfoServiceImpl implements CorpInfoService{
 
 	@Autowired
 	private CorpInfoMapper mapper;
+	
+	/** 공고 작성페이지에서 기업 정보 가져오기
+	 * @author BAEBAE
+	 */
+	@Override
+	public CorpInfo getCorpInfoByMember(String memNo) {
+		
+		return mapper.getCorpInfoByMember(memNo);
+	}
 		
 	/**memNo에 따라서 기업 정보가 다르니 다르게 보여져야 함
 	 * @author JIN
@@ -31,13 +40,6 @@ public class CorpInfoServiceImpl implements CorpInfoService{
         return mapper.updateCorpInfo(corpInfo);
     }
 
-	/** 공고 작성페이지에서 기업 정보 가져오기
-	 * @author BAEBAE
-	 */
-	@Override
-	public CorpInfo getCorpInfoByMember(String memNo) {
-		
-		return mapper.getCorpInfoByMember(memNo);
-	}
+	
 	
 }

@@ -7,6 +7,9 @@ import "./CompanyItem.css";
 const CompanyItem = ({ company: initialCompany }) => {
   const { loginMember } = useLoginMember();
   const [company, setCompany] = useState(initialCompany);
+  const [isLoading, setIsLoading] = useState(false);
+
+  console.log("🔍 기업 정보 확인:", company);
 
   const handleToggleBookmark = async (e) => {
     e.preventDefault(); // 링크 이동 방지
@@ -15,11 +18,12 @@ const CompanyItem = ({ company: initialCompany }) => {
       alert("로그인 후 이용 가능합니다.");
       return;
     }
-
+    if (isLoading) return; // 중복 클릭 방지
     try {
+      setIsLoading(true); //  로딩 시작
       const res = await axiosApi.post("/company/toggle-favorite", {
         corpNo: company.corpNo,
-        memNo: loginMember.memNo, // 이미 이 방식대로 controller에서 사용 중
+        memNo: loginMember.memNo,
       });
 
       const { isSaved, totalFav } = res.data;
@@ -32,6 +36,8 @@ const CompanyItem = ({ company: initialCompany }) => {
     } catch (err) {
       console.error("관심 기업 토글 실패:", err);
       alert("즐겨찾기 변경에 실패했습니다.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -40,7 +46,15 @@ const CompanyItem = ({ company: initialCompany }) => {
       <div className="company-item">
         {/* 로고 영역 */}
         <div className="company-item-logo-area">
-          <img src={company.corpLogo} alt="logo" className="company-logo" />
+          <img
+            src={
+              company.corpLogo
+                ? `${import.meta.env.VITE_BASE_URL}${company.corpLogo}`
+                : "/default-logo.png" //기업 로고 없을때 넣을 이미지
+            }
+            alt="기업 로고"
+            className="company-logo"
+          />
         </div>
 
         {/* 회사명 */}
