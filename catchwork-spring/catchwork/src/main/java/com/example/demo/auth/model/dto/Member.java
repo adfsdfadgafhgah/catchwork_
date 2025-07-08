@@ -36,4 +36,8 @@ public class Member {
 
 	@Builder.Default
 	private int memGrade = 0;
+	
+//	기업회원
+	private String corpRegNo;      // 사업자번호
+	private String corpMemDept;    // 부서명
 }

@@ -1,82 +1,99 @@
 package com.example.demo.auth.model.service;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.auth.model.dto.Member;
+import com.example.demo.auth.model.entity.CorpInfoEntity;
+import com.example.demo.auth.model.entity.CorpMemEntity;
 import com.example.demo.auth.model.entity.MemberEntity;
 import com.example.demo.auth.model.entity.MemberGradeEntity;
 import com.example.demo.auth.model.mapper.MemberMapper;
+import com.example.demo.auth.model.repository.CorpInfoRepository;
+import com.example.demo.auth.model.repository.CorpMemRepository;
 import com.example.demo.auth.model.repository.MemberGradeRepository;
 import com.example.demo.auth.model.repository.MemberRepository;
 
+import jakarta.persistence.EntityManager;
+
 @Service
-//@RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
 public class MemberServiceImpl implements MemberService {
 
-//	@Autowired
-	private final MemberRepository memberRepository;
-	private final MemberGradeRepository memberGradeRepository;
-//	private final MemberGradeRepository memberGradeRepository;
-
-//	@Autowired
-	private final BCryptPasswordEncoder bcrypt;
-
-//	@Autowired
 	private final MemberMapper mapper;
-
+	private final MemberRepository memberRepository;
+	private final CorpInfoRepository corpInfoRepository;
+	
+	private final MemberGradeRepository memberGradeRepository;
+	private final CorpMemRepository corpMemRepository;
+	
+	private final BCryptPasswordEncoder bcrypt;
+	
+//	@Autowired
+//	private EntityManager entityManager;
+	
 	public MemberServiceImpl(
-			MemberRepository memberRepository, 
+			MemberRepository memberRepository,
+			CorpMemRepository corpMemRepository,
+			CorpInfoRepository corpInfoRepository,
 			MemberGradeRepository memberGradeRepository,
 			BCryptPasswordEncoder bCryptPasswordEncoder, 
 			MemberMapper mapper) {
 		this.memberRepository = memberRepository;
+		this.corpMemRepository = corpMemRepository;
+		this.corpInfoRepository = corpInfoRepository;
 		this.memberGradeRepository = memberGradeRepository;
 		this.bcrypt = bCryptPasswordEncoder;
 		this.mapper = mapper;
 	}
 
-	@Override
-	public Object signup(Member inputMember) {
-		System.out.println("signup service");
-//		memNo UUID 생성
-		inputMember.setMemNo(UUID.randomUUID().toString());
-//		memGrade 0 기본 설정
-		inputMember.setMemGrade(0);
+	@Transactional(rollbackFor = Exception.class)
+	public Object signup(Member inputMember) throws Exception {
+	    if (!isValidInput(inputMember)) return "INVALID_INPUT";
 
-//	    입력값 검증
-		if (!isValidInput(inputMember)) {
-			return "INVALID_INPUT";
-		}
+	    if (memberRepository.existsByMemId(inputMember.getMemId())) return "DUPLICATE_ID";
+	    if (inputMember.getMemNickname() != null && memberRepository.existsByMemNickname(inputMember.getMemNickname()))
+	        return "DUPLICATE_NICKNAME";
 
-//	    중복 MEM_ID 체크
-		if (memberRepository.existsByMemId(inputMember.getMemId())) {
-			return "DUPLICATE_ID";
-		}
-//	    중복 MEM_NICKNAME 체크
-		if (memberRepository.existsByMemNickname(inputMember.getMemNickname())) {
-			return "DUPLICATE_NICKNAME";
-		}
+	    inputMember.setMemNo(UUID.randomUUID().toString());
+	    inputMember.setMemGrade(0); // 일반회원은 0 등급 기본
 
-		try {
-			// 회원 정보 저장
-			MemberEntity entity = createMemberEntity(inputMember);
-			MemberEntity saved = memberRepository.save(entity);
-			System.out.println("saved entity = " + saved);
+	    // 공통 회원 저장
+	    MemberEntity memberEntity = createMemberEntity(inputMember);
+	    memberRepository.save(memberEntity);
 
-			// 응답용 Member 객체 생성 (비밀번호 제외)
-			return createResponseMember(inputMember);
+	    // 기업 회원일 경우 CORP_MEM 등록
+	    if (inputMember.getMemType() == 1) {
+	    	
+	    	System.out.println(inputMember);
+	        // 기업 정보 조회
+	    	CorpInfoEntity corpInfo = corpInfoRepository.findByCorpRegNo(inputMember.getCorpRegNo());
+	    	System.out.println(corpInfo);
 
-		} catch (Exception e) {
-			// 저장 중 오류 발생 시 예외 던지기
-			System.out.println(e);
-			throw new RuntimeException("회원 정보 저장 중 오류 발생", e);
-		}
+	    	if (corpInfo==null) {
+	    	    throw new Exception("해당 사업자등록번호로 등록된 기업이 없습니다.");
+	    	}
+	    	
+//	        entityManager.flush();
+
+	    	
+	    	// CORP_MEM 생성
+	        CorpMemEntity corpMem = new CorpMemEntity();
+	        corpMem.setMemNo(memberEntity.getMemNo());
+//	        corpMem.setMember(memberEntity);
+	    	corpMem.setCorpInfo(corpInfo);
+	        corpMem.setCorpMemDept(inputMember.getCorpMemDept());
+	        corpMem.setCorpMemRoleCheck("N");
+	        corpMemRepository.save(corpMem);
+	    }
+
+	    return inputMember;
 	}
 
 	@Override
@@ -89,50 +106,6 @@ public class MemberServiceImpl implements MemberService {
 		return !memberRepository.existsByMemNickname(nickname);
 	}
 
-	/**
-	 * 사용자 로그인을 처리하는 메서드
-	 *
-	 * @param inputMember 로그인 요청 정보 (memId, memPw 포함)
-	 * @return 로그인 성공 시 "SUCCESS", 실패 시 에러 코드 문자열
-	 *
-	 * @author Won
-	 */
-//	@Override
-//	public String signin(Member inputMember) {
-//	    // 입력값 검증
-//	    if (!isValidSigninInput(inputMember)) {
-//	        return "INVALID_INPUT";
-//	    }
-//	    
-//	    try {
-//	        // DB에서 사용자 조회
-//	        MemberEntity memberEntity = memberRepository.findByMemId(inputMember.getMemId());
-//	        
-//	        // 사용자가 존재하지 않는 경우
-//	        if (memberEntity == null) {
-//	            return "USER_NOT_FOUND";
-//	        }
-//	        
-//	        // 비밀번호 검증
-//	        if (!bcrypt.matches(inputMember.getMemPw(), memberEntity.getMemPw())) {
-//	            return "INVALID_PASSWORD";
-//	        }
-//	        
-//	        // 로그인 성공
-//	        String token = generateJWTToken(memberEntity);
-//	        return token;
-//	        
-//	    } catch (Exception e) {
-//	        throw new RuntimeException("로그인 처리 중 오류가 발생했습니다.", e);
-//	    }
-//	}
-//	
-//	// JWT 토큰 생성 메서드 (실제 JWT 라이브러리 사용 필요)
-//	private String generateJWTToken(MemberEntity member) {
-//	    // 실제로는 JWT 라이브러리를 사용해서 토큰 생성
-//	    // 예시: return jwtUtil.generateToken(member.getMemId());
-//	    return "jwt.token.example." + member.getMemId(); // 임시 토큰
-//	}
 
 	/* 회원가입 헬퍼 메소드 */
 
@@ -146,13 +119,34 @@ public class MemberServiceImpl implements MemberService {
 	 * @author Won
 	 */
 	private boolean isValidInput(Member member) {
-		return member != null && member.getMemId() != null && !member.getMemId().trim().isEmpty()
-				&& member.getMemPw() != null && !member.getMemPw().trim().isEmpty() && member.getMemName() != null
-				&& !member.getMemName().trim().isEmpty() && member.getMemEmail() != null
-				&& !member.getMemEmail().trim().isEmpty() && member.getMemTel() != null
-				&& !member.getMemTel().trim().isEmpty() && member.getMemNickname() != null
-				&& !member.getMemNickname().trim().isEmpty();
+	    if (member == null) {
+	        System.out.println("[유효성 실패] member == null");
+	        return false;
+	    }
+	    if (member.getMemId() == null || member.getMemId().trim().isEmpty()) {
+	        System.out.println("[유효성 실패] memId is null or empty");
+	        return false;
+	    }
+	    if (member.getMemPw() == null || member.getMemPw().trim().isEmpty()) {
+	        System.out.println("[유효성 실패] memPw is null or empty");
+	        return false;
+	    }
+	    if (member.getMemName() == null || member.getMemName().trim().isEmpty()) {
+	        System.out.println("[유효성 실패] memName is null or empty");
+	        return false;
+	    }
+	    if (member.getMemEmail() == null || member.getMemEmail().trim().isEmpty()) {
+	        System.out.println("[유효성 실패] memEmail is null or empty");
+	        return false;
+	    }
+	    if (member.getMemTel() == null || member.getMemTel().trim().isEmpty()) {
+	        System.out.println("[유효성 실패] memTel is null or empty");
+	        return false;
+	    }
+
+	    return true;
 	}
+
 
 	/**
 	 * Member DTO를 기반으로 DB 저장용 MemberEntity 객체를 생성하는 메서드
@@ -163,30 +157,30 @@ public class MemberServiceImpl implements MemberService {
 	 * @author Won
 	 */
 	private MemberEntity createMemberEntity(Member member) {
-	    MemberEntity entity = new MemberEntity();
-	    MemberGradeEntity gradeEntity = memberGradeRepository.findById(member.getMemGrade())
-	        .orElseThrow(() -> new RuntimeException("회원 등급 정보가 없습니다."));
+		MemberEntity entity = new MemberEntity();
+		MemberGradeEntity gradeEntity = memberGradeRepository.findById(member.getMemGrade())
+				.orElseThrow(() -> new RuntimeException("회원 등급 정보가 없습니다."));
 
-	    entity.setMemNo(member.getMemNo());
-	    entity.setMemId(member.getMemId());
-	    entity.setMemPw(bcrypt.encode(member.getMemPw()));
-	    entity.setMemNickname(member.getMemNickname());
-	    entity.setMemName(member.getMemName());
-	    entity.setMemTel(member.getMemTel());
-	    entity.setMemEmail(member.getMemEmail());
-	    entity.setMemBirthday(member.getMemBirthday());
-	    entity.setMemGender(member.getMemGender());
-	    entity.setMemAddr(member.getMemAddr());
-	    entity.setMemEnrollDate(new Date());
-	    entity.setMemSmsFl(member.getMemSmsFl());
-	    entity.setMemType(member.getMemType());
-	    entity.setMemStatus(0);
-	    entity.setMemStatusDate(member.getMemStatusDate());
-	    entity.setMemProfilePath(member.getMemProfilePath());
-	    entity.setMemGrade(gradeEntity);
-	    entity.setMembershipUpdate(member.getMembershipUpdate());
+		entity.setMemNo(member.getMemNo());
+		entity.setMemId(member.getMemId());
+		entity.setMemPw(bcrypt.encode(member.getMemPw()));
+		entity.setMemNickname(member.getMemNickname());
+		entity.setMemName(member.getMemName());
+		entity.setMemTel(member.getMemTel());
+		entity.setMemEmail(member.getMemEmail());
+		entity.setMemBirthday(member.getMemBirthday());
+		entity.setMemGender(member.getMemGender());
+		entity.setMemAddr(member.getMemAddr());
+		entity.setMemEnrollDate(new Date());
+		entity.setMemSmsFl(member.getMemSmsFl());
+		entity.setMemType(member.getMemType());
+		entity.setMemStatus(0);
+		entity.setMemStatusDate(member.getMemStatusDate());
+		entity.setMemProfilePath(member.getMemProfilePath());
+		entity.setMemGrade(gradeEntity);
+		entity.setMembershipUpdate(member.getMembershipUpdate());
 
-	    return entity;
+		return entity;
 	}
 
 	/**
@@ -206,19 +200,6 @@ public class MemberServiceImpl implements MemberService {
 		return result;
 	}
 
-	/* 로그인 헬퍼 메소드 */
-	/**
-	 * 로그인 입력값의 유효성을 검사하는 메서드
-	 *
-	 * @param member 로그인 요청 정보
-	 * @return memId와 memPw가 null이 아니고 공백이 아니면 true, 그렇지 않으면 false
-	 *
-	 * @author Won
-	 */
-	private boolean isValidSigninInput(Member member) {
-		return member != null && member.getMemId() != null && !member.getMemId().trim().isEmpty()
-				&& member.getMemPw() != null && !member.getMemPw().trim().isEmpty();
-	}
 
 	/**
 	 * 로그인 회원의 정보 조회

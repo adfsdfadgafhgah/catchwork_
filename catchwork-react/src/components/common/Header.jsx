@@ -8,7 +8,7 @@ import "./Header.css";
 import HeaderNav from "./HeaderNav";
 
 const Header = () => {
-  const { memType, memNickname, role, signin, signOut } = useAuthStore(); // zustand 상태
+  const { memType, memNickname, signin, signOut } = useAuthStore(); // zustand 상태
   const [searchTerm, setSearchTerm] = useState(""); // 검색어
   const [result, setResult] = useState(""); // 상태 메시지
 
@@ -95,13 +95,16 @@ const Header = () => {
           <div className="user-info">
             {memType !== null ? (
               <>
-                <button
-                  onClick={() =>
-                    navigate(memType === 1 ? "/corpmypage" : "/mypage")
-                  }
-                >
-                  {memNickname} 님
-                </button>
+                {memType === 1 ? (
+                  <button onClick={() => navigate("/corpmypage")}>
+                    {memNickname} 님
+                  </button>
+                ) : (
+                  <button onClick={() => navigate("/mypage")}>
+                    {memNickname} 님{" "}
+                    {/* 기업회원은 닉네임 null인데 어떻게 할까요? */}
+                  </button>
+                )}
                 <button onClick={handleSignOut}>로그아웃</button>
               </>
             ) : (

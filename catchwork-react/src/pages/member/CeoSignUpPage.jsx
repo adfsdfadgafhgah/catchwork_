@@ -48,10 +48,15 @@ const CeoSignUpPage = () => {
     pwConfirmField: "ceoPwConfirm",
     telField: "ceoTel",
     addrField: "corpAddr",
-    // 필요시 regexRules 등 추가
+    nullableFields: [
+      "corpBenefit",
+      "corpBenefitDetail",
+      "corpDetail",
+      "corpLogo",
+    ],
   };
 
-  const { formData, handleChange, setField, validity, validateForm } =
+  const { formData, handleInputChange, handleCheckId, validity, validateForm } =
     useSignUpFormHandler(
       {
         ceoId: "",
@@ -79,18 +84,59 @@ const CeoSignUpPage = () => {
       config
     );
 
-  // 제출
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const isValid = validateForm();
-    console.log("validateForm 결과:", isValid);
-    console.log("현재 formData:", formData);
-    console.log("현재 validity 상태:", validity);
-    if (!isValid) return;
+    if (!isValid) {
+      alert("입력해주세요.");
+      return;
+    }
 
-    const dataToSend = { ...formData, memType: 1 };
-    console.log("전송 데이터:", dataToSend);
+    // 기업 정보 추출
+    const corpInfoToSend = {
+      corpRegNo: formData.corpRegNo,
+      corpCEOName: formData.corpCEOName,
+      corpOpenDate: formData.corpOpenDate,
+      corpName: formData.corpName,
+      corpType: formData.corpType,
+      corpLogo: formData.corpLogo,
+      corpAddr: formData.corpAddr,
+      detailAddress: formData.detailAddress,
+      corpHomeLink: formData.corpHomeLink,
+      corpBM: formData.corpBM,
+      corpDetail: formData.corpDetail,
+      corpBenefit: formData.corpBenefit,
+      corpBenefitDetail: formData.corpBenefitDetail,
+    };
+
+    // CEO 회원 정보 추출
+    const ceoMemberToSend = {
+      memId: formData.ceoId,
+      memPw: formData.ceoPw,
+      memName: formData.ceoName,
+      memNickName: formData.ceoName, // 기업은 닉네임==이름으로 처리해버리기
+      memTel: formData.ceoTel,
+      memEmail: formData.ceoEmail,
+      memGender: formData.ceoGender || "", // 없으면 빈 문자열 처리
+      memAddr: formData.corpAddr,
+      memType: 1,
+      memGrade: 0,
+      memSmsFl: "N",
+    };
+
+    // CORP_MEM 테이블용
+    const corpMemToSend = {
+      corpMemRoleCheck: "Y",
+      corpMemDept: "대표이사",
+    };
+
+    // 최종 요청 데이터 구조
+    const dataToSend = {
+      corpInfo: corpInfoToSend,
+      ceoMember: ceoMemberToSend,
+      corpMem: corpMemToSend,
+    };
 
     try {
       const res = await postCEOSignUp(dataToSend);
@@ -116,7 +162,7 @@ const CeoSignUpPage = () => {
               type="text"
               name="ceoId"
               value={formData.ceoId}
-              onChange={handleChange}
+              onChange={handleInputChange}
               placeholder="아이디를 입력해주세요"
               className={
                 validity.ceoId === false
@@ -128,7 +174,7 @@ const CeoSignUpPage = () => {
             />
             <button
               type="button"
-              onClick={/* handleCheckId 대체 필요시 추가 */ undefined}
+              onClick={handleCheckId}
               className="action-button"
             >
               중복확인
@@ -146,7 +192,7 @@ const CeoSignUpPage = () => {
             type="password"
             name="ceoPw"
             value={formData.ceoPw}
-            onChange={handleChange}
+            onChange={handleInputChange}
             placeholder="비밀번호를 입력해주세요"
             className={
               validity.ceoPw === false
@@ -168,7 +214,7 @@ const CeoSignUpPage = () => {
             type="password"
             name="ceoPwConfirm"
             value={formData.ceoPwConfirm}
-            onChange={handleChange}
+            onChange={handleInputChange}
             placeholder="비밀번호를 다시 입력해주세요"
             className={
               validity.ceoPwConfirm === false
@@ -188,7 +234,7 @@ const CeoSignUpPage = () => {
             type="text"
             name="ceoName"
             value={formData.ceoName}
-            onChange={handleChange}
+            onChange={handleInputChange}
             placeholder="이름을 입력해주세요"
             className={
               validity.ceoName === false
@@ -211,7 +257,7 @@ const CeoSignUpPage = () => {
               type="text"
               name="ceoTel"
               value={formData.ceoTel}
-              onChange={handleChange}
+              onChange={handleInputChange}
               placeholder="전화번호를 입력해주세요"
               className={
                 validity.ceoTel === false
@@ -223,9 +269,7 @@ const CeoSignUpPage = () => {
             />
             <button
               type="button"
-              onClick={
-                /* handleSendVerificationCode 대체 필요시 추가 */ undefined
-              }
+              onClick={/* handleSendVerificationCode 추가 */ undefined}
               className="action-button"
             >
               인증번호 발송
@@ -244,7 +288,7 @@ const CeoSignUpPage = () => {
               type="text"
               name="verificationCode"
               value={formData.verificationCode}
-              onChange={handleChange}
+              onChange={handleInputChange}
               placeholder="인증번호를 입력해주세요"
               className={
                 validity.verificationCode === false
@@ -256,7 +300,7 @@ const CeoSignUpPage = () => {
             />
             <button
               type="button"
-              onClick={/* handleVerifyCode 대체 필요시 추가 */ undefined}
+              onClick={/* handleVerifyCode 추가 */ undefined}
               className="action-button"
             >
               인증번호 확인
@@ -271,7 +315,7 @@ const CeoSignUpPage = () => {
               type="email"
               name="ceoEmail"
               value={formData.ceoEmail}
-              onChange={handleChange}
+              onChange={handleInputChange}
               placeholder="이메일을 입력해주세요"
               className={
                 validity.ceoEmail === false

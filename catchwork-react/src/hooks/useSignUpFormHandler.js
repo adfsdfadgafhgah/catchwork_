@@ -48,7 +48,7 @@ export default function useSignUpFormHandler(initialValues, config) {
   };
 
   // 회원가입 폼 변경 핸들러
-  const handleChange = (e) => {
+  const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     let fieldValue = type === "checkbox" ? checked : value;
 
@@ -126,11 +126,18 @@ export default function useSignUpFormHandler(initialValues, config) {
   // 폼 유효성 검사
   const validateForm = () => {
     const keysToCheck = config.fields;
-    const results = keysToCheck.map((key) => validateField(key, formData[key]));
+    const nullable = config.nullableFields || [];
+
+    const results = keysToCheck.map((key) => {
+      if (nullable.includes(key)) return true;
+      return validateField(key, formData[key]);
+    });
+
     const newValidity = keysToCheck.reduce((acc, key, i) => {
       acc[key] = results[i];
       return acc;
     }, {});
+
     setValidity(newValidity);
     return results.every((r) => r);
   };
@@ -138,7 +145,7 @@ export default function useSignUpFormHandler(initialValues, config) {
   // 회원가입 폼 핸들러 반환
   return {
     formData,
-    handleChange,
+    handleInputChange,
     setField,
     validity,
     handleCheckId,
