@@ -30,4 +30,12 @@
     FROM MEMBER 
     WHERE MEM_NO = #{memNo}
   </select>
+
+  <!-- 비밀번호 변경 -->
+  <update id="changePw">
+    UPDATE MEMBER
+    SET MEM_PW = #{memPw}
+    WHERE MEM_NO = #{memNo}
+  </update>
+
 </mapper>

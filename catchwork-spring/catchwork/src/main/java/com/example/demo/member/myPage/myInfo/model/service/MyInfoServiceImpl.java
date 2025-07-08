@@ -98,4 +98,13 @@ public class MyInfoServiceImpl implements MyInfoService {
 			return 0;
 		return bcrypt.matches(loginMember.getMemPw(), member.getMemPw()) ? 1 : 0;
 	}
+
+	// 비밀번호 변경
+	@Override
+	public int changePw(String memPw, String memNo) {
+		Member member = new Member();
+		member.setMemNo(memNo);
+		member.setMemPw(bcrypt.encode(memPw));
+		return myInfoMapper.changePw(member);
+	}
 }

@@ -77,4 +77,33 @@ public class MyInfoController {
 		}
 	}
 
+	@PostMapping("changePw")
+	public ResponseEntity<String> changePw(@RequestParam("currentPw") String currentPw,
+			@RequestParam("memPw") String memPw, @RequestParam("memNo") String memNo) {
+		System.out.println("비밀번호 변경 메서드 매핑");
+
+		Member loginMember = new Member();
+		loginMember.setMemNo(memNo);
+		loginMember.setMemPw(currentPw);
+
+		try {
+			// 현재 비밀번호 확인
+			int result = myInfoService.verifyPassword(loginMember);
+			if (result > 0) {
+				// 비밀번호 변경
+				result = myInfoService.changePw(memPw, memNo);
+				if (result > 0) {
+					System.out.println("비밀번호 변경 완료");
+					return ResponseEntity.status(200).body("비밀번호 변경 완료");
+				}
+				System.out.println("비밀번호 변경 실패");
+				return ResponseEntity.status(500).body("비밀번호 변경 실패");
+			}
+			System.out.println("비밀번호 확인 실패");	
+			return ResponseEntity.status(500).body("비밀번호 확인 실패");
+		} catch (Exception e) {
+			log.error("비밀번호 변경 실패", e);
+			return ResponseEntity.status(500).body("비밀번호 변경 실패: " + e.getMessage());
+		}
+	}
 }

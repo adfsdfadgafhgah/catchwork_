@@ -164,14 +164,19 @@ const SignUpPage = () => {
             value={formData.memPwConfirm}
             onChange={handleChange}
             style={{
-              borderColor: validity.memPwConfirm === false ? "red" : undefined,
+              borderColor:
+                formData.memPwConfirm.trim().length !== 0 &&
+                validity.memPwConfirm === false
+                  ? "red"
+                  : undefined,
             }}
           />
-          {validity.memPwConfirm === false && (
-            <small style={{ color: "red" }}>
-              비밀번호가 일치하지 않습니다.
-            </small>
-          )}
+          {formData.memPwConfirm.trim().length !== 0 &&
+            validity.memPwConfirm === false && (
+              <small style={{ color: "red" }}>
+                비밀번호가 일치하지 않습니다.
+              </small>
+            )}
         </label>
 
         <>

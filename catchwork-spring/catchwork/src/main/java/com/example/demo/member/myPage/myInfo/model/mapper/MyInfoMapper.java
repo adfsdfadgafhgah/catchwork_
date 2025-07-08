@@ -18,4 +18,7 @@ public interface MyInfoMapper {
   // 회원 조회
   Member selectMember(String memNo);
 
+  // 비밀번호 변경
+  int changePw(Member member);
+
 }
