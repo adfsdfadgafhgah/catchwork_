@@ -11,5 +11,13 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Search {
 
-	private String query;
+		private String query;
+		private String memNo;
+	    private String status;
+	    private String sort;
+	    private String recruitJobName;
+	    private String recruitCareer;
+	    private String recruitEdu;
+	    private String corpType;
+	    private String recruitType;
 }

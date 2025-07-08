@@ -153,78 +153,70 @@ public class CVServiceImpl implements CVService {
 	@Override
 	@Transactional
 	public void updateCV(CV cv) throws Exception {
+	    mapper.updateCV(cv);
+	    int cvNo = cv.getCvNo();
 
-		// 1. CV 업데이트
-		mapper.updateCV(cv);
+	    // 단일 항목
+	    if (cv.getMilitary() != null) {
+	        cv.getMilitary().setCvNo(cvNo);
+	        mapper.updateMilitary(cv.getMilitary());
+	    }
+	    if (cv.getEducation() != null) {
+	        cv.getEducation().setCvNo(cvNo);
+	        mapper.updateEducation(cv.getEducation());
+	    }
 
-		int cvNo = cv.getCvNo();
+	    // 다건 항목 전부 delete 후 insert
+	    mapper.deleteExperience(cvNo);
+	    mapper.deleteAward(cvNo);
+	    mapper.deleteQualify(cvNo);
+	    mapper.deleteLanguage(cvNo);
+	    mapper.deleteOuter(cvNo);
+	    mapper.deleteTraining(cvNo);
+	    mapper.deletePortfolio(cvNo);
 
-		// 2. Military (단일)
-		CVMilitary military = cv.getMilitary();
-		if (military != null) {
-			military.setCvNo(cvNo);
-			mapper.updateMilitary(military);
-		}
-
-		// 3. Education (단일)
-		CVEducation edu = cv.getEducation();
-		if (edu != null) {
-			edu.setCvNo(cvNo);
-			mapper.updateEducation(edu);
-		}
-
-		// 4. 나머지 다 update
-		// 경험, 자격, 수상 등 리스트도 update 해줘야 함
-		// 기존 delete 후 insert 방식도 가능 (주로 쓰는 방법)
-
-		if (cv.getExperience() != null) {
-			for (CVExperience exp : cv.getExperience()) {
-				exp.setCvNo(cvNo);
-				mapper.updateExperience(exp);
-			}
-		}
-
-		if (cv.getAward() != null) {
-			for (CVAward award : cv.getAward()) {
-				award.setCvNo(cvNo);
-				mapper.updateAward(award);
-			}
-		}
-
-		if (cv.getQualify() != null) {
-			for (CVQualify qualify : cv.getQualify()) {
-				qualify.setCvNo(cvNo);
-				mapper.updateQualify(qualify);
-			}
-		}
-
-		if (cv.getLanguage() != null) {
-			for (CVLanguage lang : cv.getLanguage()) {
-				lang.setCvNo(cvNo);
-				mapper.updateLanguage(lang);
-			}
-		}
-
-		if (cv.getOuter() != null) {
-			for (CVOuter outer : cv.getOuter()) {
-				outer.setCvNo(cvNo);
-				mapper.updateOuter(outer);
-			}
-		}
-
-		if (cv.getTraining() != null) {
-			for (CVTraining train : cv.getTraining()) {
-				train.setCvNo(cvNo);
-				mapper.updateTraining(train);
-			}
-		}
-
-		if (cv.getPortfolio() != null) {
-			for (CVPortfolio port : cv.getPortfolio()) {
-				port.setCvNo(cvNo);
-				mapper.updatePortfolio(port);
-			}
-		}
+	    if (cv.getExperience() != null) {
+	        for (CVExperience exp : cv.getExperience()) {
+	            exp.setCvNo(cvNo);
+	            mapper.addExperience(exp);
+	        }
+	    }
+	    if (cv.getAward() != null) {
+	        for (CVAward award : cv.getAward()) {
+	            award.setCvNo(cvNo);
+	            mapper.addAward(award);
+	        }
+	    }
+	    if (cv.getQualify() != null) {
+	        for (CVQualify qualify : cv.getQualify()) {
+	            qualify.setCvNo(cvNo);
+	            mapper.addQualify(qualify);
+	        }
+	    }
+	    if (cv.getLanguage() != null) {
+	        for (CVLanguage lang : cv.getLanguage()) {
+	            lang.setCvNo(cvNo);
+	            mapper.addLanguage(lang);
+	        }
+	    }
+	    if (cv.getOuter() != null) {
+	        for (CVOuter outer : cv.getOuter()) {
+	            outer.setCvNo(cvNo);
+	            mapper.addOuter(outer);
+	        }
+	    }
+	    if (cv.getTraining() != null) {
+	        for (CVTraining train : cv.getTraining()) {
+	            train.setCvNo(cvNo);
+	            mapper.addTraining(train);
+	        }
+	    }
+	    if (cv.getPortfolio() != null) {
+	        for (CVPortfolio port : cv.getPortfolio()) {
+	            port.setCvNo(cvNo);
+	            mapper.addPortfolio(port);
+	        }
+	    }
 	}
 
 	// 이력서 삭제
@@ -263,9 +255,14 @@ public class CVServiceImpl implements CVService {
 		file.transferTo(new File(filePath));
 
 		// 4. DTO 생성
-		RecruitCV recruitCV = RecruitCV.builder().recruitCVEdu(recruitCVEdu).recruitCVCareer(recruitCVCareer)
-				.recruitCVPdfTitle(recruitCVPdfTitle).recruitCVPdfPath(filePath).memNo(String.valueOf(memNo))
-				.recruitNo(recruitNo).build();
+		RecruitCV recruitCV = RecruitCV.builder()
+				.recruitCVEdu(recruitCVEdu)
+				.recruitCVCareer(recruitCVCareer)
+				.recruitCVPdfTitle(recruitCVPdfTitle)
+				.recruitCVPdfPath(filePath)
+				.memNo(String.valueOf(memNo))
+				.recruitNo(recruitNo)
+				.build();
 
 		// 5. Mapper 호출 → DB INSERT
 		mapper.uploadCVPdf(recruitCV);
@@ -273,6 +270,9 @@ public class CVServiceImpl implements CVService {
 		return recruitCV;
 	}
 
+	
+	// ---- delete & upsert helpers ----
+	
 	// EXPERIENCE
 	private void deleteAndUpsertExperience(CV cv) {
 	    int cvNo = cv.getCvNo();

@@ -15,8 +15,8 @@ import lombok.NoArgsConstructor;
 public class CompanyInfo {
 	
 	//기업정보 테이블
-	private int corpNo;                // 기업_시퀀스_번호 (PK)
-    private String corpRegNo;             // 기업_사업자등록번호 **String 으로 수정**
+	private int corpNo;                	// 기업_시퀀스_번호 (PK)
+    private String corpRegNo;           // 기업_사업자등록번호 **String 으로 수정**
     private String corpType;            // 기업_형태
     private String corpName;            // 기업_회사명
     private String corpLogo;            // 기업_로고

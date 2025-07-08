@@ -23,6 +23,9 @@ const useLoginMember = create((set) => ({
       console.error("Failed to fetch loginMember:", error);
     }
   },
+  clearLoginMember: () => {
+    set({ loginMember: {}, isLoadingLogin: false });
+  },
 }));
 
 export default useLoginMember;

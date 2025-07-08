@@ -59,6 +59,7 @@ const Header = () => {
   const handleSignOut = () => {
     signOut(); // zustand 초기화
     localStorage.removeItem("accessToken");
+
     navigate("/");
   };
 

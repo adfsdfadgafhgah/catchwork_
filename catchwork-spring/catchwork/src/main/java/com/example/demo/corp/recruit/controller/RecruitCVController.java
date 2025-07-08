@@ -67,7 +67,7 @@ public class RecruitCVController {
 	        }
 	    }
 
-	    /** 이력서 다운로드 ( 7/4 현재 안되는중)
+	    /** 이력서 PDF 경로 다운로드
 	     * @author JIN
 	     * @param cvNo
 	     * @return
@@ -89,6 +89,9 @@ public class RecruitCVController {
 	    		// 2. 파일명만 추출해서 다운로드 이름 지정
 	    		String filename = file.getName();
 
+	    		// 이력서 다운로드시 check 여부
+	    		 service.markCVAsDownloaded(cvNo);
+	    		
 		        // 3. byte[]로 읽기
 		        byte[] fileData = Files.readAllBytes(file.toPath());
 		

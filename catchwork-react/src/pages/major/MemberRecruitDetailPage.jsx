@@ -111,8 +111,7 @@ export default function MemberRecruitDetailPage() {
   };
 
   // 신고 모달창 핸들러
-  const handleReport = (target) => {
-    setReportTarget(target);
+  const handleReport = () => {
     setShowReportModal(true);
   };
 
@@ -220,8 +219,15 @@ export default function MemberRecruitDetailPage() {
       </section>
 
       {/* 모달 조건부 렌더링 */}
-      {showReportModal && (
-        <ReportModalPage target={reportTarget} onClose={handleCloseReport} />
+      {/* 채용공고 신고하기 */}
+      {showReportModal && recruit && loginMember && (
+        <ReportModalPage
+          targetNo={recruit.recruitNo}
+          targetType="RECRUIT"
+          targetNickname={`[${recruit.corpName}] ${recruit.recruitTitle}`}
+          memberNo={loginMember.memNo}
+          onClose={handleCloseReport}
+        />
       )}
 
       <div className={styles.deadlineTimer}>

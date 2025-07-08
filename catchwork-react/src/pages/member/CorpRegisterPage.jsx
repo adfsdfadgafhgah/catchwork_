@@ -42,7 +42,8 @@ const CorpRegisterPage = () => {
               name="corpRegNo"
               value={formData.corpRegNo}
               onChange={handleInputChange}
-              placeholder="사업자 등록번호를 입력하세요"
+              maxLength={10}
+              placeholder="('-' 제외)사업자 등록번호를 입력하세요"
               style={{
                 borderColor: validity.corpRegNo === false ? "red" : undefined,
               }}

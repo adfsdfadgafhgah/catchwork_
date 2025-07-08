@@ -21,7 +21,7 @@ const YearMonthPicker = ({ value, onChange, mode }) => {
   return (
     <DatePicker
       selected={parsedValue}
-      disabled={mode === "view"}
+      readOnly={mode === "view"}
       onChange={(date) => {
         if (date) {
           const year = date.getFullYear();

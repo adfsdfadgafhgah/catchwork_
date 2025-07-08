@@ -1,9 +1,13 @@
+// package com.example.demo.corp.myPage.model.mapper;
 package com.example.demo.corp.myPage.model.mapper;
 
-import com.example.demo.corp.myPage.model.dto.CorpMyPage;
 import org.apache.ibatis.annotations.Mapper;
+
+import com.example.demo.corp.myPage.model.dto.CorpMyPage;
 
 @Mapper
 public interface CorpMyPageMapper {
+
+    /** 기업 아이디로 기업 마이페이지 조회 */
     CorpMyPage findCorpInfoById(String corpId);
 }

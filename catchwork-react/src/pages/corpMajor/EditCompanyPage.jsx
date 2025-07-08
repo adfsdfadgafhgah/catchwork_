@@ -25,6 +25,8 @@ const EditCompanyPage = () => {
   const [corpDetail, setCorpDetail] = useState("");
   const [corpBenefit, setCorpBenefit] = useState("");
   const [corpBenefitDetail, setCorpBenefitDetail] = useState("");
+  const [corpLogoFile, setCorpLogoFile] = useState(null); // 업로드할 새 파일
+  const [corpLogoPreview, setCorpLogoPreview] = useState(company?.corpLogo); // 미리보기 URL
 
   useEffect(() => {
     setLoginMember(); // 로그인 정보 설정
@@ -47,7 +49,9 @@ const EditCompanyPage = () => {
         setLoading(false);
       }
     };
-
+    if (loginMember?.memNo) {
+      fetchCompany(); // 이동 시 새로 불러오기
+    }
     fetchCompany();
   }, [loginMember]);
 
@@ -93,10 +97,33 @@ const EditCompanyPage = () => {
   const handleCancel = () => {
     navigate(`/corpcompany/detail`);
   };
+  const corpInfo = {
+    corpNo,
+    corpName,
+    corpType,
+    corpRegNo,
+    corpCeoName,
+    corpAddr,
+    corpOpenDate,
+    corpHomeLink,
+    corpBm,
+    corpDetail,
+    corpBenefit,
+    corpBenefitDetail,
+  };
+
+  const formData = new FormData();
+  formData.append(
+    "corpInfo",
+    new Blob([JSON.stringify(corpInfo)], { type: "application/json" })
+  );
+
+  if (corpLogoFile) {
+    formData.append("corpLogoFile", corpLogoFile);
+  }
 
   const handleEdit = async () => {
-    console.log("=== 수정된 기업정보 ===");
-    console.log({
+    const corpInfo = {
       corpNo,
       corpName,
       corpType,
@@ -109,21 +136,21 @@ const EditCompanyPage = () => {
       corpDetail,
       corpBenefit,
       corpBenefitDetail,
-    });
+    };
+
+    const formData = new FormData();
+    formData.append(
+      "corpInfo",
+      new Blob([JSON.stringify(corpInfo)], { type: "application/json" })
+    );
+
+    if (corpLogoFile) {
+      formData.append("corpLogoFile", corpLogoFile);
+    }
+
     try {
-      await axiosApi.post("/corpcompany/update", {
-        corpNo,
-        corpName,
-        corpType,
-        corpRegNo,
-        corpCeoName,
-        corpAddr,
-        corpOpenDate,
-        corpHomeLink,
-        corpBm,
-        corpDetail,
-        corpBenefit,
-        corpBenefitDetail,
+      await axiosApi.post("/corpcompany/update", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       alert("수정이 완료되었습니다.");
@@ -134,13 +161,41 @@ const EditCompanyPage = () => {
     }
   };
 
+  // 카카오맵 주소 핸들러
+  const handleAddressSearch = () => {
+    new window.daum.Postcode({
+      oncomplete: function (data) {
+        const fullAddress = data.address;
+        setCorpAddr(fullAddress);
+      },
+    }).open();
+  };
+
+  const handleLogoChange = (e) => {
+    const file = e.target.files[0];
+    setCorpLogoFile(file);
+
+    // 미리보기용 URL 생성
+    const previewUrl = URL.createObjectURL(file);
+    setCorpLogoPreview(previewUrl);
+  };
+
   return (
     <main className="container">
       <SectionHeader title="기업 정보 수정" />
 
       <div className="company-detail-header">
         <div className="company-header-left">
-          <img src={company.corpLogo} alt="기업로고" className="company-logo" />
+          <img
+            src={
+              corpLogoPreview
+                ? corpLogoPreview
+                : `${import.meta.env.VITE_BASE_URL}${company.corpLogo}`
+            }
+            alt="기업로고"
+            className="company-logo"
+          />
+          <input type="file" accept="image/*" onChange={handleLogoChange} />
         </div>
 
         <div className="company-header-right">
@@ -186,6 +241,13 @@ const EditCompanyPage = () => {
                 value={corpAddr}
                 onChange={(e) => setCorpAddr(e.target.value)}
               />
+              <button
+                type="button"
+                onClick={handleAddressSearch}
+                style={{ height: "40px" }}
+              >
+                주소검색
+              </button>
             </div>
             <div className="info-row">
               <div className="info-label">개업일자</div>

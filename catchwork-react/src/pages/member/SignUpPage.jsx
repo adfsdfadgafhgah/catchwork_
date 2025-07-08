@@ -1,12 +1,11 @@
 import React from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import "./SignUpPage.css";
-import {
-  postSignUp,
-  // sendVerificationCode, // 나중에에 주석 해제
-} from "../../api/signupAPI";
+import // sendVerificationCode, // 나중에에 주석 해제
+"../../api/signupAPI";
 import useSignUpFormHandler from "../../hooks/useSignUpFormHandler";
 import useCorpFormHandler from "../../hooks/corpFormHandler";
+import { axiosApi } from "../../api/axiosAPI";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -155,7 +154,7 @@ const SignUpPage = () => {
     // 디버깅용
     console.log(dataToSend);
     try {
-      await postSignUp(dataToSend);
+      await axiosApi.post("/signup", dataToSend);
       alert("회원가입이 완료되었습니다.");
       navigate("/signin");
     } catch (err) {

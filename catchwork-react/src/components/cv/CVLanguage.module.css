@@ -5,17 +5,17 @@
 
 .inner {
   width: 100%;
-}
-
-.row {
   display: flex;
   gap: 8px;
-  justify-content: space-between;
   align-items: center;
 }
 
-.input {
+.row {
   flex: 1;
+}
+
+.input {
+  width: 100%;
   padding: 8px 12px;
   border: none;
   border-bottom: 1px solid var(--main-color);
