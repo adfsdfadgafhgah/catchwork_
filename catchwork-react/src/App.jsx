@@ -84,7 +84,7 @@ import WriteSupportPage from "./pages/support/WriteSupportPage";
 import SupportDetailPage from "./pages/support/SupportDetailPage";
 
 // 기업 마이페이지
-import CorpMyPage from "./pages/corpMyPage/CorpMyPage"; 
+import CorpMyPage from "./pages/corpMyPage/CorpMyPage";
 import CorpMyInfoPage from "./pages/corpMyPage/CorpMyInfoPage";
 import CorpEditMyInfoPage from "./pages/corpMyPage/CorpEditMyInfoPage";
 import CorpConfirmEditPage from "./pages/corpMyPage/CorpConfirmEditPage";
@@ -268,7 +268,7 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <CorpMyInfoPage /> },
           { path: "home", element: <CorpMyInfoPage /> },
-        ]
+        ],
       },
       { path: "corpeditmyinfo", element: <CorpEditMyInfoPage /> },
       { path: "corpconfirmedit", element: <CorpConfirmEditPage /> },

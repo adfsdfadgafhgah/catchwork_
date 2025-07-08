@@ -86,7 +86,6 @@ public class MemberServiceImpl implements MemberService {
 	    	// CORP_MEM 생성
 	        CorpMemEntity corpMem = new CorpMemEntity();
 	        corpMem.setMemNo(memberEntity.getMemNo());
-//	        corpMem.setMember(memberEntity);
 	    	corpMem.setCorpInfo(corpInfo);
 	        corpMem.setCorpMemDept(inputMember.getCorpMemDept());
 	        corpMem.setCorpMemRoleCheck("N");
@@ -183,23 +182,6 @@ public class MemberServiceImpl implements MemberService {
 		return entity;
 	}
 
-	/**
-	 * 저장 후 클라이언트에 응답할 Member 객체를 생성하는 메서드
-	 *
-	 * @param member 원본 사용자 입력 정보
-	 * @return 비밀번호 필드를 null 처리한 응답용 Member 객체
-	 *
-	 * @author Won
-	 */
-	private Member createResponseMember(Member member) {
-		Member result = new Member();
-		result.setMemName(member.getMemName());
-		result.setMemNo(member.getMemNo());
-		result.setMemId(member.getMemId());
-		result.setMemPw(null); // 보안상 비밀번호는 응답에서 제외
-		return result;
-	}
-
 
 	/**
 	 * 로그인 회원의 정보 조회
@@ -209,22 +191,10 @@ public class MemberServiceImpl implements MemberService {
 	public Member getLoginMember(String memNo) {
 		return mapper.getLoginMember(memNo);
 	}
-	
-	/** 기업회원 공고목록 조회용
-	 * @author BAEBAE
-	 */
+
 	@Override
 	public Member getCorpLoginMember(String memNo) {
-	    // 기존 멤버 정보
-	    Member member = mapper.getLoginMember(memNo);
-
-	    // 추가로 corpNo도 조회
-	    Integer corpNo = mapper.getCorpNoByMemNo(memNo);
-
-	    if (member != null && corpNo != null) {
-	        member.setCorpNo(corpNo); // 👈 중요!
-	    }
-
-	    return member;
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
