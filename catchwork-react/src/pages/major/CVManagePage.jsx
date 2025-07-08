@@ -244,6 +244,12 @@ const CVManagePage = () => {
     ])
   );
 
+  // 소문자 → 대문자 첫 글자
+  const capitalize = (str) => {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
   // 멤버십 등급에 따른 이력서 갯수 초과 검사
   const checkCVLimit = async () => {
     if (!loginMember.memNo) {
@@ -501,18 +507,25 @@ const CVManagePage = () => {
 
     const payload = payloadRename();
 
+    // ✅ 추가 #1
+    console.log("✅ validateAll =", validateAll());
+
+    // ✅ 추가 #2
+    console.log("✅ payload =", payload);
+
     if (!validateAll()) {
       alert("입력을 확인해주세요.");
       return;
     }
 
     try {
-      await axiosApi.post("/memberCV/update", payload);
+      const res = await axiosApi.post("/memberCV/update", payload);
+      console.log("✅ 서버 응답 data =", res.data);
       alert("수정 완료");
       setMode("view");
     } catch (err) {
       console.error("수정 실패", err.response?.data || err.message);
-      alert("수정 중 오류가 발생했습니다");
+      alert("수정 중 오류가 발생했습니다" + (err.response?.data?.message || err.message));
     }
   };
 
@@ -639,6 +652,7 @@ const CVManagePage = () => {
       if (deleted.length > 0) {
         deletedIds[`deleted${capitalize(type)}Ids`] = deleted;
       }
+
       convertedSections[type] = components[type].map((item) =>
         convertToServer(type, item)
       );
@@ -652,6 +666,7 @@ const CVManagePage = () => {
       education,
       military,
       ...convertedSections,
+      ...deletedIds,
     };
   };
 

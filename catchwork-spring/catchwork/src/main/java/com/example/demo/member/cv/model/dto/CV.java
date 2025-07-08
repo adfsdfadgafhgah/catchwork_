@@ -31,13 +31,13 @@ public class CV {
 	private CVMilitary military;   			// 단일 병역
 	
 	// 컴포넌트 순서
-	private List<Integer> deletedExperienceIds;
-	private List<Integer> deletedAwardIds;
-	private List<Integer> deletedQualifyIds;
-	private List<Integer> deletedLanguageIds;
-	private List<Integer> deletedOuterIds;
-	private List<Integer> deletedTrainingIds;
-	private List<Integer> deletedPortfolioIds;
+	private List<String> deletedExperienceIds;
+	private List<String> deletedAwardIds;
+	private List<String> deletedQualifyIds;
+	private List<String> deletedLanguageIds;
+	private List<String> deletedOuterIds;
+	private List<String> deletedTrainingIds;
+	private List<String> deletedPortfolioIds;
     
 
 }

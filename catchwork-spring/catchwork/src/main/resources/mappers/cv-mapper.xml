@@ -585,4 +585,90 @@
 	============================ 
 	-->
 	
+	<!-- =========================
+     DELETE BY ID
+	========================= -->
+
+	<!-- Experience 삭제 (id 기준) -->
+	<delete id="deleteExperienceById">
+	    DELETE FROM CV_EXPERIENCE
+	    WHERE EXP_ID = #{expId}
+	</delete>
+	
+	<!-- Award 삭제 (id 기준) -->
+	<delete id="deleteAwardById">
+	    DELETE FROM CV_AWARD
+	    WHERE AWARD_ID = #{awardId}
+	</delete>
+	
+	<!-- Qualify 삭제 (id 기준) -->
+	<delete id="deleteQualifyById">
+	    DELETE FROM CV_QUALIFY
+	    WHERE QUALIFY_ID = #{qualifyId}
+	</delete>
+	
+	<!-- Language 삭제 (id 기준) -->
+	<delete id="deleteLanguageById">
+	    DELETE FROM CV_LANGUAGE
+	    WHERE LANG_ID = #{langId}
+	</delete>
+	
+	<!-- Outer 삭제 (id 기준) -->
+	<delete id="deleteOuterById">
+	    DELETE FROM CV_OUTER
+	    WHERE OUTER_ID = #{outerId}
+	</delete>
+	
+	<!-- Training 삭제 (id 기준) -->
+	<delete id="deleteTrainingById">
+	    DELETE FROM CV_TRAINING
+	    WHERE TRAIN_ID = #{trainId}
+	</delete>
+	
+	<!-- Portfolio 삭제 (id 기준) -->
+	<delete id="deletePortfolioById">
+	    DELETE FROM CV_PORTFOLIO
+	    WHERE PORT_ID = #{portId}
+	</delete>
+	
+
+	<!-- =========================
+	     NEXT SEQUENCE VALUE
+	========================= -->
+
+	<!-- Experience SEQ -->
+	<select id="nextExpId" resultType="int">
+	    SELECT SEQ_EXP_ID.NEXTVAL FROM DUAL
+	</select>
+	
+	<!-- Award SEQ -->
+	<select id="nextAwardId" resultType="int">
+	    SELECT SEQ_AWARD_ID.NEXTVAL FROM DUAL
+	</select>
+	
+	<!-- Qualify SEQ -->
+	<select id="nextQualifyId" resultType="int">
+	    SELECT SEQ_QUALIFY_ID.NEXTVAL FROM DUAL
+	</select>
+	
+	<!-- Language SEQ -->
+	<select id="nextLangId" resultType="int">
+	    SELECT SEQ_LANG_ID.NEXTVAL FROM DUAL
+	</select>
+	
+	<!-- Outer SEQ -->
+	<select id="nextOuterId" resultType="int">
+	    SELECT SEQ_OUTER_ID.NEXTVAL FROM DUAL
+	</select>
+	
+	<!-- Training SEQ -->
+	<select id="nextTrainId" resultType="int">
+	    SELECT SEQ_TRAIN_ID.NEXTVAL FROM DUAL
+	</select>
+	
+	<!-- Portfolio SEQ -->
+	<select id="nextPortId" resultType="int">
+	    SELECT SEQ_PORT_ID.NEXTVAL FROM DUAL
+	</select>
+
 </mapper>
