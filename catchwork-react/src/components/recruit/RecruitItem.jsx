@@ -3,12 +3,13 @@ import styles from "./RecruitItem.module.css";
 import { useEffect, useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
 import useLoginMember from "../../stores/loginMember";
+import defaultImg from "../../assets/icon.png";
 
 export default function RecruitItem({ recruit, onLikeToggle }) {
+  const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
   const { loginMember, setLoginMember } = useLoginMember();
   const [likeCount, setLikeCount] = useState(recruit.likeCount || 0);
   const [liked, setLiked] = useState(false);
-  const url = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (!loginMember?.memNo) {
@@ -39,12 +40,8 @@ export default function RecruitItem({ recruit, onLikeToggle }) {
     <Link to={`/corpRecruit/${recruit.recruitNo}`} className={styles.card}>
       <div className={styles.logoArea}>
         <img
-          src={
-            recruit.corpLogo
-              ? `${url}/${recruit.corpLogo}`
-              : "/default-logo.png"
-          }
-          alt="기업 로고"
+          src={recruit?.corpLogo ? `${imgUrl}/${recruit.corpLogo}` : defaultImg}
+          alt="기업로고"
           className={styles.corpLogo}
         />
       </div>

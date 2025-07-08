@@ -69,7 +69,8 @@ private final MemRecruitService memRecruitService;
 		    @RequestParam(name = "recruitEdu", required = false) String recruitEdu,
 		    @RequestParam(name = "corpType", required = false) String corpType,
 		    @RequestParam(name = "recruitType", required = false) String recruitType,
-		    @RequestParam(name = "query", required = false) String query
+		    @RequestParam(name = "query", required = false) String query,
+		    @RequestParam(name = "memNo", required = false) String memNo
 	    
 	) {
 		Map<String, Object> paramMap = new HashMap<>();
@@ -79,6 +80,8 @@ private final MemRecruitService memRecruitService;
 	    paramMap.put("recruitEdu", recruitEdu);
 	    paramMap.put("corpType", corpType);
 	    paramMap.put("recruitType", recruitType);
+	    paramMap.put("query", query);
+	    paramMap.put("memNo", memNo);
 
 	    List<Recruit> recruitList = memRecruitService.getRecruitList(paramMap);
 	    return ResponseEntity.ok(recruitList);

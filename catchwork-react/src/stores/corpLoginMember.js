@@ -2,10 +2,10 @@ import { create } from "zustand";
 import { axiosApi } from "../api/axiosAPI";
 import { useAuthStore } from "./authStore";
 
-export const useCorpLoginMember = create((set, get) => ({
+export const useCorpLoginMember = create((set) => ({
   fetchCorpMember: async () => {
     try {
-      const memNo = useAuthStore.getState().memNo; // ✅ 수정됨
+      const memNo = useAuthStore.getState().memNo;
       if (!memNo) {
         console.error("memNo가 없습니다. 로그인 상태인지 확인하세요.");
         return;

@@ -116,24 +116,24 @@
     <!-- 통합 검색 조건 -->
     <if test="query != null and query != ''">
       AND (
-        LOWER(R.RECRUIT_TITLE) LIKE '%' || LOWER(#{query}) || '%' OR
-        LOWER(R.RECRUIT_JOB_NAME) LIKE '%' || LOWER(#{query}) || '%' OR
-        LOWER(R.RECRUIT_JOB_DETAIL) LIKE '%' || LOWER(#{query}) || '%' OR
-        LOWER(R.RECRUIT_JOB_AREA) LIKE '%' || LOWER(#{query}) || '%' OR
-        LOWER(R.RECRUIT_EDU) LIKE '%' || LOWER(#{query}) || '%' OR
-        LOWER(R.RECRUIT_CAREER) LIKE '%' || LOWER(#{query}) || '%' OR
-        LOWER(R.RECRUIT_TYPE) LIKE '%' || LOWER(#{query}) || '%' OR
-        LOWER(R.RECRUIT_SALARY) LIKE '%' || LOWER(#{query}) || '%' OR
-        LOWER(R.RECRUIT_RESULT_DATE) LIKE '%' || LOWER(#{query}) || '%' OR
-        LOWER(R.RECRUIT_DOCX) LIKE '%' || LOWER(#{query}) || '%' OR
-        LOWER(R.RECRUIT_APPLY) LIKE '%' || LOWER(#{query}) || '%' OR
-        LOWER(R.RECRUIT_CORP_URL) LIKE '%' || LOWER(#{query}) || '%' OR
-        LOWER(R.RECRUIT_HIRE_DETAIL) LIKE '%' || LOWER(#{query}) || '%' OR
-        LOWER(R.RECRUIT_ETC) LIKE '%' || LOWER(#{query}) || '%' OR
-        LOWER(CI.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%' OR
-        LOWER(M.MEM_NICKNAME) LIKE '%' || LOWER(#{query}) || '%' OR
-        LOWER(CI.CORP_BENEFIT) LIKE '%' || LOWER(#{query}) || '%' OR
-        LOWER(CI.CORP_BENEFIT_DETAIL) LIKE '%' || LOWER(#{query}) || '%'
+       R.RECRUIT_TITLE LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR R.RECRUIT_JOB_NAME LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR R.RECRUIT_JOB_DETAIL LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR R.RECRUIT_JOB_AREA LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR R.RECRUIT_EDU LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR R.RECRUIT_CAREER LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR R.RECRUIT_TYPE LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR R.RECRUIT_SALARY LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR R.RECRUIT_RESULT_DATE LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR R.RECRUIT_DOCX LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR R.RECRUIT_APPLY LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR R.RECRUIT_CORP_URL LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR R.RECRUIT_HIRE_DETAIL LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR R.RECRUIT_ETC LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR M.MEM_NICKNAME LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR CI.CORP_NAME LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR CI.CORP_BENEFIT LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR CI.CORP_BENEFIT_DETAIL LIKE CONCAT(CONCAT('%', #{query}), '%')
       )
     </if>
 

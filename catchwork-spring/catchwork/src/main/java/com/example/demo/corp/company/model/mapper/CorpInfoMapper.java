@@ -31,6 +31,11 @@ public interface CorpInfoMapper {
 		 */
 		int updateCorpInfo(CorpInfo corpInfo);
 
-		
+		/** 공고 작성페이지에서 기업정보 가져오기
+		 * @param memNo
+		 * @return
+		 */
+		CorpInfo selectCorpInfoByMember(String memNo);
+
 	    
 }

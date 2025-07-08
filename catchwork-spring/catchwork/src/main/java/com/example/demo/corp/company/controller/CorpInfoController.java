@@ -95,12 +95,31 @@ public class CorpInfoController {
 	 */
 	@GetMapping("info/{memNo}")
 	public ResponseEntity<CorpInfo> getCorpInfo(@PathVariable("memNo") String memNo) {
-		System.out.println("🔍 기업 정보 요청 받음: memNo = " + memNo); // ✅
+		System.out.println(" 기업 정보 요청 받음: memNo = " + memNo); 
 	    CorpInfo corpInfo = corpInfoService.getCorpInfoByMember(memNo);
-	    System.out.println("📦 반환할 corpInfo = " + corpInfo); // ✅
+	    System.out.println(" 반환할 corpInfo = " + corpInfo);
 	    if (corpInfo == null) {
 	        return ResponseEntity.notFound().build(); // 404 처리
 	    }
 	    return ResponseEntity.ok(corpInfo);
+	}
+	
+	/** 기업회원의 같은 corpNo 공고 조회 (채용공고 목록 필터링용)
+	 * @author BAEBAE
+	 * @param memNo
+	 * @return corpNo
+	 */
+	@GetMapping("corpNo")
+	public ResponseEntity<?> getCorpNoByMemNo(@RequestParam("memNo") String memNo) {
+	    try {
+	        CorpInfo corpInfo = corpInfoService.getCorpInfoByMember(memNo);
+	        if (corpInfo == null || corpInfo.getCorpNo() == 0) {
+	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 회원의 corpNo를 찾을 수 없습니다.");
+	        }
+	        return ResponseEntity.ok(corpInfo.getCorpNo());
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("corpNo 조회 중 오류 발생");
+	    }
 	}
 }

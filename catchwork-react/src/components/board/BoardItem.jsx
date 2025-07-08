@@ -26,8 +26,8 @@ export default function BoardItem({ board, onLikeToggle }) {
 
   // props와 loginMember가 모두 준비되었을 때 상태 동기화
   useEffect(() => {
-    // console.log("💡 board.likedByCurrentUser =", board.likedByCurrentUser);
-    // console.log("💡 loginMember =", loginMember);
+    console.log("💡 board.likedByCurrentUser =", board.likedByCurrentUser);
+    console.log("💡 loginMember =", loginMember);
 
     setLikeCount(board.likeCount);
 
