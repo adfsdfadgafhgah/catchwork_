@@ -21,6 +21,8 @@ export default function CorpRecruitListPage() {
   const [statusFilter, setStatusFilter] = useState("all"); // 전체, 모집중, 마감됨
   const [sortOrder, setSortOrder] = useState("latest"); // 최신순, 오래된순, 조회수순, 좋아요순
   const [writerFilter, setWriterFilter] = useState("all"); // 전체, 내가쓴공고
+  const [corpNo, setCorpNo] = useState();
+  const [confirmedSearchTerm, setConfirmedSearchTerm] = useState(""); // 실제 검색에 쓸 값
 
   // 로그인 정보 세팅
   useEffect(() => {
@@ -29,12 +31,36 @@ export default function CorpRecruitListPage() {
     }
   }, []);
 
+  // corpNo 조회
   useEffect(() => {
-    fetchRecruitList();
-  }, [sortOrder, statusFilter, writerFilter, loginMember?.memNo]);
+    const fetchCorpNo = async () => {
+      try {
+        if (loginMember?.memType === 1 && loginMember?.memNo) {
+          const resp = await axiosApi.get("/corpcompany/corpNo", {
+            params: { memNo: loginMember.memNo },
+          });
+          if (resp.status === 200) {
+            setCorpNo(resp.data); // corpNo state 세팅
+          }
+        }
+      } catch (err) {
+        console.error("corpNo 조회 실패:", err);
+      }
+    };
+
+    fetchCorpNo();
+  }, [loginMember]);
+
+  // 공고 목록 불러오기 (필터링, 정렬)
+  useEffect(() => {
+    if (corpNo) {
+      fetchRecruitList();
+    }
+  }, [sortOrder, statusFilter, writerFilter, corpNo, confirmedSearchTerm]);
 
   // 공고 목록 불러오기 (정렬 + 검색)
   const fetchRecruitList = async () => {
+    if (!corpNo) return;
     try {
       setIsLoading(true);
       const resp = await axiosApi.get("/corpRecruit/list", {
@@ -42,8 +68,9 @@ export default function CorpRecruitListPage() {
           sort: sortOrder,
           status: statusFilter,
           writer: writerFilter,
-          query: searchTerm,
+          query: confirmedSearchTerm,
           memNo: loginMember?.memNo || "",
+          corpNo: corpNo,
         },
       });
 
@@ -71,41 +98,13 @@ export default function CorpRecruitListPage() {
     }
   };
 
-  // 검색 기능
-  useEffect(() => {
-    if (searchTerm.trim() === "") {
-      setIsSearchMode(false);
-      setFilteredRecruits([]);
-    } else {
-      const result = recruits.filter(
-        (recruit) =>
-          recruit.recruitTitle.includes(searchTerm) ||
-          recruit.recruitJobName.includes(searchTerm) ||
-          recruit.recruitJobDetail.includes(searchTerm) ||
-          recruit.recruitJobArea.includes(searchTerm) ||
-          recruit.recruitEdu.includes(searchTerm) ||
-          recruit.recruitCareer.includes(searchTerm) ||
-          recruit.recruitType.includes(searchTerm) ||
-          recruit.recruitSalary.includes(searchTerm) ||
-          recruit.recruitResultDate.includes(searchTerm) ||
-          recruit.recruitDocx.includes(searchTerm) ||
-          recruit.recruitApply.includes(searchTerm) ||
-          recruit.recruitCorpUrl.includes(searchTerm) ||
-          recruit.recruitHireDetail.includes(searchTerm) ||
-          recruit.recruitEtc.includes(searchTerm) ||
-          recruit.corpName.includes(searchTerm) ||
-          recruit.memNickname.includes(searchTerm) ||
-          recruit.corpBenefit.includes(searchTerm) ||
-          recruit.corpBenefitDetail.includes(searchTerm)
-      );
-      setFilteredRecruits(result);
-      setIsSearchMode(true);
-    }
-  }, [searchTerm, recruits]);
-
   // 정렬 선택
   const handleSortChange = (e) => {
     setSortOrder(e.target.value);
+  };
+
+  const handleSearch = () => {
+    setConfirmedSearchTerm(searchTerm); // 검색어 확정
   };
 
   // 공고 작성하기 버튼
@@ -164,6 +163,11 @@ export default function CorpRecruitListPage() {
             placeholder="직종명, 취업이야기, 취준진담"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
           />
         </div>
       </div>

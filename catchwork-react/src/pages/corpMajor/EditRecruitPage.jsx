@@ -7,12 +7,15 @@ import useLoginMember from "../../stores/loginMember";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import KakaoMapPreview from "../../components/common/KakaoMapPreview";
+import defaultImg from "../../assets/icon.png";
 
 export default function EditRecruitPage() {
+  const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
   const { recruitNo } = useParams();
   const navigate = useNavigate();
   const { loginMember, setLoginMember } = useLoginMember();
-  const [corpInfo, setCorpInfo] = useState(null);
+  // const [corpInfo, setCorpInfo] = useState(null);
+  const [recruit, setRecruit] = useState(null);
 
   const [formData, setFormData] = useState({
     recruitTitle: "",
@@ -148,11 +151,9 @@ export default function EditRecruitPage() {
       <div className={styles.corpHeader}>
         <img
           src={
-            formData.corpLogo
-              ? `http://localhost:8080/${formData.corpLogo}`
-              : "/default-logo.png"
+            formData.corpLogo ? `${imgUrl}/${formData.corpLogo}` : defaultImg
           }
-          alt="기업 로고"
+          alt="기업로고"
           className={styles.corpLogo}
         />
         <div className={styles.corpInfoText}>

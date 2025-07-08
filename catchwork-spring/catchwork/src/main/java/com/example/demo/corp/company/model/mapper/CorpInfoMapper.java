@@ -28,6 +28,6 @@ public interface CorpInfoMapper {
 		 * @param memNo
 		 * @return
 		 */
-		CorpInfo getCorpInfoByMember(String memNo);
+		CorpInfo selectCorpInfoByMember(String memNo);
 	    
 }

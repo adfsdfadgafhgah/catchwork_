@@ -9,7 +9,6 @@ export const useAuthStore = create(
       memNo: null,
       memNickname: null,
       memType: null,
-      corpNo: null,
 
       signin: async (memId, memPw) => {
         try {
@@ -22,7 +21,6 @@ export const useAuthStore = create(
               memNo: decoded.memNo,
               memNickname: decoded.memNickname,
               memType: decoded.memType,
-              corpNo: decoded.corpNo,
             });
             return { success: true, message: "로그인 성공, 토큰 저장됨" };
           }
@@ -44,7 +42,6 @@ export const useAuthStore = create(
             memNo: null,
             memNickname: null,
             memType: null,
-            corpNo: null,
           });
         } catch (err) {
           console.error("로그아웃 실패:", err);

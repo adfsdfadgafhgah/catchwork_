@@ -15,9 +15,10 @@ export default function MemberRecruitListPage() {
   const [isSearchMode, setIsSearchMode] = useState(false);
   const { loginMember, setLoginMember } = useLoginMember();
   const navigate = useNavigate();
+  const [confirmedSearchTerm, setConfirmedSearchTerm] = useState(""); // 실제 검색에 쓸 값
   // 직무, 근무지역, 경력, 학력, 기업형태, 고용형태 필터
   const [recruitJobNameFilter, setRecruitJobNameFilter] = useState("all"); // 직무
-  const [recruitJobAreaFilter, setRecruitJobAreaFilter] = useState("all"); // 근무지역
+  // const [recruitJobAreaFilter, setRecruitJobAreaFilter] = useState("all"); // 근무지역
   const [recruitCareerFilter, setRecruitCareerFilter] = useState("all"); // 경력
   const [recruitEduFilter, setRecruitEduFilter] = useState("all"); // 학력
   const [corpTypeFilter, setCorpTypeFilter] = useState("all"); // 기업형태
@@ -34,11 +35,12 @@ export default function MemberRecruitListPage() {
     fetchRecruitList();
   }, [
     recruitJobNameFilter,
-    recruitJobAreaFilter,
+    // recruitJobAreaFilter,
     recruitCareerFilter,
     recruitEduFilter,
     corpTypeFilter,
     recruitTypeFilter,
+    confirmedSearchTerm,
     loginMember?.memNo,
   ]);
 
@@ -49,12 +51,12 @@ export default function MemberRecruitListPage() {
       const resp = await axiosApi.get("/memberRecruit/list", {
         params: {
           recruitJobName: recruitJobNameFilter,
-          recruitJobArea: recruitJobAreaFilter,
+          // recruitJobArea: recruitJobAreaFilter,
           recruitCareer: recruitCareerFilter,
           recruitEdu: recruitEduFilter,
           corpType: corpTypeFilter,
           recruitType: recruitTypeFilter,
-          query: searchTerm,
+          query: confirmedSearchTerm,
         },
       });
 
@@ -83,37 +85,12 @@ export default function MemberRecruitListPage() {
     }
   };
 
-  //
-  useEffect(() => {
-    if (searchTerm.trim() === "") {
-      setIsSearchMode(false);
-      setFilteredRecruits([]);
-    } else {
-      const result = recruits.filter(
-        (recruit) =>
-          recruit.recruitTitle.includes(searchTerm) ||
-          recruit.recruitJobName.includes(searchTerm) ||
-          recruit.recruitJobDetail.includes(searchTerm) ||
-          recruit.recruitJobArea.includes(searchTerm) ||
-          recruit.recruitEdu.includes(searchTerm) ||
-          recruit.recruitCareer.includes(searchTerm) ||
-          recruit.recruitType.includes(searchTerm) ||
-          recruit.recruitSalary.includes(searchTerm) ||
-          recruit.recruitResultDate.includes(searchTerm) ||
-          recruit.recruitDocx.includes(searchTerm) ||
-          recruit.recruitApply.includes(searchTerm) ||
-          recruit.recruitCorpUrl.includes(searchTerm) ||
-          recruit.recruitHireDetail.includes(searchTerm) ||
-          recruit.recruitEtc.includes(searchTerm) ||
-          recruit.corpName.includes(searchTerm) ||
-          recruit.memNickname.includes(searchTerm) ||
-          recruit.corpBenefit.includes(searchTerm) ||
-          recruit.corpBenefitDetail.includes(searchTerm)
-      );
-      setFilteredRecruits(result);
-      setIsSearchMode(true);
+  // 엔터 입력 시 confirmedSearchTerm 확정
+  const handleSearchKeyDown = (e) => {
+    if (e.key === "Enter") {
+      setConfirmedSearchTerm(searchTerm.trim());
     }
-  }, [searchTerm, recruits]);
+  };
 
   if (isLoading) {
     return <h1>Loading...</h1>;
@@ -222,6 +199,7 @@ export default function MemberRecruitListPage() {
             placeholder="검색 키워드를 입력하세요"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
           />
         </div>
       </div>

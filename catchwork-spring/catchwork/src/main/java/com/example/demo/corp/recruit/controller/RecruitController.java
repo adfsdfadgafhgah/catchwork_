@@ -90,9 +90,11 @@ public class RecruitController {
 	    @RequestParam(name = "sort", required = false, defaultValue = "latest") String sort,
 	    @RequestParam(name = "writer", required = false, defaultValue = "all") String writer,
 	    @RequestParam(name = "query", required = false) String query,
-	    @RequestParam(name = "memNo", required = false) String memNo
+	    @RequestParam(name = "memNo", required = false) String memNo,
+	    @RequestParam(name = "corpNo", required = false) Integer corpNo
 	) {
-	    List<Recruit> recruitList = recruitService.getRecruitList(status, sort, writer, query, memNo);
+	    List<Recruit> recruitList = recruitService.getRecruitList(status, sort, writer, query, memNo, corpNo);
+	    System.out.println("corpNo = " + corpNo);
 	    return ResponseEntity.ok(recruitList);
 	}
 	

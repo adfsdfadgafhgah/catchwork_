@@ -35,7 +35,7 @@ public class Recruit {
 	private String recruitWriteDate;
 	
 	// 기업 회원 join
-	private int corpNo;
+	private Integer corpNo;
 	private String corpRegNo;
 	private String corpMemRoleCheck;
 	private String corpMemDept;

@@ -9,8 +9,10 @@ import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import DeadlineTimer from "../../components/common/DeadlineTimer";
 import ReportModalPage from "../support/ReportModalPage";
 import KakaoMapPreview from "../../components/common/KakaoMapPreview";
+import defaultImg from "../../assets/icon.png";
 
 export default function CorpRecruitDetailPage() {
+  const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
   const { recruitNo } = useParams();
   const navigate = useNavigate();
   const [recruit, setRecruit] = useState(null);
@@ -141,12 +143,8 @@ export default function CorpRecruitDetailPage() {
       {/* 기업 정보 */}
       <div className={styles.corpHeader}>
         <img
-          src={
-            recruit.corpLogo
-              ? `${url}/${recruit.corpLogo}`
-              : "/default-logo.png"
-          }
-          alt="기업 로고"
+          src={recruit?.corpLogo ? `${imgUrl}/${recruit.corpLogo}` : defaultImg}
+          alt="기업로고"
           className={styles.corpLogo}
         />
         <div className={styles.corpInfoText}>
