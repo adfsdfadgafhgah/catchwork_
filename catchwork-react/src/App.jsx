@@ -49,7 +49,7 @@ import PaymentFail from "./pages/myPage/membership/PaymentFail";
 import PaymentSuccess from "./pages/myPage/membership/PaymentSuccess";
 
 //검색
-//import SearchResultPage from "./pages/major/SearchResultPage";
+import SearchResultPage from "./pages/major/SearchResultPage";
 
 //이력서 제출
 import SubmitCVPage from "./pages/major/SubmitCVPage";
@@ -171,8 +171,13 @@ const router = createBrowserRouter([
         ],
       },
 
-      //{ path: "search", element: <SearchResultPage /> },
+      //검색
+      { path: "search", element: <SearchResultPage /> },
+
+      //이력서
       { path: "submitcv", element: <SubmitCVPage /> },
+
+      //신고
       { path: "supportlist", element: <SupportListPage /> },
       { path: "writesupport", element: <WriteSupportPage /> },
       { path: "reportmodal", element: <ReportModalPage /> },

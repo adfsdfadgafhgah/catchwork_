@@ -23,7 +23,8 @@
 		ci.CORP_BENEFIT_DETAIL,
 		ci.CORP_BAN_FL,
 		ci.CORP_BAN_DATE,
-		cm.MEM_NO
+		cm.MEM_NO,
+		cm.CORP_MEM_ROLE_CHECK
 		FROM
 		CORP_INFO ci
 		JOIN

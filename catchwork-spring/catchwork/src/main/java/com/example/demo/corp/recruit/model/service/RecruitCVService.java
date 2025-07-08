@@ -26,5 +26,5 @@ public interface RecruitCVService {
 	  * @param cvNo
 	  * @return
 	  */
-	String getCVFilePath(int cvNo);// 이거 아님
+	String getCVPDFPath(int cvNo);// 이거 아님
 }

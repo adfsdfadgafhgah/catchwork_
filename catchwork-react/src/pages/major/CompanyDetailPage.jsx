@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import SectionHeader from "../../components/common/SectionHeader";
 import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 import "./CompanyDetailPage.css";
+import { useNavigate } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 import useLoginMember from "../../stores/loginMember";
 
@@ -10,6 +11,7 @@ import useLoginMember from "../../stores/loginMember";
 import ReportModalPage from "../support/ReportModalPage";
 
 const CompanyDetailPage = () => {
+  const navigate = useNavigate();
   const { loginMember, setLoginMember } = useLoginMember(); // 로그인 유저 정보
   const { corpNo } = useParams();
   const [company, setCompany] = useState(null);
@@ -24,6 +26,7 @@ const CompanyDetailPage = () => {
   const handleOpenReport = () => {
     if (!loginMember || !loginMember.memNo) {
       alert("로그인 후 이용 가능합니다.");
+      navigate("/signin");
       return;
     }
     setShowReportModal(true);
