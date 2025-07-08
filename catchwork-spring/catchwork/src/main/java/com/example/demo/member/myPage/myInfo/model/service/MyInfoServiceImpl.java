@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.auth.model.dto.Member;
+import com.example.demo.corp.recruit.model.dto.Recruit;
 import com.example.demo.common.util.Utility;
+import com.example.demo.member.company.model.dto.CompanyInfo;
 import com.example.demo.member.myPage.myInfo.model.mapper.MyInfoMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -65,12 +68,6 @@ public class MyInfoServiceImpl implements MyInfoService {
 
 			// 파일 저장 경로 (경로 정규화)
 			Path uploadPath = Paths.get(profileImgPath, savedName);
-
-			// 이미지 파일명 중복 검사
-			do {
-				savedName = Utility.fileRename(originalFilename);
-				uploadPath = Paths.get(profileImgPath, savedName);
-			} while (uploadPath.toFile().exists());
 			
 			File profileFile = uploadPath.toFile();
 			
@@ -85,7 +82,7 @@ public class MyInfoServiceImpl implements MyInfoService {
 
 		} catch (IOException e) {
 			log.error("프로필 이미지 업로드 실패", e);
-			return 0;
+			throw new RuntimeException("프로필 이미지 업로드 실패");
 		}
 		return result;
 	}
@@ -106,5 +103,26 @@ public class MyInfoServiceImpl implements MyInfoService {
 		member.setMemNo(memNo);
 		member.setMemPw(bcrypt.encode(memPw));
 		return myInfoMapper.changePw(member);
+	}
+
+	// 회원 탈퇴
+	@Override
+	public int withdraw(Member loginMember) {
+		// System.out.println("탈퇴 서비스 실행");
+		int result = myInfoMapper.withdraw(loginMember);
+		// System.out.println("result: " + result);
+		return result;
+	}
+
+	// 즐겨찾기 공고 목록 조회
+	@Override
+	public List<Recruit> getRecruitList(Map<String, Object> paramMap) {
+		return myInfoMapper.getRecruitList(paramMap);
+	}
+
+	// 즐겨찾기 기업 목록 조회
+	@Override
+	public List<CompanyInfo> getCorpList(Map<String, Object> paramMap) {
+		return myInfoMapper.getCorpList(paramMap);
 	}
 }

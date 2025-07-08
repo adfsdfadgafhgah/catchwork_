@@ -20,7 +20,7 @@ const ChangePwPage = () => {
     pwConfirmField: "memPwConfirm",
   };
 
-  const { formData, handleChange, validity, validateForm, setFormData } =
+  const { formData, handleInputChange, validity, validateForm, setFormData } =
     useSignUpFormHandler(
       {
         memPw: "",
@@ -48,7 +48,7 @@ const ChangePwPage = () => {
     requestData.append("memNo", loginMember.memNo);
 
     try {
-      const response = await axiosApi.post("/mypage/changePw", requestData);
+      const response = await axiosApi.post("/myPage/changePw", requestData);
       console.log(response);
       if (response.status === 200) {
         alert(response.data);
@@ -91,7 +91,7 @@ const ChangePwPage = () => {
               name="memPw"
               type="password"
               value={formData.memPw}
-              onChange={handleChange}
+              onChange={handleInputChange}
               style={{
                 borderColor: validity.memPw === false ? "red" : undefined,
               }}
@@ -110,7 +110,7 @@ const ChangePwPage = () => {
               name="memPwConfirm"
               type="password"
               value={formData.memPwConfirm}
-              onChange={handleChange}
+              onChange={handleInputChange}
               style={{
                 borderColor:
                   formData.memPwConfirm.trim().length !== 0 &&

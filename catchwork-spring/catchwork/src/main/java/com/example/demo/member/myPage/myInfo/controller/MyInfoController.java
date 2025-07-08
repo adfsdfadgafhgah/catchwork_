@@ -1,7 +1,13 @@
 package com.example.demo.member.myPage.myInfo.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -10,12 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.auth.model.dto.Member;
+import com.example.demo.corp.recruit.model.dto.Recruit;
+import com.example.demo.member.company.model.dto.CompanyInfo;
 import com.example.demo.member.myPage.myInfo.model.service.MyInfoService;
 
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
-@RequestMapping("mypage")
+@RequestMapping("myPage")
 @Slf4j
 public class MyInfoController {
 
@@ -105,5 +113,67 @@ public class MyInfoController {
 			log.error("비밀번호 변경 실패", e);
 			return ResponseEntity.status(500).body("비밀번호 변경 실패: " + e.getMessage());
 		}
+	}
+
+	@PutMapping("withdraw")
+	public ResponseEntity<String> withdraw(@RequestBody Member loginMember) {
+		// System.out.println("탈퇴 메서드 매핑");
+		try {
+			int result = myInfoService.verifyPassword(loginMember);
+			// System.out.println("result: " + result);
+			if (result > 0) {
+				result = myInfoService.withdraw(loginMember);
+				if (result > 0) {
+					// System.out.println("탈퇴 완료");
+					return ResponseEntity.status(200).body("탈퇴가 완료되었습니다.");
+				}
+				// System.out.println("탈퇴 실패");
+				return ResponseEntity.status(500).body("탈퇴 실패");
+			}
+			return ResponseEntity.status(401).body("비밀번호가 일치하지 않습니다.");
+		} catch (Exception e) {
+			log.error("탈퇴 실패", e);
+			return ResponseEntity.status(500).body("탈퇴 실패: " + e.getMessage());
+		}
+	}
+
+	// 좋아요한 공고 목록
+	@GetMapping("favRecruitList")
+	public ResponseEntity<List<Recruit>> getRecruitList(
+			@RequestParam(value = "recruitJobName", required = false, defaultValue = "all") String recruitJobName,
+			@RequestParam(value = "recruitJobArea", required = false, defaultValue = "all") String recruitJobArea,
+			@RequestParam(value = "recruitCareer", required = false, defaultValue = "all") String recruitCareer,
+			@RequestParam(value = "recruitEdu", required = false, defaultValue = "all") String recruitEdu,
+			@RequestParam(value = "corpType", required = false, defaultValue = "all") String corpType,
+			@RequestParam(value = "recruitType", required = false, defaultValue = "all") String recruitType,
+			@RequestParam(value = "query", required = false, defaultValue = "") String query,
+			@RequestParam(value = "memNo", required = false) String memNo
+	) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("recruitJobName", recruitJobName);
+		paramMap.put("recruitJobArea", recruitJobArea);
+		paramMap.put("recruitCareer", recruitCareer);
+		paramMap.put("recruitEdu", recruitEdu);
+		paramMap.put("corpType", corpType);
+		paramMap.put("recruitType", recruitType);
+		paramMap.put("query", query);
+		paramMap.put("memNo", memNo);
+
+		List<Recruit> recruitList = myInfoService.getRecruitList(paramMap);
+		return ResponseEntity.ok(recruitList);
+	}
+
+	// 좋아요한 기업 목록
+	@GetMapping("favCorpList")
+	public ResponseEntity<List<CompanyInfo>> getCorpList(
+			@RequestParam(value = "query", required = false, defaultValue = "") String query,
+			@RequestParam(value = "memNo", required = false) String memNo
+	) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("query", query);
+		paramMap.put("memNo", memNo);
+
+		List<CompanyInfo> corpList = myInfoService.getCorpList(paramMap);
+		return ResponseEntity.ok(corpList);
 	}
 }
