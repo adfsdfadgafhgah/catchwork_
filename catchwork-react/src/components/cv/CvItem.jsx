@@ -1,10 +1,23 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import styles from "./CvItem.module.css";
 
 const CvItem = ({ cv, recruitNo, mode, onEdit, onDelete, onSubmit }) => {
+  const navigate = useNavigate();
+
+  const handleTitleClick = () => {
+    navigate(`/cv/cvmanage?cvNo=${cv.cvNo}`);
+  };
+
   return (
     <div className={styles.cvItem}>
-      <div className={styles.cvTitle}>{cv.cvAlias}</div>
+      <div
+        className={styles.cvTitle}
+        onClick={handleTitleClick}
+        style={{ cursor: "pointer" }}
+      >
+        {cv.cvAlias}
+      </div>
 
       <div className={styles.cvActions}>
       {mode === "submit" ? (

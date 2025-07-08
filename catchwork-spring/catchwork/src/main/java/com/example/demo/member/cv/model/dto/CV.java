@@ -17,7 +17,6 @@ public class CV {
 	private String cvResume;     			// 자기소개서 내용
 	private String cvAlias;      			// 이력서 별칭
 	private String cvImgPath;				// 이력서 이미지 경로
-	private char cvMainFl;    				// 대표 이력서 여부
 	private String memNo;          			// 회원 번호 (FK → MEMBER)
 	
 	// 연관 데이터
@@ -30,6 +29,15 @@ public class CV {
 	private List<CVPortfolio> portfolio;	// 포폴 리스트
 	private CVEducation education; 			// 단일 학력
 	private CVMilitary military;   			// 단일 병역
+	
+	// 컴포넌트 순서
+	private List<String> deletedExperienceIds;
+	private List<String> deletedAwardIds;
+	private List<String> deletedQualifyIds;
+	private List<String> deletedLanguageIds;
+	private List<String> deletedOuterIds;
+	private List<String> deletedTrainingIds;
+	private List<String> deletedPortfolioIds;
     
 
 }

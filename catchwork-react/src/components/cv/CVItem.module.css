@@ -30,6 +30,15 @@
   font-weight: 500;
 }
 
+.submitButton {
+  background-color: var(--main-color);
+  color: var(--white);
+}
+
+.submitButton:hover {
+  background-color: var(--main-color-dark);
+}
+
 .editButton {
   background-color: var(--main-color);
   color: var(--white);
