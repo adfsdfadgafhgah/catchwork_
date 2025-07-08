@@ -12,10 +12,8 @@ import lombok.NoArgsConstructor;
 public class RecruitCV {
 	
 	 	private int recruitCVNo;              // 지원 이력서 시퀀스 번호 (PK)
-
 	 	private int recruitCVEdu;          	  // 학력
 	 	private int recruitCVCareer;       	  // 경력
-
 	    private String recruitCVPdfTitle;     // 지원자 이력서 PDF 제목
 	    private String recruitCVPdfPath;      // 지원자 이력서 PDF 경로 (파일 다운로드용)
 	    private String recruitCVDate;         // 지원자 지원 날짜

@@ -8,22 +8,17 @@ import org.apache.ibatis.annotations.Param;
 
 import com.example.demo.member.company.model.dto.CompanyInfo;
 import com.example.demo.member.recruit.model.dto.MemRecruit;
+import com.example.demo.member.search.model.dto.Search;
 
 @Mapper
 public interface SearchMapper {
 	
-	
-
 	/**search) recruit
 	 * @author JIN
 	 * @param params
 	 * @return
 	 */
-	List<MemRecruit> searchRecruit(
-		    @Param("query") String query,
-		    @Param("memNo") String memNo,
-		    @Param("status") String status,
-		    @Param("sort") String sort);
+	List<MemRecruit> searchRecruit(Map<String, Object> params);
 	
 	/**search) company
 	 * @author JIN
