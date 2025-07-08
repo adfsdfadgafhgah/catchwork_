@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { axiosApi } from "../api/axiosAPI";
 import { getDecodedToken } from "../api/jwtDecode";
+import useLoginMember from "../stores/loginMember";
 
 export const useAuthStore = create(
   persist(
@@ -46,6 +47,7 @@ export const useAuthStore = create(
             memType: null,
             corpNo: null,
           });
+          useLoginMember.getState().clearLoginMember();
         } catch (err) {
           console.error("로그아웃 실패:", err);
           throw err;

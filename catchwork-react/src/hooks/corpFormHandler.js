@@ -40,10 +40,12 @@ const useCorpFormHandler = (initialValues) => {
 
   const validateForm = () => {
     const nullableFields = [
+      "corpType",
+      "corpLogo",
+      "detailAddress",
+      "corpDetail",
       "corpBenefit",
       "corpBenefitDetail",
-      "corpDetail",
-      "corpLogo",
     ];
 
     const allFields = Object.keys(formData);
