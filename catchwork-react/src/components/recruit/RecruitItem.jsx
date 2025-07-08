@@ -8,6 +8,7 @@ export default function RecruitItem({ recruit, onLikeToggle }) {
   const { loginMember, setLoginMember } = useLoginMember();
   const [likeCount, setLikeCount] = useState(recruit.likeCount || 0);
   const [liked, setLiked] = useState(false);
+  const url = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (!loginMember?.memNo) {
@@ -40,7 +41,7 @@ export default function RecruitItem({ recruit, onLikeToggle }) {
         <img
           src={
             recruit.corpLogo
-              ? `http://localhost:8080/${recruit.corpLogo}`
+              ? `${url}/${recruit.corpLogo}`
               : "/default-logo.png"
           }
           alt="기업 로고"
@@ -53,12 +54,12 @@ export default function RecruitItem({ recruit, onLikeToggle }) {
         </div>
         <p className={styles.corpName}>{recruit.corpName}</p>
         <p className={styles.locationCategory}>
-          {recruit.recruitJobArea} ┃ {recruit.recruitCategory || "career"}{" "}
-          {recruit.recruitField || "education"}
+          {recruit.recruitJobArea} ┃ {recruit.recruitEdu} ┃ {""}
+          {recruit.recruitCareer}
         </p>
         <p className={styles.deadline}>~{recruit.recruitEndDate}</p>
 
-        {/* ✅ 마감 여부 뱃지 표시 */}
+        {/* 마감 여부 뱃지 표시 */}
         <div
           className={`${styles.recruitStatus} ${
             isClosed ? styles.closed : styles.open

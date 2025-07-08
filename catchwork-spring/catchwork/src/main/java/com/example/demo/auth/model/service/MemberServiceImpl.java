@@ -228,4 +228,22 @@ public class MemberServiceImpl implements MemberService {
 	public Member getLoginMember(String memNo) {
 		return mapper.getLoginMember(memNo);
 	}
+	
+	/** 기업회원 공고목록 조회용
+	 * @author BAEBAE
+	 */
+	@Override
+	public Member getCorpLoginMember(String memNo) {
+	    // 기존 멤버 정보
+	    Member member = mapper.getLoginMember(memNo);
+
+	    // 추가로 corpNo도 조회
+	    Integer corpNo = mapper.getCorpNoByMemNo(memNo);
+
+	    if (member != null && corpNo != null) {
+	        member.setCorpNo(corpNo); // 👈 중요!
+	    }
+
+	    return member;
+	}
 }

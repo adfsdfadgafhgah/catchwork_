@@ -264,4 +264,23 @@ public class MemberController {
 			return ResponseEntity.status(500).body(e.getMessage());
 		}
 	}
+	
+	/** 기업회원 공고 목록 조회용
+	 * @author BAEBAE
+	 * @param map
+	 * @return
+	 */
+	@PostMapping("member/getCorpLoginMember")
+	public ResponseEntity<Object> getCorpLoginMember(@RequestBody Map<String, String> map) {
+	    String memNo = map.get("memNo");
+	    try {
+	        Member corpLoginMember = service.getCorpLoginMember(memNo);
+	        if (corpLoginMember != null) {
+	            return ResponseEntity.ok(corpLoginMember);
+	        }
+	        return ResponseEntity.status(404).body("No such member found");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(500).body(e.getMessage());
+	    }
+	}
 }

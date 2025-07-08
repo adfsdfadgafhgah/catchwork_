@@ -3,42 +3,18 @@ import { useNavigate } from "react-router-dom";
 import styles from "./WriteRecruitPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
 import { axiosApi } from "../../api/axiosAPI";
-import useLoginMember from "../../stores/loginMember";
+// import useLoginMember from "../../stores/loginMember";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
+import { useAuthStore } from "../../stores/authStore";
+import KakaoMapPreview from "../../components/common/KakaoMapPreview";
 
 const url = import.meta.env.VITE_API_URL;
 export default function WriteRecruitPage() {
   const navigate = useNavigate();
-  const { loginMember, setLoginMember } = useLoginMember();
+  // const { loginMember, setLoginMember } = useLoginMember();
+  const { memNo, memType, memNickname } = useAuthStore();
   const [corpInfo, setCorpInfo] = useState(null);
-
-  // 로그인 상태 확인
-  useEffect(() => {
-    if (!loginMember?.memNo) {
-      setLoginMember();
-    } else {
-      const fetchCorpInfo = async () => {
-        try {
-          const resp = await axiosApi.get(
-            `/corpcompany/info/${loginMember.memNo}`
-          );
-          const info = resp.data;
-          setCorpInfo(info);
-          setFormData((prev) => ({
-            ...prev,
-            corpName: info.corpName,
-            corpLogo: info.corpLogo,
-            corpType: info.corpType,
-            corpBenefit: info.corpBenefit,
-          }));
-        } catch (err) {
-          console.error("기업 정보 불러오기 실패:", err);
-        }
-      };
-      fetchCorpInfo();
-    }
-  }, [loginMember]);
 
   const [formData, setFormData] = useState({
     recruitTitle: "",
@@ -60,6 +36,42 @@ export default function WriteRecruitPage() {
     recruitEtc: "",
   });
 
+  useEffect(() => {
+    if (memNo) {
+      const fetchCorpInfo = async () => {
+        try {
+          const resp = await axiosApi.get(`/corpcompany/info/${memNo}`);
+          const info = resp.data;
+          setCorpInfo(info);
+          setFormData((prev) => ({
+            ...prev,
+            corpName: info.corpName,
+            corpLogo: info.corpLogo,
+            corpType: info.corpType,
+            corpBenefit: info.corpBenefit,
+            corpBenefitDetail: info.corpBenefitDetail,
+          }));
+        } catch (err) {
+          console.error("기업 정보 불러오기 실패:", err);
+        }
+      };
+      fetchCorpInfo();
+    }
+  }, [memNo]);
+
+  // 카카오맵 주소 핸들러
+  const handleAddressSearch = () => {
+    new window.daum.Postcode({
+      oncomplete: function (data) {
+        const fullAddress = data.address;
+        setFormData((prev) => ({
+          ...prev,
+          recruitJobArea: fullAddress, // 주소를 저장
+        }));
+      },
+    }).open();
+  };
+
   // 공통 입력 핸들러
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -73,7 +85,7 @@ export default function WriteRecruitPage() {
   const handleWrite = async (e) => {
     e.preventDefault();
 
-    if (!loginMember?.memNo) {
+    if (!memNo) {
       alert("로그인이 필요합니다.");
       return;
     }
@@ -81,7 +93,7 @@ export default function WriteRecruitPage() {
     const submitData = {
       ...formData,
       recruitResultDate: formData.recruitResultDate || null,
-      memNo: loginMember.memNo, // 로그인한 사용자 번호 추가
+      memNo: memNo, // 로그인한 사용자 번호 추가
     };
 
     try {
@@ -96,6 +108,7 @@ export default function WriteRecruitPage() {
     }
   };
 
+  // 작성 취소 핸들러
   const handleCancel = () => {
     navigate(`/corpRecruit`);
   };
@@ -172,23 +185,23 @@ export default function WriteRecruitPage() {
           <option value="회계·세무">회계·세무</option>
           <option value="마케팅·광고·MD">마케팅·광고·MD</option>
           <option value="AI·개발·데이터">AI·개발·데이터</option>
-          <option value="AI·개발·데이터">디자인</option>
-          <option value="AI·개발·데이터">물류·무역</option>
-          <option value="AI·개발·데이터">운전·배송·배송</option>
-          <option value="AI·개발·데이터">영업</option>
-          <option value="AI·개발·데이터">고객상담·TM</option>
-          <option value="AI·개발·데이터">금융·보험</option>
-          <option value="AI·개발·데이터">식·음료</option>
-          <option value="AI·개발·데이터">건축·시설</option>
-          <option value="AI·개발·데이터">고객서비스·리테일</option>
-          <option value="AI·개발·데이터">엔지니어링·설계</option>
-          <option value="AI·개발·데이터">제조·생산</option>
-          <option value="AI·개발·데이터">교육</option>
-          <option value="AI·개발·데이터">의료·바이오</option>
-          <option value="AI·개발·데이터">미디어·문화·스포츠</option>
-          <option value="AI·개발·데이터">공공·복지</option>
-          <option value="AI·개발·데이터">의료·바이오</option>
-          <option value="AI·개발·데이터">기타</option>
+          <option value="디자인">디자인</option>
+          <option value="물류·무역">물류·무역</option>
+          <option value="운전·배송·배송">운전·배송·배송</option>
+          <option value="영업">영업</option>
+          <option value="고객상담·TM">고객상담·TM</option>
+          <option value="금융·보험">금융·보험</option>
+          <option value="식·음료">식·음료</option>
+          <option value="건축·시설">건축·시설</option>
+          <option value="고객서비스·리테일">고객서비스·리테일</option>
+          <option value="엔지니어링·설계">엔지니어링·설계</option>
+          <option value="제조·생산">제조·생산</option>
+          <option value="교육">교육</option>
+          <option value="의료·바이오">의료·바이오</option>
+          <option value="미디어·문화·스포츠">미디어·문화·스포츠</option>
+          <option value="공공·복지">공공·복지</option>
+          <option value="의료·바이오">의료·바이오</option>
+          <option value="기타">기타</option>
         </select>
       </div>
 
@@ -224,6 +237,7 @@ export default function WriteRecruitPage() {
             <option value="학력무관">학력무관</option>
           </select>
         </div>
+
         <div>
           <label className="label">경력</label>
           <select
@@ -277,6 +291,7 @@ export default function WriteRecruitPage() {
             <option value="일용직">일용직</option>
             <option value="프리랜서">프리랜서</option>
             <option value="파견직">파견직</option>
+            <option value="기타">기타</option>
           </select>
         </div>
       </div>
@@ -284,33 +299,32 @@ export default function WriteRecruitPage() {
       {/* 근무지역 */}
       <div className={styles.rowGroup}>
         <label className={styles.label}>근무지역 *</label>
-        <select
-          name="recruitJobArea"
-          value={formData.recruitJobArea}
-          onChange={handleChange}
-          className={styles.input}
-        >
-          <option value="">근무지역 선택</option>
-          <option value="서울특별시">서울특별시</option>
-          <option value="경기도">경기도</option>
-          <option value="인천광역시">인천광역시</option>
-          <option value="세종특별자치시">세종특별자치시</option>
-          <option value="대전광역시">대전광역시</option>
-          <option value="충청남도">충청남도</option>
-          <option value="충청북도">충청북도</option>
-          <option value="전라북도">전라북도</option>
-          <option value="전라남도">전라남도</option>
-          <option value="광주광역시">광주광역시</option>
-          <option value="경상북도">경상북도</option>
-          <option value="대구광역시">대구광역시</option>
-          <option value="울산광역시">울산광역시</option>
-          <option value="경상남도">경상남도</option>
-          <option value="부산광역시">부산광역시</option>
-          <option value="강원도">강원도</option>
-          <option value="제주특별자치도">제주특별자치도</option>
-          <option value="전국">전국</option>
-        </select>
+        <div style={{ display: "flex", gap: "8px", alignItems: "start" }}>
+          <input
+            type="text"
+            name="recruitJobArea"
+            value={formData.recruitJobArea}
+            readOnly
+            className={styles.input}
+            placeholder="근무지 주소를 검색하세요"
+          />
+          <button
+            type="button"
+            onClick={handleAddressSearch}
+            style={{ height: "40px" }}
+          >
+            주소검색
+          </button>
+        </div>
       </div>
+
+      {/* 지도 미리보기 */}
+      {formData.recruitJobArea && (
+        <div>
+          <label>근무지 위치</label>
+          <KakaoMapPreview address={formData.recruitJobArea} />
+        </div>
+      )}
 
       {/* 연봉 */}
       <div className={styles.rowGroup}>

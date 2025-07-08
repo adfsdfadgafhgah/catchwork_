@@ -85,8 +85,10 @@
 	    CI.CORP_LOGO AS corpLogo,
 	    CI.CORP_NAME AS corpName,
 	    CI.CORP_TYPE AS corpType,
-			CI.CORP_BENEFIT AS corpBenefit,
-			CI.CORP_BENEFIT_DETAIL AS corpBenefitDetail,
+		CI.CORP_BENEFIT AS corpBenefit,
+		CI.CORP_BENEFIT_DETAIL AS corpBenefitDetail,
+		
+		M.MEM_NICKNAME AS memNickname,
 
 	
 	    NVL(LC.LIKE_COUNT, 0) AS likeCount,
@@ -102,6 +104,7 @@
 	  FROM RECRUIT R
 	  JOIN CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
 	  JOIN CORP_INFO CI ON CM.CORP_NO = CI.CORP_NO
+	  JOIN MEMBER M ON R.MEM_NO = M.MEM_NO
 	  LEFT JOIN (
 	    SELECT RECRUIT_NO, COUNT(*) AS LIKE_COUNT
 	    FROM FAV_RECRUIT
@@ -140,8 +143,11 @@
 	    CI.CORP_NAME,
 	    CI.CORP_TYPE,
 	    CI.CORP_LOGO,
-			CI.CORP_BENEFIT,
-			CI.CORP_BENEFIT_DETAIL,
+		CI.CORP_BENEFIT,
+		CI.CORP_BENEFIT_DETAIL,
+		
+		-- 기업회원 정보
+		M.MEM_NICKNAME AS memNickname,
 	    
 	    -- 좋아요 수
 	    (SELECT COUNT(*) FROM FAV_RECRUIT F WHERE F.RECRUIT_NO = R.RECRUIT_NO) AS likeCount,
@@ -155,6 +161,7 @@
 	FROM RECRUIT R
 	JOIN CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
 	JOIN CORP_INFO CI ON CM.CORP_NO = CI.CORP_NO
+	JOIN MEMBER M ON R.MEM_NO = M.MEM_NO
 	
 	<where>
 	  <choose>
@@ -176,6 +183,10 @@
 	    </otherwise>
 	    
 	  </choose>
+	  
+	  <if test="corpNo != null">
+	    AND CI.CORP_NO = #{corpNo}
+	  </if>
 
 	  <if test="writer == 'me' and memNo != null">
 	    AND R.MEM_NO = #{memNo}
@@ -183,9 +194,24 @@
 	
 	  <if test="query != null and query != ''">
 	    AND (
-	      LOWER(R.RECRUIT_TITLE) LIKE '%' || LOWER(#{query}) || '%'
-	      OR LOWER(CI.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%'
-	      OR LOWER(R.RECRUIT_JOB_NAME) LIKE '%' || LOWER(#{query}) || '%'
+	       LOWER(R.RECRUIT_TITLE) LIKE '%' || LOWER(#{query}) || '%'
+		    OR LOWER(R.RECRUIT_JOB_NAME) LIKE '%' || LOWER(#{query}) || '%'
+		    OR LOWER(R.RECRUIT_JOB_DETAIL) LIKE '%' || LOWER(#{query}) || '%'
+		    OR LOWER(R.RECRUIT_JOB_AREA) LIKE '%' || LOWER(#{query}) || '%'
+		    OR LOWER(R.RECRUIT_EDU) LIKE '%' || LOWER(#{query}) || '%'
+		    OR LOWER(R.RECRUIT_CAREER) LIKE '%' || LOWER(#{query}) || '%'
+		    OR LOWER(R.RECRUIT_TYPE) LIKE '%' || LOWER(#{query}) || '%'
+		    OR LOWER(R.RECRUIT_SALARY) LIKE '%' || LOWER(#{query}) || '%'
+		    OR LOWER(R.RECRUIT_RESULT_DATE) LIKE '%' || LOWER(#{query}) || '%'
+		    OR LOWER(R.RECRUIT_DOCX) LIKE '%' || LOWER(#{query}) || '%'
+		    OR LOWER(R.RECRUIT_APPLY) LIKE '%' || LOWER(#{query}) || '%'
+		    OR LOWER(R.RECRUIT_CORP_URL) LIKE '%' || LOWER(#{query}) || '%'
+		    OR LOWER(R.RECRUIT_HIRE_DETAIL) LIKE '%' || LOWER(#{query}) || '%'
+		    OR LOWER(R.RECRUIT_ETC) LIKE '%' || LOWER(#{query}) || '%'
+		    OR LOWER(CI.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%'
+		    OR LOWER(CI.CORP_BENEFIT) LIKE '%' || LOWER(#{query}) || '%'
+		    OR LOWER(CI.CORP_BENEFIT_DETAIL) LIKE '%' || LOWER(#{query}) || '%'
+		    OR LOWER(M.MEM_NICKNAME) LIKE '%' || LOWER(#{query}) || '%'
 	    )
 	  </if>
 	</where>
@@ -198,7 +224,7 @@
 	        ORDER BY R.RECRUIT_WRITE_DATE ASC
 	    </when>
 	    <when test="sort == 'views'">
-	        ORDER BY R.RECRUIT_READ_COUNT DESC
+	        ORDER BY R.RECRUIT_READCOUNT DESC
 	    </when>
 	    <when test="sort == 'likes'">
 	        ORDER BY likeCount DESC

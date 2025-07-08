@@ -86,8 +86,8 @@ export default function MemberRecruitItem({ recruit, onLikeToggle }) {
         </div>
         <p className={styles.corpName}>{recruit.corpName}</p>
         <p className={styles.locationCategory}>
-          {recruit.recruitJobArea} ┃ {recruit.recruitCategory || "career"}{" "}
-          {recruit.recruitField || "education"}
+          {recruit.recruitJobArea} ┃ {recruit.recruitCareer} ┃
+          {recruit.recruitEdu}
         </p>
         <p className={styles.deadline}>~{recruit.recruitEndDate}</p>
 

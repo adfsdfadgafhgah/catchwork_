@@ -71,7 +71,7 @@ export default function CorpRecruitListPage() {
     }
   };
 
-  //
+  // 검색 기능
   useEffect(() => {
     if (searchTerm.trim() === "") {
       setIsSearchMode(false);
@@ -81,7 +81,22 @@ export default function CorpRecruitListPage() {
         (recruit) =>
           recruit.recruitTitle.includes(searchTerm) ||
           recruit.recruitJobName.includes(searchTerm) ||
-          recruit.recruitJobDetail.includes(searchTerm)
+          recruit.recruitJobDetail.includes(searchTerm) ||
+          recruit.recruitJobArea.includes(searchTerm) ||
+          recruit.recruitEdu.includes(searchTerm) ||
+          recruit.recruitCareer.includes(searchTerm) ||
+          recruit.recruitType.includes(searchTerm) ||
+          recruit.recruitSalary.includes(searchTerm) ||
+          recruit.recruitResultDate.includes(searchTerm) ||
+          recruit.recruitDocx.includes(searchTerm) ||
+          recruit.recruitApply.includes(searchTerm) ||
+          recruit.recruitCorpUrl.includes(searchTerm) ||
+          recruit.recruitHireDetail.includes(searchTerm) ||
+          recruit.recruitEtc.includes(searchTerm) ||
+          recruit.corpName.includes(searchTerm) ||
+          recruit.memNickname.includes(searchTerm) ||
+          recruit.corpBenefit.includes(searchTerm) ||
+          recruit.corpBenefitDetail.includes(searchTerm)
       );
       setFilteredRecruits(result);
       setIsSearchMode(true);
@@ -129,7 +144,7 @@ export default function CorpRecruitListPage() {
         >
           <option value="latest">최신순</option>
           <option value="oldest">오래된순</option>
-          <option value="read">조회수순</option>
+          <option value="views">조회수순</option>
           <option value="likes">좋아요순</option>
         </select>
 

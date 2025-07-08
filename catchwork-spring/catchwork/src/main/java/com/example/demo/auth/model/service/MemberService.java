@@ -11,7 +11,10 @@ public interface MemberService {
     
     //회원가입
     Object signup(Member inputMember);
-
+    
+    // ----------------------------------------------
     // 로그인 회원의 정보 조회
     Member getLoginMember(String memNo);
+    
+    Member getCorpLoginMember(String memNo);
 }

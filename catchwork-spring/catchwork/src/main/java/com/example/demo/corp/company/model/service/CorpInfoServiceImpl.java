@@ -35,9 +35,9 @@ public class CorpInfoServiceImpl implements CorpInfoService{
 	 * @author BAEBAE
 	 */
 	@Override
-	public CorpInfo getCorpInfoByMemNo(String memNo) {
+	public CorpInfo getCorpInfoByMember(String memNo) {
 		
-		return mapper.selectCorpInfoByMemNo(memNo);
+		return mapper.getCorpInfoByMember(memNo);
 	}
 	
 }
