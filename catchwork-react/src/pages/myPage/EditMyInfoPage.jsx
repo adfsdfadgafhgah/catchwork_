@@ -1,23 +1,44 @@
 import { useEffect, useRef, useState } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
-import memberFormHandler from "../../hooks/memberFormHandler";
+import useSignUpFormHandler from "../../hooks/useSignUpFormHandler";
 import "./EditMyInfoPage.css";
 import { axiosApi } from "../../api/axiosAPI";
+import ConfirmPwModal from "../../components/myPage/ConfirmPwModal";
+import defaultImg from "../../assets/icon.png";
 
 const EditMyInfoPage = () => {
-  const imgUrl = import.meta.env.VITE_FILE_CV_IMG_URL;
+  const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
   const navigate = useNavigate();
-  const fileInputRef = useRef(null);
-  const [previewSrc, setPreviewSrc] = useState("");
   const { loginMember } = useOutletContext();
+  const [previewSrc, setPreviewSrc] = useState("");
+  const [imgFile, setImgFile] = useState(null);
+  const fileInputRef = useRef(null);
 
-  // 프로필 이미지 업로드 버튼 클릭 시
-  const handleClick = () => {
-    fileInputRef.current.click();
+  // 비밀번호 확인 모달 상태 관리
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    type: null,
+    loading: false,
+  });
+
+  // 모달 열기
+  const openModal = (type) => {
+    setModalState({
+      isOpen: true,
+      type,
+      loading: false,
+    });
   };
 
-  // 주소 파싱: '주소^^^상세주소' 형태 분리
-  const [addr, detailAddr] = (loginMember?.memAddr || "").split("^^^");
+  // 모달 닫기
+  const closeModal = () => {
+    if (modalState.loading) return; // 로딩 중에는 닫기 방지
+    setModalState({
+      isOpen: false,
+      type: null,
+      loading: false,
+    });
+  };
 
   // 날짜 형식 변환
   function dateOnly(date) {
@@ -25,9 +46,38 @@ const EditMyInfoPage = () => {
     return date.substring(0, 10);
   }
 
-  // memberFormHandler 폼 상태 및 유효성 관리
-  const { formData, setFormData, handleChange, setField, validity } =
-    memberFormHandler({
+  // 주소 파싱: '주소^^^상세주소' 형태 분리
+  const [addr, detailAddr] = (loginMember?.memAddr || "").split("^^^");
+
+  // config 정의
+  const config = {
+    fields: [
+      "memEmail",
+      "memTel",
+      "memName",
+      "memNickname",
+      "memBirthday",
+      "memGender",
+      "memAddr",
+    ],
+    nicknameField: "memNickname",
+    telField: "memTel",
+    addrField: "memAddr",
+  };
+
+  // useSignUpFormHandler 사용
+  const {
+    formData,
+    setFormData,
+    handleInputChange,
+    setField,
+    validity,
+    handleCheckNickname,
+    triggerAddressSearch,
+    validateForm,
+  } = useSignUpFormHandler(
+    {
+      memEmail: loginMember?.memEmail || "",
       memTel: loginMember?.memTel || "",
       memName: loginMember?.memName || "",
       memNickname: loginMember?.memNickname || "",
@@ -35,13 +85,12 @@ const EditMyInfoPage = () => {
       memGender: loginMember?.memGender || "",
       memAddr: addr || "",
       detailAddress: detailAddr || "",
-      memSmsFl: loginMember?.memSmsFl || false,
-      memEmail: loginMember?.memEmail || "",
-      profileImgPath: loginMember?.profileImgPath || "",
-      profileImg: null,
-    });
+      memSmsFl: loginMember?.memSmsFl === "Y" ? true : false || false,
+    },
+    config
+  );
 
-  // loginMember가 바뀔 때마다 formData를 동기화
+  // loginMember가 바뀔 때마다&&새로고침 시 formData를 동기화
   useEffect(() => {
     const [addr, detailAddr] = (loginMember?.memAddr || "").split("^^^");
     setFormData((prev) => ({
@@ -53,14 +102,24 @@ const EditMyInfoPage = () => {
       memGender: loginMember?.memGender || "",
       memAddr: addr || "",
       detailAddress: detailAddr || "",
-      memSmsFl: loginMember?.memSmsFl || false,
+      memSmsFl: loginMember?.memSmsFl === "Y" ? true : false || false,
       memEmail: loginMember?.memEmail || "",
-      // profileImg는 사용자가 직접 업로드한 경우만 변경
     }));
   }, [loginMember]);
 
+  // 누락 검사
+  const isValid =
+    formData.memEmail &&
+    formData.memTel &&
+    formData.memName &&
+    formData.memNickname &&
+    formData.memBirthday &&
+    formData.memGender &&
+    formData.memAddr &&
+    formData.detailAddress;
+
+  // previewSrc가 바뀔 때마다 기존 URL 정리
   useEffect(() => {
-    // previewSrc가 바뀔 때마다 기존 URL 정리
     return () => {
       if (previewSrc) {
         URL.revokeObjectURL(previewSrc);
@@ -70,86 +129,163 @@ const EditMyInfoPage = () => {
 
   // 프로필 이미지 업로드 핸들러
   const handleFileChange = async (e) => {
-    // 파일 선택 시
     const file = e.target.files[0];
     if (file) {
-      // 미리보기 이미지 설정
       const previewUrl = URL.createObjectURL(file);
       setPreviewSrc(previewUrl);
-
-      const imgRequestData = {
-        memNo: loginMember.memNo,
-        file: file,
-      };
-
-      try {
-        // 프로필 이미지 업로드
-        const resp = await axiosApi.post(
-          "/mypage/uploadProfileImg",
-          imgRequestData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        );
-
-        // 업로드 성공 시
-        if (resp.status === 200) {
-          setFormData((prev) => ({
-            ...prev,
-            profileImgPath: resp.data, // 응답 받은 리네임된 경로 저장
-          }));
-        }
-      } catch (error) {
-        console.error("프로필 이미지 업로드 실패", error);
-        alert("프로필 이미지 업로드 중 오류 발생");
-      }
+      setImgFile(file);
     }
   };
 
-  // 필수값 및 유효성 체크
-  const isValid =
-    validity.memTel &&
-    validity.memName &&
-    validity.memNickname &&
-    formData.memBirthday.trim() &&
-    formData.memGender.trim() &&
-    formData.memAddr.trim() &&
-    formData.detailAddress.trim() &&
-    validity.memEmail;
+  const imgRef = useRef(null);
 
-  // 주소 찾기(임시)
-  const searchAddress = () => {
-    alert("주소 검색 기능은 구현 필요");
+  // 프로필 이미지 업로드 버튼 클릭 시
+  const handleClick = () => {
+    fileInputRef.current.click();
+  };
+
+  // 프로필 이미지 업로드 핸들러
+  const handleFileUpload = async () => {
+    try {
+      // 프로필 이미지 업로드
+      const resp = await axiosApi.post(
+        "/myPage/uploadProfileImg",
+        { imgFile, memNo: loginMember.memNo },
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        }
+      );
+
+      // 업로드 성공 시
+      if (resp.status === 200) {
+        navigate("/myPage/home");
+      }
+      console.log("resp", resp.status);
+    } catch (error) {
+      console.error("프로필 이미지 업로드 실패", error);
+      alert("프로필 이미지 업로드 중 오류 발생");
+    }
   };
 
   // 수정하기 버튼 클릭 시
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!isValid) return;
-    // 서버 제출 시 memAddr = memAddr + '^^^' + detailAddress로 합쳐서 제출
-    const submitData = {
-      ...formData,
-      memAddr: formData.memAddr + "^^^" + formData.detailAddress,
+
+    // 유효성 검사
+    if (!validateForm()) {
+      alert("입력 정보를 확인해주세요.");
+      return;
+    }
+
+    // 비밀번호 확인 모달 열기
+    openModal("password");
+  };
+
+  // 비밀번호 확인 API 호출
+  const verifyPassword = async (password) => {
+    try {
+      setModalState((prev) => ({ ...prev, loading: true }));
+
+      const response = await axiosApi.post("/myPage/verifyPassword", {
+        memNo: loginMember.memNo,
+        memPw: password,
+      });
+
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.error("비밀번호 확인 실패", error);
+      throw error;
+    } finally {
+      setModalState((prev) => ({ ...prev, loading: false }));
+    }
+  };
+
+  // 비밀번호 확인 후 실제 submit 로직 수행
+  const handlePasswordConfirm = async (password) => {
+    try {
+      // 비밀번호 확인 API 호출
+      const isPasswordValid = await verifyPassword(password);
+
+      if (isPasswordValid) {
+        // 비밀번호가 일치하는 경우 모달 닫기
+        closeModal();
+        // submit 로직 수행
+        console.log("submit 로직 수행");
+        await performSubmit();
+      } else {
+        alert("비밀번호가 일치하지 않습니다.");
+      }
+    } catch (error) {
+      console.error("비밀번호 확인 실패", error);
+      alert("비밀번호 확인 중 오류가 발생했습니다.");
+      // 에러 발생 시 모달 상태 초기화
+      closeModal();
+    }
+  };
+
+  // 실제 submit 로직
+  const performSubmit = async () => {
+    // 주소 병합
+    const addrData = formData.memAddr + "^^^" + formData.detailAddress;
+
+    // 요청 데이터 생성
+    const requestData = {
+      memNo: loginMember.memNo,
+      memNickname: formData.memNickname,
+      memName: formData.memName,
+      memTel: formData.memTel,
+      memEmail: formData.memEmail,
+      memBirthday: formData.memBirthday.replaceAll("-", ""),
+      memAddr: addrData,
+      memGender: formData.memGender,
+      memSmsFl: formData.memSmsFl ? "Y" : "N",
     };
 
     try {
-      const resp = await axiosApi.post("/mypage/updateMemberInfo", submitData);
+      console.log("try 실행");
+      console.log(requestData);
+      const resp = await axiosApi.post("/myPage/updateMemberInfo", requestData);
+      console.log("resp 실행");
+      if (resp.status === 200) {
+        if (imgFile) {
+          console.log("imgFile 있음");
+          handleFileUpload();
+        } else {
+          console.log("imgFile 없음");
+        }
+        navigate("/myPage/home");
+      }
     } catch (error) {
       console.error("회원 정보 수정 실패", error);
       alert("회원 정보 수정 중 오류 발생");
     }
   };
 
+  if (!loginMember || !loginMember.memId) {
+    return <div>로딩 중...</div>;
+  }
+
   return (
-    <div className="editmyinfo-container">
-      <form onSubmit={handleSubmit}>
-        <div className="editmyinfo-form">
+    <div className="edit-myinfo-container">
+      <form onSubmit={handleSubmit} className="edit-myinfo-form">
+        <div className="edit-myinfo-container">
           {/* 프로필 이미지 */}
           <div className="profile-section">
-            <div className="profile-img">
-              {formData.profileImg ? (
+            <div className="edit-profile-img" onClick={handleClick}>
+              {previewSrc || loginMember?.memProfilePath ? (
                 <img
-                  src={URL.createObjectURL(formData.profileImg)}
+                  ref={imgRef}
+                  src={
+                    previewSrc
+                      ? previewSrc
+                      : loginMember?.memProfilePath
+                      ? `${imgUrl}/${loginMember.memProfilePath}`
+                      : defaultImg
+                  }
                   alt="프로필"
                 />
               ) : (
@@ -159,11 +295,10 @@ const EditMyInfoPage = () => {
                 type="file"
                 name="profileImg"
                 accept="image/*"
+                ref={fileInputRef}
                 onChange={handleFileChange}
+                style={{ display: "none" }}
               />
-            </div>
-            <div className="profile-info">
-              <h1>{formData.memNickname}</h1>
             </div>
           </div>
 
@@ -182,7 +317,7 @@ const EditMyInfoPage = () => {
                 <input
                   name="memEmail"
                   value={formData.memEmail}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   required
                   style={{
                     borderColor:
@@ -197,13 +332,13 @@ const EditMyInfoPage = () => {
               </div>
             </div>
 
-            <div className="info-content">
+            <label className="info-content">
               <span className="info-label">전화번호</span>
               <div className="input-wrapper">
                 <input
                   name="memTel"
                   value={formData.memTel}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   required
                   style={{
                     borderColor: validity.memTel === false ? "red" : undefined,
@@ -215,7 +350,7 @@ const EditMyInfoPage = () => {
                   </small>
                 )}
               </div>
-            </div>
+            </label>
 
             <div className="info-content">
               <span className="info-label">SMS 수신</span>
@@ -238,7 +373,7 @@ const EditMyInfoPage = () => {
                 <input
                   name="memName"
                   value={formData.memName}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   required
                   style={{
                     borderColor: validity.memName === false ? "red" : undefined,
@@ -252,13 +387,13 @@ const EditMyInfoPage = () => {
               </div>
             </div>
 
-            <div className="info-content">
+            <label className="info-content">
               <span className="info-label">닉네임</span>
               <div className="input-wrapper">
                 <input
                   name="memNickname"
                   value={formData.memNickname}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   required
                   style={{
                     borderColor:
@@ -271,7 +406,15 @@ const EditMyInfoPage = () => {
                   </small>
                 )}
               </div>
-            </div>
+              <button
+                type="button"
+                onClick={handleCheckNickname}
+                disabled={!formData.memNickname}
+                className="check-button"
+              >
+                중복 확인
+              </button>
+            </label>
 
             <div className="info-content">
               <span className="info-label">생년월일</span>
@@ -280,7 +423,7 @@ const EditMyInfoPage = () => {
                   name="memBirthday"
                   type="date"
                   value={formData.memBirthday}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   required
                 />
               </div>
@@ -295,7 +438,7 @@ const EditMyInfoPage = () => {
                     name="memGender"
                     value="M"
                     checked={formData.memGender === "M"}
-                    onChange={handleChange}
+                    onChange={handleInputChange}
                     required
                   />
                   남
@@ -306,7 +449,7 @@ const EditMyInfoPage = () => {
                     name="memGender"
                     value="F"
                     checked={formData.memGender === "F"}
-                    onChange={handleChange}
+                    onChange={handleInputChange}
                     required
                   />
                   여
@@ -321,19 +464,23 @@ const EditMyInfoPage = () => {
                   <input
                     name="memAddr"
                     value={formData.memAddr}
-                    onChange={handleChange}
+                    onChange={handleInputChange}
                     readOnly
                     required
                     placeholder="주소를 입력해주세요"
                   />
-                  <button type="button" onClick={searchAddress}>
+                  <button
+                    type="button"
+                    onClick={triggerAddressSearch}
+                    className="address-button"
+                  >
                     주소 찾기
                   </button>
                 </div>
                 <input
                   name="detailAddress"
                   value={formData.detailAddress}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                   placeholder="상세주소"
                   required
                 />
@@ -342,9 +489,23 @@ const EditMyInfoPage = () => {
           </div>
         </div>
 
-        <button type="submit" disabled={!isValid} className="submit-button">
-          수정하기
-        </button>
+        <div className="submit-button-container">
+          <button
+            type="submit"
+            disabled={!isValid}
+            className="submit-button"
+            onClick={handleSubmit}
+          >
+            수정하기
+          </button>
+        </div>
+
+        <ConfirmPwModal
+          isOpen={modalState.isOpen}
+          onClose={closeModal}
+          onConfirm={handlePasswordConfirm}
+          loading={modalState.loading}
+        />
       </form>
     </div>
   );

@@ -31,18 +31,11 @@ public class MemRecruitServiceImpl implements MemRecruitService {
 	 * @author BAEBAE
 	 */
 	@Override
-	public List<Recruit> getRecruitList(String status, String sort, String writer, String query, String memNo) {
+	public List<Recruit> getRecruitList(Map<String, Object> paramMap) {
 		
 		// 자동 마감 처리 (endDate < 오늘이면서 아직 status = 0인 공고들 → 3으로 바꾸기)
 	    memRecruitMapper.autoCloseRecruit();
 	    
-		Map<String, Object> paramMap = new HashMap<>();
-	    paramMap.put("status", status);
-	    paramMap.put("sort", sort);
-	    paramMap.put("writer", writer);
-	    paramMap.put("query", query);
-	    paramMap.put("memNo", memNo);
-
 	    return memRecruitMapper.selectRecruitList(paramMap);
 	}
 

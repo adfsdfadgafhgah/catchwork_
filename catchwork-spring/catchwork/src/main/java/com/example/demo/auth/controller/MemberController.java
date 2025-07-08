@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.auth.model.dto.CeoSignUpRequest;
 import com.example.demo.auth.model.dto.Member;
 import com.example.demo.auth.model.service.MemberService;
+import com.example.demo.auth.model.service.TransactionService;
 import com.example.demo.auth.token.entity.RefreshTokenEntity;
 import com.example.demo.auth.token.repository.RefreshTokenRepository;
 import com.example.demo.util.JWTUtil;
@@ -31,14 +34,18 @@ public class MemberController {
 
     private final JWTUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
-
-//	@Autowired
 	private final MemberService service;
+	private final TransactionService transactionService;
 	
-	public MemberController(MemberService service, JWTUtil jwtUtil, RefreshTokenRepository refreshTokenRepository) {	
+	public MemberController(
+			MemberService service, 
+			JWTUtil jwtUtil, 
+			RefreshTokenRepository refreshTokenRepository,
+			TransactionService transactionService) {	
 		this.service = service;	
 		this.jwtUtil = jwtUtil;
 		this.refreshTokenRepository = refreshTokenRepository;
+		this.transactionService = transactionService;
 	}
 	
 	/**
@@ -77,6 +84,18 @@ public class MemberController {
 	                .body(Map.of("error", "회원가입 실패", "details", e.getMessage()));
 	    }
 	}
+	
+	@PostMapping("/ceosignup")
+	public ResponseEntity<?> registerCorpAndCeo(@RequestBody CeoSignUpRequest req) {
+	    transactionService.registerCorpAndCeo(
+	            req.getCorpInfo(),
+	            req.getCeoMember(),
+	            req.getCorpMem()
+	        );
+	    return ResponseEntity.ok("기업 및 대표자 등록 성공");
+	}
+	
+	
 	
 	@PostMapping("/signout")
 	public ResponseEntity<?> logout(HttpServletResponse response) {
@@ -255,5 +274,24 @@ public class MemberController {
 		} catch (Exception e) {
 			return ResponseEntity.status(500).body(e.getMessage());
 		}
+	}
+	
+	/** 기업회원 공고 목록 조회용
+	 * @author BAEBAE
+	 * @param map
+	 * @return
+	 */
+	@PostMapping("member/getCorpLoginMember")
+	public ResponseEntity<Object> getCorpLoginMember(@RequestBody Map<String, String> map) {
+	    String memNo = map.get("memNo");
+	    try {
+	        Member corpLoginMember = service.getCorpLoginMember(memNo);
+	        if (corpLoginMember != null) {
+	            return ResponseEntity.ok(corpLoginMember);
+	        }
+	        return ResponseEntity.status(404).body("No such member found");
+	    } catch (Exception e) {
+	        return ResponseEntity.status(500).body(e.getMessage());
+	    }
 	}
 }

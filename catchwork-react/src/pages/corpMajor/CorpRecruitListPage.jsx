@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import useLoginMember from "../../stores/loginMember";
+import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 
 export default function CorpRecruitListPage() {
   const [recruits, setRecruits] = useState([]);
@@ -20,6 +21,8 @@ export default function CorpRecruitListPage() {
   const [statusFilter, setStatusFilter] = useState("all"); // 전체, 모집중, 마감됨
   const [sortOrder, setSortOrder] = useState("latest"); // 최신순, 오래된순, 조회수순, 좋아요순
   const [writerFilter, setWriterFilter] = useState("all"); // 전체, 내가쓴공고
+  const [corpNo, setCorpNo] = useState();
+  const [confirmedSearchTerm, setConfirmedSearchTerm] = useState(""); // 실제 검색에 쓸 값
 
   // 로그인 정보 세팅
   useEffect(() => {
@@ -28,12 +31,36 @@ export default function CorpRecruitListPage() {
     }
   }, []);
 
+  // corpNo 조회
   useEffect(() => {
-    fetchRecruitList();
-  }, [sortOrder, statusFilter, writerFilter, loginMember?.memNo]);
+    const fetchCorpNo = async () => {
+      try {
+        if (loginMember?.memType === 1 && loginMember?.memNo) {
+          const resp = await axiosApi.get("/corpcompany/corpNo", {
+            params: { memNo: loginMember.memNo },
+          });
+          if (resp.status === 200) {
+            setCorpNo(resp.data); // corpNo state 세팅
+          }
+        }
+      } catch (err) {
+        console.error("corpNo 조회 실패:", err);
+      }
+    };
+
+    fetchCorpNo();
+  }, [loginMember]);
+
+  // 공고 목록 불러오기 (필터링, 정렬)
+  useEffect(() => {
+    if (corpNo) {
+      fetchRecruitList();
+    }
+  }, [sortOrder, statusFilter, writerFilter, corpNo, confirmedSearchTerm]);
 
   // 공고 목록 불러오기 (정렬 + 검색)
   const fetchRecruitList = async () => {
+    if (!corpNo) return;
     try {
       setIsLoading(true);
       const resp = await axiosApi.get("/corpRecruit/list", {
@@ -41,8 +68,9 @@ export default function CorpRecruitListPage() {
           sort: sortOrder,
           status: statusFilter,
           writer: writerFilter,
-          query: searchTerm,
+          query: confirmedSearchTerm,
           memNo: loginMember?.memNo || "",
+          corpNo: corpNo,
         },
       });
 
@@ -52,7 +80,7 @@ export default function CorpRecruitListPage() {
         if (statusFilter === "closed") {
           const now = new Date();
           const filtered = list.filter((recruit) => {
-            const endDate = new Date(recruit.recruitEndDate);
+            const endDate = new Date(`${recruit.recruitEndDate}T23:59:59`);
             return (
               recruit.recruitStatus === 3 ||
               (recruit.recruitStatus === 0 && endDate < now)
@@ -70,26 +98,13 @@ export default function CorpRecruitListPage() {
     }
   };
 
-  //
-  useEffect(() => {
-    if (searchTerm.trim() === "") {
-      setIsSearchMode(false);
-      setFilteredRecruits([]);
-    } else {
-      const result = recruits.filter(
-        (recruit) =>
-          recruit.recruitTitle.includes(searchTerm) ||
-          recruit.recruitJobName.includes(searchTerm) ||
-          recruit.recruitJobDetail.includes(searchTerm)
-      );
-      setFilteredRecruits(result);
-      setIsSearchMode(true);
-    }
-  }, [searchTerm, recruits]);
-
   // 정렬 선택
   const handleSortChange = (e) => {
     setSortOrder(e.target.value);
+  };
+
+  const handleSearch = () => {
+    setConfirmedSearchTerm(searchTerm); // 검색어 확정
   };
 
   // 공고 작성하기 버튼
@@ -128,7 +143,7 @@ export default function CorpRecruitListPage() {
         >
           <option value="latest">최신순</option>
           <option value="oldest">오래된순</option>
-          <option value="read">조회수순</option>
+          <option value="views">조회수순</option>
           <option value="likes">좋아요순</option>
         </select>
 
@@ -148,6 +163,11 @@ export default function CorpRecruitListPage() {
             placeholder="직종명, 취업이야기, 취준진담"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
           />
         </div>
       </div>
@@ -168,6 +188,8 @@ export default function CorpRecruitListPage() {
       )}
 
       <FloatButton buttons={FLOAT_BUTTON_PRESETS.writeOnly(handleWrite)} />
+
+      <ScrollToTopButton />
     </div>
   );
 }

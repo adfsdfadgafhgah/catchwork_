@@ -18,8 +18,8 @@ import lombok.NoArgsConstructor;
 public class CorpInfo {
 	
 	//기업정보 테이블
-	private int corpNo;                // 기업_시퀀스_번호 (PK)
-    private String corpRegNo;             // 기업_사업자등록번호 **String 으로 수정**
+	private int corpNo;                 // 기업_시퀀스_번호 (PK)
+    private String corpRegNo;           // 기업_사업자등록번호 **String 으로 수정**
     private String corpType;            // 기업_형태
     private String corpName;            // 기업_회사명
     private String corpLogo;            // 기업_로고
@@ -31,9 +31,12 @@ public class CorpInfo {
     private String corpDetail;          // 기업_기업소개상세
     private String corpBenefit;         // 기업_복리후생_카테고리
     private String corpBenefitDetail;   // 기업_복리후생_내용
-    private String corpBanFl;           // 기업_정지_플래그 String으로 받는게 맞나?
+    private String corpBanFl;           // 기업_정지_플래그
     private Date corpBanDate;           // 기업_정지일
    
+    //기업 최고 담당 인사자
+    private String corpMemRoleCheck;
+
     // MEMBER 테이블 조인
   	private String memNo;
 

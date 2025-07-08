@@ -1,0 +1,52 @@
+/* src/pages/corpMyPage/CorpMyInfoPage.css */
+
+.corpmyinfo-container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.corpmyinfo-title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.corpmyinfo-card {
+  display: flex;
+  gap: 40px;
+  padding: 32px;
+  background-color: #f9fafb;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  align-items: center;
+}
+
+.corpmyinfo-profile-img img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #e0e7ff;
+}
+
+.corpmyinfo-info {
+  flex: 1;
+}
+
+.info-content {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.info-label {
+  width: 100px;
+  color: #555;
+  font-weight: 500;
+}
+
+.info-value {
+  flex: 1;
+  color: #111;
+}

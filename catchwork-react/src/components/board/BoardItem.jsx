@@ -5,8 +5,12 @@ import BoardCss from "./BoardItem.module.css";
 import { formatTimeAgo } from "./../common/formatTimeAgo";
 import useLoginMember from "../../stores/loginMember";
 import { useEffect, useState } from "react";
+import defaultImg from "../../assets/icon.png";
 
 export default function BoardItem({ board, onLikeToggle }) {
+  const profileImgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
+  const boardImgUrl = import.meta.env.VITE_FILE_BOARD_IMG_URL;
+
   const { loginMember, setLoginMember } = useLoginMember();
   const [likeCount, setLikeCount] = useState(board.likeCount);
   const [liked, setLiked] = useState(false);
@@ -79,8 +83,8 @@ export default function BoardItem({ board, onLikeToggle }) {
           <img
             src={
               board.memProfilePath
-                ? `http://localhost:8080/${board.memProfilePath}`
-                : "/default-profile.png"
+                ? `${profileImgUrl}/${board.memProfilePath}`
+                : defaultImg
             }
             alt="프로필 이미지"
             className={BoardCss.profileImg}
@@ -98,7 +102,9 @@ export default function BoardItem({ board, onLikeToggle }) {
                 ? board.boardTitle.slice(0, 40) + "..."
                 : board.boardTitle}
             </h3>
-            <p className={BoardCss.content}>{board.boardContent}</p>
+            <p className={BoardCss.content}>
+              {board?.boardContent?.replace(/!\[.*?\]\(.*?\)/g, "") || ""}
+            </p>
             <div className={BoardCss.meta}>
               <i className="fa-regular fa-eye"></i>
               {board.boardReadCount} &nbsp;&nbsp;{" "}
@@ -121,7 +127,7 @@ export default function BoardItem({ board, onLikeToggle }) {
         <div className={BoardCss.logo}>
           {board.boardThumbnailUrl ? (
             <img
-              src={`http://localhost:8080/${board.boardThumbnailUrl}`}
+              src={`${boardImgUrl}/${board.boardThumbnailUrl}`}
               alt="썸네일"
               className={BoardCss.thumbnailImg}
             />

@@ -16,6 +16,7 @@
   <result property="memNo" column="MEM_NO" />
   <result property="adminNo" column="ADMIN_NO" />
   <result property="supportDate" column="SUPPORT_DATE" javaType="java.lang.String"/> 
+  <result property="seqNo" column="SEQ_NO"/>
 </resultMap>
 
 
@@ -35,12 +36,14 @@
   	 FROM SUPPORT S
  	 LEFT JOIN SUPPORT_CATEGORY C
      ON S.SUPPORT_CATEGORY_CODE = C.SUPPORT_CATEGORY_CODE
-  	 ORDER BY S.SUPPORT_NO DESC
+  	 ORDER BY S.SUPPORT_NO ASC
 	</select>
 	
 	<!-- 자신이 작성한 문의 -->
 	<select id="selectSupportListByMemNo" resultMap="SupportResultMap" parameterType="String">
 	  SELECT
+	    (SELECT COUNT(*) FROM SUPPORT WHERE MEM_NO = #{memNo}) 
+	      - ROW_NUMBER() OVER (ORDER BY S.SUPPORT_NO DESC) + 1 AS SEQ_NO, 
 	    S.SUPPORT_NO,
 	    S.SUPPORT_TITLE,
 	    S.SUPPORT_CONTENT,
@@ -57,7 +60,7 @@
 	  WHERE S.MEM_NO = #{memNo}
 	  ORDER BY S.SUPPORT_NO DESC
 	</select>
-	
+
 	<!-- 문의하기 디테일 나옴 -->
 	<select id="selectSupportById" parameterType="int">
   	 SELECT 

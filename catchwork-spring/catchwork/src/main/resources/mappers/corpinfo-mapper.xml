@@ -15,7 +15,8 @@
 		ci.CORP_LOGO,
 		ci.CORP_CEO_NAME,
 		ci.CORP_ADDR,
-		TO_CHAR(ci.CORP_OPEN_DATE, 'YYYY-MM-DD') AS corp_open_date,
+		TO_CHAR(ci.CORP_OPEN_DATE,
+		'YYYY-MM-DD') AS corp_open_date,
 		ci.CORP_HOME_LINK,
 		ci.CORP_BM,
 		ci.CORP_DETAIL,
@@ -23,7 +24,8 @@
 		ci.CORP_BENEFIT_DETAIL,
 		ci.CORP_BAN_FL,
 		ci.CORP_BAN_DATE,
-		cm.MEM_NO
+		cm.MEM_NO,
+		cm.CORP_MEM_ROLE_CHECK
 		FROM
 		CORP_INFO ci
 		JOIN
@@ -38,16 +40,42 @@
 		UPDATE CORP_INFO
 		SET
 		CORP_NAME = #{corpName},
-		CORP_TYPE = #{corpType},
+		CORP_TYPE =
+		#{corpType},
+		CORP_REG_NO =#{corpRegNo},
 		CORP_CEO_NAME = #{corpCeoName},
 		CORP_ADDR = #{corpAddr},
 		CORP_OPEN_DATE = #{corpOpenDate},
 		CORP_HOME_LINK = #{corpHomeLink},
 		CORP_BM = #{corpBm},
-		CORP_DETAIL = #{corpDetail},
+		CORP_DETAIL =
+		#{corpDetail},
 		CORP_BENEFIT = #{corpBenefit},
-		CORP_BENEFIT_DETAIL = #{corpBenefitDetail}
+		CORP_BENEFIT_DETAIL =
+		#{corpBenefitDetail}
 		WHERE CORP_NO = #{corpNo}
 	</update>
+
+	<!-- 공고 작성 페이지에서 기업 정보 조회 -->
+	<select id="getCorpInfoByMember">
+		 SELECT 
+	    CI.CORP_NO,
+	    CI.CORP_NAME,
+	    CI.CORP_LOGO,
+	    CI.CORP_TYPE,
+	    CI.CORP_BENEFIT,
+	    CI.CORP_BENEFIT_DETAIL
+	  FROM CORP_INFO CI
+	  JOIN CORP_MEM CM ON CI.CORP_NO = CM.CORP_NO
+	  WHERE CM.MEM_NO = #{memNo}
+	</select>
+	
+	<!-- 같은 corpNo만 공고 보임 -->
+	<select id="selectCorpInfoByMember" parameterType="string" resultType="com.example.demo.corp.company.model.dto.CorpInfo">
+    SELECT CI.*
+    FROM CORP_INFO CI
+    JOIN CORP_MEM CM ON CI.CORP_NO = CM.CORP_NO
+    WHERE CM.MEM_NO = #{memNo}
+</select>
 
 </mapper>

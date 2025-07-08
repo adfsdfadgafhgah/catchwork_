@@ -1,16 +1,19 @@
 /* 기존 스타일 유지하면서 추가 스타일만 보완 */
-.editmyinfo-form {
+
+.edit-myinfo-form {
   width: 1080px;
   margin: 0 auto;
-
   padding-top: 80px;
   padding-bottom: 80px;
+}
+
+.edit-myinfo-container {
   display: flex;
   flex-direction: row;
   gap: 40px;
 }
 
-.editmyinfo-container .submit-button {
+.edit-myinfo-container .submit-button {
   width: 100px;
   padding: 12px;
   background-color: var(--main-color);
@@ -19,39 +22,61 @@
 }
 
 /* 프로필 이미지 관련 추가 스타일 */
-.profile-img {
-  position: relative;
-  overflow: hidden;
+.edit-myinfo-container .profile-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+
+  padding: 16px 0;
 }
 
-.profile-img i {
+.edit-profile-img {
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 200px;
+  height: 200px;
+  background-color: #dbeafe;
+  border-radius: 50%;
+
+  cursor: pointer;
+}
+
+.edit-profile-img i {
   color: var(--main-color);
   font-size: 80px;
 }
 
-.profile-img img {
-  width: 100%;
-  height: 100%;
+.edit-profile-img img {
+  width: 20rem;
+  height: 20rem;
   object-fit: cover;
+  border-radius: 50%;
 }
 
-.profile-img input[type="file"] {
+.edit-profile-img input[type="file"] {
   position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 40px;
-  height: 40px;
+  /* bottom: 8rem; */
+  /* right: 8rem; */
+  width: 4rem;
+  height: 4rem;
   opacity: 0;
   cursor: pointer;
+  z-index: 100;
 }
 
-.profile-img::after {
+.edit-profile-img::after {
   content: "";
   position: absolute;
-  bottom: 10px;
-  right: 10px;
-  width: 32px;
-  height: 32px;
+  /* bottom: 8rem; */
+  /* right: 8rem; */
+  width: 4rem;
+  height: 4rem;
   background-color: var(--white);
   border-radius: 50%;
   box-shadow: var(--box-shadow);
@@ -59,6 +84,7 @@
   background-size: 20px;
   background-repeat: no-repeat;
   background-position: center;
+  opacity: 0.8;
 }
 
 /* 정보 카드 추가 스타일 */
@@ -227,4 +253,35 @@
 
 .address-wrapper input[name="detailAddress"]:focus {
   border-color: var(--main-color);
+}
+
+/* 버튼 스타일 */
+.check-button {
+  padding: 8px 16px;
+  background-color: var(--main-color);
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 12px;
+  height: 40px;
+}
+
+.address-button {
+  padding: 8px 16px;
+  background-color: var(--main-color);
+  color: var(--white);
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 4px;
+  height: 40px;
+}
+
+.submit-button-container {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
 }

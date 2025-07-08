@@ -30,7 +30,14 @@ public class Member {
 	private Date memStatusDate;
 	private String memProfilePath;
 	private Date membershipUpdate;
+	
+	// 기업회원용
+	private Integer corpNo;
 
 	@Builder.Default
 	private int memGrade = 0;
+	
+//	기업회원
+	private String corpRegNo;      // 사업자번호
+	private String corpMemDept;    // 부서명
 }

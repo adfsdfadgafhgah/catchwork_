@@ -38,12 +38,13 @@ public class CompanyInfoController {
      */
     @GetMapping("")
     public ResponseEntity<?> selectCompanyList(
-    		@RequestParam(value = "query", required = false) String query,
+    		@RequestParam(value = "query", required = false, defaultValue = "") String query,
     		@RequestParam(value = "memNo", required = false) String memNo) {
     	
     	 log.info("기업 목록 조회 요청. 검색어: {}, memNo: {}", query, memNo);
     	 
-        try {  List<CompanyInfo> companyList = companyInfoService.selectCompanyList(query, memNo);
+        try {  
+        	List<CompanyInfo> companyList = companyInfoService.selectCompanyList(query.trim(), memNo);
         
             if (companyList.isEmpty()) {
                 log.info("조회된 기업 정보가 없습니다.");

@@ -1,9 +1,9 @@
 export function getCareerRange(filter) {
   switch (filter) {
     case "신입":
-      return { careerMin: 0, careerMax: 0 };
+      return { careerMin: 0, careerMax: 11 };
     case "1-3":
-      return { careerMin: 1, careerMax: 36 };
+      return { careerMin: 12, careerMax: 36 };
     case "4-6":
       return { careerMin: 37, careerMax: 72 };
     case "7-9":

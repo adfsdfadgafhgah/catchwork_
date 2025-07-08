@@ -132,7 +132,7 @@ function MembershipPage() {
 
   return (
     <div className="membership-container">
-      {loginMember.memGrade !== 0 && (
+      {loginMember.memGrade !== 0 && subscription.subEndAt && (
         <p>
           {membershipList[loginMember.memGrade].memGradeName} 플랜 결제 중.{" "}
           {`${subscription.subEndAt.substring(

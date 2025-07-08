@@ -35,16 +35,21 @@ public class Recruit {
 	private String recruitWriteDate;
 	
 	// 기업 회원 join
-	private String memNo;
-	private int corpNo;
+	private Integer corpNo;
 	private String corpRegNo;
 	private String corpMemRoleCheck;
 	private String corpMemDept;
-	
+	private String corpBenefit;
+	private String corpBenefitDetail;
 	private String corpLogo;
 	private String corpType;
 	private String corpName;
 	
+	// 멤버 타입1 기업회원 정보
+	private String memNo;
+	private String memNickname;
+	private String memProfilePath;
+
 	private int likeCount;
 	private int likeCheck;
 	private boolean likedByCurrentUser; // 로그인 유저가 좋아요 눌렀는지 여부

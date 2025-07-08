@@ -1,11 +1,15 @@
 package com.example.demo.member.cv.model.service;
 
+import java.io.File;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.example.demo.corp.recruit.model.dto.RecruitCV;
 import com.example.demo.member.cv.model.dto.CV;
 import com.example.demo.member.cv.model.dto.CVAward;
 import com.example.demo.member.cv.model.dto.CVEducation;
@@ -19,7 +23,6 @@ import com.example.demo.member.cv.model.dto.CVTraining;
 import com.example.demo.member.cv.model.mapper.CVMapper;
 
 import lombok.RequiredArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -30,17 +33,21 @@ public class CVServiceImpl implements CVService {
 	@Autowired
 	private CVMapper mapper;
 
+	// pdf 저장경로 생성
+	@Value("${file.upload.cv-pdf-path}")
+	private String uploadDir;
+
 	// 이력서 주인 확인
 	@Override
 	public boolean isOwner(int cvNo, String memNo) {
 		return mapper.checkCVOwner(cvNo, memNo) > 0;
 	}
 
-    @Override
-    public List<CV> selectCVList(String memNo) {
-        return mapper.selectCVList(memNo);
-    }
-    
+	@Override
+	public List<CV> selectCVList(String memNo) {
+		return mapper.selectCVList(memNo);
+	}
+
 	// 이력서 조회
 	@Override
 	public CV selectCV(int cvNo) {
@@ -146,78 +153,70 @@ public class CVServiceImpl implements CVService {
 	@Override
 	@Transactional
 	public void updateCV(CV cv) throws Exception {
+	    mapper.updateCV(cv);
+	    int cvNo = cv.getCvNo();
 
-		// 1. CV 업데이트
-		mapper.updateCV(cv);
+	    // 단일 항목
+	    if (cv.getMilitary() != null) {
+	        cv.getMilitary().setCvNo(cvNo);
+	        mapper.updateMilitary(cv.getMilitary());
+	    }
+	    if (cv.getEducation() != null) {
+	        cv.getEducation().setCvNo(cvNo);
+	        mapper.updateEducation(cv.getEducation());
+	    }
 
-		int cvNo = cv.getCvNo();
+	    // 다건 항목 전부 delete 후 insert
+	    mapper.deleteExperience(cvNo);
+	    mapper.deleteAward(cvNo);
+	    mapper.deleteQualify(cvNo);
+	    mapper.deleteLanguage(cvNo);
+	    mapper.deleteOuter(cvNo);
+	    mapper.deleteTraining(cvNo);
+	    mapper.deletePortfolio(cvNo);
 
-		// 2. Military (단일)
-		CVMilitary military = cv.getMilitary();
-		if (military != null) {
-			military.setCvNo(cvNo);
-			mapper.updateMilitary(military);
-		}
-
-		// 3. Education (단일)
-		CVEducation edu = cv.getEducation();
-		if (edu != null) {
-			edu.setCvNo(cvNo);
-			mapper.updateEducation(edu);
-		}
-
-		// 4. 나머지 다 update
-		// 경험, 자격, 수상 등 리스트도 update 해줘야 함
-		// 기존 delete 후 insert 방식도 가능 (주로 쓰는 방법)
-
-		if (cv.getExperience() != null) {
-			for (CVExperience exp : cv.getExperience()) {
-				exp.setCvNo(cvNo);
-				mapper.updateExperience(exp);
-			}
-		}
-
-		if (cv.getAward() != null) {
-			for (CVAward award : cv.getAward()) {
-				award.setCvNo(cvNo);
-				mapper.updateAward(award);
-			}
-		}
-
-		if (cv.getQualify() != null) {
-			for (CVQualify qualify : cv.getQualify()) {
-				qualify.setCvNo(cvNo);
-				mapper.updateQualify(qualify);
-			}
-		}
-
-		if (cv.getLanguage() != null) {
-			for (CVLanguage lang : cv.getLanguage()) {
-				lang.setCvNo(cvNo);
-				mapper.updateLanguage(lang);
-			}
-		}
-
-		if (cv.getOuter() != null) {
-			for (CVOuter outer : cv.getOuter()) {
-				outer.setCvNo(cvNo);
-				mapper.updateOuter(outer);
-			}
-		}
-
-		if (cv.getTraining() != null) {
-			for (CVTraining train : cv.getTraining()) {
-				train.setCvNo(cvNo);
-				mapper.updateTraining(train);
-			}
-		}
-
-		if (cv.getPortfolio() != null) {
-			for (CVPortfolio port : cv.getPortfolio()) {
-				port.setCvNo(cvNo);
-				mapper.updatePortfolio(port);
-			}
-		}
+	    if (cv.getExperience() != null) {
+	        for (CVExperience exp : cv.getExperience()) {
+	            exp.setCvNo(cvNo);
+	            mapper.addExperience(exp);
+	        }
+	    }
+	    if (cv.getAward() != null) {
+	        for (CVAward award : cv.getAward()) {
+	            award.setCvNo(cvNo);
+	            mapper.addAward(award);
+	        }
+	    }
+	    if (cv.getQualify() != null) {
+	        for (CVQualify qualify : cv.getQualify()) {
+	            qualify.setCvNo(cvNo);
+	            mapper.addQualify(qualify);
+	        }
+	    }
+	    if (cv.getLanguage() != null) {
+	        for (CVLanguage lang : cv.getLanguage()) {
+	            lang.setCvNo(cvNo);
+	            mapper.addLanguage(lang);
+	        }
+	    }
+	    if (cv.getOuter() != null) {
+	        for (CVOuter outer : cv.getOuter()) {
+	            outer.setCvNo(cvNo);
+	            mapper.addOuter(outer);
+	        }
+	    }
+	    if (cv.getTraining() != null) {
+	        for (CVTraining train : cv.getTraining()) {
+	            train.setCvNo(cvNo);
+	            mapper.addTraining(train);
+	        }
+	    }
+	    if (cv.getPortfolio() != null) {
+	        for (CVPortfolio port : cv.getPortfolio()) {
+	            port.setCvNo(cvNo);
+	            mapper.addPortfolio(port);
+	        }
+	    }
 	}
 
 	// 이력서 삭제
@@ -238,6 +237,210 @@ public class CVServiceImpl implements CVService {
 		// 부모 테이블 CV 삭제
 		mapper.deleteCV(cvNo);
 	}
+
+	// 이력서 pdf 업로드
+	@Override
+	public RecruitCV uploadCVPdf(MultipartFile file, int recruitCVEdu, int recruitCVCareer, String recruitCVPdfTitle,
+			String memNo, int recruitNo) throws Exception {
+
+		// 1. 저장경로 설정
+		File dir = new File(uploadDir);
+		if (!dir.exists())
+			dir.mkdirs();
+
+		// 2. 실제 저장 파일 경로
+		String filePath = uploadDir + File.separator + recruitCVPdfTitle;
+
+		// 3. 업로드된 파일 → 서버에 저장
+		file.transferTo(new File(filePath));
+
+		// 4. DTO 생성
+		RecruitCV recruitCV = RecruitCV.builder()
+				.recruitCVEdu(recruitCVEdu)
+				.recruitCVCareer(recruitCVCareer)
+				.recruitCVPdfTitle(recruitCVPdfTitle)
+				.recruitCVPdfPath(filePath)
+				.memNo(String.valueOf(memNo))
+				.recruitNo(recruitNo)
+				.build();
+
+		// 5. Mapper 호출 → DB INSERT
+		mapper.uploadCVPdf(recruitCV);
+
+		return recruitCV;
+	}
+
+	
+	// ---- delete & upsert helpers ----
+	
+	// EXPERIENCE
+	private void deleteAndUpsertExperience(CV cv) {
+	    int cvNo = cv.getCvNo();
+
+	    if (cv.getDeletedExperienceIds() != null) {
+	        for (String id : cv.getDeletedExperienceIds()) {
+	            mapper.deleteExperienceById(id);
+	        }
+	    }
+
+	    if (cv.getExperience() != null) {
+	        for (CVExperience exp : cv.getExperience()) {
+	            exp.setCvNo(cvNo);
+	            if (exp.getExpId() != null) {
+	                mapper.updateExperience(exp);
+	            } else {
+	                int newId = mapper.nextExpId();
+	                exp.setExpId(String.valueOf(newId));
+	                mapper.addExperience(exp);
+	            }
+	        }
+	    }
+	}
+
+	// AWARD
+	private void deleteAndUpsertAward(CV cv) {
+	    int cvNo = cv.getCvNo();
+
+	    if (cv.getDeletedAwardIds() != null) {
+	        for (String id : cv.getDeletedAwardIds()) {
+	            mapper.deleteAwardById(id);
+	        }
+	    }
+
+	    if (cv.getAward() != null) {
+	        for (CVAward award : cv.getAward()) {
+	            award.setCvNo(cvNo);
+	            if (award.getAwardId() != null) {
+	                mapper.updateAward(award);
+	            } else {
+	                int newId = mapper.nextAwardId();
+	                award.setAwardId(String.valueOf(newId));
+	                mapper.addAward(award);
+	            }
+	        }
+	    }
+	}
+
+	// QUALIFY
+	private void deleteAndUpsertQualify(CV cv) {
+	    int cvNo = cv.getCvNo();
+
+	    if (cv.getDeletedQualifyIds() != null) {
+	        for (String id : cv.getDeletedQualifyIds()) {
+	            mapper.deleteQualifyById(id);
+	        }
+	    }
+
+	    if (cv.getQualify() != null) {
+	        for (CVQualify qualify : cv.getQualify()) {
+	            qualify.setCvNo(cvNo);
+	            if (qualify.getQualifyId() != null) {
+	                mapper.updateQualify(qualify);
+	            } else {
+	                int newId = mapper.nextQualifyId();
+	                qualify.setQualifyId(String.valueOf(newId));
+	                mapper.addQualify(qualify);
+	            }
+	        }
+	    }
+	}
+
+	// LANGUAGE
+	private void deleteAndUpsertLanguage(CV cv) {
+	    int cvNo = cv.getCvNo();
+
+	    if (cv.getDeletedLanguageIds() != null) {
+	        for (String id : cv.getDeletedLanguageIds()) {
+	            mapper.deleteLanguageById(id);
+	        }
+	    }
+
+	    if (cv.getLanguage() != null) {
+	        for (CVLanguage lang : cv.getLanguage()) {
+	            lang.setCvNo(cvNo);
+	            if (lang.getLangId() != null) {
+	                mapper.updateLanguage(lang);
+	            } else {
+	                int newId = mapper.nextLangId();
+	                lang.setLangId(String.valueOf(newId));
+	                mapper.addLanguage(lang);
+	            }
+	        }
+	    }
+	}
+
+	// OUTER
+	private void deleteAndUpsertOuter(CV cv) {
+	    int cvNo = cv.getCvNo();
+
+	    if (cv.getDeletedOuterIds() != null) {
+	        for (String id : cv.getDeletedOuterIds()) {
+	            mapper.deleteOuterById(id);
+	        }
+	    }
+
+	    if (cv.getOuter() != null) {
+	        for (CVOuter outer : cv.getOuter()) {
+	            outer.setCvNo(cvNo);
+	            if (outer.getOuterId() != null) {
+	                mapper.updateOuter(outer);
+	            } else {
+	                int newId = mapper.nextOuterId();
+	                outer.setOuterId(String.valueOf(newId));
+	                mapper.addOuter(outer);
+	            }
+	        }
+	    }
+	}
+
+	// TRAINING
+	private void deleteAndUpsertTraining(CV cv) {
+	    int cvNo = cv.getCvNo();
+
+	    if (cv.getDeletedTrainingIds() != null) {
+	        for (String id : cv.getDeletedTrainingIds()) {
+	            mapper.deleteTrainingById(id);
+	        }
+	    }
+
+	    if (cv.getTraining() != null) {
+	        for (CVTraining train : cv.getTraining()) {
+	            train.setCvNo(cvNo);
+	            if (train.getTrainId() != null) {
+	                mapper.updateTraining(train);
+	            } else {
+	                int newId = mapper.nextTrainId();
+	                train.setTrainId(String.valueOf(newId));
+	                mapper.addTraining(train);
+	            }
+	        }
+	    }
+	}
+
+	// PORTFOLIO
+	private void deleteAndUpsertPortfolio(CV cv) {
+	    int cvNo = cv.getCvNo();
+
+	    if (cv.getDeletedPortfolioIds() != null) {
+	        for (String id : cv.getDeletedPortfolioIds()) {
+	            mapper.deletePortfolioById(id);
+	        }
+	    }
+
+	    if (cv.getPortfolio() != null) {
+	        for (CVPortfolio port : cv.getPortfolio()) {
+	            port.setCvNo(cvNo);
+	            if (port.getPortId() != null) {
+	                mapper.updatePortfolio(port);
+	            } else {
+	                int newId = mapper.nextPortId();
+	                port.setPortId(String.valueOf(newId));
+	                mapper.addPortfolio(port);
+	            }
+	        }
+	    }
+	}
+
 
 }
 // 	private final CVMapper mapper;

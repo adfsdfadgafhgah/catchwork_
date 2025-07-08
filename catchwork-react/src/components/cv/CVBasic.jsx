@@ -3,7 +3,13 @@ import { Camera, Loader } from "lucide-react";
 import styles from "./CVBasic.module.css";
 import defaultImg from "../../assets/icon.png";
 
-const CVBasic = ({ memberInfo, cvImgPath, onImageUpload, isUploading }) => {
+const CVBasic = ({
+  memberInfo,
+  cvImgPath,
+  onImageUpload,
+  isUploading,
+  mode,
+}) => {
   const fileInputRef = useRef(null);
   const [previewSrc, setPreviewSrc] = useState("");
 
@@ -36,12 +42,24 @@ const CVBasic = ({ memberInfo, cvImgPath, onImageUpload, isUploading }) => {
     fileInputRef.current.click();
   };
 
+  // 생일 변환
+  const formatBirthday = (birthday) => {
+    if (!birthday) return "";
+    const [date] = birthday.split("T");
+    const [year, month, day] = date.split("-");
+    return `${year}년 ${month}월 ${day}일`;
+  };
+
   return (
     <div className={styles.photoAndBasicInfo}>
       <div className={styles.photoSection}>
         <div
           className={styles.photoPlaceholder}
-          onClick={!isUploading ? handleClick : undefined}
+          onClick={
+            !isUploading && mode !== "view" && mode !== "submit"
+              ? handleClick
+              : undefined
+          }
           style={{ opacity: isUploading ? 0.5 : 1 }}
         >
           {isUploading ? (
@@ -87,7 +105,13 @@ const CVBasic = ({ memberInfo, cvImgPath, onImageUpload, isUploading }) => {
         <div className={styles.infoRow}>
           <div className={styles.infoItem}>
             <span className={styles.infoLabel}>성별</span>
-            <span className={styles.infoText}>{memberInfo.memGender}</span>
+            <span className={styles.infoText}>
+              {memberInfo.memGender === "M"
+                ? "남성"
+                : memberInfo.memGender === "W"
+                ? "여성"
+                : ""}
+            </span>
           </div>
           <div className={styles.infoItem}>
             <span className={styles.infoLabel}>이메일</span>
@@ -98,7 +122,9 @@ const CVBasic = ({ memberInfo, cvImgPath, onImageUpload, isUploading }) => {
         <div className={styles.infoRow}>
           <div className={`${styles.infoItem} ${styles.birthItem}`}>
             <span className={styles.infoLabel}>생일</span>
-            <span className={styles.infoText}>{memberInfo.memBirthday}</span>
+            <span className={styles.infoText}>
+              {formatBirthday(memberInfo.memBirthday)}
+            </span>
           </div>
         </div>
       </div>

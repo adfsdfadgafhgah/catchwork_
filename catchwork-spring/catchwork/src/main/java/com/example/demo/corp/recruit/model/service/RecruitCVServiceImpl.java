@@ -16,22 +16,37 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class RecruitCVServiceImpl implements RecruitCVService {
 
+		@Autowired
+		private RecruitCVMapper mapper;
 	
-	@Autowired
-	private RecruitCVMapper mapper;
-	
-	@Override
-    public List<RecruitCV> getAllRecruitCV() {
-        return mapper.selectAllRecruitCV();
-    }
+		/** 이력서 전체 목록 조회
+		 * @author JIN
+		 */
+		@Override
+		public List<RecruitCV> getAllRecruitCV() {
+			return mapper.selectAllRecruitCV();
+		}
 
-	@Override
-	public String getCvFilePath(int cvNo) {
-	    return mapper.selectCvFilePath(cvNo);
-	}
-
-	 @Override
-	    public List<RecruitCV> getCvList(RecruitCV filter) {
-	        return mapper.getCvList(filter); // ✅ 정확히 같은 이름 filter 사용
+		/** 조건 필터링된 이력서 조회
+		 * @author JIN
+		 */
+		@Override
+	    public List<RecruitCV> getCVList(RecruitCV filter) {
+	        return mapper.getCVList(filter);
 	    }
+	 
+		/** 이력서 PDF 경로 다운로드
+		 * @author JIN
+		 */
+		@Override
+		public String getCVPDFPath(int cvNo) {
+		    return mapper.selectCVPDFPath(cvNo);// 실제 DB에서 경로 가져옴
+		}
+		
+		/** 이력서 PDF 다운 체크
+		 * @author JIN
+		 */
+		public void markCVAsDownloaded(int cvNo) {
+		    mapper.updateCVCheckFlag(cvNo);
+		}
 }

@@ -12,8 +12,10 @@ import { formatTimeAgo } from "../../components/common/formatTimeAgo";
 import ReportModalPage from "../support/ReportModalPage";
 import { Viewer } from "@toast-ui/react-editor"; // Toast UI Viewer 추가
 import useLoginMember from "../../stores/loginMember";
+import defaultImg from "../../assets/icon.png";
 
 export default function BoardDetailPage() {
+  const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
   const { boardNo } = useParams();
   const [board, setBoard] = useState(null);
   const { loginMember, setLoginMember } = useLoginMember();
@@ -23,6 +25,11 @@ export default function BoardDetailPage() {
   const [showReportModal, setShowReportModal] = useState(false);
   const [likeLoading, setLikeLoading] = useState(false);
   const isWriter = loginMember?.memNo && loginMember.memNo === board?.memNo;
+
+  // 신고하기 관련
+  const [reportTargetNo, setReportTargetNo] = useState(null);
+  const [reportTargetType, setReportTargetType] = useState(null);
+  const [reportTargetNickname, setReportTargetNickname] = useState(null);
 
   // loginMember 가져오기
   useEffect(() => {
@@ -131,14 +138,19 @@ export default function BoardDetailPage() {
   };
 
   // 신고하기
-  const handleReportClick = () => {
+  const handleReportClick = (targetNo, targetType, targetNickname) => {
+    console.log("신고 대상 이름:", targetNickname);
+    
     if (!loginMember || !loginMember.memNo) {
       alert("로그인 후 이용해주세요.");
-      navigate("/signin"); // 로그인 페이지로 이동
+      navigate("/signin");
       return;
     }
 
-    setShowReportModal(true); // 로그인한 사용자만 신고 가능
+    setReportTargetNo(targetNo.toString()); // 문자열로 변환
+    setReportTargetType(targetType.toLowerCase()); // member, corporate, comment
+    setReportTargetNickname(targetNickname);
+    setShowReportModal(true);
   };
 
   // 신고하기 모달 취소하기 버튼
@@ -183,8 +195,8 @@ export default function BoardDetailPage() {
             <img
               src={
                 board?.memProfilePath
-                  ? `http://localhost:8080/${board.member.memProfilePath}`
-                  : "/default-profile.png"
+                  ? `${imgUrl}/${board.memProfilePath}`
+                  : defaultImg
               }
               alt="프로필"
             />
@@ -207,9 +219,15 @@ export default function BoardDetailPage() {
             {likeCount} &nbsp;&nbsp;
             {/* 신고하기 버튼 조건 렌더링 */}
             {!isWriter && (
-              <button
+             <button
                 className={BoardCss.actionBtn}
-                onClick={handleReportClick}
+                onClick={() =>
+                  handleReportClick(
+                    board.boardNo,
+                    "BOARD",
+                    board.memNickname // 또는 board.member.memNickname
+                  )
+                }
               >
                 <span
                   className={`material-symbols-outlined ${BoardCss.iconSmall}`}
@@ -232,13 +250,16 @@ export default function BoardDetailPage() {
       <CommentList boardNo={board.boardNo} loginMember={loginMember} />
 
       {/* 신고하기 모달 */}
-      {showReportModal && (
+      {showReportModal && reportTargetNo && (
         <ReportModalPage
-          targetNo={boardNo}
-          targetType="board"
+          targetNo={reportTargetNo}
+          targetType={reportTargetType}
+          targetNickname={reportTargetNickname}
+          memberNo={loginMember.memNo}
           onClose={handleCloseReport}
         />
       )}
+
     </>
   );
 }

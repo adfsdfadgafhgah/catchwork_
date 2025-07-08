@@ -3,8 +3,10 @@ import styles from "./RecruitItem.module.css";
 import { useEffect, useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
 import useLoginMember from "../../stores/loginMember";
+import defaultImg from "../../assets/icon.png";
 
 export default function RecruitItem({ recruit, onLikeToggle }) {
+  const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
   const { loginMember, setLoginMember } = useLoginMember();
   const [likeCount, setLikeCount] = useState(recruit.likeCount || 0);
   const [liked, setLiked] = useState(false);
@@ -32,18 +34,14 @@ export default function RecruitItem({ recruit, onLikeToggle }) {
   // 마감 여부 판단
   const isClosed =
     recruit.recruitStatus === 3 ||
-    new Date(recruit.recruitEndDate) < new Date();
+    new Date() > new Date(`${recruit.recruitEndDate}T23:59:59`);
 
   return (
     <Link to={`/corpRecruit/${recruit.recruitNo}`} className={styles.card}>
       <div className={styles.logoArea}>
         <img
-          src={
-            recruit.corpLogo
-              ? `http://localhost:8080/${recruit.corpLogo}`
-              : "/default-logo.png"
-          }
-          alt="기업 로고"
+          src={recruit?.corpLogo ? `${imgUrl}/${recruit.corpLogo}` : defaultImg}
+          alt="기업로고"
           className={styles.corpLogo}
         />
       </div>
@@ -53,12 +51,12 @@ export default function RecruitItem({ recruit, onLikeToggle }) {
         </div>
         <p className={styles.corpName}>{recruit.corpName}</p>
         <p className={styles.locationCategory}>
-          {recruit.recruitJobArea} ┃ {recruit.recruitCategory || "career"}{" "}
-          {recruit.recruitField || "education"}
+          {recruit.recruitJobArea} ┃ {recruit.recruitEdu} ┃ {""}
+          {recruit.recruitCareer}
         </p>
         <p className={styles.deadline}>~{recruit.recruitEndDate}</p>
 
-        {/* ✅ 마감 여부 뱃지 표시 */}
+        {/* 마감 여부 뱃지 표시 */}
         <div
           className={`${styles.recruitStatus} ${
             isClosed ? styles.closed : styles.open

@@ -1,123 +1,19 @@
-/* 공통 레이아웃 */
-.corp-page-container {
+/* 메인 레이아웃 */
+.corpmypage-container {
   display: flex;
-  min-height: 100vh;
-  background-color: #f5f5f5;
-}
-
-.corp-edit-content {
-  flex: 1;
-  padding: 80px;
-  background-color: #fff;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-}
-
-.form-container {
-  width: 100%;
-  max-width: 600px;
-}
-
-.page-title {
-  font-weight: 700;
-  color: #1f2937;
-  text-align: left;
-}
-
-.content-warning {
-  color: #dc3545;
-  line-height: 1.6;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-/* 프로필 콘텐츠 (나란히 배치) */
-.profile-content {
-  display: flex;
-  flex-direction: row; /* 옆으로 나란히 배치 */
-  align-items: flex-start;
-  gap: 20px; /* 프로필과 정보 간 간격 */
-  margin-bottom: 20px;
-}
-
-.info-box {
-  border: 1px solid #e0e7ff;
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 20px;
-}
-
-.profile-img-container {
+  height: 100%;
+  min-height: 720px;
+  margin: 0 auto;
   position: relative;
-  flex-shrink: 0; /* 이미지 크기 유지 */
 }
 
-.profile-img {
+/* 메인 콘텐츠 */
+.corpmypage-content {
   display: flex;
+  flex-direction: row;
   justify-content: center;
-  align-items: center;
-  width: 200px;
-  height: 200px;
-  background-color: #dbeafe;
-  border-radius: 50%;
-  margin: 0; /* 중앙 정렬 제거, row 레이아웃에 맞게 조정 */
+
+  flex: 1;
+  max-width: 1080px;
+  margin: 0 auto;
 }
-
-.info-list {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1; /* 남은 공간 채우기 */
-}
-
-.info-item {
-  display: flex;
-  align-items: center;
-  color: #374151;
-  line-height: 1.5;
-}
-
-.info-label {
-  font-weight: 500;
-  padding: 0 8px 0 0;
-  margin-right: 8px;
-  border-right: 1px solid #6b7280;
-}
-
-.info-value {
-  color: #1f2937;
-}
-
-.info-value.font-medium {
-  font-weight: 500;
-}
-
-/* 반응형 디자인 */
-@media (max-width: 768px) {
-  .corp-edit-content {
-    padding: 40px 20px;
-  }
-
-  .profile-content {
-    flex-direction: column; /* 모바일에서는 세로로 */
-    align-items: center;
-  }
-
-  .profile-img {
-    width: 150px;
-    height: 150px;
-  }
-}
-
-@media (max-width: 480px) {
-  
-  .profile-img {
-    width: 120px;
-    height: 120px;
-  }
-  
-}
-
-

@@ -8,8 +8,11 @@ import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import DeadlineTimer from "../../components/common/DeadlineTimer";
 import ReportModalPage from "../support/ReportModalPage";
+import KakaoMapPreview from "../../components/common/KakaoMapPreview";
+import defaultImg from "../../assets/icon.png";
 
 export default function MemberRecruitDetailPage() {
+  const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
   const { recruitNo } = useParams();
   const navigate = useNavigate();
   const [recruit, setRecruit] = useState(null);
@@ -104,14 +107,15 @@ export default function MemberRecruitDetailPage() {
 
   // 이력서 제출 페이지로 이동 핸들러
   const handleSubmit = () => {
-    navigate(`/corpRecruit/edit/${recruitNo}`);
+    navigate(`/cv?recruitNo=${recruitNo}`);
   };
 
-  const handleReport = (target) => {
-    setReportTarget(target);
+  // 신고 모달창 핸들러
+  const handleReport = () => {
     setShowReportModal(true);
   };
 
+  // 신고 모달창 끄기 핸들러
   const handleCloseReport = () => {
     setShowReportModal(false);
   };
@@ -125,12 +129,8 @@ export default function MemberRecruitDetailPage() {
       {/* 기업 정보 */}
       <div className={styles.corpHeader}>
         <img
-          src={
-            recruit.corpLogo
-              ? `http://localhost:8080/${recruit.corpLogo}`
-              : "/default-logo.png"
-          }
-          alt="기업 로고"
+          src={recruit?.corpLogo ? `${imgUrl}/${recruit.corpLogo}` : defaultImg}
+          alt="기업로고"
           className={styles.corpLogo}
         />
         <div className={styles.corpInfoText}>
@@ -138,7 +138,7 @@ export default function MemberRecruitDetailPage() {
           <span className={styles.corpType}>{recruit.corpType}</span>
           {/* 채용 제목 */}
           <h2 className={styles.recruitTitle}>
-            [{recruit.corpName}] {recruit.recruitTitle}
+            [{recruit.memNickname}] {recruit.recruitTitle}
           </h2>
           <p className={styles.recruitDates}>
             {recruit.recruitStartDate} ~ {recruit.recruitEndDate}
@@ -194,6 +194,8 @@ export default function MemberRecruitDetailPage() {
         </table>
       </section>
 
+      <KakaoMapPreview address={recruit.recruitJobArea} />
+
       {/* 상세 정보 섹션 */}
       <section className={styles.detailSections}>
         <h4 className={styles.sectionTitle}>제출 서류</h4>
@@ -209,26 +211,34 @@ export default function MemberRecruitDetailPage() {
         <p>{recruit.recruitHireDetail}</p>
 
         <h4 className={styles.sectionTitle}>복리후생</h4>
-        <p>{recruit.recruitBenefit}</p>
+        <p>{recruit.corpBenefit}</p>
+        <p>{recruit.corpBenefitDetail}</p>
 
         <h4 className={styles.sectionTitle}>기타 사항</h4>
         <p>{recruit.recruitEtc}</p>
       </section>
 
       {/* 모달 조건부 렌더링 */}
-      {showReportModal && (
-        <ReportModalPage target={reportTarget} onClose={handleCloseReport} />
+      {/* 채용공고 신고하기 */}
+      {showReportModal && recruit && loginMember && (
+        <ReportModalPage
+          targetNo={recruit.recruitNo}
+          targetType="RECRUIT"
+          targetNickname={`[${recruit.corpName}] ${recruit.recruitTitle}`}
+          memberNo={loginMember.memNo}
+          onClose={handleCloseReport}
+        />
       )}
 
       <div className={styles.deadlineTimer}>
         <DeadlineTimer recruitEndDate={recruit.recruitEndDate} />
-
-        <FloatButton
-          buttons={FLOAT_BUTTON_PRESETS.submitAndReport(handleSubmit, () =>
-            handleReport(`[${recruit.corpName}] ${recruit.recruitTitle}`)
-          )}
-        />
       </div>
+
+      <FloatButton
+        buttons={FLOAT_BUTTON_PRESETS.submitAndReport(handleSubmit, () =>
+          handleReport(`[${recruit.corpName}] ${recruit.recruitTitle}`)
+        )}
+      />
     </div>
   );
 }

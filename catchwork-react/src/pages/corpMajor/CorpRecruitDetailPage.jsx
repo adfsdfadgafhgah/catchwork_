@@ -7,8 +7,12 @@ import SectionHeader from "../../components/common/SectionHeader";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import DeadlineTimer from "../../components/common/DeadlineTimer";
+import ReportModalPage from "../support/ReportModalPage";
+import KakaoMapPreview from "../../components/common/KakaoMapPreview";
+import defaultImg from "../../assets/icon.png";
 
 export default function CorpRecruitDetailPage() {
+  const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
   const { recruitNo } = useParams();
   const navigate = useNavigate();
   const [recruit, setRecruit] = useState(null);
@@ -16,6 +20,9 @@ export default function CorpRecruitDetailPage() {
   const [liked, setLiked] = useState(false); // 좋아요 기능
   const [likeCount, setLikeCount] = useState(0); // 좋아요 기능
   const [likeLoading, setLikeLoading] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportTarget, setReportTarget] = useState("");
+  const url = import.meta.env.VITE_API_URL;
 
   // loginMember 가져오기
   useEffect(() => {
@@ -95,9 +102,15 @@ export default function CorpRecruitDetailPage() {
     navigate(`/corpRecruit/edit/${recruitNo}`);
   };
 
-  // 신고 모달창으로 핸들러
-  const handleReport = () => {
-    navigate(`/corpRecruit/edit/${recruitNo}`);
+  // 신고 모달창 핸들러
+  const handleReport = (target) => {
+    setReportTarget(target);
+    setShowReportModal(true);
+  };
+
+  // 신고 모달창 끄기 핸들러
+  const handleCloseReport = () => {
+    setShowReportModal(false);
   };
 
   // 공고 삭제 핸들러
@@ -130,12 +143,8 @@ export default function CorpRecruitDetailPage() {
       {/* 기업 정보 */}
       <div className={styles.corpHeader}>
         <img
-          src={
-            recruit.corpLogo
-              ? `http://localhost:8080/${recruit.corpLogo}`
-              : "/default-logo.png"
-          }
-          alt="기업 로고"
+          src={recruit?.corpLogo ? `${imgUrl}/${recruit.corpLogo}` : defaultImg}
+          alt="기업로고"
           className={styles.corpLogo}
         />
         <div className={styles.corpInfoText}>
@@ -143,13 +152,13 @@ export default function CorpRecruitDetailPage() {
           <span className={styles.corpType}>{recruit.corpType}</span>
           {/* 채용 제목 */}
           <h2 className={styles.recruitTitle}>
-            [{recruit.corpName}] {recruit.recruitTitle}
+            [{recruit.memNickname}] {recruit.recruitTitle}
           </h2>
           <p className={styles.recruitDates}>
             {recruit.recruitStartDate} ~ {recruit.recruitEndDate}
           </p>
 
-          {/* ✅ 조회수/좋아요 표시 라인 추가 */}
+          {/*  조회수/좋아요 표시 라인 추가 */}
           <div className={styles.engagementInfo}>
             <span>
               <i className="fa-regular fa-eye" /> {recruit.recruitReadCount}{" "}
@@ -199,6 +208,8 @@ export default function CorpRecruitDetailPage() {
         </table>
       </section>
 
+      <KakaoMapPreview address={recruit.recruitJobArea} />
+
       {/* 상세 정보 섹션 */}
       <section className={styles.detailSections}>
         <h4 className={styles.sectionTitle}>제출 서류</h4>
@@ -214,7 +225,8 @@ export default function CorpRecruitDetailPage() {
         <p>{recruit.recruitHireDetail}</p>
 
         <h4 className={styles.sectionTitle}>복리후생</h4>
-        <p>{recruit.recruitBenefit}</p>
+        <p>{recruit.corpBenefit}</p>
+        <p>{recruit.corpBenefitDetail}</p>
 
         <h4 className={styles.sectionTitle}>기타 사항</h4>
         <p>{recruit.recruitEtc}</p>
@@ -223,6 +235,11 @@ export default function CorpRecruitDetailPage() {
       <div className={styles.deadlineTimer}>
         <DeadlineTimer recruitEndDate={recruit.recruitEndDate} />
       </div>
+
+      {/* 모달 조건부 렌더링 */}
+      {showReportModal && (
+        <ReportModalPage target={reportTarget} onClose={handleCloseReport} />
+      )}
 
       {loginMember?.memNo === recruit.memNo ? (
         <FloatButton
@@ -237,7 +254,11 @@ export default function CorpRecruitDetailPage() {
           }
         />
       ) : (
-        <FloatButton buttons={FLOAT_BUTTON_PRESETS.reportOnly(handleReport)} />
+        <FloatButton
+          buttons={FLOAT_BUTTON_PRESETS.reportOnly(() =>
+            handleReport(`[${recruit.corpName}] ${recruit.recruitTitle}`)
+          )}
+        />
       )}
     </div>
   );

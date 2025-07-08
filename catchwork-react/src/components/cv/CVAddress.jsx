@@ -2,13 +2,13 @@
 import React from "react";
 import styles from "./CVAddress.module.css";
 
-const CVAddress = ({ formData, onChange, onSearch }) => {
+const CVAddress = ({ formData }) => {
   return (
     <div className={styles.infoSection}>
       {/* 제목 */}
       <div className={`${styles.infoRow} ${styles.infoTitle}`}>
         <div className={`${styles.infoItem} ${styles.addressItem}`}>
-          <div className={styles.infoLabel}>주소</div>  
+          <div className={styles.infoLabel}>주소</div>
         </div>
       </div>
 
@@ -16,32 +16,12 @@ const CVAddress = ({ formData, onChange, onSearch }) => {
       <div className={`${styles.infoRow} ${styles.infoContent}`}>
         <div className={`${styles.infoItem} ${styles.addressItem}`}>
           <div className={styles.addressInputs}>
-            <input
-              type="text"
-              className={styles.infoInput}
-              placeholder="도로명/지번 주소"
-              value={formData.mainAddress}
-              onChange={(e) => onChange("mainAddress", e.target.value)}
-            />
-            <button
-              type="button"
-              className={styles.addressSearchBtn}
-              onClick={onSearch}
-            >
-              주소찾기
-            </button>
+            <span className={styles.infoInput}>{formData.mainAddress}</span>
           </div>
           {/* 상세주소 */}
-          <input
-            type="text"
-            className={styles.infoInput}
-            placeholder="상세주소"
-            value={formData.detailAddress}
-            onChange={(e) => onChange("detailAddress", e.target.value)}
-          />
+          <span className={styles.infoInput}>{formData.detailAddress}</span>
         </div>
       </div>
-
     </div>
   );
 };
