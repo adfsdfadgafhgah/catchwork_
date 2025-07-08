@@ -1,8 +1,8 @@
-import { useEffect } from "react";
-import { Outlet } from "react-router-dom";
 import CorpSideBar from "../../components/myPage/CorpSideBar";
-import useLoginMember from "../../stores/loginMember";
 import "./CorpMyPage.css";
+import { Outlet } from "react-router-dom";
+import useLoginMember from "../../stores/loginMember";
+import { useEffect } from "react";
 
 const CorpMyPage = () => {
   const { loginMember, setLoginMember } = useLoginMember();
@@ -11,10 +11,11 @@ const CorpMyPage = () => {
     setLoginMember();
   }, []);
 
+  // 출력 결과
   return (
-    <div className="corp-page-container">
+    <div className="corpmypage-container">
       <CorpSideBar />
-      <div className="corp-edit-content">
+      <div className="corpmypage-content">
         <Outlet context={{ loginMember, setLoginMember }} />
       </div>
     </div>
