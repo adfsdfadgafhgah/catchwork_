@@ -112,6 +112,11 @@ public class RecruitCVController {
 	    	}
 	    }
 	    
+	    /** 이력서 삭제
+	     * @author JIN
+	     * @param dto
+	     * @return
+	     */
 	    @DeleteMapping("/delete")
 	    public ResponseEntity<?> deleteCVs(@RequestBody RecruitCV dto) {
 	        try {
