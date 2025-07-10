@@ -63,20 +63,6 @@ export default function MemberRecruitListPage() {
       if (resp.status === 200) {
         const list = resp.data;
         setRecruits(list);
-
-        // if (statusFilter === "closed") {
-        //   const now = new Date();
-        //   const filtered = list.filter((recruit) => {
-        //     const endDate = new Date(recruit.recruitEndDate);
-        //     return (
-        //       recruit.recruitStatus === 3 ||
-        //       (recruit.recruitStatus === 0 && endDate < now)
-        //     );
-        //   });
-        //   setRecruits(filtered);
-        // } else {
-        //   setRecruits(list);
-        // }
       }
     } catch (err) {
       console.error("채용공고 목록 조회 실패:", err);

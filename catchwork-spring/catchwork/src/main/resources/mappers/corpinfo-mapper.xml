@@ -72,10 +72,13 @@
 	
 	<!-- 같은 corpNo만 공고 보임 -->
 	<select id="selectCorpInfoByMember" parameterType="string" resultType="com.example.demo.corp.company.model.dto.CorpInfo">
-	    SELECT CI.*
-	    FROM CORP_INFO CI
-	    JOIN CORP_MEM CM ON CI.CORP_NO = CM.CORP_NO
-	    WHERE CM.MEM_NO = #{memNo}
+	    SELECT 
+        CI.*, 
+        CM.MEM_NO,
+        CM.CORP_MEM_ROLE_CHECK
+    FROM CORP_INFO CI
+    JOIN CORP_MEM CM ON CI.CORP_NO = CM.CORP_NO
+    WHERE CM.MEM_NO = #{memNo}
 	</select>
 
 	<!-- <select id="selectCorpNoAndRoleCheck" resultType="map">

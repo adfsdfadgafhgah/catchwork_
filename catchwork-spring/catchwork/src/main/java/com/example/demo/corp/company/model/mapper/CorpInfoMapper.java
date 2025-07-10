@@ -30,7 +30,7 @@ public interface CorpInfoMapper {
 
 	/**
 	 * 공고 작성페이지에서 기업정보 가져오기
-	 * 
+	 * @author BAEBAE
 	 * @param memNo
 	 * @return
 	 */

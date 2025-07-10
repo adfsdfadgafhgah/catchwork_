@@ -41,8 +41,12 @@ export default function CorpRecruitListPage() {
             params: { memNo: loginMember.memNo },
           });
           if (resp.status === 200) {
-            setCorpNo(resp.data); // corpNo state 세팅
-            setCorpMemRoleCheck(resp.data.corpMemRoleCheck); // 'Y' 또는 'N'
+            console.log("🚨 resp.data:", resp.data);
+            const { corpNo, corpMemRoleCheck } = resp.data;
+            console.log("🚨 corpNo:", corpNo);
+            console.log("🚨 corpMemRoleCheck:", corpMemRoleCheck);
+            setCorpNo(corpNo);
+            setCorpMemRoleCheck(corpMemRoleCheck);
           }
         }
       } catch (err) {
@@ -127,6 +131,10 @@ export default function CorpRecruitListPage() {
     return <h1>Loading...</h1>;
   }
 
+  console.log("🧪 렌더링 조건 확인:");
+  console.log("   - loginMember.memType =", loginMember?.memType);
+  console.log("   - corpMemRoleCheck =", corpMemRoleCheck);
+
   return (
     <div className={styles.recruitListPage}>
       <SectionHeader title="채용공고" />
@@ -193,8 +201,9 @@ export default function CorpRecruitListPage() {
         />
       )}
 
-      <FloatButton buttons={FLOAT_BUTTON_PRESETS.writeOnly(handleWrite)} />
-
+      {loginMember?.memType === 1 && corpMemRoleCheck === "Y" ? null : (
+        <FloatButton buttons={FLOAT_BUTTON_PRESETS.writeOnly(handleWrite)} />
+      )}
       <ScrollToTopButton />
     </div>
   );
