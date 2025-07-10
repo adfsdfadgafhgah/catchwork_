@@ -120,3 +120,7 @@ select {
   padding: 15px;
   border-radius: 100px;
 }
+
+.pdf-section {
+  padding: 10px 0px;
+}

@@ -212,4 +212,12 @@
     WHERE RECRUIT_NO = #{recruitNo}
 	</update>
 
+	
+	<!-- 이력서 제출 여부 확인 -->
+	<select id="checkSubmitCV" resultType="int">
+	    SELECT COUNT(*)
+	    FROM RECRUIT_CV
+	    WHERE RECRUIT_NO = #{recruitNo}
+	      AND MEM_NO = #{memNo}
+	</select>
 </mapper>
