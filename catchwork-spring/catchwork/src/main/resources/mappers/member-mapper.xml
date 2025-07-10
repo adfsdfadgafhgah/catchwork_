@@ -6,6 +6,7 @@
 <!-- 로그인 회원의 정보 조회 -->
 <select id="getLoginMember">
 	SELECT
+	  MEM_ID,
 	  MEM_NO,
 	  MEM_NICKNAME,
 	  MEM_NAME,

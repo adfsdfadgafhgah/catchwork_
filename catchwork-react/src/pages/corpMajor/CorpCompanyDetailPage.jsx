@@ -142,7 +142,7 @@ const CorpCompanyDetailPage = () => {
         <div className="company-section">
           <h3>주요사업</h3>
           <p>
-            {company.corpBm.split("\n").map((line, idx) => (
+            {company.corpBm?.split("\n").map((line, idx) => (
               <span key={idx}>
                 {line}
                 <br />
@@ -154,7 +154,7 @@ const CorpCompanyDetailPage = () => {
         <div className="company-section">
           <h3>기업상세</h3>
           <p>
-            {company.corpDetail.split("\n").map((line, idx) => (
+            {company.corpDetail?.split("\n").map((line, idx) => (
               <span key={idx}>
                 {line}
                 <br />
@@ -166,7 +166,7 @@ const CorpCompanyDetailPage = () => {
         <div className="company-section">
           <h3>복리후생</h3>
           <b>
-            {company.corpBenefit.split("\n").map((line, idx) => (
+            {company.corpBenefit?.split("\n").map((line, idx) => (
               <span key={idx}>
                 {line}
                 <br />
@@ -174,7 +174,7 @@ const CorpCompanyDetailPage = () => {
             ))}
           </b>
           <p>
-            {company.corpBenefitDetail.split("\n").map((line, idx) => (
+            {company.corpBenefitDetail?.split("\n").map((line, idx) => (
               <span key={idx}>
                 {line}
                 <br />
