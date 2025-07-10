@@ -121,5 +121,22 @@ private final MemRecruitService memRecruitService;
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("조회수 증가 실패");
 	    }
 	}
+	
+	/** 이력서 제출 여부 확인
+	 * @param payload
+	 * @return
+	 */
+	@PostMapping("submitCVCheck")
+	public ResponseEntity<Map<String, Object>> submitCVCheck(@RequestBody Map<String, Object> payload) {
+	    int recruitNo = Integer.valueOf(payload.get("recruitNo").toString());
+	    String memNo = String.valueOf(payload.get("memNo").toString());
+
+	    boolean exists = memRecruitService.checkSubmitCV(recruitNo, memNo);
+
+	    Map<String, Object> response = new HashMap<>();
+	    response.put("exists", exists);
+
+	    return ResponseEntity.ok(response);
+	}
 
 }

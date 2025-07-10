@@ -37,12 +37,46 @@ public class CVServiceImpl implements CVService {
 	@Value("${file.upload.cv-pdf-path}")
 	private String uploadDir;
 
+
+	// 이력서 pdf 업로드
+	@Override
+	public RecruitCV uploadCVPdf(MultipartFile file, int recruitCVEdu, int recruitCVCareer, String recruitCVPdfTitle,
+			String memNo, int recruitNo) throws Exception {
+
+		// 1. 저장경로 설정
+		File dir = new File(uploadDir);
+		if (!dir.exists())
+			dir.mkdirs();
+
+		// 2. 실제 저장 파일 경로
+		String filePath = uploadDir + File.separator + recruitCVPdfTitle;
+
+		// 3. 업로드된 파일 → 서버에 저장
+		file.transferTo(new File(filePath));
+
+		// 4. DTO 생성
+		RecruitCV recruitCV = RecruitCV.builder()
+				.recruitCVEdu(recruitCVEdu)
+				.recruitCVCareer(recruitCVCareer)
+				.recruitCVPdfTitle(recruitCVPdfTitle)
+				.recruitCVPdfPath(filePath)
+				.memNo(String.valueOf(memNo))
+				.recruitNo(recruitNo)
+				.build();
+
+		// 5. Mapper 호출 → DB INSERT
+		mapper.uploadCVPdf(recruitCV);
+
+		return recruitCV;
+	}
+	
 	// 이력서 주인 확인
 	@Override
 	public boolean isOwner(int cvNo, String memNo) {
 		return mapper.checkCVOwner(cvNo, memNo) > 0;
 	}
 
+	// 이력서 리스트 조회
 	@Override
 	public List<CV> selectCVList(String memNo) {
 		return mapper.selectCVList(memNo);
@@ -238,40 +272,8 @@ public class CVServiceImpl implements CVService {
 		mapper.deleteCV(cvNo);
 	}
 
-	// 이력서 pdf 업로드
-	@Override
-	public RecruitCV uploadCVPdf(MultipartFile file, int recruitCVEdu, int recruitCVCareer, String recruitCVPdfTitle,
-			String memNo, int recruitNo) throws Exception {
-
-		// 1. 저장경로 설정
-		File dir = new File(uploadDir);
-		if (!dir.exists())
-			dir.mkdirs();
-
-		// 2. 실제 저장 파일 경로
-		String filePath = uploadDir + File.separator + recruitCVPdfTitle;
-
-		// 3. 업로드된 파일 → 서버에 저장
-		file.transferTo(new File(filePath));
-
-		// 4. DTO 생성
-		RecruitCV recruitCV = RecruitCV.builder()
-				.recruitCVEdu(recruitCVEdu)
-				.recruitCVCareer(recruitCVCareer)
-				.recruitCVPdfTitle(recruitCVPdfTitle)
-				.recruitCVPdfPath(filePath)
-				.memNo(String.valueOf(memNo))
-				.recruitNo(recruitNo)
-				.build();
-
-		// 5. Mapper 호출 → DB INSERT
-		mapper.uploadCVPdf(recruitCV);
-
-		return recruitCV;
-	}
-
 	
-	// ---- delete & upsert helpers ----
+	// ---- 수정 시 컴포넌트 추가/삭제 ----
 	
 	// EXPERIENCE
 	private void deleteAndUpsertExperience(CV cv) {
@@ -443,12 +445,3 @@ public class CVServiceImpl implements CVService {
 
 
 }
-// 	private final CVMapper mapper;
-
-// 	@Override
-// 	public void submitCV(String memNo, int cvNo, int recruitNo) {
-// 		log.info("submitCV 서비스 호출 - memNo: {}, cvNo: {}, recruitNo: {}", memNo, cvNo, recruitNo);
-// 		mapper.insertSubmitCV(memNo, cvNo, recruitNo);
-// 	}
-
-// }

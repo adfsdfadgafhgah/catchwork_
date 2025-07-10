@@ -106,9 +106,31 @@ export default function MemberRecruitDetailPage() {
   };
 
   // 이력서 제출 페이지로 이동 핸들러
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (!loginMember?.memNo) {
+    alert("로그인 후 이용 가능합니다.");
+    return;
+  }
+
+  try {
+    const resp = await axiosApi.post("/memberRecruit/submitCVCheck", {
+      recruitNo: recruit.recruitNo,
+      memNo: loginMember.memNo,
+    });
+
+    if (resp.data.exists) {
+      // 이미 제출한 이력서가 있는 경우
+      alert("이미 제출한 이력서가 있습니다.");
+      return;
+    }
+
+    // 없으면 이력서 작성 페이지로 이동
     navigate(`/cv?recruitNo=${recruitNo}`);
-  };
+  } catch (err) {
+    console.error("이력서 제출 여부 확인 실패:", err);
+    alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+  }
+};
 
   // 신고 모달창 핸들러
   const handleReport = () => {

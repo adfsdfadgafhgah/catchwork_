@@ -20,6 +20,11 @@ import com.example.demo.member.cv.model.dto.CVTraining;
 @Mapper
 public interface CVMapper {
 
+	/** 이력서 pdf 업로드
+	 * @param recruitCV
+	 */
+	void uploadCVPdf(RecruitCV recruitCV);
+	
 	/** 이력서 주인 확인
 	 * @param cvNo
 	 * @param memNo
@@ -142,9 +147,6 @@ public interface CVMapper {
 
 	void deletePortfolio(int cvNo);
 
-	
-	// 이력서 pdf 업로드
-	void uploadCVPdf(RecruitCV recruitCV);
 
     /** 삭제 (ID 기준) */
     void deleteExperienceById(String expId);
