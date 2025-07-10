@@ -11,8 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -38,7 +40,6 @@ public class RecruitCVController {
 		@GetMapping("list")
 	    public ResponseEntity<?> getCVList() {
 	        try {
-	            log.info("[GET] /list - 전체 이력서 목록 조회 요청");
 	            List<RecruitCV> list = service.getAllRecruitCV();
 	            log.info("조회된 이력서 수: {}", list.size());
 	            return ResponseEntity.ok(list);
@@ -72,7 +73,7 @@ public class RecruitCVController {
 	     * @param cvNo
 	     * @return
 	     */
-	    @GetMapping("/download/{cvNo}")
+	    @GetMapping("download/{cvNo}")
 	    public ResponseEntity<byte[]> downloadCV(@PathVariable("cvNo") int cvNo) {
 	    	try {
 	    		
@@ -82,8 +83,7 @@ public class RecruitCVController {
 	    		File file = new File(filePath);
 	    		if (!file.exists()) {
 	    			System.out.println("파일 없음: " + filePath); // 디버깅용 출력
-	    			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                 .body(null);
+	    			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 	    		}
 
 	    		// 2. 파일명만 추출해서 다운로드 이름 지정
@@ -101,8 +101,7 @@ public class RecruitCVController {
 		        headers.setContentDisposition(
 		            ContentDisposition.builder("attachment")
 		                              .filename(filename)
-		                              .build()
-		        		);
+		                              .build());
 		        return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
 	    	} catch (Exception e) {
 	    		e.printStackTrace();
@@ -110,5 +109,26 @@ public class RecruitCVController {
 	    	}
 	    }
 	    
+	    /** 이력서 삭제
+	     * @author JIN
+	     * @param dto
+	     * @return
+	     */
+	    @DeleteMapping("/delete")
+	    public ResponseEntity<?> deleteCVs(@RequestBody RecruitCV dto) {
+	        try {
+	            List<Integer> cvNos = dto.getCvNos();
+	            if (cvNos == null || cvNos.isEmpty()) {
+	                return ResponseEntity.badRequest().body("삭제할 이력서가 없습니다.");
+	            }
+	            service.deleteCVs(cvNos);
+	            return ResponseEntity.ok().build();
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패: " + e.getMessage());
+	        }
+	    }
+
+
+
 
 }

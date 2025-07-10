@@ -9,7 +9,7 @@ const SelectCompanyPage = () => {
   const [companyList, setCompanyList] = useState([]);
 
   useEffect(() => {
-    const fetchCompanies = async () => {
+    const showCompanies = async () => {
       if (!query) return;
       try {
         const res = await axiosApi.get("/search/company", {
@@ -20,7 +20,7 @@ const SelectCompanyPage = () => {
         console.error("기업 검색 오류:", err);
       }
     };
-    fetchCompanies();
+    showCompanies();
   }, [query]);
 
   return (

@@ -9,7 +9,7 @@ const SelectRecruitPage = () => {
   const [recruitList, setRecruitList] = useState([]);
 
   useEffect(() => {
-    const fetchRecruits = async () => {
+    const showRecruits = async () => {
       if (!query) return;
       try {
         const res = await axiosApi.get("/search/recruit", {
@@ -20,7 +20,7 @@ const SelectRecruitPage = () => {
         console.error("공고 검색 오류:", err);
       }
     };
-    fetchRecruits();
+    showRecruits();
   }, [query]);
 
   return (

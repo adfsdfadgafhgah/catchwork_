@@ -30,9 +30,15 @@ public interface RecruitCVService {
 	
 	
 	 /** 이력서 PDF 다운 체크
-	  * @author JIN
+	 * @author JIN
 	 * @param cvNo
 	 */
 	void markCVAsDownloaded(int cvNo);
 	
+	
+	 /** 이력서 삭제
+	 * @author JIN
+	 * @param cvNos
+	 */
+	void deleteCVs(List<Integer> cvNos);
 }

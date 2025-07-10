@@ -24,7 +24,7 @@ public class RecruitCVServiceImpl implements RecruitCVService {
 		 */
 		@Override
 		public List<RecruitCV> getAllRecruitCV() {
-			return mapper.selectAllRecruitCV();
+			return mapper.getAllRecruitCV();
 		}
 
 		/** 조건 필터링된 이력서 조회
@@ -49,4 +49,13 @@ public class RecruitCVServiceImpl implements RecruitCVService {
 		public void markCVAsDownloaded(int cvNo) {
 		    mapper.updateCVCheckFlag(cvNo);
 		}
+		
+		/** 이력서 삭제
+		 *@author JIN
+		 */
+		@Override
+	    public void deleteCVs(List<Integer> cvNos) {
+	        if (cvNos == null || cvNos.isEmpty()) return;
+	        mapper.deleteCVs(cvNos); 
+	    }
 }
