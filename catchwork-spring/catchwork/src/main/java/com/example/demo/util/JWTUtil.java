@@ -120,42 +120,40 @@ public class JWTUtil {
 	        .compact();
 	}
 
-	  public boolean isValidToken(String token) {
-		    try {
-		        Jwts.parser().verifyWith(secretKey)
-		        .build()
-		        .parseSignedClaims(token)
-                .getPayload()
-                .getExpiration()
-                .before(new Date());
-		        return true;
-		    } catch (JwtException e) {
-		        log.debug("JWT 처리 중 오류 발생", e);
-		    } catch (Exception e) {
-		        log.debug("알 수 없는 예외 발생", e);
-		    }
-		    return false;
-		  }
-	
-
-/*
-access 토큰 payload 구조
-{
-  "memNo": "MinJang",				// String
-  "memNickname": "미친_민장_180",	// String
-  "memType": 1,						// int
-  "iat": 1750842790,				// long
-  "exp": 1750878790					// long
+    public boolean isValidToken(String token) {
+        try {
+            Jwts.parser().verifyWith(secretKey)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload()
+            .getExpiration()
+            .before(new Date());
+            return true;
+        } catch (JwtException e) {
+            log.debug("JWT 처리 중 오류 발생", e);
+        } catch (Exception e) {
+            log.debug("알 수 없는 예외 발생", e);
+        }
+        return false;
+    }
 }
-
-refresh 토큰 payload 구조
-{
-  "memNo": "MinJang",			// String
-  "iat": 1750842790,			// long
-  "exp": 1750878790				// long
-}
-
-
- */
-	
-}
+        
+        /*
+        access 토큰 payload 구조
+        {
+          "memNo": "MinJang",				// String
+          "memNickname": "미친_민장_180",	// String
+          "memType": 1,						// int
+          "iat": 1750842790,				// long
+          "exp": 1750878790					// long
+        }
+        
+        refresh 토큰 payload 구조
+        {
+          "memNo": "MinJang",			// String
+          "iat": 1750842790,			// long
+          "exp": 1750878790				// long
+        }
+        
+        
+         */
