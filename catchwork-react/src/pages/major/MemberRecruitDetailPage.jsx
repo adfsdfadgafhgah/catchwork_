@@ -21,7 +21,6 @@ export default function MemberRecruitDetailPage() {
   const [likeCount, setLikeCount] = useState(0); // 좋아요 기능
   const [likeLoading, setLikeLoading] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
-  const [reportTarget, setReportTarget] = useState("");
 
   // loginMember 가져오기
   useEffect(() => {

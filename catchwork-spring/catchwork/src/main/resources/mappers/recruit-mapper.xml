@@ -148,6 +148,7 @@
 		
 		-- 기업회원 정보
 		M.MEM_NICKNAME AS memNickname,
+		CM.CORP_MEM_ROLE_CHECK AS corpMemRoleCheck,
 	    
 	    -- 좋아요 수
 	    (SELECT COUNT(*) FROM FAV_RECRUIT F WHERE F.RECRUIT_NO = R.RECRUIT_NO) AS likeCount,
@@ -340,5 +341,7 @@
     SET RECRUIT_READCOUNT = RECRUIT_READCOUNT + 1
     WHERE RECRUIT_NO = #{recruitNo}
 	</update>
+	
+	
 
 </mapper>

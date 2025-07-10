@@ -91,9 +91,10 @@ public class RecruitController {
 	    @RequestParam(name = "writer", required = false, defaultValue = "all") String writer,
 	    @RequestParam(name = "query", required = false) String query,
 	    @RequestParam(name = "memNo", required = false) String memNo,
-	    @RequestParam(name = "corpNo", required = false) Integer corpNo
+	    @RequestParam(name = "corpNo", required = false) Integer corpNo,
+	    @RequestParam(name = "corpMemRoleCheck", required = false) String corpMemRoleCheck
 	) {
-	    List<Recruit> recruitList = recruitService.getRecruitList(status, sort, writer, query, memNo, corpNo);
+	    List<Recruit> recruitList = recruitService.getRecruitList(status, sort, writer, query, memNo, corpNo, corpMemRoleCheck);
 	    System.out.println("corpNo = " + corpNo);
 	    return ResponseEntity.ok(recruitList);
 	}
@@ -190,5 +191,5 @@ public class RecruitController {
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("조회수 증가 실패");
 	    }
 	}
-
+	
 }

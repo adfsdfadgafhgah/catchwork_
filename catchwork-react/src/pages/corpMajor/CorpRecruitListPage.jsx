@@ -23,6 +23,7 @@ export default function CorpRecruitListPage() {
   const [writerFilter, setWriterFilter] = useState("all"); // 전체, 내가쓴공고
   const [corpNo, setCorpNo] = useState();
   const [confirmedSearchTerm, setConfirmedSearchTerm] = useState(""); // 실제 검색에 쓸 값
+  const [corpMemRoleCheck, setCorpMemRoleCheck] = useState("N"); // 'Y'면 대표이사
 
   // 로그인 정보 세팅
   useEffect(() => {
@@ -40,7 +41,12 @@ export default function CorpRecruitListPage() {
             params: { memNo: loginMember.memNo },
           });
           if (resp.status === 200) {
-            setCorpNo(resp.data); // corpNo state 세팅
+            console.log("🚨 resp.data:", resp.data);
+            const { corpNo, corpMemRoleCheck } = resp.data;
+            console.log("🚨 corpNo:", corpNo);
+            console.log("🚨 corpMemRoleCheck:", corpMemRoleCheck);
+            setCorpNo(corpNo);
+            setCorpMemRoleCheck(corpMemRoleCheck);
           }
         }
       } catch (err) {
@@ -114,12 +120,20 @@ export default function CorpRecruitListPage() {
       navigate("/signin");
       return;
     }
+    if (corpMemRoleCheck === "Y") {
+      alert("대표이사 계정은 공고 작성이 불가능합니다.");
+      return;
+    }
     navigate("/corpRecruit/write");
   };
 
   if (isLoading) {
     return <h1>Loading...</h1>;
   }
+
+  console.log("🧪 렌더링 조건 확인:");
+  console.log("   - loginMember.memType =", loginMember?.memType);
+  console.log("   - corpMemRoleCheck =", corpMemRoleCheck);
 
   return (
     <div className={styles.recruitListPage}>
@@ -187,8 +201,9 @@ export default function CorpRecruitListPage() {
         />
       )}
 
-      <FloatButton buttons={FLOAT_BUTTON_PRESETS.writeOnly(handleWrite)} />
-
+      {loginMember?.memType === 1 && corpMemRoleCheck === "Y" ? null : (
+        <FloatButton buttons={FLOAT_BUTTON_PRESETS.writeOnly(handleWrite)} />
+      )}
       <ScrollToTopButton />
     </div>
   );

@@ -53,21 +53,11 @@ export default function BoardListPage() {
     }
   };
 
-  // searchTerm이 바뀔 때마다 실시간 검색
-  useEffect(() => {
-    if (searchTerm.trim() === "") {
-      setIsSearchMode(false);
-      setFilteredBoards([]);
-    } else {
-      const result = boards.filter(
-        (board) =>
-          board.boardTitle.includes(searchTerm) ||
-          board.boardContent.includes(searchTerm)
-      );
-      setFilteredBoards(result);
-      setIsSearchMode(true);
+  const handleSearchKeyDown = (e) => {
+    if (e.key === "Enter") {
+      getBoardList();
     }
-  }, [searchTerm, boards]);
+  };
 
   // 정렬 선택
   const handleSortChange = (e) => {
@@ -115,6 +105,7 @@ export default function BoardListPage() {
             placeholder="진중한 취업이야기, 취준진담"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
           />
         </div>
       </div>

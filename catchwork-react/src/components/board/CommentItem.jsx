@@ -5,6 +5,7 @@ import CommentCss from "./CommentItem.module.css";
 import { formatTimeAgo } from "./../common/formatTimeAgo";
 import ReportModalPage from "../../pages/support/ReportModalPage";
 import { axiosApi } from "../../api/axiosAPI";
+import defaultImg from "../../assets/icon.png";
 
 export default function CommentItem({
   comment,
@@ -15,6 +16,7 @@ export default function CommentItem({
   const [isReplyOpen, setIsReplyOpen] = useState(false); // 대댓글 입력창 열림 여부
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
   const [showReportModal, setShowReportModal] = useState(false);
+  const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
 
   const isWriter = loginMember && loginMember.memNo === comment.memNo;
 
@@ -69,11 +71,11 @@ export default function CommentItem({
               )}
               <img
                 src={
-                  comment.memProfilePath
-                    ? `http://localhost:8080/${comment.memProfilePath}`
-                    : "/profile.png"
+                  comment?.memProfilePath
+                    ? `${imgUrl}/${comment?.memProfilePath}`
+                    : defaultImg
                 }
-                alt="프로필"
+                alt="기업로고"
                 className={CommentCss.profileImg}
               />
               <span className={CommentCss.nickname}>{comment.memNickname}</span>
@@ -83,11 +85,16 @@ export default function CommentItem({
             </span>
           </div>
 
-          {/* ✅ 댓글 내용 or 삭제된 댓글 표시 */}
+          {/*  댓글 내용 or 삭제된 댓글 표시 */}
           {comment.commentStatus === 1 ? (
             <div className={CommentCss.deleted}>삭제된 댓글입니다.</div>
           ) : (
-            <div className={CommentCss.content}>{comment.commentContent}</div>
+            <div
+              className={CommentCss.content}
+              dangerouslySetInnerHTML={{
+                __html: comment.commentContent.replace(/\n/g, "<br/>"),
+              }}
+            ></div>
           )}
 
           <div className={CommentCss.actions}>

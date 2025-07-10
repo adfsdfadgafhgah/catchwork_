@@ -1,5 +1,7 @@
 package com.example.demo.corp.company.model.mapper;
 
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -28,10 +30,12 @@ public interface CorpInfoMapper {
 
 	/**
 	 * 공고 작성페이지에서 기업정보 가져오기
-	 * 
+	 * @author BAEBAE
 	 * @param memNo
 	 * @return
 	 */
 	CorpInfo selectCorpInfoByMember(String memNo);
+	
+//	Map<String, Object> selectCorpNoAndRoleCheck(String memNo);
 
 }

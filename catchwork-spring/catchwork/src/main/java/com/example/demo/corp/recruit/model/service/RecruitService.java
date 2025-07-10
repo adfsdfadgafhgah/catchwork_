@@ -1,6 +1,7 @@
 package com.example.demo.corp.recruit.model.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.example.demo.corp.recruit.model.dto.Recruit;
 
@@ -29,7 +30,7 @@ public interface RecruitService {
 	 * @param memNo
 	 * @return
 	 */
-	List<Recruit> getRecruitList(String status, String sort, String writer, String query, String memNo, Integer corpNo);
+	List<Recruit> getRecruitList(String status, String sort, String writer, String query, String memNo, Integer corpNo, String corpMemRoleCheck);
 
 	/** 채용공고 좋아요
 	 * @author BAEBAE
