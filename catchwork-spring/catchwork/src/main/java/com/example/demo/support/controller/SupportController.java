@@ -19,7 +19,6 @@ import com.example.demo.auth.model.dto.CustomUserDetails;
 import com.example.demo.support.model.dto.Support;
 import com.example.demo.support.model.service.SupportService;
 
-@CrossOrigin(origins = "http://localhost:5173") // 프론트 허용
 @RestController
 @RequestMapping("/support")
 public class SupportController {

@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CorpSideBar from "../../components/myPage/CorpSideBar";
 import "./CorpConfirmEditPage.css";
 
 const CorpConfirmEditPage = () => {
@@ -29,7 +28,6 @@ const CorpConfirmEditPage = () => {
 
   return (
     <div className="corp-page-container">
-      <CorpSideBar />
       <div className="corp-edit-content">
         <div className="form-container">
           <h2 className="page-title">기업 회원 정보 수정</h2>

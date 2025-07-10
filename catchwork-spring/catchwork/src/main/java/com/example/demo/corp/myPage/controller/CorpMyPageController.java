@@ -11,7 +11,6 @@ import com.example.demo.corp.myPage.model.service.CorpMyPageService;
 
 @RestController
 @RequestMapping("/corp")
-@CrossOrigin(origins = "http://localhost:5173")   // React 개발 서버 주소
 public class CorpMyPageController {
 
     @Autowired

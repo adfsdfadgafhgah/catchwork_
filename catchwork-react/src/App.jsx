@@ -258,7 +258,7 @@ const router = createBrowserRouter([
       { path: "corpcvlist", element: <CorpCVListPage /> },
 
       // 기업 마이 페이지
-      {
+   {
         path: "/corpmypage",
         element: (
           <ProtectedRoute allowedType={1}>
@@ -268,12 +268,12 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <CorpMyInfoPage /> },
           { path: "home", element: <CorpMyInfoPage /> },
+          { path: "editmyinfo", element: <CorpEditMyInfoPage /> },
+          { path: "confirmedit", element: <CorpConfirmEditPage /> },
+          { path: "changepw", element: <CorpChangePwPage /> },
+          { path: "withdraw", element: <CorpWithdrawPage /> },
         ],
       },
-      { path: "corpeditmyinfo", element: <CorpEditMyInfoPage /> },
-      { path: "corpconfirmedit", element: <CorpConfirmEditPage /> },
-      { path: "corpchangepw", element: <CorpChangePwPage /> },
-      { path: "corpwithdraw", element: <CorpWithdrawPage /> },
     ],
   },
 ]);

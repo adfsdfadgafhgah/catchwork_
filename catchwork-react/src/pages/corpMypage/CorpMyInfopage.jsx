@@ -28,9 +28,9 @@ function CorpMyInfo() {
   }
 
   return (
-    <div className="myinfo-container">
+    <div className="corpmyinfo-container">
       <div className="profile-section">
-        <div className="myinfo-profile-img">
+        <div className="corpmyinfo-profile-img">
           <img
             src={
               loginMember.memProfilePath
