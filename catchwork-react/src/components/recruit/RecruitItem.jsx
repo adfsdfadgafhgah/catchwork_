@@ -6,7 +6,7 @@ import useLoginMember from "../../stores/loginMember";
 import defaultImg from "../../assets/icon.png";
 
 export default function RecruitItem({ recruit, onLikeToggle }) {
-  const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
+  const logoImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
   const { loginMember, setLoginMember } = useLoginMember();
   const [likeCount, setLikeCount] = useState(recruit.likeCount || 0);
   const [liked, setLiked] = useState(false);
@@ -40,7 +40,9 @@ export default function RecruitItem({ recruit, onLikeToggle }) {
     <Link to={`/corpRecruit/${recruit.recruitNo}`} className={styles.card}>
       <div className={styles.logoArea}>
         <img
-          src={recruit?.corpLogo ? `${imgUrl}/${recruit.corpLogo}` : defaultImg}
+          src={
+            recruit?.corpLogo ? `${logoImgUrl}/${recruit.corpLogo}` : defaultImg
+          }
           alt="기업로고"
           className={styles.corpLogo}
         />

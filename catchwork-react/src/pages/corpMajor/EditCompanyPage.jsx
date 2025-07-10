@@ -122,6 +122,7 @@ const EditCompanyPage = () => {
     formData.append("corpLogoFile", corpLogoFile);
   }
 
+  // 기업 정보 수정
   const handleEdit = async () => {
     const corpInfo = {
       corpNo,
