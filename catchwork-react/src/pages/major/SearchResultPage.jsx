@@ -39,7 +39,7 @@ const SearchResultPage = () => {
       recruitType,
     });
     setLoading(true);
-    const fetchData = async () => {
+    const SearchData = async () => {
       try {
         if (type === "recruit") {
           const res = await axiosApi.get("/search/recruit", {
@@ -71,7 +71,7 @@ const SearchResultPage = () => {
         setLoading(false);
       }
     };
-    fetchData();
+    SearchData();
   }, [
     query,
     type,

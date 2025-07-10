@@ -5,8 +5,10 @@ import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 import "./CorpCompanyDetailPage.css";
 import { axiosApi } from "../../api/axiosAPI";
 import useLoginMember from "../../stores/loginMember";
+import defaultLogo from "../../assets/icon.png";
 
 const CorpCompanyDetailPage = () => {
+  const logoImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
   const navigate = useNavigate();
   const { loginMember, setLoginMember } = useLoginMember(); // 로그인한 회원 정보 가져오기
 
@@ -29,7 +31,7 @@ const CorpCompanyDetailPage = () => {
     }
     console.log("[6] API 요청 시작, memNo:", loginMember.memNo);
 
-    const fetchCompany = async () => {
+    const CompanyDetail = async () => {
       try {
         const res = await axiosApi.get(`/corpcompany/detail`, {
           params: { memNo: loginMember.memNo },
@@ -42,7 +44,7 @@ const CorpCompanyDetailPage = () => {
         setLoading(false);
       }
     };
-    fetchCompany();
+    CompanyDetail();
   }, [loginMember]);
 
   useEffect(() => {
@@ -85,7 +87,11 @@ const CorpCompanyDetailPage = () => {
         <div className="company-detail-header">
           <div className="company-header-left">
             <img
-              src={company.corpLogo}
+              src={
+                company.corpLogo
+                  ? `${logoImgUrl}/${company.corpLogo}`
+                  : defaultLogo
+              }
               alt="기업로고"
               className="company-logo"
             />
@@ -135,18 +141,46 @@ const CorpCompanyDetailPage = () => {
 
         <div className="company-section">
           <h3>주요사업</h3>
-          <p>{company.corpBm}</p>
+          <p>
+            {company.corpBm.split("\n").map((line, idx) => (
+              <span key={idx}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </p>
         </div>
 
         <div className="company-section">
           <h3>기업상세</h3>
-          <p>{company.corpDetail}</p>
+          <p>
+            {company.corpDetail.split("\n").map((line, idx) => (
+              <span key={idx}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </p>
         </div>
 
         <div className="company-section">
           <h3>복리후생</h3>
-          <b>{company.corpBenefit}</b>
-          <p>{company.corpBenefitDetail}</p>
+          <b>
+            {company.corpBenefit.split("\n").map((line, idx) => (
+              <span key={idx}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </b>
+          <p>
+            {company.corpBenefitDetail.split("\n").map((line, idx) => (
+              <span key={idx}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </p>
         </div>
 
         {company.corpMemRoleCheck === "Y" && (

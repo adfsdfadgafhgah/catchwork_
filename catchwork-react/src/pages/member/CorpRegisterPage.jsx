@@ -7,7 +7,7 @@ const CorpRegisterPage = () => {
     formData,
     handleInputChange,
     handleSubmit,
-    handleAuthenticationCheck,
+    handleCorpRegisterAuth,
     triggerAddressSearch,
     validity,
     isCorpVerified,
@@ -85,7 +85,7 @@ const CorpRegisterPage = () => {
 
             <button
               type="button"
-              onClick={handleAuthenticationCheck}
+              onClick={handleCorpRegisterAuth}
               disabled={isCorpVerified}
               className="corpRegister-action-button"
             >

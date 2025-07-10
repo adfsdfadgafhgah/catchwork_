@@ -52,4 +52,8 @@ public interface MemRecruitMapper {
 	 */
 	void autoCloseRecruit();
 
+	/** 이력서 제출 여부 확인 */
+	int checkSubmitCV(@Param("recruitNo") int recruitNo,
+	                  @Param("memNo") String memNo);
+	
 }

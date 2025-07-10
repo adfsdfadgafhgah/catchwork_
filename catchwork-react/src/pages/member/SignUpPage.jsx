@@ -12,7 +12,7 @@ const SignUpPage = () => {
   const [searchParams] = useSearchParams();
 
   const {
-    handleAuthenticationCheck,
+    handleCorpJoinCheck,
     isCorpVerified,
     handleInputChange: handleCorpInputChange,
     validity: corpValidity,
@@ -226,7 +226,7 @@ const SignUpPage = () => {
             )}
             <button
               type="button"
-              onClick={handleAuthenticationCheck}
+              onClick={handleCorpJoinCheck}
               disabled={isCorpVerified}
               className="corpRegister-action-button"
             >

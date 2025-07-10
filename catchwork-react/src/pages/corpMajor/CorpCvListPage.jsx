@@ -10,16 +10,16 @@ const CorpCVListPage = () => {
   const [filteredList, setFilteredList] = useState([]);
   const [selectedEdu, setSelectedEdu] = useState("");
   const [selectedExp, setSelectedExp] = useState("");
-  const [selectedCVNos, setSelectedCVNos] = useState([]);
-  const [showCheckbox, setShowCheckbox] = useState(false);
+  const [selectedCVNos, setSelectedCVNos] = useState([]); // 체크박스로 선택된
+  const [showCheckbox, setShowCheckbox] = useState(false); //체크박스 모드
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; //한페이지에 보여지는 이력서 갯수
 
   useEffect(() => {
-    fetchCVList(); //처음 페이지 진입시 전체 목록 호출
+    showAllCVList(); //처음 페이지 진입시 전체 목록 호출
   }, []);
 
-  const fetchCVList = async () => {
+  const showAllCVList = async () => {
     try {
       const res = await axiosApi.get("/corpcv/list");
       const formatted = res.data.map((cv) => ({
@@ -34,6 +34,7 @@ const CorpCVListPage = () => {
     }
   };
 
+  //선택된 조건에 따라 목록 갱신
   const handleFilter = async () => {
     try {
       const { careerMin, careerMax } = getCareerRange(selectedExp);
@@ -50,7 +51,7 @@ const CorpCVListPage = () => {
       }
 
       const res = await axiosApi.get("/corpcv/filter", { params });
-      const rawList = Array.isArray(res.data) ? res.data : []; // ✅ 핵심
+      const rawList = Array.isArray(res.data) ? res.data : [];
       const formatted = res.data.map((cv) => ({
         ...cv,
         isDownloaded: cv.recruitCVCheckFl === "Y",
@@ -67,6 +68,7 @@ const CorpCVListPage = () => {
     }
   };
 
+  //페이지 네이션
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredList.slice(indexOfFirstItem, indexOfLastItem);
@@ -78,6 +80,7 @@ const CorpCVListPage = () => {
     );
   };
 
+  //이력서 낱개 다운로드
   const handleDownload = async (cvNo, cvTitle) => {
     try {
       const res = await axiosApi.get(`/corpcv/download/${cvNo}`, {
@@ -108,6 +111,7 @@ const CorpCVListPage = () => {
     }
   };
 
+  //이력서 일괄 다운로드
   const handleBulkDownload = () => {
     if (selectedCVNos.length === 0) {
       alert("선택된 이력서가 없습니다.");
@@ -122,7 +126,7 @@ const CorpCVListPage = () => {
   };
 
   const handleCancel = () => {
-    setSelectedCVNos([]);
+    setSelectedCVNos([]); //취소하면 체크박스 다시 빈배열로
   };
 
   const isAllSelected =
@@ -134,6 +138,35 @@ const CorpCVListPage = () => {
       setSelectedCVNos(allNos);
     } else {
       setSelectedCVNos([]);
+    }
+  };
+  const handleDelete = async () => {
+    if (selectedCVNos.length === 0) {
+      alert("삭제할 이력서를 선택하세요.");
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      "선택한 이력서를 정말 삭제하시겠습니까?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await axiosApi.delete("/corpcv/delete", {
+        data: { cvNos: selectedCVNos }, // 💡 axios에서 DELETE + body 보낼 땐 data로!
+      });
+
+      // 삭제 성공 시 프론트 목록에서도 제거
+      const updatedList = cvList.filter(
+        (cv) => !selectedCVNos.includes(cv.recruitCVNo)
+      );
+      setCVList(updatedList);
+      setFilteredList(updatedList);
+      setSelectedCVNos([]);
+      alert("이력서가 삭제되었습니다.");
+    } catch (err) {
+      console.error("이력서 삭제 실패", err);
+      alert("이력서 삭제에 실패했습니다.");
     }
   };
 
@@ -271,7 +304,10 @@ const CorpCVListPage = () => {
         <button className="btn-cancel" onClick={handleCancel}>
           취소하기
         </button>
-        <button className="btn-delete">이력서 삭제하기</button>
+        <button className="btn-delete" onClick={handleDelete}>
+          이력서 삭제하기
+        </button>
+
         {showCheckbox && (
           <button className="btn-download" onClick={handleBulkDownload}>
             선택한 이력서 일괄 다운로드

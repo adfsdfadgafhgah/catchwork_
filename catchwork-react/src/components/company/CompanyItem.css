@@ -24,10 +24,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .company-logo {
-  height: 40px;
+  flex: 1;
   object-fit: contain;
 }
 

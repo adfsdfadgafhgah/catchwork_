@@ -53,6 +53,9 @@
 		CORP_BENEFIT = #{corpBenefit},
 		CORP_BENEFIT_DETAIL =
 		#{corpBenefitDetail}
+		<if test="corpLogo != null">
+			,CORP_LOGO = #{corpLogo}
+		</if>
 		WHERE CORP_NO = #{corpNo}
 	</update>
 

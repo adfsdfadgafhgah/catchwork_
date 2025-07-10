@@ -63,4 +63,14 @@ public class MemRecruitServiceImpl implements MemRecruitService {
 	public void recruitReadCount(int recruitNo) {
 		memRecruitMapper.recruitReadCount(recruitNo);
 	}
+	
+	/** 이력서 제출 여부 확인
+	 * @param recruitNo
+	 * @param memNo
+	 * @return
+	 */
+	public boolean checkSubmitCV(int recruitNo, String memNo) {
+	    int count = memRecruitMapper.checkSubmitCV(recruitNo, memNo);
+	    return count > 0;
+	}
 }

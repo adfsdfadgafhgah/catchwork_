@@ -6,11 +6,13 @@ import "./CompanyDetailPage.css";
 import { useNavigate } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 import useLoginMember from "../../stores/loginMember";
+import defaultLogo from "../../assets/icon.png";
 
 //명하 신고하기모달창
 import ReportModalPage from "../support/ReportModalPage";
 
 const CompanyDetailPage = () => {
+  const imgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
   const navigate = useNavigate();
   const { loginMember, setLoginMember } = useLoginMember(); // 로그인 유저 정보
   const { corpNo } = useParams();
@@ -128,7 +130,9 @@ const CompanyDetailPage = () => {
         <div className="company-detail-header">
           <div className="company-header-left">
             <img
-              src={company.corpLogo}
+              src={
+                company.corpLogo ? `${imgUrl}/${company.corpLogo}` : defaultLogo
+              }
               alt="기업로고"
               className="company-logo"
             />
@@ -196,18 +200,46 @@ const CompanyDetailPage = () => {
 
         <div className="company-section">
           <h3>주요사업</h3>
-          <p>{company.corpBm}</p>
+          <p>
+            {company.corpBm.split("\n").map((line, idx) => (
+              <span key={idx}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </p>
         </div>
 
         <div className="company-section">
           <h3>기업상세</h3>
-          <p>{company.corpDetail}</p>
+          <p>
+            {company.corpDetail.split("\n").map((line, idx) => (
+              <span key={idx}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </p>
         </div>
 
         <div className="company-section">
           <h3>복리후생</h3>
-          <b>{company.corpBenefit}</b>
-          <p>{company.corpBenefitDetail}</p>
+          <b>
+            {company.corpBenefit.split("\n").map((line, idx) => (
+              <span key={idx}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </b>
+          <p>
+            {company.corpBenefitDetail.split("\n").map((line, idx) => (
+              <span key={idx}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </p>
         </div>
 
         {/* 명하 - 신고 모달 */}

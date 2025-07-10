@@ -13,7 +13,7 @@ public interface RecruitCVMapper {
 	 * @author JIN
 	 * @return
 	 */
-	List<RecruitCV> selectAllRecruitCV();
+	List<RecruitCV> getAllRecruitCV();
 	 
 	 /**학력,경력 필터링 조회
 	 * @author JIN
@@ -29,9 +29,16 @@ public interface RecruitCVMapper {
 	 */
 	String selectCVPDFPath(int cvNo);
 	 
-	/** 이력서 PDF 다운 체크
+	/** 이력서 PDF 다운로드 체크
 	 * @author JIN
 	 * @param cvNo
 	 */
 	void updateCVCheckFlag(int cvNo);
+	
+	/** 이력서 삭제
+	 * @author JIN
+	 * @param cvNos
+	 */
+	void deleteCVs(@Param("cvNos") List<Integer> cvNos);
+
 }
