@@ -17,22 +17,18 @@ const CompanyListPage = () => {
   // 최초 마운트 시 정보 fetch
   useEffect(() => {
     if (!loginMember || !loginMember.memNo) {
-      console.log("💤 loginMember가 아직 없음. setLoginMember 호출");
       setLoginMember();
     }
   }, []);
 
   // loginMember가 실제로 업데이트 되었을 때만 기업 리스트 불러오기
   useEffect(() => {
-    //if (loginMember && loginMember.memNo) { // 이코드 넣었더니 로그인 안하면 목록이 안떠
     console.log("loginMember 세팅됨:", loginMember);
     getCorpList();
-    // }
   }, [loginMember]);
 
   //기업 목록
   const getCorpList = async () => {
-    console.log("🚀 getCorpList() 호출됨");
     setLoading(true);
 
     try {
@@ -68,7 +64,7 @@ const CompanyListPage = () => {
 
   // 검색어 바뀔 때마다 요청 보내기
   useEffect(() => {
-    console.log("🔥 useEffect 실행", loginMember, searchTerm);
+    console.log(" useEffect 실행", loginMember, searchTerm);
 
     if (searchTerm.trim() === "") {
       setIsSearchMode(false);

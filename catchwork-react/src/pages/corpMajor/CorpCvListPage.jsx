@@ -3,43 +3,74 @@ import SectionHeader from "../../components/common/SectionHeader";
 import Pagination from "../../components/common/Pagination";
 import { axiosApi } from "../../api/axiosAPI";
 import "./CorpCVListPage.css";
+import useLoginMember from "../../stores/loginMember";
 import { getCareerRange } from "../../hooks/getCareerRange";
 
+const itemsPerPage = 10; //한페이지에 보여지는 이력서 갯수
 const CorpCVListPage = () => {
+  //이력서 목록 관련
   const [cvList, setCVList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
+  // 필터 조건 (학력,경력)
   const [selectedEdu, setSelectedEdu] = useState("");
   const [selectedExp, setSelectedExp] = useState("");
+  //선택 모드
   const [selectedCVNos, setSelectedCVNos] = useState([]); // 체크박스로 선택된
   const [showCheckbox, setShowCheckbox] = useState(false); //체크박스 모드
+  //페이지 네이션 - 현재 페이지 번호
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; //한페이지에 보여지는 이력서 갯수
+
+  const { loginMember, isLoadingLogin, setLoginMember } = useLoginMember();
 
   useEffect(() => {
-    showAllCVList(); //처음 페이지 진입시 전체 목록 호출
+    setLoginMember(); // 로그인 멤버 정보 가져오기
   }, []);
 
-  const showAllCVList = async () => {
+  useEffect(() => {
+    console.log("로그인한 기업 회원 정보:", loginMember);
+    if (!loginMember || !loginMember.corpNo) {
+      console.warn("❗유효하지 않은 corpNo:", loginMember?.corpNo);
+      return;
+    }
+
+    console.log("✅ 기업 로그인 완료:", loginMember);
+    showAllCVList(Number(loginMember.corpNo));
+  }, [loginMember]);
+
+  const showCVListByRecruitNo = async (recruitNo) => {
     try {
-      const res = await axiosApi.get("/corpcv/list");
-      const formatted = res.data.map((cv) => ({
+      const res = await axiosApi.get("/corpcv/by-recruit", {
+        params: { recruitNo },
+      });
+
+      const mappedCVList = res.data.map((cv) => ({
         ...cv,
         isDownloaded: cv.recruitCVCheckFl === "Y",
         date: cv.recruitCVDate || "",
       }));
-      setCVList(formatted);
-      setFilteredList(formatted);
+
+      setCVList(mappedCVList);
+      setFilteredList(mappedCVList);
     } catch (err) {
-      console.error("이력서 전체 목록 불러오기 실패", err);
+      console.error("공고별 이력서 목록 불러오기 실패", err);
+      alert("공고 이력서 목록 불러오기 실패");
     }
   };
 
   //선택된 조건에 따라 목록 갱신
   const handleFilter = async () => {
+    if (!isLoadingLogin || !loginMember?.corpNo) {
+      alert("로그인 정보가 없습니다.");
+      return;
+    }
     try {
       const { careerMin, careerMax } = getCareerRange(selectedExp);
-
       const params = {};
+
+      if (loginMember?.corpNo) {
+        params.corpNo = loginMember.corpNo;
+      }
+
       // 학력 필터는 선택된 경우만 추가
       if (selectedEdu !== "") {
         params.recruitCVEdu = selectedEdu;
@@ -52,13 +83,13 @@ const CorpCVListPage = () => {
 
       const res = await axiosApi.get("/corpcv/filter", { params });
       const rawList = Array.isArray(res.data) ? res.data : [];
-      const formatted = res.data.map((cv) => ({
+      const filteredCV = res.data.map((cv) => ({
         ...cv,
         isDownloaded: cv.recruitCVCheckFl === "Y",
         date: cv.recruitCVDate || "",
       }));
-      setCVList(formatted);
-      setFilteredList(formatted);
+      setCVList(filteredCV);
+      setFilteredList(filteredCV);
       setCurrentPage(1);
       setSelectedCVNos([]);
     } catch (err) {
@@ -73,7 +104,9 @@ const CorpCVListPage = () => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredList.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(filteredList.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredList.length / itemsPerPage); //전체 페이지 수 계산
+
+  //체크박스 처리
   const handleCheckboxChange = (cvNo) => {
     setSelectedCVNos((prev) =>
       prev.includes(cvNo) ? prev.filter((no) => no !== cvNo) : [...prev, cvNo]
@@ -84,7 +117,7 @@ const CorpCVListPage = () => {
   const handleDownload = async (cvNo, cvTitle) => {
     try {
       const res = await axiosApi.get(`/corpcv/download/${cvNo}`, {
-        responseType: "blob",
+        responseType: "blob", //pdf 파일을 바이너리(blob)으로 다운로드 요청
       });
 
       const url = window.URL.createObjectURL(new Blob([res.data]));
@@ -130,8 +163,9 @@ const CorpCVListPage = () => {
   };
 
   const isAllSelected =
-    selectedCVNos.length > 0 && selectedCVNos.length === currentItems.length;
+    selectedCVNos.length > 0 && selectedCVNos.length === currentItems.length; //전체 선택여부 판별
 
+  //전체 선택 & 해제 처리
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       const allNos = currentItems.map((cv) => cv.recruitCVNo);

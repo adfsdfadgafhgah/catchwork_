@@ -6,6 +6,7 @@ import com.example.demo.member.company.model.dto.CompanyInfo;
 public interface CompanyInfoService {
 	
 	/** 기업 목록 조회 
+	 * @author JIN
 	 * @param query
 	 * @param memNo
 	 * @return

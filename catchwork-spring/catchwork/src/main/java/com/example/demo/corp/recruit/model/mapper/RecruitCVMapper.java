@@ -9,11 +9,11 @@ import com.example.demo.corp.recruit.model.dto.RecruitCV;
 @Mapper
 public interface RecruitCVMapper {
 	
-	 /**전체 이력서 조회
+	 /**우리 기업으로 들어온 전체 이력서 조회
 	 * @author JIN
 	 * @return
 	 */
-	List<RecruitCV> getAllRecruitCV();
+	List<RecruitCV> getCVListByRecruitNo(@Param("recruitNo") int recruitNo);
 	 
 	 /**학력,경력 필터링 조회
 	 * @author JIN

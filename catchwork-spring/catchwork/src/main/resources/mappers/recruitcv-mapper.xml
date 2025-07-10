@@ -20,26 +20,22 @@
 		<result property="recruitTitle" column="recruit_title" />
 	</resultMap>
 
-	<!-- 전체 결과 조회 -->
-	<select id="getAllRecruitCV" resultMap="recruitCVMap">
-		SELECT
-		RC.RECRUIT_CV_NO,
-		R.RECRUIT_TITLE,
-		RC.RECRUIT_CV_PDF_TITLE,
-		RC.RECRUIT_CV_PDF_PATH,
-		TO_CHAR(RC.RECRUIT_CV_DATE, 'YYYY.MM.DD') AS
-		recruit_cv_date,
-		RC.RECRUIT_CV_EDU,
-		RC.RECRUIT_CV_CAREER,
-		RC.RECRUIT_CV_CHECK_FL
-		FROM
-		RECRUIT_CV RC
-		JOIN
-		RECRUIT R ON RC.RECRUIT_NO
-		= R.RECRUIT_NO
-		ORDER BY
-		R.RECRUIT_TITLE ASC,
-		RC.RECRUIT_CV_NO DESC
+	<!-- 우리 기업으로 들어온 이력서 결과 조회 -->
+	<select id="getCVListByRecruitNo" resultMap="recruitCVMap">
+    SELECT
+        RC.RECRUIT_CV_NO,
+        RC.RECRUIT_CV_EDU,
+        RC.RECRUIT_CV_CAREER,
+        RC.RECRUIT_CV_PDF_TITLE,
+        RC.RECRUIT_CV_DATE,
+        RC.RECRUIT_CV_CHECK_FL,
+        RC.MEM_NO,
+        RC.RECRUIT_NO,
+        R.RECRUIT_TITLE
+    	FROM RECRUIT_CV RC
+    	JOIN RECRUIT R ON RC.RECRUIT_NO = R.RECRUIT_NO
+    	WHERE RC.RECRUIT_NO = #{recruitNo}
+    	ORDER BY RC.RECRUIT_CV_NO DESC
 	</select>
 
 	<!-- 필터링 (학력, 경력) -->
@@ -56,10 +52,14 @@
 		R.RECRUIT_TITLE
 		FROM
 		RECRUIT_CV RC
-		JOIN
-		RECRUIT R
-		ON RC.RECRUIT_NO = R.RECRUIT_NO
+		JOIN RECRUIT R ON RC.RECRUIT_NO = R.RECRUIT_NO
+JOIN CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
+JOIN CORP_INFO CI ON CM.CORP_NO = CI.CORP_NO
+WHERE CI.CORP_NO = #{corpNo}
 		<where>
+		<if test="corpNo != null">
+			CI.CORP_NO = #{corpNo}
+		</if>
 			<if test="recruitCVEdu != null">
 				AND RC.RECRUIT_CV_EDU = #{recruitCVEdu}
 			</if>

@@ -6,11 +6,11 @@ import com.example.demo.corp.recruit.model.dto.RecruitCV;
 
 public interface RecruitCVService {
 	
-	/**이력서 전체 목록 조회
+	/**우리 기업으로 들어온 이력서 전체 목록 조회
 	 * @author JIN
 	 * @return
 	 */
-	List<RecruitCV> getAllRecruitCV();
+	List<RecruitCV> getCVListByRecruitNo(int recruitNo);
 	
 	/** 조건 필터링된 이력서 조회
 	 * @author JIN

@@ -13,6 +13,7 @@ public interface CompanyInfoMapper {
 		 
 	    /**
 	     * 기업 목록 + 채용공고수 + 조회수 + 저장수 + 관심여부 포함 조회
+	     * @author JIN
 	     * @param query 회사명 검색어
 	     * @param memNo 회원 번호 (관심기업 여부 체크용)
 	     * @return 기업 정보 리스트

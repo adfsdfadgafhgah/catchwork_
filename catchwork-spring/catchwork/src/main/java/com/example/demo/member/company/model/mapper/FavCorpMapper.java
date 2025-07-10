@@ -9,6 +9,7 @@ public interface FavCorpMapper {
 	
 
 	/**
+	 * @author JIN
 	 * @param fav
 	 * @return
 	 */
@@ -35,10 +36,4 @@ public interface FavCorpMapper {
      * @return
      */
     int totalFav(int corpNo); // 기업별 총 관심 수
-
-	
-
-	
-
-    
 }

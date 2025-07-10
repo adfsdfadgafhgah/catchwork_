@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.corp.recruit.model.dto.RecruitCV;
@@ -33,22 +34,23 @@ public class RecruitCVController {
 		@Autowired
 	    private RecruitCVService service;
 
-		/**이력서 전체 목록 조회
+		/**우리 기업으로 들어온 이력서 전체 목록 조회
 		 * @author JIN
 		 * @return
 		 */
 		@GetMapping("list")
-	    public ResponseEntity<?> getCVList() {
-	        try {
-	            List<RecruitCV> list = service.getAllRecruitCV();
-	            log.info("조회된 이력서 수: {}", list.size());
-	            return ResponseEntity.ok(list);
-	        } catch (Exception e) {
-	            log.error("이력서 전체 조회 중 오류 발생", e);
-	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-	                                 .body("이력서 조회 실패: " + e.getMessage());
-	        }
-	    }
+		public ResponseEntity<?> getCVListByRecruitNo(@RequestParam("recruitNo") int recruitNo) {
+		    try {
+		        List<RecruitCV> list = service.getCVListByRecruitNo(recruitNo);
+		        log.info("공고 번호 {} 에 대한 이력서 수: {}", recruitNo, list.size());
+		        return ResponseEntity.ok(list);
+		    } catch (Exception e) {
+		        log.error("공고별 이력서 조회 오류", e);
+		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+		                             .body("공고별 이력서 조회 실패: " + e.getMessage());
+		    }
+		}
+
 	    
 	    /** 조건 필터링된 이력서 목록 조회
 	     * @author JIN

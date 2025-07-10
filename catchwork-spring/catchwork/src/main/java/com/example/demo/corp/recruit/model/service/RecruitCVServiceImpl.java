@@ -19,12 +19,12 @@ public class RecruitCVServiceImpl implements RecruitCVService {
 		@Autowired
 		private RecruitCVMapper mapper;
 	
-		/** 이력서 전체 목록 조회
+		/** 우리 기업으로 들어온 이력서 전체 목록 조회
 		 * @author JIN
 		 */
 		@Override
-		public List<RecruitCV> getAllRecruitCV() {
-			return mapper.getAllRecruitCV();
+		public List<RecruitCV> getCVListByRecruitNo(int recruitNo) {
+		    return mapper.getCVListByRecruitNo(recruitNo);
 		}
 
 		/** 조건 필터링된 이력서 조회
