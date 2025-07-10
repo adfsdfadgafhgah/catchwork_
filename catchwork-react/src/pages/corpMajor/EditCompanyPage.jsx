@@ -34,7 +34,7 @@ const EditCompanyPage = () => {
 
   //기업 정보
   useEffect(() => {
-    const fetchCompany = async () => {
+    const CompanyDetail = async () => {
       if (!loginMember?.memNo) return;
 
       try {
@@ -50,9 +50,9 @@ const EditCompanyPage = () => {
       }
     };
     if (loginMember?.memNo) {
-      fetchCompany(); // 이동 시 새로 불러오기
+      CompanyDetail(); // 이동 시 새로 불러오기
     }
-    fetchCompany();
+    CompanyDetail();
   }, [loginMember]);
 
   //불러온 기업 정보로 state 초기화

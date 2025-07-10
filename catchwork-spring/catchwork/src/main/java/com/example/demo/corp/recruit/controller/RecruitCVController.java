@@ -40,7 +40,6 @@ public class RecruitCVController {
 		@GetMapping("list")
 	    public ResponseEntity<?> getCVList() {
 	        try {
-	            log.info("[GET] /list - 전체 이력서 목록 조회 요청");
 	            List<RecruitCV> list = service.getAllRecruitCV();
 	            log.info("조회된 이력서 수: {}", list.size());
 	            return ResponseEntity.ok(list);
@@ -84,8 +83,7 @@ public class RecruitCVController {
 	    		File file = new File(filePath);
 	    		if (!file.exists()) {
 	    			System.out.println("파일 없음: " + filePath); // 디버깅용 출력
-	    			return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                                 .body(null);
+	    			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 	    		}
 
 	    		// 2. 파일명만 추출해서 다운로드 이름 지정
@@ -103,8 +101,7 @@ public class RecruitCVController {
 		        headers.setContentDisposition(
 		            ContentDisposition.builder("attachment")
 		                              .filename(filename)
-		                              .build()
-		        		);
+		                              .build());
 		        return new ResponseEntity<>(fileData, headers, HttpStatus.OK);
 	    	} catch (Exception e) {
 	    		e.printStackTrace();

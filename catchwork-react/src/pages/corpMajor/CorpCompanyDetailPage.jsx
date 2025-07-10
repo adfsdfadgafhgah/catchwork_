@@ -29,7 +29,7 @@ const CorpCompanyDetailPage = () => {
     }
     console.log("[6] API 요청 시작, memNo:", loginMember.memNo);
 
-    const fetchCompany = async () => {
+    const CompanyDetail = async () => {
       try {
         const res = await axiosApi.get(`/corpcompany/detail`, {
           params: { memNo: loginMember.memNo },
@@ -42,7 +42,7 @@ const CorpCompanyDetailPage = () => {
         setLoading(false);
       }
     };
-    fetchCompany();
+    CompanyDetail();
   }, [loginMember]);
 
   useEffect(() => {
@@ -135,18 +135,46 @@ const CorpCompanyDetailPage = () => {
 
         <div className="company-section">
           <h3>주요사업</h3>
-          <p>{company.corpBm}</p>
+          <p>
+            {company.corpBm.split("\n").map((line, idx) => (
+              <span key={idx}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </p>
         </div>
 
         <div className="company-section">
           <h3>기업상세</h3>
-          <p>{company.corpDetail}</p>
+          <p>
+            {company.corpDetail.split("\n").map((line, idx) => (
+              <span key={idx}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </p>
         </div>
 
         <div className="company-section">
           <h3>복리후생</h3>
-          <b>{company.corpBenefit}</b>
-          <p>{company.corpBenefitDetail}</p>
+          <b>
+            {company.corpBenefit.split("\n").map((line, idx) => (
+              <span key={idx}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </b>
+          <p>
+            {company.corpBenefitDetail.split("\n").map((line, idx) => (
+              <span key={idx}>
+                {line}
+                <br />
+              </span>
+            ))}
+          </p>
         </div>
 
         {company.corpMemRoleCheck === "Y" && (

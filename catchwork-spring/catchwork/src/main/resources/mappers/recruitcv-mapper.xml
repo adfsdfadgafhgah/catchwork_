@@ -21,7 +21,7 @@
 	</resultMap>
 
 	<!-- 전체 결과 조회 -->
-	<select id="selectAllRecruitCV" resultMap="recruitCVMap">
+	<select id="getAllRecruitCV" resultMap="recruitCVMap">
 		SELECT
 		RC.RECRUIT_CV_NO,
 		R.RECRUIT_TITLE,
@@ -69,8 +69,8 @@
 			</if>
 		</where>
 
-		<!-- 공고 제목 오름차순, 경력 오름차순 -->
-		ORDER BY R.RECRUIT_TITLE ASC, RC.RECRUIT_CV_CAREER ASC
+		<!-- 공고 제목 오름차순 -->
+		ORDER BY R.RECRUIT_TITLE ASC
 	</select>
 
 	<!-- 경로 저장 -->

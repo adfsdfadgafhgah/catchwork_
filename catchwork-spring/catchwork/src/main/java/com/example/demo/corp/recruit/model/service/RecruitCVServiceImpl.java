@@ -24,7 +24,7 @@ public class RecruitCVServiceImpl implements RecruitCVService {
 		 */
 		@Override
 		public List<RecruitCV> getAllRecruitCV() {
-			return mapper.selectAllRecruitCV();
+			return mapper.getAllRecruitCV();
 		}
 
 		/** 조건 필터링된 이력서 조회
