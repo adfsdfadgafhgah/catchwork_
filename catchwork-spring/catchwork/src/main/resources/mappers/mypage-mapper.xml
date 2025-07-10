@@ -167,33 +167,52 @@
   <!-- 기업 목록 조회 (검색기능포함)-->
 	<select id="getCorpList">
 		SELECT
-		ci.*,
+		ci.CORP_NO,
+    ci.CORP_NAME,
+    ci.CORP_TYPE,
+    ci.CORP_LOGO,
+    ci.CORP_ADDR,
+    ci.CORP_BM,
+    ci.CORP_DETAIL,
+    ci.CORP_BENEFIT,
+    ci.CORP_BENEFIT_DETAIL,
     <!-- 공고 개수 -->
 		(
       SELECT COUNT(*) 
       FROM RECRUIT r 
       JOIN CORP_MEM cm ON r.MEM_NO = cm.MEM_NO
-		  WHERE cm.CORP_NO = ci.CORP_NO AND r.RECRUIT_STATUS = 0
+		  WHERE cm.CORP_NO = ci.CORP_NO 
+      AND r.RECRUIT_STATUS = 0
     ) AS RECRUIT_COUNT,
     <!-- 관심 개수 -->
 		(
       SELECT COUNT(*) 
-      FROM FAV_CORP fc WHERE fc.CORP_NO = ci.CORP_NO
-    ) AS TOTAL_FAVS,
+      FROM FAV_CORP fc 
+      WHERE fc.CORP_NO = ci.CORP_NO
+    ) AS FAVS,
     <!-- 관심 등록 여부 -->
     (
       SELECT COUNT(*) 
       FROM FAV_CORP fc 
       WHERE fc.CORP_NO = ci.CORP_NO 
       AND	fc.MEM_NO = #{memNo}
-    ) AS IS_SAVED,
-		#{memNo} AS MEM_NO
+    ) AS IS_SAVED
 		FROM CORP_INFO ci
-		<where>
-			<if test="query != null and query != ''">
-			AND ci.CORP_NAME LIKE '%' || #{query} || '%'
-			</if>
-		</where>
+		WHERE CORP_NO IN (
+      SELECT CORP_NO
+      FROM FAV_CORP
+      WHERE MEM_NO = #{memNo}
+    )
+		<if test="query != null and query != ''">
+			AND LOWER(ci.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%'
+      OR LOWER(ci.CORP_TYPE) LIKE '%' || LOWER(#{query}) || '%'
+      OR LOWER(ci.CORP_ADDR) LIKE '%' || LOWER(#{query}) || '%'
+      OR LOWER(ci.CORP_BM) LIKE '%' || LOWER(#{query}) || '%'
+      OR LOWER(ci.CORP_DETAIL) LIKE '%' || LOWER(#{query}) || '%'
+      OR LOWER(ci.CORP_BENEFIT) LIKE '%' || LOWER(#{query}) || '%'
+      OR LOWER(ci.CORP_BENEFIT_DETAIL) LIKE '%' || LOWER(#{query}) || '%'
+		</if>
+		
 		ORDER BY ci.CORP_NAME ASC
 	</select>
 

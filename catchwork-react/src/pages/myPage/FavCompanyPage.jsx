@@ -1,14 +1,19 @@
 import { useOutletContext } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { axiosApi } from "../../api/axiosAPI";
+import CompanyItem from "../../components/company/CompanyItem";
+import SectionHeader from "../../components/common/SectionHeader";
+import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 
 const FavCompanyPage = () => {
-  const { loginMember, setLoginMember } = useOutletContext();
+  const { loginMember } = useOutletContext();
   const [companyList, setCompanyList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getCorpList();
-  }, []);
+  }, [loginMember.memNo]);
 
   //기업 목록
   const getCorpList = async () => {
@@ -36,7 +41,7 @@ const FavCompanyPage = () => {
     }
   };
 
-  // 검색어 입력 후 엔터 누르면 검색 모드 해제
+  // 검색어 입력 후 엔터 누르면 검색
   const handleSearch = (e) => {
     if (e.target.value.trim() !== "" && e.key === "Enter") {
       const currentSearchTerm = e.target.value;
@@ -65,16 +70,6 @@ const FavCompanyPage = () => {
         {/* 기업 카드 리스트 */}
         {isLoading ? (
           <p style={{ textAlign: "center" }}>로딩 중...</p>
-        ) : isSearchMode ? (
-          filteredCompanies.length > 0 ? (
-            <div className="company-grid">
-              {filteredCompanies.map((company) => (
-                <CompanyItem key={company.corpNo} company={company} />
-              ))}
-            </div>
-          ) : (
-            <p style={{ textAlign: "center" }}>검색 결과가 없습니다.</p>
-          )
         ) : (
           <div className="company-grid">
             {companyList.length > 0 ? (

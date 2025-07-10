@@ -6,11 +6,13 @@ import "./CompanyDetailPage.css";
 import { useNavigate } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 import useLoginMember from "../../stores/loginMember";
+import defaultLogo from "../../assets/icon.png";
 
 //명하 신고하기모달창
 import ReportModalPage from "../support/ReportModalPage";
 
 const CompanyDetailPage = () => {
+  const imgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
   const navigate = useNavigate();
   const { loginMember, setLoginMember } = useLoginMember(); // 로그인 유저 정보
   const { corpNo } = useParams();
@@ -128,7 +130,9 @@ const CompanyDetailPage = () => {
         <div className="company-detail-header">
           <div className="company-header-left">
             <img
-              src={company.corpLogo}
+              src={
+                company.corpLogo ? `${imgUrl}/${company.corpLogo}` : defaultLogo
+              }
               alt="기업로고"
               className="company-logo"
             />

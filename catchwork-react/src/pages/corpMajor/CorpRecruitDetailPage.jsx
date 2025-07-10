@@ -12,7 +12,7 @@ import KakaoMapPreview from "../../components/common/KakaoMapPreview";
 import defaultImg from "../../assets/icon.png";
 
 export default function CorpRecruitDetailPage() {
-  const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
+  const logoImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
   const { recruitNo } = useParams();
   const navigate = useNavigate();
   const [recruit, setRecruit] = useState(null);
@@ -143,7 +143,9 @@ export default function CorpRecruitDetailPage() {
       {/* 기업 정보 */}
       <div className={styles.corpHeader}>
         <img
-          src={recruit?.corpLogo ? `${imgUrl}/${recruit.corpLogo}` : defaultImg}
+          src={
+            recruit?.corpLogo ? `${logoImgUrl}/${recruit.corpLogo}` : defaultImg
+          }
           alt="기업로고"
           className={styles.corpLogo}
         />

@@ -5,8 +5,10 @@ import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 import "./CorpCompanyDetailPage.css";
 import { axiosApi } from "../../api/axiosAPI";
 import useLoginMember from "../../stores/loginMember";
+import defaultLogo from "../../assets/icon.png";
 
 const CorpCompanyDetailPage = () => {
+  const logoImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
   const navigate = useNavigate();
   const { loginMember, setLoginMember } = useLoginMember(); // 로그인한 회원 정보 가져오기
 
@@ -85,7 +87,11 @@ const CorpCompanyDetailPage = () => {
         <div className="company-detail-header">
           <div className="company-header-left">
             <img
-              src={company.corpLogo}
+              src={
+                company.corpLogo
+                  ? `${logoImgUrl}/${company.corpLogo}`
+                  : defaultLogo
+              }
               alt="기업로고"
               className="company-logo"
             />
