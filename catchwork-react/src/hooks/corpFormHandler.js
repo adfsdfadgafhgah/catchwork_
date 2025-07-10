@@ -96,38 +96,52 @@ const useCorpFormHandler = (initialValues) => {
     }
   };
 
-  const handleAuthenticationCheck = async () => {
-    // 인증에 필요한 필드만 추출
+  const handleCorpRegisterAuth = async () => {
     const { corpRegNo, corpCEOName, corpOpenDate } = formData;
 
     if (!corpRegNo || !corpCEOName || !corpOpenDate) {
-      alert("사업자등록번호, 대표자 성명, 개설일자를 모두 입력해주세요.");
+      alert("필수 정보를 입력해주세요.");
       setIsCorpVerified(false);
       return;
     }
 
-    try {
-      // 인증에 필요한 정보만 전송
-      const response = await axiosApi.post("/corpegnocheck", {
-        corpRegNo,
-        corpCEOName,
-        corpOpenDate,
-      });
-
-      const { data } = response;
-
-      if (data) {
-        alert("사업자 등록번호 인증 성공!");
-        setIsCorpVerified(true);
-        // 인증 상태 저장 등 추가 작업 가능
-      } else {
-        alert("인증 실패: " + (data.message || "유효하지 않은 정보입니다."));
-        setIsCorpVerified(false);
-      }
-    } catch (err) {
-      alert("인증 요청 중 오류 발생");
+    const exists = await axiosApi.post("/corpegnocheck", { corpRegNo });
+    if (exists.data === true) {
+      alert("이미 등록된 기업입니다.");
       setIsCorpVerified(false);
-      console.error(err);
+      return;
+    }
+
+    const verified = await axiosApi.post("/corpegnoauth", {
+      corpRegNo,
+      corpCEOName,
+      corpOpenDate,
+    });
+    if (verified.data === true) {
+      alert("사업자 인증 성공");
+      setIsCorpVerified(true);
+    } else {
+      alert("사업자 인증 실패");
+      setIsCorpVerified(false);
+    }
+  };
+
+  const handleCorpJoinCheck = async () => {
+    const { corpRegNo } = corpFormData;
+
+    if (!corpRegNo) {
+      alert("사업자등록번호를 입력해주세요.");
+      setIsCorpVerified(false);
+      return;
+    }
+
+    const exists = await axiosApi.post("/corpegnocheck", { corpRegNo });
+    if (exists.data === true) {
+      alert("등록된 기업입니다. 가입 가능");
+      setIsCorpVerified(true);
+    } else {
+      alert("등록되지 않은 기업입니다. 관리자에게 문의하세요.");
+      setIsCorpVerified(false);
     }
   };
 
@@ -144,7 +158,8 @@ const useCorpFormHandler = (initialValues) => {
     formData,
     handleInputChange,
     handleSubmit,
-    handleAuthenticationCheck,
+    handleCorpRegisterAuth,
+    handleCorpJoinCheck,
     triggerAddressSearch,
     validity,
     isCorpVerified,

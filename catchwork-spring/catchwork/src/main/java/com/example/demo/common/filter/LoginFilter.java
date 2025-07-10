@@ -86,9 +86,6 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
         String memNickname = customUserDetails.getMemberEntity().getMemNickname(); // 닉네임 추출
         int memType = customUserDetails.getMemberEntity().getMemType(); // memType 0 : 개인 / 1 : 기업
 
-//        SecurityContext <- token에 넣는걸로 해서 그냥 빠꾸
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
-
 //        String accessToken = jwtUtil.createJwt(username, memNickname, memType, 5 * 1000L); // 5 sec (test)
         String accessToken = jwtUtil.createJwt(username, memNickname, memType, 15 * 60 * 1000L);		// 15 min
         
