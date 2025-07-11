@@ -639,7 +639,7 @@ const CVManagePage = () => {
     }
   };
 
-  // 이력서 저장 요청
+  // 이력서 제출 요청
   const handleSubmit = async () => {
     const sections = document.querySelectorAll(".pdf-section");
     const images = [];
@@ -849,9 +849,9 @@ const CVManagePage = () => {
   return (
     <div className="resume-container">
       <div
-        className={mode === "view" ? "resume-form view-mode" : "resume-form"}
+        className={mode === "view" || mode === "submit" ? "resume-form view-mode" : "resume-form"}
       >
-        <h1 className="form-title">내 이력서 작성하기</h1>
+        <h1 className="form-title">내 이력서</h1>
 
         {/* 이력서 제목 입력 */}
         <div className="writeCVSection">

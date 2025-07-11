@@ -181,6 +181,15 @@ public class CVController {
 	    }
 	}
 	
+	/** 이력서 pdf 제출
+	 * @param file
+	 * @param recruitCVEdu
+	 * @param recruitCVCareer
+	 * @param recruitCVPdfTitle
+	 * @param memNo
+	 * @param recruitNo
+	 * @return
+	 */
 	@PostMapping("/pdf/upload")
 	public ResponseEntity<?> uploadCVPdf(
 	        @RequestParam("file") MultipartFile file,
