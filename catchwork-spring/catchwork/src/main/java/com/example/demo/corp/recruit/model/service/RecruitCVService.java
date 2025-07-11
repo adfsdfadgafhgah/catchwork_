@@ -10,7 +10,7 @@ public interface RecruitCVService {
 	 * @author JIN
 	 * @return
 	 */
-	List<RecruitCV> getCVListByRecruitNo(int recruitNo);
+	List<RecruitCV> getCVListByRole(String memNo);
 	
 	/** 조건 필터링된 이력서 조회
 	 * @author JIN

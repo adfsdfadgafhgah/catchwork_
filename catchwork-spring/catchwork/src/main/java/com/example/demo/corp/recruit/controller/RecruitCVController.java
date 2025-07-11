@@ -38,16 +38,19 @@ public class RecruitCVController {
 		 * @author JIN
 		 * @return
 		 */
-		@GetMapping("list")
-		public ResponseEntity<?> getCVListByRecruitNo(@RequestParam("recruitNo") int recruitNo) {
+		@GetMapping("list-by-role")
+		public ResponseEntity<?> getCVListByRecruitNo(@RequestParam("memNo") String memNo) {
+			 log.info("[Controller] 요청 들어옴 - memNo: {}", memNo);
+		    if (memNo == null || memNo.trim().isEmpty()) {
+		        return ResponseEntity.badRequest().body("memNo는 필수입니다.");
+		    }
+
 		    try {
-		        List<RecruitCV> list = service.getCVListByRecruitNo(recruitNo);
-		        log.info("공고 번호 {} 에 대한 이력서 수: {}", recruitNo, list.size());
+		        List<RecruitCV> list = service.getCVListByRole(memNo);
 		        return ResponseEntity.ok(list);
 		    } catch (Exception e) {
-		        log.error("공고별 이력서 조회 오류", e);
 		        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-		                             .body("공고별 이력서 조회 실패: " + e.getMessage());
+		                             .body("조회 실패: " + e.getMessage());
 		    }
 		}
 

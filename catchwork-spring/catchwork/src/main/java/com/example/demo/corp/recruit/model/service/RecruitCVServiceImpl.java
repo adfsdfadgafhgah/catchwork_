@@ -23,18 +23,48 @@ public class RecruitCVServiceImpl implements RecruitCVService {
 		 * @author JIN
 		 */
 		@Override
-		public List<RecruitCV> getCVListByRecruitNo(int recruitNo) {
-		    return mapper.getCVListByRecruitNo(recruitNo);
+		public List<RecruitCV> getCVListByRole(String memNo) {
+		    log.info("[Service] getCVListByRole - memNo: {}", memNo);
+		    String role = mapper.getCorpRoleByMemNo(memNo);
+		    log.info("[Service] 기업 회원 권한: {}", role);
+
+		    if ("Y".equals(role)) {
+		        Integer corpNo = mapper.getCorpNoByMemNo(memNo);
+		        log.info("[Service] 기업 대표 - corpNo: {}", corpNo);
+
+		        List<RecruitCV> list = mapper.getCVListByCorpNo(corpNo);
+		        
+		        if (list == null) {
+		            log.error("[Service] mapper.getCVListByCorpNo() 결과가 null입니다!");
+		        } else {
+		            log.info("[Service] 이력서 개수: {}", list.size());
+		        }
+
+		        return list;
+		    }
+ else {
+		        List<RecruitCV> list = mapper.getCVListByWriter(memNo);
+		        log.info("[Service] 일반 사원 - 이력서 개수: {}", list.size());
+		        return list;
+		    }
 		}
+
+
+
 
 		/** 조건 필터링된 이력서 조회
 		 * @author JIN
 		 */
 		@Override
-	    public List<RecruitCV> getCVList(RecruitCV filter) {
-	        return mapper.getCVList(filter);
-	    }
-	 
+		public List<RecruitCV> getCVList(RecruitCV filter) {
+		    log.info("[Service] getCVList - corpNo={}, edu={}, minCareer={}, maxCareer={}",
+		        filter.getCorpNo(), filter.getRecruitCVEdu(), filter.getCareerMin(), filter.getCareerMax());
+
+		    List<RecruitCV> list = mapper.getCVList(filter);
+		    log.info("[Service] 필터 결과 이력서 수: {}", list.size());
+
+		    return list;
+		}
 		/** 이력서 PDF 경로 다운로드
 		 * @author JIN
 		 */
