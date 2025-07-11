@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper
-	namespace="com.example.demo.corp.recruit.model.mapper.RecruitCVMapper">
+<mapper namespace="com.example.demo.corp.recruit.model.mapper.RecruitCVMapper">
 
 	<!-- resultMap 정의 -->
 	<resultMap id="recruitCVMap"
@@ -12,6 +11,8 @@
 		<result property="recruitCVCareer" column="recruit_cv_career" />
 		<result property="recruitCVPdfTitle"
 			column="recruit_cv_pdf_title" />
+		<result property="recruitCVPdfPath"
+			column="recruit_cv_pdf_path" />
 		<result property="recruitCVDate" column="recruit_cv_date" />
 		<result property="recruitCVCheckFl"
 			column="recruit_cv_check_fl" />
@@ -20,35 +21,59 @@
 		<result property="recruitTitle" column="recruit_title" />
 	</resultMap>
 
-	<!-- 전체 결과 조회 -->
-	<select id="getAllRecruitCV" resultMap="recruitCVMap">
+	<!-- 회원의 역할 조회 -->
+	<select id="getCorpRoleByMemNo" resultType="String">
 		SELECT
-		RC.RECRUIT_CV_NO,
-		R.RECRUIT_TITLE,
-		RC.RECRUIT_CV_PDF_TITLE,
-		RC.RECRUIT_CV_PDF_PATH,
-		TO_CHAR(RC.RECRUIT_CV_DATE, 'YYYY.MM.DD') AS
-		recruit_cv_date,
-		RC.RECRUIT_CV_EDU,
-		RC.RECRUIT_CV_CAREER,
-		RC.RECRUIT_CV_CHECK_FL
+		CORP_MEM_ROLE_CHECK FROM CORP_MEM WHERE MEM_NO = #{memNo}
+	</select>
+
+	<!-- 소속 기업 번호 조회 -->
+	<select id="getCorpNoByMemNo" resultType="int">
+		SELECT CORP_NO FROM
+		CORP_MEM WHERE MEM_NO = #{memNo}
+	</select>
+
+	<!-- 기업 대표 → 회사 전체 이력서 -->
+	<select id="getCVListByCorpNo" resultMap="recruitCVMap">
+		SELECT
+		RC.RECRUIT_CV_NO, RC.RECRUIT_CV_EDU, RC.RECRUIT_CV_CAREER,
+		RC.RECRUIT_CV_PDF_TITLE, RC.RECRUIT_CV_PDF_PATH, RC.RECRUIT_CV_DATE,
+		RC.RECRUIT_CV_CHECK_FL,
+		RC.MEM_NO, RC.RECRUIT_NO, R.RECRUIT_TITLE
 		FROM
 		RECRUIT_CV RC
+		JOIN RECRUIT R ON RC.RECRUIT_NO = R.RECRUIT_NO
 		JOIN
-		RECRUIT R ON RC.RECRUIT_NO
-		= R.RECRUIT_NO
-		ORDER BY
-		R.RECRUIT_TITLE ASC,
-		RC.RECRUIT_CV_NO DESC
+		CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
+		WHERE CM.CORP_NO = #{corpNo}
+		ORDER
+		BY RC.RECRUIT_CV_NO DESC
+	</select>
+
+
+	<!-- 일반 사원 → 내가 작성한 공고의 이력서 -->
+	<select id="getCVListByWriter" resultMap="recruitCVMap">
+		SELECT
+		RC.RECRUIT_CV_NO, RC.RECRUIT_CV_EDU, RC.RECRUIT_CV_CAREER,
+		RC.RECRUIT_CV_PDF_TITLE,RC.RECRUIT_CV_PDF_PATH,RC.RECRUIT_CV_DATE,
+		RC.RECRUIT_CV_CHECK_FL,
+		RC.MEM_NO, RC.RECRUIT_NO, R.RECRUIT_TITLE
+		FROM
+		RECRUIT_CV RC
+		JOIN RECRUIT R ON RC.RECRUIT_NO = R.RECRUIT_NO
+		WHERE
+		R.MEM_NO = #{memNo}
+		ORDER BY RC.RECRUIT_CV_NO DESC
 	</select>
 
 	<!-- 필터링 (학력, 경력) -->
-	<select id="getCVList">
+	<select id="getCVList" resultMap="recruitCVMap">
 		SELECT
 		RC.RECRUIT_CV_NO,
 		RC.RECRUIT_CV_EDU,
 		RC.RECRUIT_CV_CAREER,
 		RC.RECRUIT_CV_PDF_TITLE,
+		RC.RECRUIT_CV_PDF_PATH,
 		RC.RECRUIT_CV_DATE,
 		RC.RECRUIT_CV_CHECK_FL,
 		RC.MEM_NO,
@@ -56,10 +81,15 @@
 		R.RECRUIT_TITLE
 		FROM
 		RECRUIT_CV RC
+		JOIN RECRUIT R ON RC.RECRUIT_NO = R.RECRUIT_NO
 		JOIN
-		RECRUIT R
-		ON RC.RECRUIT_NO = R.RECRUIT_NO
-		<where>
+		CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
+		JOIN CORP_INFO CI ON CM.CORP_NO =
+		CI.CORP_NO
+		<trim prefix="WHERE" prefixOverrides="AND |OR ">
+			<if test="corpNo != null">
+				AND CI.CORP_NO = #{corpNo}
+			</if>
 			<if test="recruitCVEdu != null">
 				AND RC.RECRUIT_CV_EDU = #{recruitCVEdu}
 			</if>
@@ -67,11 +97,10 @@
 				AND RC.RECRUIT_CV_CAREER BETWEEN #{careerMin} AND
 				#{careerMax}
 			</if>
-		</where>
-
-		<!-- 공고 제목 오름차순 -->
+		</trim>
 		ORDER BY R.RECRUIT_TITLE ASC
 	</select>
+
 
 	<!-- 경로 저장 -->
 	<select id="selectCVPDFPath" resultType="String"
@@ -86,7 +115,8 @@
 	<update id="updateCVCheckFlag">
 		UPDATE RECRUIT_CV
 		SET RECRUIT_CV_CHECK_FL = 'Y'
-		WHERE RECRUIT_CV_NO = #{cvNo}
+		WHERE
+		RECRUIT_CV_NO = #{cvNo}
 	</update>
 
 	<!-- 이력서 여러개 삭제 -->

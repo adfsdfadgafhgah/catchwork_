@@ -5,13 +5,13 @@ import useLoginMember from "../../stores/loginMember";
 import "./CompanyItem.css";
 import defaultImg from "../../assets/icon.png";
 
-const CompanyItem = ({ company: initialCompany }) => {
+const CompanyItem = ({ company: companyInfo }) => {
   const companyImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
   const { loginMember } = useLoginMember();
-  const [company, setCompany] = useState(initialCompany);
+  const [company, setCompany] = useState(companyInfo);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log("🔍 기업 정보 확인:", company);
+  console.log("기업 정보 확인:", company);
 
   const handleToggleBookmark = async (e) => {
     e.preventDefault(); // 링크 이동 방지
