@@ -4,5 +4,6 @@ import com.example.demo.auth.model.dto.CorpInfo;
 
 public interface CorpService {
     boolean checkCorpRegNo(CorpInfo corp);
+    boolean checkCorpCEOName(CorpInfo corp);
     boolean authCorpRegNo(CorpInfo corp);
 }

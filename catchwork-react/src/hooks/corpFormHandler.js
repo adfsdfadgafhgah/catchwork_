@@ -105,6 +105,7 @@ const useCorpFormHandler = (initialValues) => {
       return;
     }
 
+    // checkCorpRegNo -> DB 중복 확인 / 등록되어있을 시 TRUE
     const exists = await axiosApi.post("/corpegnocheck", { corpRegNo });
     if (exists.data === true) {
       alert("이미 등록된 기업입니다.");
@@ -112,6 +113,7 @@ const useCorpFormHandler = (initialValues) => {
       return;
     }
 
+    // 사업자 등록번호 유효성 검사 / 현재는 그냥 TRUE
     const verified = await axiosApi.post("/corpegnoauth", {
       corpRegNo,
       corpCEOName,
@@ -127,7 +129,7 @@ const useCorpFormHandler = (initialValues) => {
   };
 
   const handleCorpJoinCheck = async () => {
-    const { corpRegNo } = corpFormData;
+    const { corpRegNo } = formData;
 
     if (!corpRegNo) {
       alert("사업자등록번호를 입력해주세요.");
@@ -136,9 +138,20 @@ const useCorpFormHandler = (initialValues) => {
     }
 
     const exists = await axiosApi.post("/corpegnocheck", { corpRegNo });
+    const verified = await axiosApi.post("/corpegnoauth", {
+      corpRegNo,
+      corpCEOName,
+      corpOpenDate,
+    });
+
     if (exists.data === true) {
-      alert("등록된 기업입니다. 가입 가능");
-      setIsCorpVerified(true);
+      if (verified.data === true) {
+        alert("등록된 기업입니다. 가입 가능");
+        setIsCorpVerified(true);
+      } else {
+        alert("사업자가 유효하지 않습니다.");
+        setIsCorpVerified(false);
+      }
     } else {
       alert("등록되지 않은 기업입니다. 관리자에게 문의하세요.");
       setIsCorpVerified(false);

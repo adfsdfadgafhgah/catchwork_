@@ -9,7 +9,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.example.demo.auth.model.dto.CustomUserDetails;
 import com.example.demo.auth.model.entity.MemberEntity;
-import com.example.demo.util.JWTUtil;
+import com.example.demo.common.util.JWTUtil;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.DispatcherType;
@@ -55,7 +55,6 @@ public class JWTFilter extends OncePerRequestFilter{
         try {
         	// accessToken 만료되었는지 확인
             if (jwtUtil.isExpired(token)) {
-                System.out.println("[JWTFilter] Token expired");
 
                 // refreshToken 쿠키 확인
                 boolean hasRefreshToken = false;

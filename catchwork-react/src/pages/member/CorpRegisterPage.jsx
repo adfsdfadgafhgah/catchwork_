@@ -120,14 +120,14 @@ const CorpRegisterPage = () => {
           )}
 
           {/* 기업 로고 */}
-          <label>기업 로고</label>
+          {/* <label>기업 로고</label>
           <input
             type="file"
             name="corpLogo"
             value={formData.corpLogo}
             onChange={handleInputChange}
             placeholder="기업 로고이미지를 입력하세요"
-          />
+          /> */}
 
           {/* 기업 주소 */}
           <label>기업 주소 *</label>
@@ -138,7 +138,7 @@ const CorpRegisterPage = () => {
               value={formData.corpAddr}
               readOnly
               onChange={handleInputChange}
-              placeholder="기업주소 입력하세요"
+              placeholder="기업주소를 입력하세요"
               style={{
                 borderColor: validity.corpAddr === false ? "red" : undefined,
               }}
@@ -162,6 +162,7 @@ const CorpRegisterPage = () => {
             name="detailAddress"
             value={formData.detailAddress}
             onChange={handleInputChange}
+            placeholder="상세주소를 입력하세요"
           />
 
           {/* 기업 홈페이지 링크 */}
