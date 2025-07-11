@@ -47,7 +47,7 @@ axiosApi.interceptors.response.use(
       // localStorage 초기화
       localStorage.removeItem("auth-storage");
       localStorage.removeItem("accessToken");
-      localStorage.clear();
+      // localStorage.clear();
 
       // zustand 등 store도 초기화
       useAuthStore.getState().signOut();
@@ -77,6 +77,7 @@ axiosApi.interceptors.response.use(
           useAuthStore.setState({
             memNo: decoded.memNo,
             memNickname: decoded.memNickname,
+            memName: decoded.memName, // 명하 추가
             memType: decoded.memType,
           });
 

@@ -39,4 +39,11 @@ public interface MemRecruitService {
 	 */
 	void recruitReadCount(int recruitNo);
 
+	/** 이력서 제출 여부 확인
+	 * @author BAEBAE
+	 * @param recruitNo
+	 * @param memNo
+	 * @return true - 이미 제출 / false - 미제출
+	 */
+	boolean checkSubmitCV(int recruitNo, String memNo);
 }

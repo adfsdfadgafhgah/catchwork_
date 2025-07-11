@@ -5,11 +5,7 @@ import defaultImg from "../../assets/icon.png";
 
 function MyInfo() {
   const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
-  const { loginMember, setLoginMember } = useOutletContext();
-
-  useEffect(() => {
-    setLoginMember();
-  }, []);
+  const { loginMember } = useOutletContext();
 
   return (
     <div className="myinfo-container">

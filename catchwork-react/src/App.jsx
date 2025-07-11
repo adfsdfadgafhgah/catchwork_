@@ -115,11 +115,25 @@ const router = createBrowserRouter([
       // 등록된 주소 외 모든 주소 예외 처리
       { path: "*", element: <NotFound /> },
       // 로그인/회원가입
-      { path: "signin", element: <SignInPage /> },
-      { path: "signup", element: <SignUpPage /> },
+      {
+        path: "signin",
+        element: (
+          <ProtectedRoute blockWhenLoggedIn={true}>
+            <SignInPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "signup",
+        element: (
+          <ProtectedRoute blockWhenLoggedIn={true}>
+            <SignUpPage />
+          </ProtectedRoute>
+        ),
+      },
       { path: "corpregister", element: <CorpRegisterPage /> },
       { path: "ceosignup", element: <CeoSignUpPage /> },
-      { path: "auth", element: <AuthTest /> },
+      // { path: "auth", element: <AuthTest /> },
 
       // Id,PW 찾기
       { path: "findid", element: <FindIdPage /> },
@@ -258,7 +272,7 @@ const router = createBrowserRouter([
       { path: "corpcvlist", element: <CorpCVListPage /> },
 
       // 기업 마이 페이지
-      {
+   {
         path: "/corpmypage",
         element: (
           <ProtectedRoute allowedType={1}>
@@ -268,20 +282,17 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <CorpMyInfoPage /> },
           { path: "home", element: <CorpMyInfoPage /> },
+          { path: "editmyinfo", element: <CorpEditMyInfoPage /> },
+          { path: "confirmedit", element: <CorpConfirmEditPage /> },
+          { path: "changepw", element: <CorpChangePwPage /> },
+          { path: "withdraw", element: <CorpWithdrawPage /> },
         ],
       },
-      { path: "corpeditmyinfo", element: <CorpEditMyInfoPage /> },
-      { path: "corpconfirmedit", element: <CorpConfirmEditPage /> },
-      { path: "corpchangepw", element: <CorpChangePwPage /> },
-      { path: "corpwithdraw", element: <CorpWithdrawPage /> },
     ],
   },
 ]);
 
 export default router;
-
-
- 
 
 /*
 참조

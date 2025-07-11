@@ -1,5 +1,6 @@
 package com.example.demo.corp.recruit.model.dto;
 
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,11 +22,16 @@ public class RecruitCV {
 	    private String memNo;				  // 회원 번호 (FK)
 	    private int recruitNo;                // 공고 번호 (FK)
 	   
-	   //조인
+	    //조인
 	    private String recruitTitle;          // 공고 제목
+	    private Integer corpNo;                 // 기업_시퀀스_번호 (PK)
+	    
 	    
 	    //경력 개월수로 바꾸려고
 	    private Integer careerMin;
 	    private Integer careerMax;
+	    
+	    private List<Integer> cvNos; // 이력서 여러개 삭제용
+
 	    
 }

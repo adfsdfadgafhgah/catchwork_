@@ -2,9 +2,11 @@ import { useState } from "react";
 import CommentCss from "./CommentEdit.module.css";
 import { formatTimeAgo } from "../common/formatTimeAgo";
 import { axiosApi } from "../../api/axiosAPI";
+import defaultImg from "../../assets/icon.png";
 
 export default function CommentEdit({ comment, onCancel, onSuccess }) {
   const [content, setContent] = useState(comment.commentContent);
+  const profileImg = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
 
   const handleSubmit = async () => {
     if (!content.trim()) {
@@ -30,8 +32,8 @@ export default function CommentEdit({ comment, onCancel, onSuccess }) {
           <img
             src={
               comment.memProfilePath
-                ? `http://localhost:8080/${comment.memProfilePath}`
-                : "/profile.png"
+                ? `${profileImg}/${comment.memProfilePath}`
+                : defaultImg
             }
             alt="프로필"
             className={CommentCss.profileImg}

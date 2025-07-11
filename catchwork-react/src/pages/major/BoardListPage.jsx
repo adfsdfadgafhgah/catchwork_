@@ -13,33 +13,22 @@ import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 
 export default function BoardListPage() {
   const [boards, setBoards] = useState([]); // 게시글 목록 조회
-  const [isloading, setIsLoading] = useState(true); // 로딩 상태
+  const [isLoading, setIsLoading] = useState(true); // 로딩 상태
   const [searchTerm, setSearchTerm] = useState(""); // 검색
+  const [confirmedSearchTerm, setConfirmedSearchTerm] = useState(""); // 검색 실행에 사용
   const { loginMember, setLoginMember } = useLoginMember(); // 로그인 사용자
   const [sortOrder, setSortOrder] = useState("latest"); // 정렬 기준 상태
-  const [filteredBoards, setFilteredBoards] = useState([]);
-  const [isSearchMode, setIsSearchMode] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!loginMember?.memNo) {
-      setLoginMember(); // 로그인 정보 세팅
-    }
-  }, []);
-
-  useEffect(() => {
-    getBoardList(); // 로그인 여부 관계없이 항상 호출
-  }, [sortOrder, loginMember?.memNo]);
-
-  // 게시글 목록 불러오기 (정렬 + 검색)
+  // API 호출 로직을 useEffect 안으로 이동
   const getBoardList = async () => {
     try {
       setIsLoading(true);
       const resp = await axiosApi.get("/board/boardList", {
         params: {
           sort: sortOrder,
-          query: searchTerm,
-          memNo: loginMember?.memNo || "",
+          query: confirmedSearchTerm,
+          memNo: loginMember?.memNo,
         },
       });
 
@@ -53,21 +42,22 @@ export default function BoardListPage() {
     }
   };
 
-  // searchTerm이 바뀔 때마다 실시간 검색
   useEffect(() => {
-    if (searchTerm.trim() === "") {
-      setIsSearchMode(false);
-      setFilteredBoards([]);
-    } else {
-      const result = boards.filter(
-        (board) =>
-          board.boardTitle.includes(searchTerm) ||
-          board.boardContent.includes(searchTerm)
-      );
-      setFilteredBoards(result);
-      setIsSearchMode(true);
+    // 로그인 정보가 없으면 비동기적으로 불러옵니다.
+    if (!loginMember?.memNo) {
+      setLoginMember();
+      return; // 로그인 정보가 없으면 API 요청을 보내지 않고 함수를 종료
     }
-  }, [searchTerm, boards]);
+
+    // 로그인 정보가 준비된 후에만 API 호출
+    getBoardList();
+  }, [sortOrder, confirmedSearchTerm, loginMember?.memNo]); //searchTerm 추가
+
+  const handleSearchKeyDown = (e) => {
+    if (e.key === "Enter") {
+      setConfirmedSearchTerm(searchTerm.trim());
+    }
+  };
 
   // 정렬 선택
   const handleSortChange = (e) => {
@@ -85,7 +75,7 @@ export default function BoardListPage() {
   };
 
   // 로딩 중...
-  if (isloading) {
+  if (isLoading) {
     return <h1>Loading...</h1>;
   }
 
@@ -115,23 +105,18 @@ export default function BoardListPage() {
             placeholder="진중한 취업이야기, 취준진담"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            onKeyDown={handleSearchKeyDown}
           />
         </div>
       </div>
 
       {/* 검색 결과 유무에 따른 조건 렌더링 */}
-      {isSearchMode ? (
-        filteredBoards.length > 0 ? (
-          <BoardList boards={filteredBoards} loginMember={loginMember} />
-        ) : (
-          <p className={BoardCss.noResult}>검색 결과가 없습니다.</p>
-        )
+      {isLoading ? (
+        <h1>Loading...</h1>
+      ) : boards.length > 0 ? (
+        <BoardList boards={boards} loginMember={loginMember} />
       ) : (
-        <BoardList
-          key={loginMember?.memNo}
-          boards={boards}
-          loginMember={loginMember}
-        />
+        <p className={BoardCss.noResult}>검색 결과가 없습니다.</p>
       )}
 
       <FloatButton buttons={FLOAT_BUTTON_PRESETS.writeOnly(handleWrite)} />

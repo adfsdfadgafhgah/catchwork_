@@ -32,6 +32,7 @@ public class CompanyInfoController {
     
     /**
      * 기업 정보 목록을 조회하는 API
+     * @author JIN
      * @param query 검색어 (선택 사항)
      * @param memNo 회원번호 (선택 사항): 로그인 안해도 목록 조회 되어야 함
      * @return 기업 목록 리스트
@@ -59,10 +60,12 @@ public class CompanyInfoController {
         }
     }
     
-    
-    /**
-     * 기업 상세 조회 
-     * ex) /company/3
+    /** 기업 상세 조회
+     * ex) company/3
+     * @author JIN
+     * @param corpNo
+     * @param memNo
+     * @return
      */
     @GetMapping("{corpNo}")
     public ResponseEntity<?> getCorpDetail(@PathVariable("corpNo") int corpNo,

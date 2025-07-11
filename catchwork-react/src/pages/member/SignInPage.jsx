@@ -88,11 +88,6 @@ const SignInPage = () => {
           />
         </div>
 
-        {/* <div className="remember-me">
-          <input type="radio" id="rememberId" />
-          <label htmlFor="rememberId">아이디 저장</label>
-        </div> */}
-
         <button type="submit" className="signin-button">
           로그인하기
         </button>

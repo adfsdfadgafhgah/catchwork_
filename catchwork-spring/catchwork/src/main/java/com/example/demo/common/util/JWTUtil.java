@@ -1,4 +1,4 @@
-package com.example.demo.util;
+package com.example.demo.common.util;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import lombok.extern.slf4j.Slf4j;
 
@@ -67,16 +66,6 @@ public class JWTUtil {
                 .get("memType", Integer.class);
     }
 
-    public String getRole(String token) {
-        return Jwts.parser()
-            .verifyWith(secretKey)
-            .build()
-            .parseSignedClaims(token)
-            .getPayload()
-            .get("role", String.class);
-    }
-
-    
     
     public Boolean isExpired(String token) {
         try {
@@ -120,42 +109,38 @@ public class JWTUtil {
 	        .compact();
 	}
 
-	  public boolean isValidToken(String token) {
-		    try {
-		        Jwts.parser().verifyWith(secretKey)
-		        .build()
-		        .parseSignedClaims(token)
-                .getPayload()
-                .getExpiration()
-                .before(new Date());
-		        return true;
-		    } catch (JwtException e) {
-		        log.debug("JWT 처리 중 오류 발생", e);
-		    } catch (Exception e) {
-		        log.debug("알 수 없는 예외 발생", e);
-		    }
-		    return false;
-		  }
-	
-
+    public boolean isValidToken(String token) {
+        try {
+            Jwts.parser().verifyWith(secretKey)
+            .build()
+            .parseSignedClaims(token)
+            .getPayload()
+            .getExpiration()
+            .before(new Date());
+            return true;
+        } catch (JwtException e) {
+            log.debug("JWT 처리 중 오류 발생", e);
+        } catch (Exception e) {
+            log.debug("알 수 없는 예외 발생", e);
+        }
+        return false;
+    }
+}
+        
 /*
 access 토큰 payload 구조
 {
-  "memNo": "MinJang",				// String
-  "memNickname": "미친_민장_180",	// String
-  "memType": 1,						// int
-  "iat": 1750842790,				// long
-  "exp": 1750878790					// long
+    "memNo": "MinJang",				// String
+    "memNickname": "미친_민장_180",	// String
+    "memType": 1,						// int
+    "iat": 1750842790,				// long
+    "exp": 1750878790					// long
 }
 
 refresh 토큰 payload 구조
 {
-  "memNo": "MinJang",			// String
-  "iat": 1750842790,			// long
-  "exp": 1750878790				// long
+    "memNo": "MinJang",			// String
+    "iat": 1750842790,			// long
+    "exp": 1750878790				// long
 }
-
-
- */
-	
-}
+*/

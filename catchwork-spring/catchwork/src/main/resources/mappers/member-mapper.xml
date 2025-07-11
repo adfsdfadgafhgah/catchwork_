@@ -5,9 +5,24 @@
 
 <!-- 로그인 회원의 정보 조회 -->
 <select id="getLoginMember">
-SELECT *
-FROM MEMBER
-WHERE MEM_NO = #{memNo}
+	SELECT
+	  MEM_ID,
+	  MEM_NO,
+	  MEM_NICKNAME,
+	  MEM_NAME,
+	  MEM_TEL,
+	  MEM_EMAIL,
+	  MEM_BIRTHDAY,
+	  MEM_GENDER,
+	  MEM_ADDR,
+	  MEM_SMS_FL,
+	  MEM_TYPE,
+	  MEM_STATUS,
+	  MEM_STATUS_DATE,
+	  MEM_PROFILE_PATH,
+	  MEM_GRADE
+	FROM MEMBER
+	WHERE MEM_NO = #{memNo}
 </select>
 
 <!-- 기업회원용 로그인 정보 조회 (CORP_NO 포함) -->

@@ -3,13 +3,15 @@ import { Link } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 import useLoginMember from "../../stores/loginMember";
 import "./CompanyItem.css";
+import defaultImg from "../../assets/icon.png";
 
-const CompanyItem = ({ company: initialCompany }) => {
+const CompanyItem = ({ company: companyInfo }) => {
+  const companyImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
   const { loginMember } = useLoginMember();
-  const [company, setCompany] = useState(initialCompany);
+  const [company, setCompany] = useState(companyInfo);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log("🔍 기업 정보 확인:", company);
+  console.log("기업 정보 확인:", company);
 
   const handleToggleBookmark = async (e) => {
     e.preventDefault(); // 링크 이동 방지
@@ -49,8 +51,8 @@ const CompanyItem = ({ company: initialCompany }) => {
           <img
             src={
               company.corpLogo
-                ? `${import.meta.env.VITE_BASE_URL}${company.corpLogo}`
-                : "/default-logo.png" //기업 로고 없을때 넣을 이미지
+                ? `${companyImgUrl}/${company.corpLogo}`
+                : defaultImg //기업 로고 없을때 넣을 이미지
             }
             alt="기업 로고"
             className="company-logo"

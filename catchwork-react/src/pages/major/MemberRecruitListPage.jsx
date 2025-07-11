@@ -11,14 +11,12 @@ export default function MemberRecruitListPage() {
   const [recruits, setRecruits] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredRecruits, setFilteredRecruits] = useState([]);
-  const [isSearchMode, setIsSearchMode] = useState(false);
   const { loginMember, setLoginMember } = useLoginMember();
   const navigate = useNavigate();
   const [confirmedSearchTerm, setConfirmedSearchTerm] = useState(""); // 실제 검색에 쓸 값
   // 직무, 근무지역, 경력, 학력, 기업형태, 고용형태 필터
   const [recruitJobNameFilter, setRecruitJobNameFilter] = useState("all"); // 직무
-  // const [recruitJobAreaFilter, setRecruitJobAreaFilter] = useState("all"); // 근무지역
+  const [recruitJobAreaFilter, setRecruitJobAreaFilter] = useState("all"); // 근무지역
   const [recruitCareerFilter, setRecruitCareerFilter] = useState("all"); // 경력
   const [recruitEduFilter, setRecruitEduFilter] = useState("all"); // 학력
   const [corpTypeFilter, setCorpTypeFilter] = useState("all"); // 기업형태
@@ -26,16 +24,46 @@ export default function MemberRecruitListPage() {
 
   // 로그인 정보 세팅
   useEffect(() => {
+    // 로그인 정보가 없다면 비동기적으로 불러옵니다.
+    // 이 부분이 완료될 때까지 기다려야 합니다.
     if (!loginMember?.memNo) {
       setLoginMember();
+      // 로그인 정보가 없으면 API 요청을 보내지 않고 여기서 함수 종료
+      return;
     }
-  }, []);
 
-  useEffect(() => {
+    // 로그인 정보가 성공적으로 불러와진 후에만 API 요청을 보냅니다.
+    const fetchRecruitList = async () => {
+      try {
+        setIsLoading(true);
+        const resp = await axiosApi.get("/memberRecruit/list", {
+          params: {
+            recruitJobName: recruitJobNameFilter,
+            recruitJobArea: recruitJobAreaFilter,
+            recruitCareer: recruitCareerFilter,
+            recruitEdu: recruitEduFilter,
+            corpType: corpTypeFilter,
+            recruitType: recruitTypeFilter,
+            query: confirmedSearchTerm,
+            memNo: loginMember.memNo,
+          },
+        });
+
+        if (resp.status === 200) {
+          const list = resp.data;
+          setRecruits(list);
+        }
+      } catch (err) {
+        console.error("채용공고 목록 조회 실패:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
     fetchRecruitList();
   }, [
     recruitJobNameFilter,
-    // recruitJobAreaFilter,
+    recruitJobAreaFilter,
     recruitCareerFilter,
     recruitEduFilter,
     corpTypeFilter,
@@ -43,47 +71,6 @@ export default function MemberRecruitListPage() {
     confirmedSearchTerm,
     loginMember?.memNo,
   ]);
-
-  // 공고 목록 불러오기 (정렬 + 검색)
-  const fetchRecruitList = async () => {
-    try {
-      setIsLoading(true);
-      const resp = await axiosApi.get("/memberRecruit/list", {
-        params: {
-          recruitJobName: recruitJobNameFilter,
-          // recruitJobArea: recruitJobAreaFilter,
-          recruitCareer: recruitCareerFilter,
-          recruitEdu: recruitEduFilter,
-          corpType: corpTypeFilter,
-          recruitType: recruitTypeFilter,
-          query: confirmedSearchTerm,
-        },
-      });
-
-      if (resp.status === 200) {
-        const list = resp.data;
-        setRecruits(list);
-
-        // if (statusFilter === "closed") {
-        //   const now = new Date();
-        //   const filtered = list.filter((recruit) => {
-        //     const endDate = new Date(recruit.recruitEndDate);
-        //     return (
-        //       recruit.recruitStatus === 3 ||
-        //       (recruit.recruitStatus === 0 && endDate < now)
-        //     );
-        //   });
-        //   setRecruits(filtered);
-        // } else {
-        //   setRecruits(list);
-        // }
-      }
-    } catch (err) {
-      console.error("채용공고 목록 조회 실패:", err);
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   // 엔터 입력 시 confirmedSearchTerm 확정
   const handleSearchKeyDown = (e) => {
@@ -129,6 +116,32 @@ export default function MemberRecruitListPage() {
           <option value="미디어·문화·스포츠">미디어·문화·스포츠</option>
           <option value="공공·복지">공공·복지</option>
           <option value="의료·바이오">의료·바이오</option>
+          <option value="기타">기타</option>
+        </select>
+
+        <select
+          className={styles.sortSelect}
+          value={recruitJobAreaFilter}
+          onChange={(e) => setRecruitJobAreaFilter(e.target.value)}
+        >
+          <option value="all">근무지역</option>
+          <option value="서울">서울</option>
+          <option value="부산">부산</option>
+          <option value="대구">대구</option>
+          <option value="인천">인천</option>
+          <option value="광주">광주</option>
+          <option value="대전">대전</option>
+          <option value="울산">울산</option>
+          <option value="세종">세종</option>
+          <option value="경기">경기</option>
+          <option value="강원">강원</option>
+          <option value="충북">충북</option>
+          <option value="충남">충남</option>
+          <option value="전북">전북</option>
+          <option value="전남">전남</option>
+          <option value="경북">경북</option>
+          <option value="경남">경남</option>
+          <option value="제주">제주</option>
           <option value="기타">기타</option>
         </select>
 
@@ -205,21 +218,16 @@ export default function MemberRecruitListPage() {
       </div>
 
       {/* 검색 결과 유무에 따른 조건 렌더링 */}
-      {isSearchMode ? (
-        filteredRecruits.length > 0 ? (
-          <MemberRecruitList
-            recruits={filteredRecruits}
-            loginMember={loginMember}
-          />
-        ) : (
-          <p className={styles.noResult}>검색 결과가 없습니다.</p>
-        )
-      ) : (
+      {isLoading ? (
+        <h1>Loading...</h1>
+      ) : recruits.length > 0 ? (
         <MemberRecruitList
           key={loginMember?.memNo}
           recruits={recruits}
           loginMember={loginMember}
         />
+      ) : (
+        <p className={styles.noResult}>검색 결과가 없습니다.</p>
       )}
 
       <ScrollToTopButton />

@@ -22,7 +22,7 @@ import com.example.demo.auth.model.service.MemberService;
 import com.example.demo.auth.model.service.TransactionService;
 import com.example.demo.auth.token.entity.RefreshTokenEntity;
 import com.example.demo.auth.token.repository.RefreshTokenRepository;
-import com.example.demo.util.JWTUtil;
+import com.example.demo.common.util.JWTUtil;
 
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.http.Cookie;
@@ -221,22 +221,6 @@ public class MemberController {
         boolean available = service.isNicknameAvailable(nickname);
         return ResponseEntity.ok(Collections.singletonMap("available", available));
     }
-	
-	
-	/**
-	 * 로그인 처리 메소드
-	 *
-	 * @param inputMember 요청 바디에서 전달되는 로그인 정보(아이디, 비밀번호)
-	 * @param request HTTP 요청 객체 (이전 페이지 세션에서 조회용)
-	 * @param response HTTP 응답 객체 (아이디 저장 쿠키 설정용)
-	 * @param session 세션 객체 (이전 페이지 URL 저장 및 조회용)
-	 * @param saveId 아이디 저장 여부 (옵션, 체크 시 쿠키에 아이디 저장)
-	 * @return JWT 토큰과 이전 페이지 URL(있을 경우)을 포함한 JSON 응답 또는 오류 메시지
-	 *
-	 * @throws 예외 발생 시 500 내부 서버 오류 상태코드 및 예외 메시지 반환
-	 *
-	 * @author Won
-	 */
 	
 	
 	/**

@@ -71,7 +71,6 @@ public class MemberServiceImpl implements MemberService {
 	    // 기업 회원일 경우 CORP_MEM 등록
 	    if (inputMember.getMemType() == 1) {
 	    	
-	    	System.out.println(inputMember);
 	        // 기업 정보 조회
 	    	CorpInfoEntity corpInfo = corpInfoRepository.findByCorpRegNo(inputMember.getCorpRegNo());
 	    	System.out.println(corpInfo);
@@ -80,8 +79,6 @@ public class MemberServiceImpl implements MemberService {
 	    	    throw new Exception("해당 사업자등록번호로 등록된 기업이 없습니다.");
 	    	}
 	    	
-//	        entityManager.flush();
-
 	    	
 	    	// CORP_MEM 생성
 	        CorpMemEntity corpMem = new CorpMemEntity();

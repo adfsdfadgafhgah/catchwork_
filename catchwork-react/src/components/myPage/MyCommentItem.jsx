@@ -1,13 +1,11 @@
-import { useState } from "react";
-import CommentWrite from "./CommentWrite";
-import CommentEdit from "./CommentEdit";
-import CommentCss from "./CommentItem.module.css";
-import { formatTimeAgo } from "./../common/formatTimeAgo";
-import ReportModalPage from "../../pages/support/ReportModalPage";
+import { useState, useRef } from "react";
+import CommentCss from "../board/CommentItem.module.css";
+import { formatTimeAgo } from "../common/formatTimeAgo";
 import { axiosApi } from "../../api/axiosAPI";
 import defaultImg from "../../assets/icon.png";
+import { NavLink } from "react-router-dom";
 
-export default function CommentItem({
+export default function MyCommentItem({
   comment,
   childComments,
   loginMember,
@@ -17,6 +15,7 @@ export default function CommentItem({
   const [isEditing, setIsEditing] = useState(false); // 수정 모드 여부
   const [showReportModal, setShowReportModal] = useState(false);
   const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
+  const isEditingOrReplyOpen = useRef(false); // 수정/삭제 버튼 클릭시 NavLink 클릭 방지
 
   const isWriter = loginMember && loginMember.memNo === comment.memNo;
 
@@ -49,19 +48,21 @@ export default function CommentItem({
     setShowReportModal(false);
   };
 
+  // 수정/삭제 버튼 클릭시 NavLink 클릭 방지
+  const handleClick = (e) => {
+    if (isEditingOrReplyOpen.current) {
+      e.preventDefault();
+    }
+    isEditingOrReplyOpen.current = false;
+  };
+
   return (
-    <div className={CommentCss.commentWrapper}>
-      {/* 댓글 또는 수정 모드 */}
-      {isEditing ? (
-        <CommentEdit
-          comment={comment}
-          onCancel={() => setIsEditing(false)}
-          onSuccess={() => {
-            setIsEditing(false);
-            onRefresh();
-          }}
-        />
-      ) : (
+    <NavLink
+      to={`/board/${comment.boardNo}`}
+      style={{ textDecoration: "none" }}
+      onClick={handleClick}
+    >
+      <div className={CommentCss.commentWrapper}>
         <div className={CommentCss.commentBox}>
           <div className={CommentCss.header}>
             <div className={CommentCss.writerInfo}>
@@ -114,21 +115,25 @@ export default function CommentItem({
             {comment.commentStatus === 0 &&
               (isWriter ? (
                 <>
+                  <button className={CommentCss.actionBtn}>수정</button>
                   <button
                     className={CommentCss.actionBtn}
-                    onClick={() => setIsEditing(true)}
-                  >
-                    수정
-                  </button>
-                  <button
-                    className={CommentCss.actionBtn}
-                    onClick={handleDelete}
+                    onClick={(e) => {
+                      handleDelete();
+                      isEditingOrReplyOpen.current = true;
+                    }}
                   >
                     삭제
                   </button>
                 </>
               ) : (
-                <button className={CommentCss.actionBtn} onClick={handleReport}>
+                <button
+                  className={CommentCss.actionBtn}
+                  onClick={(e) => {
+                    handleReport();
+                    isEditingOrReplyOpen.current = true;
+                  }}
+                >
                   <span
                     className={`material-symbols-outlined ${CommentCss.iconSmall}`}
                   >
@@ -139,45 +144,17 @@ export default function CommentItem({
               ))}
           </div>
         </div>
-      )}
-
-      {/* 대댓글 작성창 */}
-      {isReplyOpen && (
-        <div className={CommentCss.replyInputBox}>
-          <CommentWrite
-            boardNo={comment.boardNo}
-            loginMember={loginMember}
-            parentCommentNo={comment.commentNo}
-            onAdd={(success) => {
-              if (success) setIsReplyOpen(false); // 🔥 작성 후 닫기
-              onRefresh(); // 목록 새로고침
-            }}
+        {/* 신고하기 모달 */}
+        {showReportModal && (
+          <ReportModalPage
+            targetNo={comment.commentNo.toString()}
+            targetType="comment"
+            targetNickname={comment.memNickname}
+            memberNo={loginMember?.memNo}
+            onClose={handleCloseReport}
           />
-        </div>
-      )}
-
-      {/* 대댓글 리스트 */}
-      <div className={CommentCss.childList}>
-        {childComments.map((child) => (
-          <CommentItem
-            key={child.commentNo}
-            comment={child}
-            childComments={[]} // 대댓글의 자식은 없음
-            loginMember={loginMember}
-            onRefresh={onRefresh}
-          />
-        ))}
+        )}
       </div>
-      {/* 신고하기 모달 */}
-      {showReportModal && (
-        <ReportModalPage
-          targetNo={comment.commentNo.toString()}
-          targetType="comment"
-          targetNickname={comment.memNickname}
-          memberNo={loginMember?.memNo}
-          onClose={handleCloseReport}
-        />
-      )}
-    </div>
+    </NavLink>
   );
 }

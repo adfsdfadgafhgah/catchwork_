@@ -19,7 +19,7 @@ import com.example.demo.auth.model.dto.CustomUserDetails;
 import com.example.demo.auth.model.dto.Member;
 import com.example.demo.auth.token.entity.RefreshTokenEntity;
 import com.example.demo.auth.token.repository.RefreshTokenRepository;
-import com.example.demo.util.JWTUtil;
+import com.example.demo.common.util.JWTUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;
@@ -85,9 +85,6 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
         String username = customUserDetails.getUsername();	// memNo 임
         String memNickname = customUserDetails.getMemberEntity().getMemNickname(); // 닉네임 추출
         int memType = customUserDetails.getMemberEntity().getMemType(); // memType 0 : 개인 / 1 : 기업
-
-//        SecurityContext <- token에 넣는걸로 해서 그냥 빠꾸
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
 
 //        String accessToken = jwtUtil.createJwt(username, memNickname, memType, 5 * 1000L); // 5 sec (test)
         String accessToken = jwtUtil.createJwt(username, memNickname, memType, 15 * 60 * 1000L);		// 15 min

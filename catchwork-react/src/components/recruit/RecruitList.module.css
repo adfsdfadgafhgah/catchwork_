@@ -1,8 +1,22 @@
 .recruitList {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, max-content));
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   padding: 20px;
+  justify-items: center;
+}
+
+/* 반응형: 화면이 작을 때 2열, 더 작을 때 1열 */
+@media screen and (max-width: 1024px) {
+  .recruitList {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .recruitList {
+    grid-template-columns: 1fr;
+  }
 }
 
 .empty {

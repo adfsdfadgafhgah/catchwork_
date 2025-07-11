@@ -33,7 +33,10 @@ INSERT INTO "BILLING_KEY" (
     #{ownerType},
     #{issuerCode},
     #{acquirerCode},
-    CAST(TO_TIMESTAMP_TZ(#{authenticatedAt}, 'YYYY-MM-DD"T"HH24:MI:SS TZH:TZM') AS DATE),
+    CAST(
+      TO_TIMESTAMP_TZ(#{authenticatedAt}, 
+      'YYYY-MM-DD"T"HH24:MI:SS TZH:TZM'
+    ) AS DATE),
     #{memNo},
     #{mId}
 )
@@ -67,8 +70,14 @@ INSERT INTO PAYMENT (
     #{country},
     #{payType},
     #{status},
-    CAST(TO_TIMESTAMP_TZ(#{requestedAt}, 'YYYY-MM-DD"T"HH24:MI:SSTZH:TZM') AS DATE),
-    CAST(TO_TIMESTAMP_TZ(#{approvedAt}, 'YYYY-MM-DD"T"HH24:MI:SSTZH:TZM') AS DATE),
+    CAST(
+      TO_TIMESTAMP_TZ(#{requestedAt}, 
+      'YYYY-MM-DD"T"HH24:MI:SSTZH:TZM'
+    ) AS DATE),
+    CAST(
+      TO_TIMESTAMP_TZ(#{approvedAt}, 
+      'YYYY-MM-DD"T"HH24:MI:SSTZH:TZM'
+    ) AS DATE),
     #{cancels},
     #{failure}
 )
@@ -161,13 +170,6 @@ SET MEM_GRADE = #{newGrade},
 WHERE MEM_NO = #{memNo}
 </update>
 
-<!-- 멤버십 명칭 조회 -->
-<select id="getOrderName">
-SELECT MEM_GRADE_NAME
-FROM "MEMBER_GRADE"
-WHERE MEM_GRADE = #{newGrade}
-</select>
-
 <!-- 멤버십 변경 적용 -->
 <update id="changeMembership">
 UPDATE "MEMBER"
@@ -187,7 +189,7 @@ SET MEM_GRADE = (
 WHERE MEM_NO = #{memNo}
 </update>
 
-<!-- 결제 상태 변경 -->
+<!-- 정기 결제 전, 결제 상태 변경 -->
 <update id="changeSubscriptionStatus">
 UPDATE "SUBSCRIPTION"
 SET SUB_STATUS = 2

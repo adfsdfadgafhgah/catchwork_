@@ -40,6 +40,10 @@ const useQuery = () => {
 };
 
 const CVManagePage = () => {
+  // ===============================
+  // ✅ Router, 기본 셋업
+  // ===============================
+
   // 쿼리스트링
   const query = useQuery();
 
@@ -60,6 +64,10 @@ const CVManagePage = () => {
   const cvNo = query.get("cvNo");
   const queryMode = query.get("mode");
   const recruitNo = query.get("recruitNo");
+
+  // ===============================
+  // ✅ State 선언
+  // ===============================
 
   // 작성/보기/수정 모드 상태
   const [mode, setMode] = useState(cvNo ? "view" : "add");
@@ -146,6 +154,10 @@ const CVManagePage = () => {
     portfolio: [{ id: "portfolio" + Date.now() }],
   });
 
+  // ===============================
+  // ✅ 섹션 메타정보
+  // ===============================
+
   // CVForm01 섹션 정보 (자격증, 수상이력)
   const sectionMetaForm01 = {
     qualify: { title: "자격증명", name: "발급기관" },
@@ -178,6 +190,10 @@ const CVManagePage = () => {
       description: "링크 또는 설명",
     },
   };
+
+  // ===============================
+  // ✅ DTO 변환 관련
+  // ===============================
 
   // 서버로 업로드 시 key 이름을 서버 DTO용으로 바꿀때 필요한 객체
   // 클라이언트 키맵
@@ -237,9 +253,8 @@ const CVManagePage = () => {
   // clientKeyMap을 역으로 변환
   // 서버 키맵
   const serverKeyMap = Object.fromEntries(
-    // 클라 키맵 가져오기      각 항목 순회  key, value(map)
     Object.entries(clientKeyMap).map(([type, mapping]) => [
-      type, // value 내부의 k, v를 역으로 변환 ("id": "expId" -> "expId": "id",)
+      type,
       Object.fromEntries(Object.entries(mapping).map(([k, v]) => [v, k])),
     ])
   );
@@ -249,6 +264,97 @@ const CVManagePage = () => {
     if (!str) return "";
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
+
+  // DTO 생각 안한 Bottle God의 작품
+  const payloadRename = () => {
+    const convertedSections = {};
+    const deletedIds = {};
+
+    Object.keys(components).forEach((type) => {
+      const remainIds = components[type]
+        .map((item) => item.idFromServer)
+        .filter(Boolean);
+
+      const deleted = (initialIds[type] || []).filter(
+        (id) => !remainIds.includes(id)
+      );
+
+      if (deleted.length > 0) {
+        deletedIds[`deleted${capitalize(type)}Ids`] = deleted;
+      }
+
+      convertedSections[type] = components[type].map((item) =>
+        convertToServer(type, item)
+      );
+    });
+
+    return {
+      ...(cvNo ? { cvNo } : {}),
+      ...member,
+      cvImgPath,
+      ...formData,
+      education,
+      military,
+      ...convertedSections,
+      ...deletedIds,
+    };
+  };
+
+  // 클라이언트 형식 -> DTO 형식 변환
+  const convertToServer = (type, data) => {
+    const map = clientKeyMap[type];
+    const result = {};
+    for (const key in data) {
+      if (key === "type") continue;
+      if (map[key]) {
+        result[map[key]] = data[key];
+      } else {
+        result[key] = data[key];
+      }
+    }
+    return result;
+  };
+
+  // DTO 형식 -> 클라이언트 형식 변환
+  const convertToClient = (type, data) => {
+    const map = serverKeyMap[type];
+    const result = { type };
+    if (data[serverKeyMap[type]?.id]) {
+      result.idFromServer = data[serverKeyMap[type].id];
+    }
+    for (const key in data) {
+      if (map[key]) {
+        result[map[key]] = data[key];
+      } else {
+        result[key] = data[key];
+      }
+    }
+    return result;
+  };
+
+  // ===============================
+  // ✅ 유틸 함수
+  // ===============================
+
+  // 모든 경력(experience) 섹션들의 기간(개월 수)을 합산한다
+  const totalExperienceMonths = components.experience.reduce((sum, exp) => {
+    if (
+      exp.startDate &&
+      exp.endDate &&
+      /^\d{4}-\d{2}$/.test(exp.startDate) &&
+      /^\d{4}-\d{2}$/.test(exp.endDate)
+    ) {
+      const [startY, startM] = exp.startDate.split("-").map(Number);
+      const [endY, endM] = exp.endDate.split("-").map(Number);
+      const months = (endY - startY) * 12 + (endM - startM) + 1;
+      return sum + months;
+    }
+    return sum;
+  }, 0);
+
+  // ===============================
+  // ✅ 비즈니스 로직 / 핸들러
+  // ===============================
 
   // 멤버십 등급에 따른 이력서 갯수 초과 검사
   const checkCVLimit = async () => {
@@ -284,17 +390,12 @@ const CVManagePage = () => {
   const validateAll = () => {
     let valid = true;
 
-    // 제목 검사
     if (!formData.cvAlias || formData.cvAlias.length > 30) {
       valid = false;
     }
-
-    // 자기소개서 검사
     if (formData.cvResume?.length > 2000) {
       valid = false;
     }
-
-    // 군필정보 검사
     if (
       !military.cvMiliClass ||
       !military.cvMiliBranch ||
@@ -303,8 +404,6 @@ const CVManagePage = () => {
     ) {
       valid = false;
     }
-
-    // 학력 검사
     if (
       !education.eduName ||
       education.eduName.length > 20 ||
@@ -317,8 +416,6 @@ const CVManagePage = () => {
     ) {
       valid = false;
     }
-
-    // 동적 컴포넌트들 검사
     Object.entries(components).forEach(([type, list]) => {
       list.forEach((item) => {
         if (type === "language") {
@@ -361,7 +458,6 @@ const CVManagePage = () => {
         }
       });
     });
-
     return valid;
   };
 
@@ -375,7 +471,7 @@ const CVManagePage = () => {
       const res = await axiosApi.post("/memberCV/img/upload", imgFormData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-      setCvImgPath(res.data); // 응답 받은 리네임된 경로 저장
+      setCvImgPath(res.data);
       return true;
     } catch (err) {
       console.error("이미지 업로드 실패", err);
@@ -391,11 +487,7 @@ const CVManagePage = () => {
     new window.daum.Postcode({
       oncomplete: function (data) {
         console.log("선택된 주소:", data);
-
-        // 도로명 주소 or 지번 주소
         const fullAddress = data.roadAddress || data.jibunAddress;
-
-        // formData에 memAddress 업데이트
         handleInputChange("mainAddress", fullAddress);
       },
     }).open();
@@ -410,7 +502,6 @@ const CVManagePage = () => {
   const handleEducationChange = (field, value) => {
     setEducation((prev) => {
       const newData = { ...prev, [field]: value };
-
       if (
         newData.eduStartDate &&
         newData.eduEndDate &&
@@ -419,13 +510,11 @@ const CVManagePage = () => {
       ) {
         const startNum = parseInt(newData.eduStartDate.replace("-", ""), 10);
         const endNum = parseInt(newData.eduEndDate.replace("-", ""), 10);
-
         if (endNum < startNum) {
           setDateError("학력 종료일은 시작일과 같거나 이후여야 합니다.");
-          return prev; // 원래 값 유지
+          return prev;
         }
       }
-
       return newData;
     });
   };
@@ -434,7 +523,6 @@ const CVManagePage = () => {
   const handleMilitaryChange = (field, value) => {
     setMilitary((prev) => {
       const newData = { ...prev, [field]: value };
-
       if (
         newData.cvMiliStartDate &&
         newData.cvMiliEndDate &&
@@ -443,13 +531,11 @@ const CVManagePage = () => {
       ) {
         const startNum = parseInt(newData.cvMiliStartDate.replace("-", ""), 10);
         const endNum = parseInt(newData.cvMiliEndDate.replace("-", ""), 10);
-
         if (endNum < startNum) {
           setDateError("병역 종료일은 시작일과 같거나 이후여야 합니다.");
-          return prev; // 원래 값 유지
+          return prev;
         }
       }
-
       return newData;
     });
   };
@@ -459,8 +545,6 @@ const CVManagePage = () => {
     setComponents((prev) => {
       const updated = [...prev[type]];
       const newItem = { ...updated[index], [field]: value, type };
-
-      // ▼ 날짜 비교: startDate & endDate가 모두 존재할 때만 검사
       if (field === "startDate" || field === "endDate") {
         if (
           newItem.startDate &&
@@ -470,14 +554,12 @@ const CVManagePage = () => {
         ) {
           const startNum = parseInt(newItem.startDate.replace("-", ""), 10);
           const endNum = parseInt(newItem.endDate.replace("-", ""), 10);
-
           if (endNum < startNum) {
             setDateError("종료일은 시작일과 같거나 이후여야 합니다.");
-            return prev; // 기존 state 유지, 변경 안 함
+            return prev;
           }
         }
       }
-
       updated[index] = newItem;
       return { ...prev, [type]: updated };
     });
@@ -501,46 +583,22 @@ const CVManagePage = () => {
   // 이력서 수정 요청
   const handleUpdate = async () => {
     setIsSubmitted(true);
-
-    // 한 번의 microtask 기다려서 state flush
-    // 상태 수정 이후 바로 실행 막고 상태가 완전히 업데이트 되는걸 기다리게 하는 놈
     await Promise.resolve();
-
     const payload = payloadRename();
-
     if (!validateAll()) {
       alert("입력을 확인해주세요.");
       return;
     }
-
     try {
       const res = await axiosApi.post("/memberCV/update", payload);
       alert("수정 완료");
       setMode("view");
     } catch (err) {
       console.error("수정 실패", err.response?.data || err.message);
-      alert("수정 중 오류가 발생했습니다" + (err.response?.data?.message || err.message));
-    }
-  };
-
-  // 이력서 삭제 요청
-  const handleDelete = async () => {
-    if (!cvNo) {
-      alert("삭제할 이력서가 존재하지 않습니다.");
-      return;
-    }
-
-    if (!window.confirm("정말 삭제하시겠습니까?")) {
-      return;
-    }
-
-    try {
-      await axiosApi.post("/memberCV/delete", { cvNo });
-      alert("삭제 완료");
-      navigate("/cv");
-    } catch (error) {
-      console.error("삭제 실패", err.response?.data || err.message);
-      alert("삭제 중 오류 발생");
+      alert(
+        "수정 중 오류가 발생했습니다" +
+          (err.response?.data?.message || err.message)
+      );
     }
   };
 
@@ -562,64 +620,83 @@ const CVManagePage = () => {
     navigate("/cv");
   };
 
+  // 이력서 삭제 요청
+  const handleDelete = async () => {
+    if (!cvNo) {
+      alert("삭제할 이력서가 존재하지 않습니다.");
+      return;
+    }
+    if (!window.confirm("정말 삭제하시겠습니까?")) {
+      return;
+    }
+    try {
+      await axiosApi.post("/memberCV/delete", { cvNo });
+      alert("삭제 완료");
+      navigate("/cv");
+    } catch (error) {
+      console.error("삭제 실패", err.response?.data || err.message);
+      alert("삭제 중 오류 발생");
+    }
+  };
+
   // 이력서 제출 요청
   const handleSubmit = async () => {
-    // 1. 캡쳐할 이력서 영역 선택
-    const target = document.querySelector(".resume-container");
-
-    // 2. html → canvas 변환
-    const canvas = await html2canvas(target, {
-      scale: 2, // 해상도 2배
-      useCORS: true, // 외부 이미지 허용
-    });
-
-    // 3. canvas → 이미지 dataURL 변환
-    const imgData = canvas.toDataURL("image/jpeg", 0.7);
-
-    // 4. PDF 생성
-    const pdf = new jsPDF("p", "mm", "a4");
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pageWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = pdf.internal.pageSize.getHeight();
-
-    const imgWidth = pdfWidth;
-    const imgHeight = (canvas.height * pageWidth) / canvas.width;
-
-    let heightLeft = imgHeight;
-    let position = 0;
-
-    // 5. 페이지에 이미지 추가
-    pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-    heightLeft -= pdfHeight;
-
-    while (heightLeft > 0) {
-      position -= pdfHeight;
-      pdf.addPage();
-      pdf.addImage(imgData, "JPEG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pdfHeight;
+    const sections = document.querySelectorAll(".pdf-section");
+    const images = [];
+    for (let section of sections) {
+      const canvas = await html2canvas(section, {
+        scale: 2,
+        useCORS: true,
+      });
+      const imgData = canvas.toDataURL("image/jpeg", 1.0);
+      const imgProps = {
+        width: canvas.width,
+        height: canvas.height,
+        dataUrl: imgData,
+      };
+      images.push(imgProps);
     }
-
-    // 6. PDF → arraybuffer
+    let totalHeightPx = 0;
+    images.forEach((img) => {
+      totalHeightPx += img.height - img.height / 1.7;
+    });
+    const totalHeightMm = totalHeightPx * 0.264583;
+    const pdfWidthMm = 210;
+    const marginLeftMm = 20;
+    const marginRightMm = 20;
+    const marginTopMm = 20;
+    const usableWidthMm = pdfWidthMm - marginLeftMm - marginRightMm;
+    const pdfHeightMm = totalHeightMm + marginTopMm;
+    const pdf = new jsPDF("p", "mm", [pdfWidthMm, pdfHeightMm]);
+    let yOffset = marginTopMm;
+    for (let img of images) {
+      const imgWidthMm = usableWidthMm;
+      const imgHeightMm = (img.height * imgWidthMm) / img.width;
+      pdf.addImage(
+        img.dataUrl,
+        "JPEG",
+        marginLeftMm,
+        yOffset,
+        imgWidthMm,
+        imgHeightMm
+      );
+      yOffset += imgHeightMm;
+    }
     const pdfOutput = pdf.output("arraybuffer");
     const blob = new Blob([pdfOutput], { type: "application/pdf" });
-
-    // 7. FormData 준비
     const formData = new FormData();
     const memTelRename = memberInfo.memTel.replace(/-/g, "") || "";
     const pdfTitle = `${memberInfo.memName}_${memTelRename}_${Date.now()}.pdf`;
-    formData.append("recruitCVEdu", education.eduCodeNo); // 지원자 학력
-    formData.append("recruitCVCareer", totalExperienceMonths); // 지원자 경력
-    formData.append("recruitCVPdfTitle", pdfTitle); // 지원자 이력서 pdf 제목
-    formData.append("file", blob, pdfTitle); // 지원자 이력서 pdf 경로
-    formData.append("memNo", loginMember.memNo); // 회원 번호
-    formData.append("recruitNo", recruitNo); // 공고 번호
-
+    formData.append("recruitCVEdu", education.eduCodeNo);
+    formData.append("recruitCVCareer", totalExperienceMonths);
+    formData.append("recruitCVPdfTitle", pdfTitle);
+    formData.append("file", blob, pdfTitle);
+    formData.append("memNo", loginMember.memNo);
+    formData.append("recruitNo", recruitNo);
     try {
-      // 8. 서버에 업로드
       const res = await axiosApi.post("/memberCV/pdf/upload", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
-
       alert("PDF 업로드 성공");
       navigate("/memberRecruit/" + recruitNo);
     } catch (e) {
@@ -628,108 +705,106 @@ const CVManagePage = () => {
     }
   };
 
-  // DTO 생각 안한 Bottle God의 작품
-  const payloadRename = () => {
-    const convertedSections = {};
-    const deletedIds = {};
+  // ===============================
+  // ✅ useEffect
+  // ===============================
 
-    Object.keys(components).forEach((type) => {
-      // 현재 남아있는 서버 id 목록
-      const remainIds = components[type]
-        .map((item) => item.idFromServer)
-        .filter(Boolean);
+  useEffect(() => {
+    setLoginMember();
+  }, []);
 
-      const deleted = (initialIds[type] || []).filter(
-        (id) => !remainIds.includes(id)
-      );
+  useEffect(() => {
+    if (!isLoadingLogin) return;
+    if (!loginMember.memNo) {
+      alert("로그인이 필요합니다.");
+      navigate("/signin");
+    }
+  }, [isLoadingLogin, loginMember, navigate]);
 
-      if (deleted.length > 0) {
-        deletedIds[`deleted${capitalize(type)}Ids`] = deleted;
+  useEffect(() => {
+    if (dateError) {
+      alert(dateError);
+      setDateError("");
+    }
+  }, [dateError]);
+
+  useEffect(() => {
+    if (mode === "add") {
+      checkCVLimit();
+    }
+  }, [mode, loginMember]);
+
+  useEffect(() => {
+    const fetchCV = async () => {
+      if (!cvNo) return;
+      if (!isLoadingLogin) return;
+      if (!loginMember?.memNo) return;
+      try {
+        const checkOwner = await axiosApi.post("/memberCV/checkOwner", {
+          cvNo,
+          memNo: loginMember?.memNo,
+        });
+        if (checkOwner.data) {
+          if (queryMode) {
+            setMode(queryMode);
+          }
+          const detail = await axiosApi.post("/memberCV/detail", { cvNo });
+          const data = detail.data;
+          const { education, military, cvAlias, cvResume, cvImgPath, ...rest } =
+            data;
+          setFormData({
+            cvAlias: cvAlias || "",
+            cvResume: cvResume || "",
+            ...rest,
+          });
+          setCvImgPath(cvImgPath || "");
+          setEducation(
+            education || {
+              eduName: "",
+              eduMajor: "",
+              eduStartDate: "",
+              eduEndDate: "",
+              eduCodeNo: "",
+              eduStatusCodeNo: "",
+            }
+          );
+          setMilitary(
+            military || {
+              cvMiliClass: "",
+              cvMiliBranch: "",
+              cvMiliStartDate: "",
+              cvMiliEndDate: "",
+            }
+          );
+          const newComponents = {};
+          const newInitialIds = {};
+          Object.keys(clientKeyMap).forEach((type) => {
+            const list = data[type] || [];
+            newComponents[type] = list.map((item) =>
+              convertToClient(type, item)
+            );
+            newInitialIds[type] = list
+              .map((item) => item[clientKeyMap[type].id])
+              .filter(Boolean);
+          });
+          setComponents(newComponents);
+          setInitialIds(newInitialIds);
+        } else {
+          alert("🔪잡았다. 쥐새끼.🐁");
+          navigate("/cv");
+        }
+      } catch (error) {
+        console.error(error);
+        alert("이력서 확인 중 오류가 발생했습니다.");
+        navigate("/cv");
       }
-
-      convertedSections[type] = components[type].map((item) =>
-        convertToServer(type, item)
-      );
-    });
-
-    return {
-      ...(cvNo ? { cvNo } : {}), // 수정 시에만 들어감
-      ...member, // 회원 정보
-      cvImgPath, // 이미지 경로
-      ...formData, // 나머지 formData 필드 그대로
-      education,
-      military,
-      ...convertedSections,
-      ...deletedIds,
     };
-  };
+    fetchCV();
+  }, [isLoadingLogin, cvNo, loginMember, navigate]);
 
-  // 클라이언트 형식 -> DTO 형식 변환
-  // 클라 키맵, 서버에서 받아온 맵
-  const convertToServer = (type, data) => {
-    // 클라 키맵의 종류 가져오기(award, exp 등)
-    const map = clientKeyMap[type];
-    const result = {};
-    // 서버에서 받은 맵의 키 순회
-    for (const key in data) {
-      // type 제거
-      if (key === "type") continue;
-      // 클라 키맴에 서버의 키 있는지 확인
-      if (map[key]) {
-        // result에 클라 키 이름, 서버의 값 저장
-        result[map[key]] = data[key];
-      } else {
-        result[key] = data[key];
-      }
-    }
-    return result;
-  };
-
-  // DTO 형식 -> 클라이언트 형식 변환
-  const convertToClient = (type, data) => {
-    const map = serverKeyMap[type];
-
-    // type 주입
-    const result = { type };
-
-    if (data[serverKeyMap[type]?.id]) {
-      result.idFromServer = data[serverKeyMap[type].id];
-    }
-
-    for (const key in data) {
-      if (map[key]) {
-        result[map[key]] = data[key];
-      } else {
-        result[key] = data[key];
-      }
-    }
-    return result;
-  };
-
-  // 모든 경력(experience) 섹션들의 기간(개월 수)을 합산한다
-  const totalExperienceMonths = components.experience.reduce((sum, exp) => {
-    // 시작일과 종료일이 모두 존재하고 YYYY-MM 형식일 때만 계산
-    if (
-      exp.startDate &&
-      exp.endDate &&
-      /^\d{4}-\d{2}$/.test(exp.startDate) &&
-      /^\d{4}-\d{2}$/.test(exp.endDate)
-    ) {
-      // "2023-02" → [2023, 2] 숫자 배열로 변환
-      const [startY, startM] = exp.startDate.split("-").map(Number);
-      const [endY, endM] = exp.endDate.split("-").map(Number);
-
-      // 전체 개월 수 계산
-      // (종료년도 - 시작년도) * 12 + (종료월 - 시작월) + 1
-      const months = (endY - startY) * 12 + (endM - startM) + 1;
-
-      // 누적 합산
-      return sum + months;
-    }
-
-    // 유효하지 않은 데이터면 합산하지 않고 기존 합계를 그대로 반환
-    return sum;
-  }, 0);
+  // ===============================
+  // ✅ Floating 버튼 정의
+  // ===============================
 
   const floatButtons = (() => {
     switch (mode) {
@@ -753,126 +828,6 @@ const CVManagePage = () => {
     }
   })();
 
-  // 로그인 여부 검사
-  useEffect(() => {
-    setLoginMember();
-  }, []);
-
-  useEffect(() => {
-    if (!isLoadingLogin) return;
-
-    if (!loginMember.memNo) {
-      alert("로그인이 필요합니다.");
-      navigate("/signin");
-    }
-  }, [isLoadingLogin, loginMember, navigate]);
-
-  useEffect(() => {
-    if (dateError) {
-      alert(dateError);
-      setDateError("");
-    }
-  }, [dateError]);
-
-  // 이력서 등록 갯수 초과 검사
-  useEffect(() => {
-    if (mode === "add") {
-      checkCVLimit();
-    }
-  }, [mode, loginMember]);
-
-  // cvNo가 있으면 detail
-  useEffect(() => {
-    const fetchCV = async () => {
-      if (!cvNo) return;
-      if (!isLoadingLogin) return;
-      if (!loginMember?.memNo) return;
-
-      try {
-        // 본인 소유 여부 확인
-        const checkOwner = await axiosApi.post("/memberCV/checkOwner", {
-          cvNo,
-          memNo: loginMember?.memNo,
-        });
-
-        if (checkOwner.data) {
-          // 이력시 리스트에서 모드를 들고 들어온 경우
-          if (queryMode) {
-            setMode(queryMode);
-          }
-
-          // 소유자 맞으면 상세 조회
-          const detail = await axiosApi.post("/memberCV/detail", { cvNo });
-          const data = detail.data;
-
-          // 기존 세팅 로직 복붙
-          const { education, military, cvAlias, cvResume, cvImgPath, ...rest } =
-            data;
-
-          // 기본 정보
-          setFormData({
-            cvAlias: cvAlias || "",
-            cvResume: cvResume || "",
-            ...rest,
-          });
-
-          // 증명사진
-          setCvImgPath(cvImgPath || "");
-
-          // 학력
-          setEducation(
-            education || {
-              eduName: "",
-              eduMajor: "",
-              eduStartDate: "",
-              eduEndDate: "",
-              eduCodeNo: "",
-              eduStatusCodeNo: "",
-            }
-          );
-
-          // 병역
-          setMilitary(
-            military || {
-              cvMiliClass: "",
-              cvMiliBranch: "",
-              cvMiliStartDate: "",
-              cvMiliEndDate: "",
-            }
-          );
-
-          // 동적 sections
-          const newComponents = {};
-          const newInitialIds = {};
-
-          Object.keys(clientKeyMap).forEach((type) => {
-            const list = data[type] || [];
-            newComponents[type] = list.map((item) =>
-              convertToClient(type, item)
-            );
-
-            // 서버 id를 저장
-            newInitialIds[type] = list
-              .map((item) => item[clientKeyMap[type].id])
-              .filter(Boolean);
-          });
-
-          setComponents(newComponents);
-          setInitialIds(newInitialIds);
-        } else {
-          alert("🔪잡았다. 쥐새끼.🐁");
-          navigate("/cv");
-        }
-      } catch (error) {
-        console.error(error);
-        alert("이력서 확인 중 오류가 발생했습니다.");
-        navigate("/cv");
-      }
-    };
-
-    fetchCV();
-  }, [isLoadingLogin, cvNo, loginMember, navigate]);
-
   // // 콘솔console 찍기
   // useEffect(() => {
   //   console.log("모드 =", mode);
@@ -894,9 +849,9 @@ const CVManagePage = () => {
   return (
     <div className="resume-container">
       <div
-        className={mode === "view" ? "resume-form view-mode" : "resume-form"}
+        className={mode === "view" || mode === "submit" ? "resume-form view-mode" : "resume-form"}
       >
-        <h1 className="form-title">내 이력서 작성하기</h1>
+        <h1 className="form-title">내 이력서</h1>
 
         {/* 이력서 제목 입력 */}
         <div className="writeCVSection">
@@ -908,134 +863,150 @@ const CVManagePage = () => {
         </div>
 
         <div className="writeCVInfo">
-          {/* 기본 정보 표시 */}
-          <div className="writeCVSection">
-            <CVBasic
-              memberInfo={memberInfo}
-              cvImgPath={cvImgPath}
-              onImageUpload={handleUploadImage}
-              isUploading={isUploading}
-              mode={mode}
-            />
-          </div>
-
-          {/* 주소 입력 */}
-          <div className="writeCVSection">
-            <CVAddress formData={memberAddress} />
-          </div>
-
-          {/* 병역 입력 */}
-          <div className="writeCVSection">
-            <CVMilitary
-              formData={military}
-              onChange={handleMilitaryChange}
-              mode={mode}
-              isSubmitted={isSubmitted}
-            />
-          </div>
-
-          {/* 학력 입력 */}
-          <div className="writeCVSection">
-            <h2 className="writeCVSection-title">학력</h2>
-            <CVEducation
-              formData={education}
-              onChange={handleEducationChange}
-              mode={mode}
-              isSubmitted={isSubmitted}
-            />
-          </div>
-
-          {/* 공통 Form01 영역 */}
-          {Object.entries(sectionMetaForm01).map(([type, labels]) => (
-            <div className="writeCVSection" key={type}>
-              <h2 className="writeCVSection-title">{labels.title}</h2>
-              {components[type].length === 0 && (
-                <div className="empty-message">
-                  입력된 {labels.title}이 없습니다.
-                </div>
-              )}
-              {components[type].map((item, index) => (
-                <CVForm01
-                  key={item.id}
-                  index={index}
-                  type={type}
-                  data={item}
-                  mode={mode}
-                  labels={labels}
-                  isSubmitted={isSubmitted}
-                  onRemove={() => removeComponent(type, index)}
-                  onChange={handleComponentChange}
-                />
-              ))}
-              {mode !== "view" && mode !== "submit" && (
-                <FormAddButton onClick={() => addComponent(type)} />
-              )}
+          <div className="pdf-section">
+            {/* 기본 정보 표시 */}
+            <div className="writeCVSection">
+              <CVBasic
+                memberInfo={memberInfo}
+                cvImgPath={cvImgPath}
+                onImageUpload={handleUploadImage}
+                isUploading={isUploading}
+                mode={mode}
+              />
             </div>
-          ))}
+          </div>
 
-          {/* 어학 */}
-          <div className="writeCVSection">
-            <h2 className="writeCVSection-title">어학</h2>
-            {components.language.length === 0 && (
-              <div className="empty-message">입력된 어학이 없습니다.</div>
-            )}
-            {components.language.map((item, index) => (
-              <CVLanguage
-                key={item.id}
-                index={index}
-                data={item}
+          <div className="pdf-section">
+            {/* 주소 입력 */}
+            <div className="writeCVSection">
+              <CVAddress formData={memberAddress} />
+            </div>
+          </div>
+
+          <div className="pdf-section">
+            {/* 병역 입력 */}
+            <div className="writeCVSection">
+              <CVMilitary
+                formData={military}
+                onChange={handleMilitaryChange}
                 mode={mode}
                 isSubmitted={isSubmitted}
-                onRemove={() => removeComponent("language", index)}
-                onChange={handleComponentChange}
               />
-            ))}
-            {mode !== "view" && mode !== "submit" && (
-              <FormAddButton onClick={() => addComponent("language")} />
-            )}
+            </div>
           </div>
 
-          {/* 공통 Form02 영역 */}
-          {/* 경력, 교육이수, 대외활동, 포트폴리오 섹션 추가 */}
-          {Object.entries(sectionMetaForm02).map(([type, labels]) => (
-            <div className="writeCVSection" key={type}>
-              <h2 className="writeCVSection-title">{labels.title}</h2>
-              {/* 경력 섹션일 때만 렌더링되는 (최종 경력)*/}
-              {type === "experience" && (
-                <div>총 경력 기간 : {totalExperienceMonths}개월</div>
+          <div className="pdf-section">
+            {/* 학력 입력 */}
+            <div className="writeCVSection">
+              <h2 className="writeCVSection-title">학력</h2>
+              <CVEducation
+                formData={education}
+                onChange={handleEducationChange}
+                mode={mode}
+                isSubmitted={isSubmitted}
+              />
+            </div>
+          </div>
+
+          <div className="pdf-section">
+            {/* 공통 Form01 영역 */}
+            {Object.entries(sectionMetaForm01).map(([type, labels]) => (
+              <div className="writeCVSection" key={type}>
+                <h2 className="writeCVSection-title">{labels.title}</h2>
+                {components[type].length === 0 && (
+                  <div className="empty-message">
+                    입력된 {labels.title}이 없습니다.
+                  </div>
+                )}
+                {components[type].map((item, index) => (
+                  <CVForm01
+                    key={item.id}
+                    index={index}
+                    type={type}
+                    data={item}
+                    mode={mode}
+                    labels={labels}
+                    isSubmitted={isSubmitted}
+                    onRemove={() => removeComponent(type, index)}
+                    onChange={handleComponentChange}
+                  />
+                ))}
+                {mode !== "view" && mode !== "submit" && (
+                  <FormAddButton onClick={() => addComponent(type)} />
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="pdf-section">
+            {/* 어학 */}
+            <div className="writeCVSection">
+              <h2 className="writeCVSection-title">어학</h2>
+              {components.language.length === 0 && (
+                <div className="empty-message">입력된 어학이 없습니다.</div>
               )}
-              {components[type].length === 0 && (
-                <div className="empty-message">
-                  입력된 {labels.title}이 없습니다.
-                </div>
-              )}
-              {components[type].map((item, index) => (
-                <CVForm02
+              {components.language.map((item, index) => (
+                <CVLanguage
                   key={item.id}
                   index={index}
-                  type={type}
                   data={item}
                   mode={mode}
-                  labels={labels}
                   isSubmitted={isSubmitted}
-                  onRemove={() => removeComponent(type, index)}
+                  onRemove={() => removeComponent("language", index)}
                   onChange={handleComponentChange}
                 />
               ))}
               {mode !== "view" && mode !== "submit" && (
-                <FormAddButton onClick={() => addComponent(type)} />
+                <FormAddButton onClick={() => addComponent("language")} />
               )}
             </div>
-          ))}
+          </div>
 
-          {/* 자기소개서 */}
-          <div className="writeCVSection">
-            <CVResume
-              formData={formData}
-              onChange={handleInputChange}
-              mode={mode}
-              isSubmitted={isSubmitted}
-            />
+          <div className="pdf-section">
+            {/* 공통 Form02 영역 */}
+            {/* 경력, 교육이수, 대외활동, 포트폴리오 섹션 추가 */}
+            {Object.entries(sectionMetaForm02).map(([type, labels]) => (
+              <div className="writeCVSection" key={type}>
+                <h2 className="writeCVSection-title">{labels.title}</h2>
+                {/* 경력 섹션일 때만 렌더링되는 (최종 경력)*/}
+                {type === "experience" && (
+                  <div>총 경력 기간 : {totalExperienceMonths}개월</div>
+                )}
+                {components[type].length === 0 && (
+                  <div className="empty-message">
+                    입력된 {labels.title}이 없습니다.
+                  </div>
+                )}
+                {components[type].map((item, index) => (
+                  <CVForm02
+                    key={item.id}
+                    index={index}
+                    type={type}
+                    data={item}
+                    mode={mode}
+                    labels={labels}
+                    isSubmitted={isSubmitted}
+                    onRemove={() => removeComponent(type, index)}
+                    onChange={handleComponentChange}
+                  />
+                ))}
+                {mode !== "view" && mode !== "submit" && (
+                  <FormAddButton onClick={() => addComponent(type)} />
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="pdf-section">
+            {/* 자기소개서 */}
+            <div className="writeCVSection">
+              <CVResume
+                formData={formData}
+                onChange={handleInputChange}
+                mode={mode}
+                isSubmitted={isSubmitted}
+              />
+            </div>
           </div>
         </div>
       </div>

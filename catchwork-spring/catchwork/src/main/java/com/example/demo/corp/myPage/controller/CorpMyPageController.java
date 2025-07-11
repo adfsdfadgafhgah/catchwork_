@@ -1,12 +1,14 @@
-// package com.example.demo.corp.myPage.controller;
 package com.example.demo.corp.myPage.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.auth.model.dto.CustomUserDetails;
 import com.example.demo.corp.myPage.model.dto.CorpMyPage;
@@ -14,33 +16,39 @@ import com.example.demo.corp.myPage.model.service.CorpMyPageService;
 
 @RestController
 @RequestMapping("/corp")
-@CrossOrigin(origins = "http://localhost:5173")    // React 개발 서버 주소
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class CorpMyPageController {
-
-    private static final Logger logger = LoggerFactory.getLogger(CorpMyPageController.class);
 
     @Autowired
     private CorpMyPageService corpMyPageService;
 
-    /** 기업 마이페이지 메인 조회 */
-    @GetMapping("/mypage")
-    public ResponseEntity<?> getCorpInfo(@AuthenticationPrincipal CustomUserDetails userDetails) {
-
-        if (userDetails == null) {
-            logger.warn("비로그인 사용자의 기업 마이페이지 조회 요청");
-            return ResponseEntity.status(401).body("로그인이 필요합니다.");
-        }
-
-        String corpId = userDetails.getUsername(); // 로그인된 기업 아이디
-        logger.info("기업 마이페이지 조회 요청 - 기업 ID: {}", corpId);
-
-        CorpMyPage corpInfo = corpMyPageService.getCorpInfoById(corpId);
-
-        if (corpInfo != null) {
-            logger.info("조회된 기업 정보: {}", corpInfo.toString());
-            return ResponseEntity.ok(corpInfo);
-        }
-        logger.warn("기업 정보를 찾을 수 없습니다 - 기업 ID: {}", corpId);
-        return ResponseEntity.status(404).body("기업 정보를 찾을 수 없습니다.");
+    // 🔄 기업 회원 정보 수정
+    @PutMapping("/edit")
+    public ResponseEntity<?> updateMemberInfo(@RequestBody CorpMyPage corpMyPage) {
+        corpMyPageService.updateMemberInfo(corpMyPage);
+        return ResponseEntity.ok().build();
     }
+
+//    // 🔐 비밀번호 확인용 회원 비밀번호 조회
+//    @GetMapping("/confirm-password")
+//    public ResponseEntity<String> getMemberPassword(@AuthenticationPrincipal CustomUserDetails loginMember) {
+//        String password = corpMyPageService.selectMemberPassword(loginMember.getMember().getMemNo());
+//        return ResponseEntity.ok(password);
+//    }
+//
+//    // 🔐 비밀번호 변경
+//    @PutMapping("/change-password")
+//    public ResponseEntity<?> changePassword(@AuthenticationPrincipal CustomUserDetails loginMember,
+//                                            @RequestBody CorpMyPage corpMyPage) {
+//        corpMyPage.setMemNo(loginMember.getMember().getMemNo());
+//        corpMyPageService.changePassword(corpMyPage);
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    // 🔕 회원 탈퇴
+//    @PutMapping("/withdraw")
+//    public ResponseEntity<?> withdraw(@AuthenticationPrincipal CustomUserDetails loginMember) {
+//        corpMyPageService.withdraw(loginMember.getMember().getMemNo());
+//        return ResponseEntity.ok().build();
+//    }
 }

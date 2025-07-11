@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.auth.model.dto.Member;
+import com.example.demo.member.board.model.dto.Board;
+import com.example.demo.member.board.model.dto.Comment;
 import com.example.demo.corp.recruit.model.dto.Recruit;
 import com.example.demo.member.company.model.dto.CompanyInfo;
 import com.example.demo.member.myPage.myInfo.model.service.MyInfoService;
@@ -68,6 +70,7 @@ public class MyInfoController {
 		}
 	}
 
+	// 비밀번호 확인
 	@PostMapping("verifyPassword")
 	public ResponseEntity<Boolean> verifyPassword(@RequestBody Member loginMember) {
 		System.out.println("비밀번호 확인 메서드 매핑");
@@ -85,6 +88,7 @@ public class MyInfoController {
 		}
 	}
 
+	// 비밀번호 변경
 	@PostMapping("changePw")
 	public ResponseEntity<String> changePw(@RequestParam("currentPw") String currentPw,
 			@RequestParam("memPw") String memPw, @RequestParam("memNo") String memNo) {
@@ -115,6 +119,7 @@ public class MyInfoController {
 		}
 	}
 
+	// 회원 탈퇴
 	@PutMapping("withdraw")
 	public ResponseEntity<String> withdraw(@RequestBody Member loginMember) {
 		// System.out.println("탈퇴 메서드 매핑");
@@ -139,7 +144,7 @@ public class MyInfoController {
 
 	// 좋아요한 공고 목록
 	@GetMapping("favRecruitList")
-	public ResponseEntity<List<Recruit>> getRecruitList(
+	public ResponseEntity<List<Recruit>> getFavRecruitList(
 			@RequestParam(value = "recruitJobName", required = false, defaultValue = "all") String recruitJobName,
 			@RequestParam(value = "recruitJobArea", required = false, defaultValue = "all") String recruitJobArea,
 			@RequestParam(value = "recruitCareer", required = false, defaultValue = "all") String recruitCareer,
@@ -159,13 +164,13 @@ public class MyInfoController {
 		paramMap.put("query", query);
 		paramMap.put("memNo", memNo);
 
-		List<Recruit> recruitList = myInfoService.getRecruitList(paramMap);
+		List<Recruit> recruitList = myInfoService.getFavRecruitList(paramMap);
 		return ResponseEntity.ok(recruitList);
 	}
 
 	// 좋아요한 기업 목록
 	@GetMapping("favCorpList")
-	public ResponseEntity<List<CompanyInfo>> getCorpList(
+	public ResponseEntity<List<CompanyInfo>> getFavCorpList(
 			@RequestParam(value = "query", required = false, defaultValue = "") String query,
 			@RequestParam(value = "memNo", required = false) String memNo
 	) {
@@ -173,7 +178,79 @@ public class MyInfoController {
 		paramMap.put("query", query);
 		paramMap.put("memNo", memNo);
 
-		List<CompanyInfo> corpList = myInfoService.getCorpList(paramMap);
+		List<CompanyInfo> corpList = myInfoService.getFavCorpList(paramMap);
 		return ResponseEntity.ok(corpList);
+	}
+
+	// 즐겨찾기 게시글 목록
+	@GetMapping("favBoardList")
+	public ResponseEntity<List<Board>> getFavBoardList(
+			@RequestParam(value = "query", required = false, defaultValue = "") String query,
+			@RequestParam(value = "memNo", required = false) String memNo,
+			@RequestParam(name = "sort") String sort
+	) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("query", query);
+		paramMap.put("memNo", memNo);
+		paramMap.put("sort", sort);
+
+		List<Board> boardList = myInfoService.getFavBoardList(paramMap);
+		return ResponseEntity.ok(boardList);
+	}
+
+	// 내가 쓴 게시글 목록
+	@GetMapping("myBoardList")
+	public ResponseEntity<List<Board>> getMyBoardList(
+			@RequestParam(value = "query", required = false, defaultValue = "") String query,
+			@RequestParam(value = "memNo", required = false) String memNo,
+			@RequestParam(name = "sort") String sort
+	) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("query", query);
+		paramMap.put("memNo", memNo);
+		paramMap.put("sort", sort);
+
+		List<Board> boardList = myInfoService.getMyBoardList(paramMap);
+		return ResponseEntity.ok(boardList);
+	}
+
+	// 내가 쓴 댓글 목록
+	@GetMapping("myCommentList")
+	public ResponseEntity<List<Comment>> getMyCommentList(
+			@RequestParam(value = "query", required = false, defaultValue = "") String query,
+			@RequestParam(value = "memNo", required = false) String memNo
+	) {
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("query", query);
+		paramMap.put("memNo", memNo);
+
+		List<Comment> commentList = myInfoService.getMyCommentList(paramMap);
+		return ResponseEntity.ok(commentList);
+		}
+
+	// 내가 지원한 채용공고 목록
+	@GetMapping("myRecruitList")
+	public ResponseEntity<List<Recruit>> getMyRecruitList(
+		@RequestParam(value = "recruitJobName", required = false, defaultValue = "all") String recruitJobName,
+		@RequestParam(value = "recruitJobArea", required = false, defaultValue = "all") String recruitJobArea,
+		@RequestParam(value = "recruitCareer", required = false, defaultValue = "all") String recruitCareer,
+		@RequestParam(value = "recruitEdu", required = false, defaultValue = "all") String recruitEdu,
+		@RequestParam(value = "corpType", required = false, defaultValue = "all") String corpType,
+		@RequestParam(value = "recruitType", required = false, defaultValue = "all") String recruitType,
+		@RequestParam(value = "query", required = false, defaultValue = "") String query,
+		@RequestParam(value = "memNo", required = false) String memNo
+	) {	
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("recruitJobName", recruitJobName);
+		paramMap.put("recruitJobArea", recruitJobArea);
+		paramMap.put("recruitCareer", recruitCareer);
+		paramMap.put("recruitEdu", recruitEdu);
+		paramMap.put("corpType", corpType);
+		paramMap.put("recruitType", recruitType);
+		paramMap.put("query", query);
+		paramMap.put("memNo", memNo);
+
+		List<Recruit> recruitList = myInfoService.getMyRecruitList(paramMap);
+		return ResponseEntity.ok(recruitList);
 	}
 }

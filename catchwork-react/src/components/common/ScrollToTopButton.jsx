@@ -6,6 +6,8 @@ const ScrollToTopButton = () => {
 
   const handleScroll = () => {
     const scrollY = window.scrollY;
+
+    //스크롤의 위치가 300이상이면 보이게
     if (scrollY > 300) {
       setIsVisible(true);
     } else {
@@ -15,8 +17,8 @@ const ScrollToTopButton = () => {
 
   const scrollToTop = () => {
     window.scrollTo({
-      top: 0,
-      behavior: "smooth",
+      top: 0, //페이지 최상단으로
+      behavior: "smooth", //부드럽게
     });
   };
 

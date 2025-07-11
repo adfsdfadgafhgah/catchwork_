@@ -41,9 +41,6 @@ public interface PaymentMapper {
 	// 멤버십 다운그레이드
 	Integer downgradeSubscription(Map<String, Object> map);
 
-	// 멤버십 명칭 조회
-	String getOrderName(int newGrade);
-
 	// 멤버십 정보 변경
 	int changeMembership(Map<String, Object> map);
 

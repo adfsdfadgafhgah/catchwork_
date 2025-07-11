@@ -40,7 +40,7 @@
 	</select>
 	
 	<!-- 자신이 작성한 문의 -->
-	<select id="selectSupportListByMemNo" resultMap="SupportResultMap" parameterType="String">
+	<select id="selectSupportListByMemNo" resultMap="SupportResultMap">
 	  SELECT
 	    (SELECT COUNT(*) FROM SUPPORT WHERE MEM_NO = #{memNo}) 
 	      - ROW_NUMBER() OVER (ORDER BY S.SUPPORT_NO DESC) + 1 AS SEQ_NO, 
@@ -62,7 +62,7 @@
 	</select>
 
 	<!-- 문의하기 디테일 나옴 -->
-	<select id="selectSupportById" parameterType="int">
+	<select id="selectSupportById">
   	 SELECT 
     	S.SUPPORT_NO,
     	S.SUPPORT_TITLE,
@@ -81,7 +81,7 @@
 	</select>
 	
 	<!-- 문의하기 작성 -->
-	<insert id="insertSupport" parameterType="Support">
+	<insert id="insertSupport">
     	INSERT INTO SUPPORT (
          SUPPORT_NO,
          SUPPORT_TITLE,

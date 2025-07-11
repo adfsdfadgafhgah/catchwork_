@@ -41,7 +41,7 @@ public class PaymentScheduling {
 		log.info("결제 스케줄링 종료");
 	}
 
-	// @Scheduled(cron = "0 30 * * * *")
+	@Scheduled(cron = "0 30 * * * *")
 	public void billingUnpaidScheduling() {
 		log.info("미납자 결제 스케줄링 시작");
 		// 미납자의 정기 결제 시행

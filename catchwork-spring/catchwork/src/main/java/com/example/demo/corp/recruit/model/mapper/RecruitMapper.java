@@ -88,4 +88,6 @@ public interface RecruitMapper {
 	 * @author BAEBAE
 	 */
 	void autoCloseRecruit();
+
+
 }

@@ -99,10 +99,17 @@
 	    (SELECT COUNT(*) FROM FAV_RECRUIT F WHERE F.RECRUIT_NO = R.RECRUIT_NO) AS likeCount,
 	    
 	    -- 로그인 유저의 좋아요 여부
-	    (SELECT COUNT(*)
-	     FROM FAV_RECRUIT F
-	     WHERE F.RECRUIT_NO = R.RECRUIT_NO
-	       AND F.MEM_NO = #{memNo}) AS likedByCurrentUser
+	    <choose>
+        <when test="memNo != null and memNo != ''">
+            (SELECT COUNT(*)
+             FROM FAV_RECRUIT F
+             WHERE F.RECRUIT_NO = R.RECRUIT_NO
+               AND F.MEM_NO = #{memNo}) AS likedByCurrentUser
+        </when>
+        <otherwise>
+            0 AS likedByCurrentUser
+        </otherwise>
+    </choose>
 	
 	FROM RECRUIT R
 	JOIN CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
@@ -143,7 +150,7 @@
     </if>
 
     <if test="recruitJobArea != null and recruitJobArea != '' and recruitJobArea != 'all'">
-      AND R.RECRUIT_JOB_AREA = #{recruitJobArea}
+      AND R.RECRUIT_JOB_AREA LIKE CONCAT(CONCAT('%', #{recruitJobArea}), '%')
     </if>
 
     <if test="recruitCareer != null and recruitCareer != '' and recruitCareer != 'all'">
@@ -212,4 +219,12 @@
     WHERE RECRUIT_NO = #{recruitNo}
 	</update>
 
+	
+	<!-- 이력서 제출 여부 확인 -->
+	<select id="checkSubmitCV" resultType="int">
+	    SELECT COUNT(*)
+	    FROM RECRUIT_CV
+	    WHERE RECRUIT_NO = #{recruitNo}
+	      AND MEM_NO = #{memNo}
+	</select>
 </mapper>

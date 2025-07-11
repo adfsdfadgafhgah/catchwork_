@@ -3,85 +3,130 @@ import SectionHeader from "../../components/common/SectionHeader";
 import Pagination from "../../components/common/Pagination";
 import { axiosApi } from "../../api/axiosAPI";
 import "./CorpCVListPage.css";
+import useLoginMember from "../../stores/loginMember";
 import { getCareerRange } from "../../hooks/getCareerRange";
+import { useAuthStore } from "../../stores/authStore";
+
+const itemsPerPage = 10; //한페이지에 보여지는 이력서 갯수
 
 const CorpCVListPage = () => {
+  //이력서 목록 관련
   const [cvList, setCVList] = useState([]);
   const [filteredList, setFilteredList] = useState([]);
+  // 필터 조건 (학력,경력)
   const [selectedEdu, setSelectedEdu] = useState("");
   const [selectedExp, setSelectedExp] = useState("");
-  const [selectedCVNos, setSelectedCVNos] = useState([]);
-  const [showCheckbox, setShowCheckbox] = useState(false);
+  //선택 모드
+  const [selectedCVNos, setSelectedCVNos] = useState([]); // 체크박스로 선택된
+  const [showCheckbox, setShowCheckbox] = useState(false); //체크박스 모드
+  //페이지 네이션 - 현재 페이지 번호
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10; //한페이지에 보여지는 이력서 갯수
+
+  const { loginMember, isLoadingLogin, setLoginMember } = useLoginMember();
 
   useEffect(() => {
-    fetchCVList(); //처음 페이지 진입시 전체 목록 호출
+    const init = async () => {
+      const memNo = useAuthStore.getState().memNo;
+
+      if (!memNo) {
+        console.warn("❗ [CorpCVListPage] memNo 없음 - 로그인 먼저 필요");
+        return;
+      }
+
+      // memNo가 있다면 loginMember 세팅 시도
+      await setLoginMember(); // 내부에서 isLoadingLogin = true 도 세팅됨
+    };
+
+    init();
   }, []);
 
-  const fetchCVList = async () => {
+  useEffect(() => {
+    if (isLoadingLogin && loginMember?.memNo) {
+      console.log("✅ 유효한 loginMember 확인됨:", loginMember);
+      getCVListByRole(loginMember.memNo);
+    } else if (isLoadingLogin && !loginMember?.memNo) {
+      console.warn("❗유효하지 않은 memNo:", loginMember?.memNo);
+    }
+  }, [isLoadingLogin, loginMember]);
+
+  // 권한에 따라 이력서 전체 조회
+  const getCVListByRole = async (memNo) => {
     try {
-      const res = await axiosApi.get("/corpcv/list");
-      const formatted = res.data.map((cv) => ({
+      const res = await axiosApi.get("/corpcv/list-by-role", {
+        params: { memNo },
+      });
+
+      const mappedCVList = res.data.map((cv) => ({
         ...cv,
         isDownloaded: cv.recruitCVCheckFl === "Y",
         date: cv.recruitCVDate || "",
       }));
-      setCVList(formatted);
-      setFilteredList(formatted);
+
+      setCVList(mappedCVList);
+      setFilteredList(mappedCVList);
     } catch (err) {
       console.error("이력서 전체 목록 불러오기 실패", err);
+      alert("이력서 목록을 불러오는 데 실패했습니다.");
     }
   };
 
+  //선택된 조건에 따라 목록 갱신
   const handleFilter = async () => {
+    if (!loginMember?.memNo) {
+      alert("로그인 정보가 없습니다.");
+      return;
+    }
+
     try {
       const { careerMin, careerMax } = getCareerRange(selectedExp);
-
-      const params = {};
-      // 학력 필터는 선택된 경우만 추가
-      if (selectedEdu !== "") {
-        params.recruitCVEdu = selectedEdu;
-      }
-
+      const params = {
+        memNo: loginMember.memNo,
+      };
+      //학력 경력은 선택된 경우에만 추가
+      if (selectedEdu !== "") params.recruitCVEdu = selectedEdu;
       if (careerMin !== null && careerMax !== null) {
         params.careerMin = careerMin;
         params.careerMax = careerMax;
       }
 
       const res = await axiosApi.get("/corpcv/filter", { params });
-      const rawList = Array.isArray(res.data) ? res.data : []; // ✅ 핵심
-      const formatted = res.data.map((cv) => ({
+      const rawList = Array.isArray(res.data) ? res.data : [];
+
+      const filtered = rawList.map((cv) => ({
         ...cv,
         isDownloaded: cv.recruitCVCheckFl === "Y",
         date: cv.recruitCVDate || "",
       }));
-      setCVList(formatted);
-      setFilteredList(formatted);
+
+      setCVList(filtered);
+      setFilteredList(filtered);
       setCurrentPage(1);
       setSelectedCVNos([]);
     } catch (err) {
       console.error("필터링된 이력서 불러오기 실패", err);
-      setCVList([]); // 실패 시도라도 초기화
-      alert("필터링 된 이력서 목록 불러오기에 실패했습니다.");
+      alert("필터링된 이력서 목록 불러오기 실패");
     }
   };
 
+  //페이지 네이션
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = filteredList.slice(indexOfFirstItem, indexOfLastItem);
 
-  const totalPages = Math.ceil(filteredList.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredList.length / itemsPerPage); //전체 페이지 수 계산
+
+  //체크박스 처리
   const handleCheckboxChange = (cvNo) => {
     setSelectedCVNos((prev) =>
       prev.includes(cvNo) ? prev.filter((no) => no !== cvNo) : [...prev, cvNo]
     );
   };
 
+  //이력서 낱개 다운로드
   const handleDownload = async (cvNo, cvTitle) => {
     try {
       const res = await axiosApi.get(`/corpcv/download/${cvNo}`, {
-        responseType: "blob",
+        responseType: "blob", //pdf 파일을 바이너리(blob)으로 다운로드 요청
       });
 
       const url = window.URL.createObjectURL(new Blob([res.data]));
@@ -108,6 +153,7 @@ const CorpCVListPage = () => {
     }
   };
 
+  //이력서 일괄 다운로드
   const handleBulkDownload = () => {
     if (selectedCVNos.length === 0) {
       alert("선택된 이력서가 없습니다.");
@@ -122,18 +168,48 @@ const CorpCVListPage = () => {
   };
 
   const handleCancel = () => {
-    setSelectedCVNos([]);
+    setSelectedCVNos([]); //취소하면 체크박스 다시 빈배열로
   };
 
   const isAllSelected =
-    selectedCVNos.length > 0 && selectedCVNos.length === currentItems.length;
+    selectedCVNos.length > 0 && selectedCVNos.length === currentItems.length; //전체 선택여부 판별
 
+  //전체 선택 & 해제 처리
   const handleSelectAll = (e) => {
     if (e.target.checked) {
       const allNos = currentItems.map((cv) => cv.recruitCVNo);
       setSelectedCVNos(allNos);
     } else {
       setSelectedCVNos([]);
+    }
+  };
+  const handleDelete = async () => {
+    if (selectedCVNos.length === 0) {
+      alert("삭제할 이력서를 선택하세요.");
+      return;
+    }
+
+    const confirmDelete = window.confirm(
+      "선택한 이력서를 정말 삭제하시겠습니까?"
+    );
+    if (!confirmDelete) return;
+
+    try {
+      await axiosApi.delete("/corpcv/delete", {
+        data: { cvNos: selectedCVNos }, // 💡 axios에서 DELETE + body 보낼 땐 data로!
+      });
+
+      // 삭제 성공 시 프론트 목록에서도 제거
+      const updatedList = cvList.filter(
+        (cv) => !selectedCVNos.includes(cv.recruitCVNo)
+      );
+      setCVList(updatedList);
+      setFilteredList(updatedList);
+      setSelectedCVNos([]);
+      alert("이력서가 삭제되었습니다.");
+    } catch (err) {
+      console.error("이력서 삭제 실패", err);
+      alert("이력서 삭제에 실패했습니다.");
     }
   };
 
@@ -271,7 +347,10 @@ const CorpCVListPage = () => {
         <button className="btn-cancel" onClick={handleCancel}>
           취소하기
         </button>
-        <button className="btn-delete">이력서 삭제하기</button>
+        <button className="btn-delete" onClick={handleDelete}>
+          이력서 삭제하기
+        </button>
+
         {showCheckbox && (
           <button className="btn-download" onClick={handleBulkDownload}>
             선택한 이력서 일괄 다운로드
