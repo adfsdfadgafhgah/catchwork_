@@ -1,7 +1,8 @@
 /* ✅ BoardListPage.module.css */
 
 .boardListPage {
-  max-width: 1000px;
+  /* max-width: 1000px; */
+  width: 1000px;
   margin: 20px auto;
   padding: 0 16px;
   background-color: white;

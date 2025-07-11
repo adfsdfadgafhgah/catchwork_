@@ -46,8 +46,8 @@
     WHERE MEM_NO = #{memNo}
   </update>
 
-  <!-- 채용공고 목록 -->
-	<select id="getRecruitList">
+  <!-- 즐겨찾기 공고 목록 조회 -->
+	<select id="getFavRecruitList">
 	SELECT
 	    R.RECRUIT_NO,
 	    R.RECRUIT_TITLE,
@@ -164,8 +164,8 @@
     ORDER BY R.RECRUIT_NO DESC
   </select>
 
-  <!-- 기업 목록 조회 (검색기능포함)-->
-	<select id="getCorpList">
+  <!-- 즐겨찾기 기업 목록 조회 -->
+	<select id="getFavCorpList">
 		SELECT
 		ci.CORP_NO,
     ci.CORP_NAME,
@@ -216,4 +216,264 @@
 		ORDER BY ci.CORP_NAME ASC
 	</select>
 
+  <!-- 즐겨찾기 게시글 목록 조회 -->
+  <select id="getFavBoardList">
+    SELECT
+    B.BOARD_NO,
+    B.BOARD_TITLE,
+    B.BOARD_CONTENT,
+    TO_CHAR(B.BOARD_WRITE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_WRITE_DATE,
+    TO_CHAR(B.BOARD_EDIT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_EDIT_DATE,
+    B.BOARD_READ_COUNT,
+    B.BOARD_STATUS_CODE,
+    B.BOARD_STATUS_DATE,
+    B.BOARD_THUMBNAIL_URL,
+    M.MEM_NO,
+    M.MEM_NICKNAME,
+    M.MEM_PROFILE_PATH,
+    (
+      SELECT COUNT(*) FROM FAV_BOARD F WHERE F.BOARD_NO = B.BOARD_NO
+    ) AS LIKE_COUNT,
+    (
+      SELECT COUNT(*) 
+      FROM FAV_BOARD F 
+      WHERE F.BOARD_NO = B.BOARD_NO 
+      AND F.MEM_NO = #{memNo}
+      ) AS LIKED_BY_CURRENT_USER,
+    (
+      SELECT COUNT(*) 
+      FROM "COMMENT" C 
+      WHERE C.BOARD_NO = B.BOARD_NO 
+      AND C.COMMENT_STATUS = 0
+    ) AS COMMENT_COUNT
+    FROM BOARD B
+    JOIN MEMBER M ON B.MEM_NO = M.MEM_NO
+    JOIN FAV_BOARD FB ON B.BOARD_NO = FB.BOARD_NO
+    WHERE B.BOARD_STATUS_CODE IN (0, 3)
+    AND FB.MEM_NO = #{memNo}
+	  <if test="query != null and query != ''">
+	    AND (B.BOARD_TITLE LIKE '%' || #{query} || '%'
+	    OR B.BOARD_CONTENT LIKE '%' || #{query} || '%')
+	  </if>
+	  <choose>
+	    <when test="sort == 'oldest'">
+	      ORDER BY B.BOARD_WRITE_DATE ASC
+	    </when>
+	    <when test="sort == 'likes'">
+	      ORDER BY 
+	        (SELECT COUNT(*) FROM FAV_BOARD F WHERE F.BOARD_NO = B.BOARD_NO) DESC
+	    </when>
+	    <when test="sort == 'comments'">
+	      ORDER BY 
+	        (SELECT COUNT(*) FROM "COMMENT" C WHERE C.BOARD_NO = B.BOARD_NO AND C.COMMENT_STATUS = 0) DESC
+	    </when>
+	    <when test="sort == 'views'">
+	      ORDER BY B.BOARD_READ_COUNT DESC
+	    </when>
+	    <otherwise>
+	      ORDER BY B.BOARD_WRITE_DATE DESC
+	    </otherwise>
+	  </choose>
+  </select>
+
+  <!-- 내가 쓴 게시글 목록 조회 -->
+  <select id="getMyBoardList">
+    SELECT
+    B.BOARD_NO,
+    B.BOARD_TITLE,
+    B.BOARD_CONTENT,
+    TO_CHAR(B.BOARD_WRITE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_WRITE_DATE,
+    TO_CHAR(B.BOARD_EDIT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_EDIT_DATE,
+    B.BOARD_READ_COUNT,
+    B.BOARD_STATUS_CODE,
+    B.BOARD_STATUS_DATE,
+    B.BOARD_THUMBNAIL_URL,
+    M.MEM_NO,
+    M.MEM_NICKNAME,
+    M.MEM_PROFILE_PATH,
+    (
+      SELECT COUNT(*) FROM FAV_BOARD F WHERE F.BOARD_NO = B.BOARD_NO
+    ) AS LIKE_COUNT,
+    (
+      SELECT COUNT(*) 
+      FROM FAV_BOARD F 
+      WHERE F.BOARD_NO = B.BOARD_NO 
+      AND F.MEM_NO = #{memNo}
+      ) AS LIKED_BY_CURRENT_USER,
+    (
+      SELECT COUNT(*) 
+      FROM "COMMENT" C 
+      WHERE C.BOARD_NO = B.BOARD_NO 
+      AND C.COMMENT_STATUS = 0
+    ) AS COMMENT_COUNT
+    FROM BOARD B
+    JOIN MEMBER M ON B.MEM_NO = M.MEM_NO
+    WHERE B.BOARD_STATUS_CODE = 0
+    AND B.MEM_NO = #{memNo}
+    <if test="query != null and query != ''">
+      AND (B.BOARD_TITLE LIKE '%' || #{query} || '%'
+      OR B.BOARD_CONTENT LIKE '%' || #{query} || '%')
+    </if>
+    <choose>
+      <when test="sort == 'oldest'">
+        ORDER BY B.BOARD_WRITE_DATE ASC
+      </when>
+      <when test="sort == 'likes'">
+        ORDER BY 
+          (SELECT COUNT(*) FROM FAV_BOARD F WHERE F.BOARD_NO = B.BOARD_NO) DESC
+      </when>
+      <when test="sort == 'comments'">
+        ORDER BY 
+          (SELECT COUNT(*) FROM "COMMENT" C WHERE C.BOARD_NO = B.BOARD_NO AND C.COMMENT_STATUS = 0) DESC
+      </when>
+      <when test="sort == 'views'">
+        ORDER BY B.BOARD_READ_COUNT DESC
+      </when>
+      <otherwise>
+        ORDER BY B.BOARD_WRITE_DATE DESC
+      </otherwise>
+    </choose>
+  </select> 
+
+  <!-- 내가 쓴 댓글 목록 조회 -->
+  <select id="getMyCommentList">
+    SELECT
+	    C.COMMENT_NO,
+	    C.COMMENT_CONTENT,
+	    TO_CHAR(C.COMMENT_WRITE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS COMMENT_WRITE_DATE,
+	    TO_CHAR(C.COMMENT_EDIT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS COMMENT_EDIT_DATE,
+	    C.COMMENT_STATUS,
+	    TO_CHAR(C.COMMENT_STATUS_DATE, 'YYYY-MM-DD HH24:MI:SS') AS COMMENT_STATUS_DATE,
+	    C.BOARD_NO,
+	    C.MEM_NO,
+	    M.MEM_NICKNAME,
+	    M.MEM_PROFILE_PATH
+    FROM "COMMENT" C
+    JOIN BOARD B ON C.BOARD_NO = B.BOARD_NO
+    JOIN MEMBER M ON C.MEM_NO = M.MEM_NO
+    WHERE C.COMMENT_STATUS = 0
+    AND C.MEM_NO = #{memNo}
+    <if test="query != null and query != ''">
+      AND (C.COMMENT_CONTENT LIKE '%' || #{query} || '%')
+    </if>
+    ORDER BY C.COMMENT_NO DESC
+  </select>
+
+  <!-- 내가 지원한 채용공고 목록 조회 -->
+  <select id="getMyRecruitList">
+SELECT
+	    R.RECRUIT_NO,
+	    R.RECRUIT_TITLE,
+	    TO_CHAR(R.RECRUIT_START_DATE, 'YYYY-MM-DD') AS RECRUIT_START_DATE,
+	    TO_CHAR(R.RECRUIT_END_DATE, 'YYYY-MM-DD') AS RECRUIT_END_DATE,
+	    R.RECRUIT_JOB_NAME,
+	    R.RECRUIT_JOB_DETAIL,
+	    R.RECRUIT_EDU,
+	    R.RECRUIT_CAREER,
+	    R.RECRUIT_HEADCOUNT,
+	    R.RECRUIT_TYPE,
+	    R.RECRUIT_JOB_AREA,
+	    R.RECRUIT_SALARY,
+	    TO_CHAR(R.RECRUIT_RESULT_DATE, 'YYYY-MM-DD') AS RECRUIT_RESULT_DATE,
+	    R.RECRUIT_DOCX,
+	    R.RECRUIT_APPLY,
+	    R.RECRUIT_CORP_URL,
+	    R.RECRUIT_HIRE_DETAIL,
+	    R.RECRUIT_ETC,
+	    R.RECRUIT_READCOUNT AS recruitReadCount,
+	    R.RECRUIT_STATUS,
+	    TO_CHAR(R.RECRUIT_WRITE_DATE, 'YYYY-MM-DD') AS RECRUIT_WRITE_DATE,
+	    R.MEM_NO,
+	    
+	    <!-- 기업 정보 -->
+	    CI.CORP_NAME,
+	    CI.CORP_TYPE,
+	    CI.CORP_LOGO,
+		  CI.CORP_BENEFIT,
+		  CI.CORP_BENEFIT_DETAIL,
+			
+		  <!-- 기업회원 정보 -->
+		  M.MEM_NICKNAME AS memNickname,
+	    
+	    <!-- 좋아요 수 -->
+	    (SELECT COUNT(*) FROM FAV_RECRUIT F WHERE F.RECRUIT_NO = R.RECRUIT_NO) AS likeCount,
+	    
+	    <!-- 로그인 유저의 좋아요 여부 -->
+	    (
+      SELECT COUNT(*)
+	    FROM FAV_RECRUIT F
+	    WHERE F.RECRUIT_NO = R.RECRUIT_NO
+	    AND F.MEM_NO = #{memNo}
+      ) AS likedByCurrentUser
+	
+    FROM RECRUIT R
+    JOIN CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
+    JOIN CORP_INFO CI ON CM.CORP_NO = CI.CORP_NO
+    JOIN MEMBER M ON R.MEM_NO = M.MEM_NO
+    JOIN RECRUIT_CV RC ON R.RECRUIT_NO = RC.RECRUIT_NO
+    
+    <where>
+    <!-- 기본적으로 진행중인 공고만 -->
+    R.RECRUIT_STATUS IN (0, 3)
+    <!-- 현재 사용자가 지원한 공고만 -->
+    AND RC.MEM_NO = #{memNo}
+
+    <!-- 검색어 필터 -->
+    <if test="query != null and query != ''">
+    AND 
+    (
+      LOWER(R.RECRUIT_TITLE) LIKE '%' || LOWER(#{query}) || '%' OR
+      LOWER(R.RECRUIT_JOB_NAME) LIKE '%' || LOWER(#{query}) || '%' OR
+      LOWER(R.RECRUIT_JOB_DETAIL) LIKE '%' || LOWER(#{query}) || '%' OR
+      LOWER(R.RECRUIT_JOB_AREA) LIKE '%' || LOWER(#{query}) || '%' OR
+      LOWER(R.RECRUIT_EDU) LIKE '%' || LOWER(#{query}) || '%' OR
+      LOWER(R.RECRUIT_CAREER) LIKE '%' || LOWER(#{query}) || '%' OR
+      LOWER(R.RECRUIT_TYPE) LIKE '%' || LOWER(#{query}) || '%' OR
+      LOWER(R.RECRUIT_SALARY) LIKE '%' || LOWER(#{query}) || '%' OR
+      LOWER(R.RECRUIT_RESULT_DATE) LIKE '%' || LOWER(#{query}) || '%' OR
+      LOWER(R.RECRUIT_DOCX) LIKE '%' || LOWER(#{query}) || '%' OR
+      LOWER(R.RECRUIT_APPLY) LIKE '%' || LOWER(#{query}) || '%' OR
+      LOWER(R.RECRUIT_CORP_URL) LIKE '%' || LOWER(#{query}) || '%' OR
+      LOWER(R.RECRUIT_HIRE_DETAIL) LIKE '%' || LOWER(#{query}) || '%' OR
+      LOWER(R.RECRUIT_ETC) LIKE '%' || LOWER(#{query}) || '%' OR
+      LOWER(CI.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%' OR
+      LOWER(M.MEM_NICKNAME) LIKE '%' || LOWER(#{query}) || '%' OR
+      LOWER(CI.CORP_BENEFIT) LIKE '%' || LOWER(#{query}) || '%' OR
+      LOWER(CI.CORP_BENEFIT_DETAIL) LIKE '%' || LOWER(#{query}) || '%'
+    )
+    </if>
+
+    <!-- 직무 -->
+    <if test="recruitJobName != null and recruitJobName != '' and recruitJobName != 'all'">
+    AND R.RECRUIT_JOB_NAME = #{recruitJobName}
+    </if>
+
+    <!-- 근무지역 -->
+    <if test="recruitJobArea != null and recruitJobArea != '' and recruitJobArea != 'all'">
+    AND R.RECRUIT_JOB_AREA LIKE '%' || #{recruitJobArea} || '%'
+    </if>
+
+    <!-- 경력 -->
+    <if test="recruitCareer != null and recruitCareer != '' and recruitCareer != 'all'">
+    AND R.RECRUIT_CAREER = #{recruitCareer}
+    </if>
+
+    <!-- 학력 -->
+    <if test="recruitEdu != null and recruitEdu != '' and recruitEdu != 'all'">
+    AND R.RECRUIT_EDU = #{recruitEdu}
+    </if>
+
+    <!-- 기업형태 -->
+    <if test="corpType != null and corpType != '' and corpType != 'all'">
+    AND CI.CORP_TYPE = #{corpType}
+    </if>
+
+    <!-- 고용형태 -->
+    <if test="recruitType != null and recruitType != '' and recruitType != 'all'">
+    AND R.RECRUIT_TYPE = #{recruitType}
+    </if>
+    </where>
+
+    ORDER BY R.RECRUIT_NO DESC
+  </select>
 </mapper>
