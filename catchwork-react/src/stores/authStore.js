@@ -9,6 +9,7 @@ export const useAuthStore = create(
     (set) => ({
       memNo: null,
       memNickname: null,
+      memName : null, // 명하 추가
       memType: null,
 
       signin: async (memId, memPw) => {
@@ -18,9 +19,11 @@ export const useAuthStore = create(
           if (token) {
             localStorage.setItem("accessToken", token);
             const decoded = getDecodedToken(token);
+            console.log("Decoded Token in signin:", decoded);
             set({
               memNo: decoded.memNo,
               memNickname: decoded.memNickname,
+              memName: decoded.memName, // 명하 추가
               memType: decoded.memType,
             });
             await useLoginMember.getState().setLoginMember();
@@ -43,6 +46,7 @@ export const useAuthStore = create(
           set({
             memNo: null,
             memNickname: null,
+            memName: null, // 명하 추가
             memType: null,
           });
           useLoginMember.getState().clearLoginMember();

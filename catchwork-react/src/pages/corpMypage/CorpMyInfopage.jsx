@@ -42,7 +42,7 @@ function CorpMyInfo() {
         </div>
 
         <div className="profile-info">
-          <h1>{loginMember.memNickname || "닉네임 없음"}</h1>
+          <h1>{loginMember.memName || "닉네임 없음"}</h1>
         </div>
       </div>
       

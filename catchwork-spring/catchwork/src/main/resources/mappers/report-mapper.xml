@@ -5,7 +5,7 @@
 
 <mapper namespace="com.example.demo.report.model.mapper.ReportMapper">
 
-  <insert id="insertReport" parameterType="com.example.demo.report.model.dto.Report">
+  <insert id="insertReport">
     INSERT INTO REPORT (
       REPORT_NO,
       REPORT_TARGET_NO,

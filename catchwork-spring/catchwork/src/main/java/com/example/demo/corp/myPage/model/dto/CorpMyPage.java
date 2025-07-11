@@ -1,16 +1,25 @@
-// package com.example.demo.corp.myPage.model.dto;
 package com.example.demo.corp.myPage.model.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
+@Getter
+@Setter
+@ToString
 public class CorpMyPage {
-    private String corpName;        // 기업명
-    private String memId;           // 기업 아이디
-    private String memEmail;        // 이메일
-    private String memTel;          // 전화번호
-    private String memName;         // 담당자 이름
-    private String corpDepartment;  // 부서명
-    private String memProfilePath;  // 프로필 이미지 경로
-    private int    memNo;           // PK
+    // Member 테이블 관련 필드 (회원 정보 수정, 비밀번호 변경 등)
+    private String memNo;
+    private String memNickname;
+    private String memName;
+    private String memTel;
+    private String memEmail;
+    private String memBirthday;
+    private String memGender;
+    private String memAddr;
+    private String memSmsFl; // SMS 수신 여부
+    private String memPw;    // 비밀번호 변경 시 사용
+
+    // 여기서는 기업 관련 필드를 직접 가지지 않고
+    // CorpCompanyInfoDTO에서 별도로 관리합니다.
 }
