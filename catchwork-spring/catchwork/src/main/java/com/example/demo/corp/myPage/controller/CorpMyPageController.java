@@ -29,26 +29,26 @@ public class CorpMyPageController {
         return ResponseEntity.ok().build();
     }
 
-    // 🔐 비밀번호 확인용 회원 비밀번호 조회
-    @GetMapping("/confirm-password")
-    public ResponseEntity<String> getMemberPassword(@AuthenticationPrincipal CustomUserDetails loginMember) {
-        String password = corpMyPageService.selectMemberPassword(loginMember.getMember().getMemNo());
-        return ResponseEntity.ok(password);
-    }
-
-    // 🔐 비밀번호 변경
-    @PutMapping("/change-password")
-    public ResponseEntity<?> changePassword(@AuthenticationPrincipal CustomUserDetails loginMember,
-                                            @RequestBody CorpMyPage corpMyPage) {
-        corpMyPage.setMemNo(loginMember.getMember().getMemNo());
-        corpMyPageService.changePassword(corpMyPage);
-        return ResponseEntity.ok().build();
-    }
-
-    // 🔕 회원 탈퇴
-    @PutMapping("/withdraw")
-    public ResponseEntity<?> withdraw(@AuthenticationPrincipal CustomUserDetails loginMember) {
-        corpMyPageService.withdraw(loginMember.getMember().getMemNo());
-        return ResponseEntity.ok().build();
-    }
+//    // 🔐 비밀번호 확인용 회원 비밀번호 조회
+//    @GetMapping("/confirm-password")
+//    public ResponseEntity<String> getMemberPassword(@AuthenticationPrincipal CustomUserDetails loginMember) {
+//        String password = corpMyPageService.selectMemberPassword(loginMember.getMember().getMemNo());
+//        return ResponseEntity.ok(password);
+//    }
+//
+//    // 🔐 비밀번호 변경
+//    @PutMapping("/change-password")
+//    public ResponseEntity<?> changePassword(@AuthenticationPrincipal CustomUserDetails loginMember,
+//                                            @RequestBody CorpMyPage corpMyPage) {
+//        corpMyPage.setMemNo(loginMember.getMember().getMemNo());
+//        corpMyPageService.changePassword(corpMyPage);
+//        return ResponseEntity.ok().build();
+//    }
+//
+//    // 🔕 회원 탈퇴
+//    @PutMapping("/withdraw")
+//    public ResponseEntity<?> withdraw(@AuthenticationPrincipal CustomUserDetails loginMember) {
+//        corpMyPageService.withdraw(loginMember.getMember().getMemNo());
+//        return ResponseEntity.ok().build();
+//    }
 }
