@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.common.util.JWTUtil;
 import com.example.demo.member.company.model.dto.FavCorp;
 import com.example.demo.member.company.model.service.FavCorpService;
-import com.example.demo.util.JWTUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;

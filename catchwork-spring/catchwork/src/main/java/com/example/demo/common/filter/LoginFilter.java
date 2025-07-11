@@ -19,7 +19,7 @@ import com.example.demo.auth.model.dto.CustomUserDetails;
 import com.example.demo.auth.model.dto.Member;
 import com.example.demo.auth.token.entity.RefreshTokenEntity;
 import com.example.demo.auth.token.repository.RefreshTokenRepository;
-import com.example.demo.util.JWTUtil;
+import com.example.demo.common.util.JWTUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.FilterChain;

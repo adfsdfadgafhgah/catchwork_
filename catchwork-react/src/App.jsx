@@ -115,11 +115,25 @@ const router = createBrowserRouter([
       // 등록된 주소 외 모든 주소 예외 처리
       { path: "*", element: <NotFound /> },
       // 로그인/회원가입
-      { path: "signin", element: <SignInPage /> },
-      { path: "signup", element: <SignUpPage /> },
+      {
+        path: "signin",
+        element: (
+          <ProtectedRoute blockWhenLoggedIn={true}>
+            <SignInPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "signup",
+        element: (
+          <ProtectedRoute blockWhenLoggedIn={true}>
+            <SignUpPage />
+          </ProtectedRoute>
+        ),
+      },
       { path: "corpregister", element: <CorpRegisterPage /> },
       { path: "ceosignup", element: <CeoSignUpPage /> },
-      { path: "auth", element: <AuthTest /> },
+      // { path: "auth", element: <AuthTest /> },
 
       // Id,PW 찾기
       { path: "findid", element: <FindIdPage /> },
