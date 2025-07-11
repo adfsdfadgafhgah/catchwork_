@@ -1,87 +1,139 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import CorpSideBar from "../../components/myPage/CorpSideBar";
+import { useState } from "react";
+import useSignUpFormHandler from "../../hooks/useSignUpFormHandler";
+import { useOutletContext, useNavigate } from "react-router-dom";
+import { axiosApi } from "../../api/axiosAPI";
 import "./CorpChangePwPage.css";
 
-const CorpChangePasswordPage = () => {
+const CorpChangePwPage = () => {
+  const { loginMember } = useOutletContext();
+  const [currentPw, setCurrentPw] = useState("");
   const navigate = useNavigate();
 
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!currentPassword || !newPassword || !confirmPassword) {
-      setError("모든 항목을 입력해주세요.");
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      setError("비밀번호가 일치하지 않습니다.");
-      return;
-    }
-
-    setError("");
-    alert("비밀번호가 성공적으로 변경되었습니다.");
-    navigate("/corpmypage");
+  const confirmPw = (e) => {
+    setCurrentPw(e.target.value);
   };
 
+  // config 사용해서 useSignUpForm을 Handle하기
+  const config = {
+    fields: ["memPw", "memPwConfirm"],
+    pwField: "memPw",
+    pwConfirmField: "memPwConfirm",
+  };
+
+  const { formData, handleInputChange, validity, validateForm, setFormData } =
+    useSignUpFormHandler(
+      {
+        memPw: "",
+        memPwConfirm: "",
+      },
+      config
+    );
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!validateForm()) {
+      alert("입력 정보를 확인해주세요.");
+      return;
+    }
+
+    if (formData.memPw !== formData.memPwConfirm) {
+      alert("새 비밀번호와 새 비밀번호 확인이 일치하지 않습니다.");
+      return;
+    }
+
+    const requestData = new URLSearchParams();
+    requestData.append("currentPw", currentPw);
+    requestData.append("memPw", formData.memPw);
+    requestData.append("memNo", loginMember.memNo);
+
+    try {
+      const response = await axiosApi.post("/myPage/changePw", requestData);
+      console.log(response);
+      if (response.status === 200) {
+        alert(response.data);
+        navigate("/mypage/home");
+        return;
+      }
+      alert(response.data);
+      setCurrentPw("");
+      setFormData({ memPw: "", memPwConfirm: "" });
+      return;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const isDisabled =
+    currentPw === "" || formData.memPw === "" || formData.memPwConfirm === "";
+
   return (
-    <div className="corp-page-container">
-      <CorpSideBar />
-      <div className="main-content">
-        <div className="content-container">
-          <h2 className="page-title">기업 회원 비밀번호 변경</h2>
-
-          <form onSubmit={handleSubmit} className="password-form">
-            <div className="form-group">
-              <label htmlFor="currentPw" className="form-label">기존 비밀번호</label>
-              <input
-                type="password"
-                id="currentPw"
-                className="form-input"
-                placeholder="비밀번호를 입력해주세요"
-                value={currentPassword}
-                onChange={(e) => setCurrentPassword(e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="newPw" className="form-label">새 비밀번호</label>
-              <input
-                type="password"
-                id="newPw"
-                className="form-input"
-                placeholder="비밀번호를 입력해주세요"
-                value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-              />
-            </div>
-
-            <div className="form-group">
-              <input
-                type="password"
-                id="confirmPw"
-                className="form-input"
-                placeholder="비밀번호를 확인해주세요"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </div>
-
-            {error && <p className="error-message">{error}</p>}
-
-            <div className="button-container">
-              <button type="submit" className="submit-btn">수정하기</button>
-            </div>
-          </form>
+    <div className="edit-change-pw-container">
+      <form onSubmit={handleSubmit} className="edit-change-pw-form">
+        <div className="edit-change-pw-form-item">
+          <label htmlFor="currentPw">
+            현재 비밀번호
+            <input
+              type="password"
+              id="currentPw"
+              name="currentPw"
+              onChange={confirmPw}
+              style={{
+                borderColor: validity.currentPw === false ? "red" : undefined,
+              }}
+            />
+          </label>
         </div>
-      </div>
+        <div className="edit-change-pw-form-item">
+          <label htmlFor="memPw">
+            새 비밀번호
+            <input
+              name="memPw"
+              type="password"
+              value={formData.memPw}
+              onChange={handleInputChange}
+              style={{
+                borderColor: validity.memPw === false ? "red" : undefined,
+              }}
+            />
+            {validity.memPw === false && (
+              <small style={{ color: "red" }}>
+                새 비밀번호를 입력해주세요.
+              </small>
+            )}
+          </label>
+        </div>
+        <div className="edit-change-pw-form-item">
+          <label htmlFor="memPwConfirm">
+            새 비밀번호 확인
+            <input
+              name="memPwConfirm"
+              type="password"
+              value={formData.memPwConfirm}
+              onChange={handleInputChange}
+              style={{
+                borderColor:
+                  formData.memPwConfirm.trim().length !== 0 &&
+                  validity.memPwConfirm === false
+                    ? "red"
+                    : undefined,
+              }}
+            />
+            {formData.memPwConfirm.trim().length !== 0 &&
+              validity.memPwConfirm === false && (
+                <small style={{ color: "red" }}>
+                  비밀번호가 일치하지 않습니다.
+                </small>
+              )}
+          </label>
+        </div>
+
+        <button type="submit" onClick={handleSubmit} disabled={isDisabled}>
+          비밀번호 변경
+        </button>
+      </form>
     </div>
   );
 };
 
-export default CorpChangePasswordPage;
+export default CorpChangePwPage;

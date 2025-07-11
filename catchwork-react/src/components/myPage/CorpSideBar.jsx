@@ -1,17 +1,19 @@
 import React, { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import "./CorpSideBar.css";
+import { NavLink, useLocation } from "react-router-dom";
 
-const CorpSideBar = ({ activeTab, setActiveTab = () => {} }) => {
-  // 기본값 설정
-  const navigate = useNavigate();
+const CorpSideBar = () => {
+  // 주소값
   const location = useLocation();
+
+  // 열린 메뉴
   const [expandedMenu, setExpandedMenu] = useState({
-    interest: false,
-    myPosts: false,
+    fav: false,
+    myContents: false,
     account: false,
   });
 
+  // 사이드바 세부 목록 토글
   const toggleMenu = (menu) => {
     setExpandedMenu((prev) => ({
       ...prev,
@@ -19,26 +21,25 @@ const CorpSideBar = ({ activeTab, setActiveTab = () => {} }) => {
     }));
   };
 
-  const handleNavigation = (tab, path) => {
-    if (location.pathname !== path) {
-      setActiveTab(tab);
-      navigate(path);
-    } else {
-      setActiveTab(tab); // 동일 경로일 경우 탭만 업데이트
-    }
-  };
-
   return (
-    <div className="sidebar">
-      <div className="sidebar-content">
-        <h2 className="sidebar-title">마이 페이지</h2>
-        <nav className="sidebar-nav">
-          <button
-            onClick={() => handleNavigation("내정보", "/corpmypage")}
-            className={`nav-item ${activeTab === "내정보" ? "active" : ""}`}
+    <div className="corpsidebar">
+      <div className="corpsidebar-content">
+        <h2 className="corpsidebar-title">마이 페이지</h2>
+
+        <nav className="corpsidebar-nav">
+          <NavLink
+            to="/corpmypage/home"
+            className={`nav-item ${
+              location.pathname === "/corpmypage/home" ||
+              location.pathname === "/corpmypage"
+                ? "active"
+                : ""
+            }`}
           >
             내정보
-          </button>
+          </NavLink>
+
+          {/* 계정 관리 */}
           <div>
             <button
               onClick={() => toggleMenu("account")}
@@ -55,34 +56,30 @@ const CorpSideBar = ({ activeTab, setActiveTab = () => {} }) => {
             </button>
             {expandedMenu.account && (
               <div className="sub-nav">
-                <button
-                  onClick={() =>
-                    handleNavigation("내정보변경", "/corpconfirmedit")
-                  }
+                <NavLink
                   className={`sub-nav-item ${
-                    activeTab === "내정보변경" ? "active" : ""
+                    location.pathname === "/corpmypage/eitmyinfo" ? "active" : ""
                   }`}
+                  to="/corpmypage/editmyinfo"
                 >
                   내 정보 변경
-                </button>
-                <button
-                  onClick={() =>
-                    handleNavigation("비밀번호변경", "/corpchangepw")
-                  }
+                </NavLink>
+                <NavLink
                   className={`sub-nav-item ${
-                    activeTab === "비밀번호변경" ? "active" : ""
+                    location.pathname === "/corpmypage/changepw" ? "active" : ""
                   }`}
+                  to="/corpmypage/changepw"
                 >
                   비밀번호 변경
-                </button>
-                <button
-                  onClick={() => handleNavigation("회원탈퇴", "/corpwithdraw")}
+                </NavLink>
+                <NavLink
                   className={`sub-nav-item ${
-                    activeTab === "회원탈퇴" ? "active" : ""
+                    location.pathname === "/corpmypage/withdraw" ? "active" : ""
                   }`}
+                  to="/corpmypage/withdraw"
                 >
                   회원 탈퇴
-                </button>
+                </NavLink>
               </div>
             )}
           </div>

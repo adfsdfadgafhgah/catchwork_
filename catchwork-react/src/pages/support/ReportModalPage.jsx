@@ -39,10 +39,6 @@ const ReportModalPage = ({
     }
 
     if (!targetNickname || targetNickname.trim() === "") {
-      // 선택 사항: 신고 제출 시 닉네임이 없으면 사용자에게 알림
-      // alert("신고 대상 이름이 없습니다. 다시 시도해주세요.");
-      // return;
-      // 닉네임 없어도 진행하고 싶으면 이 부분은 주석 처리 가능
     }
 
     try {

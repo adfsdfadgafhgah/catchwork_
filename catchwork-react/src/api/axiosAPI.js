@@ -77,6 +77,7 @@ axiosApi.interceptors.response.use(
           useAuthStore.setState({
             memNo: decoded.memNo,
             memNickname: decoded.memNickname,
+            memName: decoded.memName, // 명하 추가
             memType: decoded.memType,
           });
 
