@@ -68,38 +68,50 @@
 
 	<!-- 필터링 (학력, 경력) -->
 	<select id="getCVList" resultMap="recruitCVMap">
-		SELECT
-		RC.RECRUIT_CV_NO,
-		RC.RECRUIT_CV_EDU,
-		RC.RECRUIT_CV_CAREER,
-		RC.RECRUIT_CV_PDF_TITLE,
-		RC.RECRUIT_CV_PDF_PATH,
-		RC.RECRUIT_CV_DATE,
-		RC.RECRUIT_CV_CHECK_FL,
-		RC.MEM_NO,
-		RC.RECRUIT_NO,
-		R.RECRUIT_TITLE
-		FROM
-		RECRUIT_CV RC
-		JOIN RECRUIT R ON RC.RECRUIT_NO = R.RECRUIT_NO
-		JOIN
-		CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
-		JOIN CORP_INFO CI ON CM.CORP_NO =
-		CI.CORP_NO
-		<trim prefix="WHERE" prefixOverrides="AND |OR ">
-			<if test="corpNo != null">
-				AND CI.CORP_NO = #{corpNo}
-			</if>
-			<if test="recruitCVEdu != null">
-				AND RC.RECRUIT_CV_EDU = #{recruitCVEdu}
-			</if>
-			<if test="careerMin != null and careerMax != null">
-				AND RC.RECRUIT_CV_CAREER BETWEEN #{careerMin} AND
-				#{careerMax}
-			</if>
-		</trim>
-		ORDER BY R.RECRUIT_TITLE ASC
-	</select>
+  SELECT
+    RC.RECRUIT_CV_NO,
+    RC.RECRUIT_CV_EDU,
+    RC.RECRUIT_CV_CAREER,
+    RC.RECRUIT_CV_PDF_TITLE,
+    RC.RECRUIT_CV_PDF_PATH,
+    RC.RECRUIT_CV_DATE,
+    RC.RECRUIT_CV_CHECK_FL,
+    RC.MEM_NO,
+    RC.RECRUIT_NO,
+    R.RECRUIT_TITLE
+
+  FROM RECRUIT_CV RC
+  JOIN RECRUIT R ON RC.RECRUIT_NO = R.RECRUIT_NO
+  JOIN CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
+  JOIN CORP_INFO CI ON CM.CORP_NO = CI.CORP_NO
+
+  <!-- 학력 필터를 위한 LEFT JOIN (졸업/예정만 고려) -->
+  LEFT JOIN (
+    SELECT CV_NO, MAX(EDU_CODE_NO) AS FINAL_EDU_CODE
+    FROM CV_EDUCATION
+    WHERE EDU_STATUS_CODE_NO IN (0, 1)  <!-- 졸업, 졸업예정 -->
+    GROUP BY CV_NO
+  ) EDU ON EDU.CV_NO = RC.RECRUIT_CV_NO
+
+  <trim prefix="WHERE" prefixOverrides="AND |OR ">
+    <if test="corpNo != null">
+      AND CI.CORP_NO = #{corpNo}
+    </if>
+
+    <!-- 학력 필터가 요청된 경우에만 조건 추가 -->
+    <if test="recruitCVEdu != null">
+      AND EDU.FINAL_EDU_CODE = #{recruitCVEdu}
+    </if>
+
+    <!-- 경력 필터 -->
+    <if test="careerMin != null and careerMax != null">
+      AND RC.RECRUIT_CV_CAREER BETWEEN #{careerMin} AND #{careerMax}
+    </if>
+  </trim>
+
+  ORDER BY R.RECRUIT_TITLE ASC
+</select>
+
 
 
 	<!-- 경로 저장 -->

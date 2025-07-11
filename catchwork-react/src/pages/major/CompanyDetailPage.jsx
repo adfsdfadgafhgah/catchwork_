@@ -124,7 +124,7 @@ const CompanyDetailPage = () => {
 
   return (
     <>
-      <main className="container">
+      <main className="company-detail-container">
         <SectionHeader title="기업정보" />
 
         <div className="company-detail-header">

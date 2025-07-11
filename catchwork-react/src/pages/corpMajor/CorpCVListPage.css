@@ -1,7 +1,6 @@
-.container {
+.corp-container {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 40px 20px;
 }
 
 .cv-filter-area {
@@ -139,4 +138,12 @@
   padding-left: 10px;
   border-left: 4px solid var(--main-color);
   color: var(--main-color-dark);
+}
+/* 추가 CSS */
+.fixed-pagination {
+  position: sticky;
+  bottom: 0;
+  background-color: white;
+  padding: 12px 0;
+  z-index: 10;
 }
