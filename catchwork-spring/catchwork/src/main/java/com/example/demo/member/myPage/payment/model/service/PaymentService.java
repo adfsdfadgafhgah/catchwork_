@@ -31,9 +31,6 @@ public interface PaymentService {
 	// 멤버십 정보 변경
 	int changeMembership(String memNo, int memGrade);
 
-	// 멤버십 명칭 조회
-	String getOrderName(int newGrade);
-
 	// 멤버십 복구
 	int restoreSubscription(String memNo);
 

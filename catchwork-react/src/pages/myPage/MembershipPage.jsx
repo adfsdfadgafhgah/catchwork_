@@ -26,6 +26,7 @@ function MembershipPage() {
     getMembershipList,
   } = useMembershipData(loginMember);
 
+  // 로그인 유저 정보 갱신
   useEffect(() => {
     setLoginMember();
     if (loginMember?.memNo) {
@@ -135,10 +136,8 @@ function MembershipPage() {
       {loginMember.memGrade !== 0 && subscription.subEndAt && (
         <p>
           {membershipList[loginMember.memGrade].memGradeName} 플랜 결제 중.{" "}
-          {`${subscription.subEndAt.substring(
-            5,
-            7
-          )}월 ${subscription.subEndAt.substring(8, 10)}일`}
+          {`${subscription.subEndAt.substring(5, 7)}월 
+          ${subscription.subEndAt.substring(8, 10)}일`}
           까지 사용 가능
         </p>
       )}

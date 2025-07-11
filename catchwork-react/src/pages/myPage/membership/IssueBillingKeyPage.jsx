@@ -1,7 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { axiosApi } from "../../../api/axiosAPI";
-import useMembershipData from "../../../hooks/useMembershipData";
 
 function IssueBillingKeyPage() {
   const navigate = useNavigate();
@@ -10,9 +9,6 @@ function IssueBillingKeyPage() {
   const productId = searchParams.get("productId");
   const customerKey = searchParams.get("customerKey");
   const authKey = searchParams.get("authKey");
-
-  // 공통 데이터 훅 사용
-  const { loginMember, membershipList, isLoading } = useMembershipData();
 
   useEffect(() => {
     if (!customerKey || !authKey || !productId) {

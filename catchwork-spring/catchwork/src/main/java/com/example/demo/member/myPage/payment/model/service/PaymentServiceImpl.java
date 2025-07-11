@@ -81,7 +81,6 @@ public class PaymentServiceImpl implements PaymentService {
 
 		// 1. 구독중인 서비스 조회
 		selectResult = mapper.selectSubscription(memNo);
-//		System.out.println("구독중인 서비스 조회" + selectResult);
 
 		// 2. 구독중인 서비스가 있다면 수정
 		if (selectResult != null) {
@@ -156,12 +155,6 @@ public class PaymentServiceImpl implements PaymentService {
 		}
 
 		return result;
-	}
-
-	// 멤버십 명칭 조회
-	@Override
-	public String getOrderName(int newGrade) {
-		return mapper.getOrderName(newGrade);
 	}
 
 	// 멤버십 복구

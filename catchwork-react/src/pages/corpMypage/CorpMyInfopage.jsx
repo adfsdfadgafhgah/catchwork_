@@ -12,7 +12,8 @@ function CorpMyInfo() {
 
   useEffect(() => {
     // 기업 마이페이지 정보 API 호출
-    axiosApi.get("http://localhost:8080/corp/mypage", { withCredentials: true })
+    axiosApi
+      .get("http://localhost:8080/corp/mypage", { withCredentials: true })
       .then((res) => {
         setLoginMember(res.data);
       })
@@ -45,11 +46,13 @@ function CorpMyInfo() {
           <h1>{loginMember.memName || "닉네임 없음"}</h1>
         </div>
       </div>
-      
+
       <div className="corpmyinfo-info">
         <div className="info-content">
           <span className="info-label">기업명</span>
-          <span className="info-value">{loginMember.corpName || "기업명 없음"}</span>
+          <span className="info-value">
+            {loginMember.corpName || "기업명 없음"}
+          </span>
         </div>
 
         <div className="info-content">
@@ -74,10 +77,11 @@ function CorpMyInfo() {
 
         <div className="info-content">
           <span className="info-label">부서명</span>
-          <span className="info-value">{loginMember.corpDepartment || "부서 없음"}</span>
+          <span className="info-value">
+            {loginMember.corpDepartment || "부서 없음"}
+          </span>
         </div>
       </div>
-
     </div>
   );
 }

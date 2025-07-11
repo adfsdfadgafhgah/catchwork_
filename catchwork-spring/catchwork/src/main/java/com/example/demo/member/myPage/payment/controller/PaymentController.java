@@ -53,8 +53,6 @@ public class PaymentController {
 
 		try {
 			billingKey = service.getBillingKey(memNo);
-//			System.out.println("유효한 빌링키 : " + billingKey);
-//			System.out.println("memNo : " + memNo);
 
 			// 유효한 빌링키가 있다면 true를 반환
 			if (billingKey != null) {
@@ -63,14 +61,9 @@ public class PaymentController {
 			return ResponseEntity.status(200).body(hasBillingKey);
 
 		} catch (Exception e) {
-//			e.printStackTrace();
+			e.printStackTrace();
 			return ResponseEntity.status(500).body(e.getMessage());
 		}
-	}
-
-	// 구독 정보 갱신
-	private void updateSubscription(String memNo, String orderName, int status) {
-		int result = service.updateSubscription(memNo, orderName, status);
 	}
 
 	// 환불 잔액 조회
@@ -121,14 +114,10 @@ public class PaymentController {
 			int result = service.downgradeSubscription(memNo, newGrade);
 
 			if (result > 0) {
-				String orderName = service.getOrderName(newGrade);
-				// 구독 정보 수정
-//        		int updateResult = service.downgradeMembership(memNo, orderName);
 				return ResponseEntity.status(200).body("downgrade complete");
 			}
 			return ResponseEntity.status(200).body("downgrade failed");
 		} catch (Exception e) {
-//			System.out.println("@@오류 발생@@");
 			e.printStackTrace();
 			return ResponseEntity.status(500).body(e.getMessage());
 		}
@@ -140,13 +129,10 @@ public class PaymentController {
 		JSONObject requestData = parseRequestData(jsonBody);
 		String customerKey = (String) requestData.get("customerKey");
 		String billingKey = service.getBillingKey(customerKey);
-//        System.out.println("customerKey : " + customerKey);
-//        System.out.println("billingKey : " + billingKey);
 
 		// API를 호출하여 빌링 결제
 		JSONObject response = sendRequest(requestData, API_SECRET_KEY,
 				"https://api.tosspayments.com/v1/billing/" + billingKey);
-//        System.out.println("결제 응답 JSON: " + response.toJSONString());
 
         // 결제 상태 초기화
         int status = 0;
@@ -186,7 +172,6 @@ public class PaymentController {
                 }
 			}
 		}
-
 		return ResponseEntity.status(response.containsKey("error") ? 400 : 200).body(response);
 	}
 
@@ -203,7 +188,9 @@ public class PaymentController {
 			// 빌링키를 DB에 저장 후 결과 반환
 			int result = service.insertBillingKey(response);
 			if (result > 0) { // 빌링키 저장 성공시
-				billingKeyMap.put((String) requestData.get("customerKey"), (String) response.get("billingKey"));
+				billingKeyMap.put(
+					(String) requestData.get("customerKey"), 
+					(String) response.get("billingKey"));
 			}
 		}
 
