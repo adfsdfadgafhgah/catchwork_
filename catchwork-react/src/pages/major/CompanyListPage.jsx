@@ -14,12 +14,16 @@ const CompanyListPage = () => {
   const [filteredCompanies, setFilteredCompanies] = useState([]);
   const [isSearchMode, setIsSearchMode] = useState(false);
 
-  // 최초 마운트 시 정보 fetch
+  // searchTerm 또는 loginMember가 바뀔 때마다 API 재호출
   useEffect(() => {
-    if (!loginMember || !loginMember.memNo) {
-      setLoginMember();
-    }
-  }, []);
+    if (!loginMember || !loginMember.memNo) return; // loginMember 준비 안 된 경우 무시
+
+    const delayDebounce = setTimeout(() => {
+      getCorpList(); // 서버에 요청
+    }, 300);
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchTerm, loginMember]);
 
   // loginMember가 실제로 업데이트 되었을 때만 기업 리스트 불러오기
   useEffect(() => {
@@ -62,26 +66,14 @@ const CompanyListPage = () => {
     }
   };
 
-  // 검색어 바뀔 때마다 요청 보내기
+  // searchTerm이 변경될 때마다 기업 리스트 다시 요청
   useEffect(() => {
-    console.log(" useEffect 실행", loginMember, searchTerm);
+    const delayDebounce = setTimeout(() => {
+      getCorpList();
+    }, 300); // 입력 후 300ms 지연 (디바운싱)
 
-    if (searchTerm.trim() === "") {
-      setIsSearchMode(false);
-      setFilteredCompanies([]);
-    } else {
-      const lowerSearchTerm = searchTerm.toLowerCase();
-
-      const result = companyList.filter(
-        (company) =>
-          company.corpName?.toLowerCase().includes(lowerSearchTerm) ||
-          company.corpType?.toLowerCase().includes(lowerSearchTerm) ||
-          company.corpAddr?.toLowerCase().includes(lowerSearchTerm)
-      );
-      setFilteredCompanies(result);
-      setIsSearchMode(true);
-    }
-  }, [searchTerm, companyList]);
+    return () => clearTimeout(delayDebounce);
+  }, [searchTerm]);
 
   return (
     <>
