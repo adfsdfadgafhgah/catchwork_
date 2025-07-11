@@ -17,7 +17,7 @@ import com.example.demo.common.util.Utility;
 import com.example.demo.member.board.model.mapper.BoardMapper;
 
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(value = "myBatisTransactionManager", rollbackFor = Exception.class)
 public class ImageUploadServiceImpl implements ImageUploadService {
 	
 	// 파일을 업로드할 디렉터리 경로
@@ -87,6 +87,7 @@ public class ImageUploadServiceImpl implements ImageUploadService {
     String saveFilename = Utility.fileRename(orgFilename); // 이미지 저장명
     String fileFullPath = Paths.get(uploadPath, saveFilename).toString(); // 디스크에 저장할 파일의 전체 경로
 
+    System.out.println("orgFilename: " + orgFilename);
     System.out.println("saveFilename: " + saveFilename);
     System.out.println("fileFullPath: " + fileFullPath);
 
@@ -114,7 +115,7 @@ public class ImageUploadServiceImpl implements ImageUploadService {
       System.out.println("saveFilename: " + saveFilename);
 
       result = mapper.uploadBoardThumbnail(map);
-      System.out.println("result: " + result);
+      System.out.println("수정 결과 result: " + result);
     } catch (Exception e) {
       e.printStackTrace();
       throw new RuntimeException("썸네일 이미지 업로드 실패");

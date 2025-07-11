@@ -39,20 +39,6 @@ export default function WriteBoardPage() {
     setIsFormValid(title.trim() !== "" && contentMarkdown.trim() !== "");
   }, [title]);
 
-  // 썸네일 업로드 핸들러
-  const handleThumbnailUpload = async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const resp = await axiosApi.post("/board/thumbnail", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-    } catch (err) {
-      alert("썸네일 업로드 실패");
-    }
-  };
-
   // 글 등록 버튼 클릭 시
   const handleSubmit = async () => {
     if (!loginMember?.memNo) {

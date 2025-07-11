@@ -204,13 +204,16 @@
       WHERE MEM_NO = #{memNo}
     )
 		<if test="query != null and query != ''">
-			AND LOWER(ci.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%'
-      OR LOWER(ci.CORP_TYPE) LIKE '%' || LOWER(#{query}) || '%'
-      OR LOWER(ci.CORP_ADDR) LIKE '%' || LOWER(#{query}) || '%'
-      OR LOWER(ci.CORP_BM) LIKE '%' || LOWER(#{query}) || '%'
-      OR LOWER(ci.CORP_DETAIL) LIKE '%' || LOWER(#{query}) || '%'
-      OR LOWER(ci.CORP_BENEFIT) LIKE '%' || LOWER(#{query}) || '%'
-      OR LOWER(ci.CORP_BENEFIT_DETAIL) LIKE '%' || LOWER(#{query}) || '%'
+			AND 
+      (
+        LOWER(ci.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%'
+        OR LOWER(ci.CORP_TYPE) LIKE '%' || LOWER(#{query}) || '%'
+        OR LOWER(ci.CORP_ADDR) LIKE '%' || LOWER(#{query}) || '%'
+        OR LOWER(ci.CORP_BM) LIKE '%' || LOWER(#{query}) || '%'
+        OR LOWER(ci.CORP_DETAIL) LIKE '%' || LOWER(#{query}) || '%'
+        OR LOWER(ci.CORP_BENEFIT) LIKE '%' || LOWER(#{query}) || '%'
+        OR LOWER(ci.CORP_BENEFIT_DETAIL) LIKE '%' || LOWER(#{query}) || '%'
+      )
 		</if>
 		
 		ORDER BY ci.CORP_NAME ASC
