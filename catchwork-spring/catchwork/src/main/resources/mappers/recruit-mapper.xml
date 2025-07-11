@@ -143,26 +143,26 @@
 	    CI.CORP_NAME,
 	    CI.CORP_TYPE,
 	    CI.CORP_LOGO,
-		CI.CORP_BENEFIT,
-		CI.CORP_BENEFIT_DETAIL,
+		  CI.CORP_BENEFIT,
+		  CI.CORP_BENEFIT_DETAIL,
 		
-		-- 기업회원 정보
-		M.MEM_NICKNAME AS memNickname,
-		CM.CORP_MEM_ROLE_CHECK AS corpMemRoleCheck,
+	  	-- 기업회원 정보
+		  M.MEM_NICKNAME AS memNickname,
+		  CM.CORP_MEM_ROLE_CHECK AS corpMemRoleCheck,
 	    
 	    -- 좋아요 수
 	    (SELECT COUNT(*) FROM FAV_RECRUIT F WHERE F.RECRUIT_NO = R.RECRUIT_NO) AS likeCount,
 	    
 	    -- 로그인 유저의 좋아요 여부
 	    (SELECT COUNT(*)
-	     FROM FAV_RECRUIT F
-	     WHERE F.RECRUIT_NO = R.RECRUIT_NO
-	       AND F.MEM_NO = #{memNo}) AS likedByCurrentUser
+	    FROM FAV_RECRUIT F
+	    WHERE F.RECRUIT_NO = R.RECRUIT_NO
+	    AND F.MEM_NO = #{memNo}) AS likedByCurrentUser
 	
-	FROM RECRUIT R
-	JOIN CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
-	JOIN CORP_INFO CI ON CM.CORP_NO = CI.CORP_NO
-	JOIN MEMBER M ON R.MEM_NO = M.MEM_NO
+			FROM RECRUIT R
+			JOIN CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
+			JOIN CORP_INFO CI ON CM.CORP_NO = CI.CORP_NO
+			JOIN MEMBER M ON R.MEM_NO = M.MEM_NO
 	
 	<where>
 	  <choose>
@@ -186,13 +186,13 @@
 	  </choose>
 	  
 	  <if test="corpNo != null">
-  AND EXISTS (
-    SELECT 1
-    FROM CORP_MEM CM2
-    WHERE CM2.MEM_NO = R.MEM_NO
+  		AND EXISTS (
+    	SELECT 1
+   		FROM CORP_MEM CM2
+   		WHERE CM2.MEM_NO = R.MEM_NO
       AND CM2.CORP_NO = #{corpNo}
-  )
-</if>
+ 			)
+		</if>
 
 	  <if test="writer == 'me' and memNo != null">
 	    AND R.MEM_NO = #{memNo}
@@ -200,7 +200,7 @@
 	
 	  <if test="query != null and query != ''">
 	    AND (
-	        R.RECRUIT_TITLE LIKE CONCAT(CONCAT('%', #{query}), '%')
+	      R.RECRUIT_TITLE LIKE CONCAT(CONCAT('%', #{query}), '%')
 		    OR R.RECRUIT_JOB_NAME LIKE CONCAT(CONCAT('%', #{query}), '%')
 		    OR R.RECRUIT_JOB_DETAIL LIKE CONCAT(CONCAT('%', #{query}), '%')
 		    OR R.RECRUIT_JOB_AREA LIKE CONCAT(CONCAT('%', #{query}), '%')

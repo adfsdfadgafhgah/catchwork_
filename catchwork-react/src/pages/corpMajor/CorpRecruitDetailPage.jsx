@@ -134,6 +134,29 @@ export default function CorpRecruitDetailPage() {
     }
   };
 
+  // 좋아요 핸들러
+  const handleLike = async () => {
+    if (!loginMember?.memNo) {
+      alert("로그인이 필요합니다.");
+      navigate("/login");
+      return;
+    }
+    if (likeLoading) return;
+    setLikeLoading(true);
+    try {
+      await axiosApi.post(`/corpRecruit/like/${recruitNo}`, {
+        memNo: loginMember.memNo,
+      });
+      setLiked(!liked);
+      setLikeCount(liked ? likeCount - 1 : likeCount + 1);
+    } catch (err) {
+      console.error("❌ 좋아요 처리 실패:", err);
+      alert("좋아요 처리에 실패했습니다.");
+    } finally {
+      setLikeLoading(false);
+    }
+  };
+
   if (!recruit) return <div>로딩 중...</div>;
 
   return (
@@ -167,7 +190,7 @@ export default function CorpRecruitDetailPage() {
               &nbsp;&nbsp;
             </span>
 
-            <span>
+            <span onClick={handleLike} style={{ cursor: "pointer" }}>
               <i
                 className={`fa-heart ${liked ? "fa-solid" : "fa-regular"}`}
                 style={{ color: liked ? "var(--main-color)" : "gray" }}
