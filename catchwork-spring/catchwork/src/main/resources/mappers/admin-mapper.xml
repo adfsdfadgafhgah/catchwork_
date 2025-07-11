@@ -1,0 +1,10 @@
+<!-- src/main/resources/mappers/AdminMapper.xml -->
+<mapper namespace="com.example.demo.admin.model.mapper.AdminMapper">
+
+    <select id="findByAdminId" >
+        SELECT *
+        FROM ADMIN
+        WHERE ADMIN_ID = #{adminId}
+    </select>
+
+</mapper>

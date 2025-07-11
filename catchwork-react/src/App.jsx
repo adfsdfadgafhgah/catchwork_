@@ -102,6 +102,10 @@ import CorpCVListPage from "./pages/corpMajor/CorpCVListPage";
 // 신고하기
 import ReportModalPage from "./pages/support/ReportModalPage";
 
+// 관리자
+import AdminPage from "./pages/admin/AdminPage";
+import AdminMainPage from "./pages/admin/AdminMainPage";
+
 //test
 import AuthTest from "./pages/member/AuthTest";
 
@@ -272,7 +276,7 @@ const router = createBrowserRouter([
       { path: "corpcvlist", element: <CorpCVListPage /> },
 
       // 기업 마이 페이지
-   {
+      {
         path: "/corpmypage",
         element: (
           <ProtectedRoute allowedType={1}>
@@ -288,6 +292,13 @@ const router = createBrowserRouter([
           { path: "withdraw", element: <CorpWithdrawPage /> },
         ],
       },
+    ],
+  },
+  {
+    path: "/admin",
+    element: <AdminPage />,
+    children: [
+      { index: true, element: <AdminMainPage /> }
     ],
   },
 ]);
