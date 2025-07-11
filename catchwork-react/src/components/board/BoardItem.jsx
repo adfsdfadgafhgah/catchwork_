@@ -3,49 +3,30 @@ import { axiosApi } from "../../api/axiosAPI";
 import iconImg from "../../assets/icon.png";
 import BoardCss from "./BoardItem.module.css";
 import { formatTimeAgo } from "./../common/formatTimeAgo";
-import useLoginMember from "../../stores/loginMember";
 import { useEffect, useState } from "react";
 import defaultImg from "../../assets/icon.png";
+// import useLoginMember from "../../stores/loginMember";
 
-export default function BoardItem({ board, onLikeToggle }) {
+// 💡 props로 board와 memNo를 직접 받습니다.
+export default function BoardItem({ board, memNo }) {
   const profileImgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
   const boardImgUrl = import.meta.env.VITE_FILE_BOARD_IMG_URL;
 
-  const { loginMember, setLoginMember } = useLoginMember();
+  // 💡 likeCount와 liked 상태를 props에서 직접 초기화합니다.
   const [likeCount, setLikeCount] = useState(board.likeCount);
-  const [liked, setLiked] = useState(false);
+  const [liked, setLiked] = useState(
+    board.likedByCurrentUser === true || board.likedByCurrentUser === 1
+  );
 
-  useEffect(() => {
-    if (!loginMember?.memNo) {
-      const fetchLoginMember = async () => {
-        await setLoginMember();
-      };
-      fetchLoginMember();
-    }
-  }, []);
-
-  // props와 loginMember가 모두 준비되었을 때 상태 동기화
-  useEffect(() => {
-    console.log("💡 board.likedByCurrentUser =", board.likedByCurrentUser);
-    console.log("💡 loginMember =", loginMember);
-
-    setLikeCount(board.likeCount);
-
-    // loginMember가 있을 때만 liked 상태 설정
-    if (loginMember?.memNo) {
-      setLiked(
-        board.likedByCurrentUser === true || board.likedByCurrentUser === 1
-      );
-    } else {
-      setLiked(false);
-    }
-  }, [board.likeCount, board.likedByCurrentUser, loginMember?.memNo]);
+  // 💡 기존의 모든 useEffect 로직은 필요 없습니다.
+  //    부모 컴포넌트(BoardListPage)가 이미 완벽한 데이터를 넘겨주고 있기 때문입니다.
 
   const toggleLike = async (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (!loginMember?.memNo) {
+    // 💡 memNo prop을 사용하여 로그인 여부를 확인합니다.
+    if (!memNo) {
       alert("로그인 후 이용해 주세요.");
       return;
     }
@@ -53,10 +34,8 @@ export default function BoardItem({ board, onLikeToggle }) {
     try {
       const resp = await axiosApi.post("/board/like", {
         boardNo: board.boardNo,
-        memNo: loginMember.memNo,
+        memNo: memNo, // 💡 memNo prop 사용
       });
-
-      // console.log("좋아요 응답:", resp.data);
 
       if (resp.data.result === "liked") {
         setLiked(true);
@@ -64,11 +43,6 @@ export default function BoardItem({ board, onLikeToggle }) {
       } else if (resp.data.result === "unliked") {
         setLiked(false);
         setLikeCount((prev) => prev - 1);
-      }
-
-      // 부모 컴포넌트에 변경사항 알림
-      if (onLikeToggle) {
-        onLikeToggle();
       }
     } catch (err) {
       console.error("좋아요 처리 실패:", err);
@@ -139,10 +113,3 @@ export default function BoardItem({ board, onLikeToggle }) {
     </Link>
   );
 }
-
-// // board.memProfilePath가 undefined일 경우 대비!
-// <img
-//   src={board.memProfilePath || "/default-profile.png"}
-//   alt="프로필 이미지"
-//   className={BoardCss.profileImg}
-// />

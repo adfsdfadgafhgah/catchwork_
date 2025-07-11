@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 import styles from "../corpMajor/CorpRecruitDetailPage.module.css";
-import useLoginMember from "../../stores/loginMember";
 import SectionHeader from "../../components/common/SectionHeader";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
@@ -13,27 +12,26 @@ import defaultImg from "../../assets/icon.png";
 
 export default function MemberRecruitDetailPage() {
   const logoImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
+  const { memNo } = useOutletContext();
   const { recruitNo } = useParams();
   const navigate = useNavigate();
   const [recruit, setRecruit] = useState(null);
-  const { loginMember, setLoginMember } = useLoginMember();
   const [liked, setLiked] = useState(false); // 좋아요 기능
   const [likeCount, setLikeCount] = useState(0); // 좋아요 기능
   const [likeLoading, setLikeLoading] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
 
-  // loginMember 가져오기
-  useEffect(() => {
-    if (!loginMember?.memNo) {
-      const fetchLoginMember = async () => {
-        await setLoginMember(); // loginMember를 zustand에 갱신
-      };
-      fetchLoginMember();
-    }
-  }, []);
+  // 신고하기 관련 (기존과 동일)
+  const [reportTargetNo, setReportTargetNo] = useState(null);
+  const [reportTargetType, setReportTargetType] = useState(null);
+  const [reportTargetNickname, setReportTargetNickname] = useState(null);
 
   // 공고 상세 조회 + 조회수 증가
   useEffect(() => {
+    if (memNo === undefined) {
+      return;
+    }
+
     const key = `viewed_recruit_${recruitNo}`;
     const now = new Date();
     const today = now.toDateString();
@@ -42,14 +40,17 @@ export default function MemberRecruitDetailPage() {
     const fetchDetail = async () => {
       try {
         const resp = await axiosApi.get(`/memberRecruit/detail/${recruitNo}`, {
-          params: { memNo: loginMember?.memNo },
+          params: { memNo: memNo },
         });
         const data = resp.data;
         setRecruit(data);
         setLiked(data.likedByCurrentUser);
         setLikeCount(data.likeCount);
       } catch (err) {
-        console.error("❌ 상세 조회 실패:", err);
+        console.error("상세 조회 실패:", err);
+        // 게시글이 없거나 접근 권한이 없을 경우 목록으로 이동
+        alert("채용공고를 불러오지 못했습니다.");
+        navigate("/memberRecruit"); // 또는 적절한 목록 페이지 경로
       }
     };
 
@@ -59,24 +60,24 @@ export default function MemberRecruitDetailPage() {
         if (!lastViewed || new Date(lastViewed).toDateString() !== today) {
           localStorage.setItem(key, now.toISOString());
           await axiosApi.get(`/memberRecruit/recruitReadCount/${recruitNo}`);
-          console.log("📈 조회수 증가 후 상세 다시 조회");
+          console.log("조회수 증가 후 상세 다시 조회");
         } else {
-          console.log("✅ 오늘 이미 조회함");
+          console.log("오늘 이미 조회함");
         }
 
         // 항상 상세 재조회
         await fetchDetail();
       } catch (err) {
-        console.error("❌ 전체 로직 실패:", err);
+        console.error("전체 로직 실패:", err);
       }
     };
 
     increaseThenFetch();
-  }, [recruitNo, loginMember?.memNo]);
+  }, [recruitNo, memNo, navigate]);
 
   // 좋아요 토글 함수 추가
   const toggleLike = async () => {
-    if (!loginMember) {
+    if (!memNo) {
       alert("로그인 후 이용 가능합니다.");
       return;
     }
@@ -87,7 +88,7 @@ export default function MemberRecruitDetailPage() {
     try {
       const resp = await axiosApi.post("/memberRecruit/like", {
         recruitNo: recruit.recruitNo,
-        memNo: loginMember.memNo,
+        memNo: memNo,
       });
 
       if (resp.data.result === "liked") {
@@ -106,33 +107,42 @@ export default function MemberRecruitDetailPage() {
 
   // 이력서 제출 페이지로 이동 핸들러
   const handleSubmit = async () => {
-    if (!loginMember?.memNo) {
-    alert("로그인 후 이용 가능합니다.");
-    return;
-  }
-
-  try {
-    const resp = await axiosApi.post("/memberRecruit/submitCVCheck", {
-      recruitNo: recruit.recruitNo,
-      memNo: loginMember.memNo,
-    });
-
-    if (resp.data.exists) {
-      // 이미 제출한 이력서가 있는 경우
-      alert("이미 제출한 이력서가 있습니다.");
+    if (!memNo) {
+      alert("로그인 후 이용 가능합니다.");
       return;
     }
 
-    // 없으면 이력서 작성 페이지로 이동
-    navigate(`/cv?recruitNo=${recruitNo}`);
-  } catch (err) {
-    console.error("이력서 제출 여부 확인 실패:", err);
-    alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
-  }
-};
+    try {
+      const resp = await axiosApi.post("/memberRecruit/submitCVCheck", {
+        recruitNo: recruit.recruitNo,
+        memNo: memNo,
+      });
+
+      if (resp.data.exists) {
+        // 이미 제출한 이력서가 있는 경우
+        alert("이미 제출한 이력서가 있습니다.");
+        return;
+      }
+
+      // 없으면 이력서 작성 페이지로 이동
+      navigate(`/cv?recruitNo=${recruitNo}`);
+    } catch (err) {
+      console.error("이력서 제출 여부 확인 실패:", err);
+      alert("서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    }
+  };
 
   // 신고 모달창 핸들러
   const handleReport = () => {
+    // memNo prop을 사용하여 로그인 여부를 확인합니다.
+    if (!memNo) {
+      alert("로그인 후 이용해주세요.");
+      navigate("/signin"); // 로그인 페이지로 이동
+      return;
+    }
+    setReportTargetNo(recruit.recruitNo.toString());
+    setReportTargetType("RECRUIT");
+    setReportTargetNickname(`[${recruit.corpName}] ${recruit.recruitTitle}`);
     setShowReportModal(true);
   };
 
@@ -167,7 +177,7 @@ export default function MemberRecruitDetailPage() {
             {recruit.recruitStartDate} ~ {recruit.recruitEndDate}
           </p>
 
-          {/* ✅ 조회수/좋아요 표시 라인 추가 */}
+          {/* 조회수/좋아요 표시 라인 추가 */}
           <div className={styles.engagementInfo}>
             <span>
               <i className="fa-regular fa-eye" /> {recruit.recruitReadCount}{" "}
@@ -243,12 +253,12 @@ export default function MemberRecruitDetailPage() {
 
       {/* 모달 조건부 렌더링 */}
       {/* 채용공고 신고하기 */}
-      {showReportModal && recruit && loginMember && (
+      {showReportModal && recruit && (
         <ReportModalPage
           targetNo={recruit.recruitNo}
           targetType="RECRUIT"
           targetNickname={`[${recruit.corpName}] ${recruit.recruitTitle}`}
-          memberNo={loginMember.memNo}
+          memberNo={memNo}
           onClose={handleCloseReport}
         />
       )}
@@ -258,8 +268,9 @@ export default function MemberRecruitDetailPage() {
       </div>
 
       <FloatButton
-        buttons={FLOAT_BUTTON_PRESETS.submitAndReport(handleSubmit, () =>
-          handleReport(`[${recruit.corpName}] ${recruit.recruitTitle}`)
+        buttons={FLOAT_BUTTON_PRESETS.submitAndReport(
+          handleSubmit,
+          handleReport
         )}
       />
     </div>

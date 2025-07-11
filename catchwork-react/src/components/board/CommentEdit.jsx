@@ -4,11 +4,17 @@ import { formatTimeAgo } from "../common/formatTimeAgo";
 import { axiosApi } from "../../api/axiosAPI";
 import defaultImg from "../../assets/icon.png";
 
-export default function CommentEdit({ comment, onCancel, onSuccess }) {
+export default function CommentEdit({ comment, onCancel, onSuccess, memNo }) {
   const [content, setContent] = useState(comment.commentContent);
   const profileImg = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
 
   const handleSubmit = async () => {
+    if (!memNo || memNo !== comment.memNo) {
+      alert("수정 권한이 없습니다.");
+      onCancel(); // 권한이 없으면 수정 모드를 취소합니다.
+      return;
+    }
+
     if (!content.trim()) {
       alert("내용을 입력해주세요.");
       return;
@@ -17,10 +23,13 @@ export default function CommentEdit({ comment, onCancel, onSuccess }) {
     try {
       await axiosApi.put(`/comment/edit/${comment.commentNo}`, {
         commentContent: content,
+        memNo: memNo,
       });
       onSuccess(); // 성공 시 부모에 알림
+      alert("댓글이 수정되었습니다."); // 수정 완료 알림 추가
     } catch (err) {
       console.error("댓글 수정 실패:", err);
+      alert("댓글 수정에 실패하였습니다.");
     }
   };
 

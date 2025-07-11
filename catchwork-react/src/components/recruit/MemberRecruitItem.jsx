@@ -1,41 +1,21 @@
 import { Link } from "react-router-dom";
 import styles from "./RecruitItem.module.css";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
-import useLoginMember from "../../stores/loginMember";
 import defaultImg from "../../assets/icon.png";
 
-export default function MemberRecruitItem({ recruit, onLikeToggle }) {
+export default function MemberRecruitItem({ recruit, onLikeToggle, memNo }) {
   const logoImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
-  const { loginMember, setLoginMember } = useLoginMember();
   const [likeCount, setLikeCount] = useState(recruit.likeCount || 0);
-  const [liked, setLiked] = useState(false);
-
-  useEffect(() => {
-    if (!loginMember?.memNo) {
-      const fetchLoginMember = async () => {
-        await setLoginMember();
-      };
-      fetchLoginMember();
-    }
-  }, []);
-
-  useEffect(() => {
-    setLikeCount(recruit.likeCount || 0);
-    if (loginMember?.memNo) {
-      setLiked(
-        recruit.likedByCurrentUser === true || recruit.likedByCurrentUser === 1
-      );
-    } else {
-      setLiked(false);
-    }
-  }, [recruit.likeCount, recruit.likedByCurrentUser, loginMember?.memNo]);
+  const [liked, setLiked] = useState(
+    recruit.likedByCurrentUser === true || recruit.likedByCurrentUser === 1
+  );
 
   const toggleLike = async (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    if (!loginMember?.memNo) {
+    if (!memNo) {
       alert("로그인 후 이용해 주세요.");
       return;
     }
@@ -43,7 +23,7 @@ export default function MemberRecruitItem({ recruit, onLikeToggle }) {
     try {
       const resp = await axiosApi.post("/memberRecruit/like", {
         recruitNo: recruit.recruitNo,
-        memNo: loginMember.memNo,
+        memNo: memNo,
       });
 
       if (resp.data.result === "liked") {
