@@ -13,8 +13,6 @@ export default function CorpRecruitListPage() {
   const [recruits, setRecruits] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredRecruits, setFilteredRecruits] = useState([]);
-  const [isSearchMode, setIsSearchMode] = useState(false);
   const { loginMember, setLoginMember } = useLoginMember();
   const navigate = useNavigate();
   // 정렬, 상태, 작성자 필터
@@ -187,18 +185,16 @@ export default function CorpRecruitListPage() {
       </div>
 
       {/* 검색 결과 유무에 따른 조건 렌더링 */}
-      {isSearchMode ? (
-        filteredRecruits.length > 0 ? (
-          <RecruitList recruits={filteredRecruits} loginMember={loginMember} />
-        ) : (
-          <p className={styles.noResult}>검색 결과가 없습니다.</p>
-        )
-      ) : (
+      {isLoading ? (
+        <h1>Loading...</h1>
+      ) : recruits.length > 0 ? (
         <RecruitList
           key={loginMember?.memNo}
           recruits={recruits}
           loginMember={loginMember}
         />
+      ) : (
+        <p className={styles.noResult}>검색 결과가 없습니다.</p>
       )}
 
       {loginMember?.memType === 1 && corpMemRoleCheck === "Y" ? null : (
