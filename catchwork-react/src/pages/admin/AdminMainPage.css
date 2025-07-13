@@ -1,0 +1,15 @@
+.mainWrapper {
+  margin-top: 70px;
+  margin-left: 220px;
+  padding: 20px;
+  height: calc(100vh - 70px);
+  overflow-y: auto;
+}
+
+.mainTitle {
+  background-color: red;
+  color: blue;
+  font-size: 32px;
+  font-weight: 700;
+  padding: 10px;
+}
