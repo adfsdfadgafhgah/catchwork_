@@ -1,0 +1,32 @@
+.adminGrid {
+  display: grid;
+  grid-template-columns: 220px 1fr; /* nav, rest */
+  grid-template-rows: 70px 1fr;    /* header, main */
+  grid-template-areas:
+    "nav header"
+    "nav main";
+  height: 100vh;
+}
+
+/* 좌측 네비게이션 */
+.adminNav {
+  grid-area: nav;
+  background-color: var(--sub-color);
+  overflow-y: auto;
+}
+
+/* 헤더 */
+.adminHeader {
+  grid-area: header;
+  background-color: var(--white);
+  box-shadow: var(--box-shadow);
+  z-index: 999;
+}
+
+/* 메인 영역 */
+.adminMain {
+  grid-area: main;
+  padding: 20px;
+  background-color: var(--white);
+  overflow-y: auto;
+}
