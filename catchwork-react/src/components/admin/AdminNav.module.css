@@ -1,18 +1,24 @@
 .nav {
   width: 220px;
   height: 100%;
-  padding: 20px;
+  padding: 15px 20px;
+  background-color: var(--white);
+  border-right: 1px solid var(--stroke-color1);
 }
 
+.logoSection {
+  margin-bottom: 20px;
+}
+
+
 .logo {
-  font-size: 24px;
-  font-weight: 700;
-  margin-bottom: 40px;
+  width: 180px;
+  height: 40px;
 }
 
 .menu {
   list-style: none;
-  padding: 0;
+  padding-left: 10px;
   margin: 0;
 }
 
@@ -22,8 +28,8 @@
 
 .menu li a {
   text-decoration: none;
-  color: var(--text);
-  font-weight: 500;
+  color: var(--dark-gray);
+  font-size: 20px;
 }
 
 .menu li a:hover {
@@ -31,6 +37,5 @@
 }
 
 .active {
-  color: var(--main-color);
-  font-weight: 700;
+  color: var(--main-color) !important;
 }

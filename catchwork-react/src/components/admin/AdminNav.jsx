@@ -6,14 +6,14 @@ import logo from "../../assets/logo.png";
 const AdminNav = () => {
   return (
     <nav className={styles.nav}>
-      <div className={styles.logo}>
-          <Link to="/admin">
-            <img src={logo} height="50px" alt="logo" />
+      <div className={styles.logoSection}>
+          <Link to="/">
+            <img className={styles.logo} src={logo} alt="logo" />
           </Link>
       </div>
       <ul className={styles.menu}>
         <li>
-          <NavLink to="/admin" className={({ isActive }) => isActive ? styles.active : ""}>
+          <NavLink to="/admin" end className={({ isActive }) => isActive ? styles.active : ""}>
             메인
           </NavLink>
         </li>

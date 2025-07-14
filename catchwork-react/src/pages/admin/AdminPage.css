@@ -1,6 +1,6 @@
 .adminGrid {
   display: grid;
-  grid-template-columns: 220px 1fr; /* nav, rest */
+  grid-template-columns: 221px 1fr; /* nav, rest */
   grid-template-rows: 70px 1fr;    /* header, main */
   grid-template-areas:
     "nav header"
@@ -11,7 +11,6 @@
 /* 좌측 네비게이션 */
 .adminNav {
   grid-area: nav;
-  background-color: var(--sub-color);
   overflow-y: auto;
 }
 
@@ -19,7 +18,7 @@
 .adminHeader {
   grid-area: header;
   background-color: var(--white);
-  box-shadow: var(--box-shadow);
+  
   z-index: 999;
 }
 
