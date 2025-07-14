@@ -102,6 +102,14 @@ import CorpCVListPage from "./pages/corpMajor/CorpCVListPage";
 // 신고하기
 import ReportModalPage from "./pages/support/ReportModalPage";
 
+// 관리자
+import AdminPage from "./pages/admin/AdminPage";                    // 감싸는 놈
+import AdminMainPage from "./pages/admin/AdminMainPage";            // 메인 리스트
+import AdminSupportPage from "./pages/admin/AdminSupportPage";      // 문의 리스트
+import AdminReportPage from "./pages/admin/AdminReportPage";        // 신고 리스트
+import AdminBanPage from "./pages/admin/AdminBanPage";              // 정지 리스트
+import AdminRestorePage from "./pages/admin/AdminRestorePage";      // 복구 리스트
+
 //test
 import AuthTest from "./pages/member/AuthTest";
 
@@ -308,6 +316,49 @@ const router = createBrowserRouter([
       },
     ],
   },
+
+  /* 
+    ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+    ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+    ㅣ                                관리자                                        ㅣ
+    ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+    ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+  */
+  { // 상세 페이지 경로 미리 추가(주석)
+    path: "/admin",
+    element: <AdminPage />,
+    children: [
+      { index: true, element: <AdminMainPage /> },
+      {
+        path: "support",
+        children: [
+          { index: true, element: <AdminSupportPage /> },
+          // { path: ":id", element: <AdminSupportDetailPage /> },
+        ],
+      },
+      {
+        path: "report",
+        children: [
+          { index: true, element: <AdminReportPage /> },
+          // { path: ":id", element: <AdminReportDetailPage /> },
+        ],
+      },
+      {
+        path: "ban",
+        children: [
+          { index: true, element: <AdminBanPage /> },
+          // { path: ":id", element: <AdminBanDetailPage /> },
+        ],
+      },
+      {
+        path: "restore",
+        children: [
+          { index: true, element: <AdminRestorePage /> },
+          // { path: ":id", element: <AdminRestoreDetailPage /> },
+        ],
+      },
+    ],
+  }
 ]);
 
 export default router;
