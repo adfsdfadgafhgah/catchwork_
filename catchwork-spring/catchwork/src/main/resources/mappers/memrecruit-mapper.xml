@@ -168,9 +168,32 @@
     <if test="recruitType != null and recruitType != '' and recruitType != 'all'">
       AND R.RECRUIT_TYPE = #{recruitType}
     </if>
-  </where>
 
-  ORDER BY R.RECRUIT_NO DESC
+  </where>
+<!-- 정렬 -->
+	<choose>
+	  <when test="sort == 'latest'">
+	    ORDER BY R.RECRUIT_WRITE_DATE DESC
+	  </when>
+	  <when test="sort == 'oldest'">
+	    ORDER BY R.RECRUIT_WRITE_DATE ASC
+	  </when>
+	  <when test="sort == 'likes'">
+	    ORDER BY (SELECT COUNT(*) FROM FAV_RECRUIT F WHERE F.RECRUIT_NO = R.RECRUIT_NO) DESC
+	  </when>
+	  <when test="sort == 'views'">
+	    ORDER BY R.RECRUIT_READCOUNT DESC
+	  </when>
+  	  <when test="sort == 'main'">
+  	  <!-- 인기 공고 로직 어떻게하지 -->
+	  </when>
+	  <otherwise>
+	    ORDER BY R.RECRUIT_NO DESC
+	  </otherwise>
+	</choose>
+	<if test="limit != null">
+		FETCH FIRST #{limit} ROWS ONLY
+	</if>
 </select>
 	
 	<!-- endDate 지나면 자동으로 마감처리 -->

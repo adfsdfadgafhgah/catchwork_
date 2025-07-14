@@ -41,6 +41,11 @@ axiosApi.interceptors.response.use(
     const originalRequest = error.config;
     // console.log("originalRequest", originalRequest);
 
+    // 로그인 화면에서는 재요청 안 보내게 하기 -> 서버에서 에러코드 세분화해서 필요 없을 듯
+    // if (originalRequest.url?.includes("/signin")) {
+    //   return Promise.reject(error);
+    // }
+
     // 재발급 실패
     if (originalRequest.url === "/reissue") {
       console.log("refresh failed");
@@ -98,3 +103,9 @@ axiosApi.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// http only 쿠키로 하면 못 읽음
+// const getRefreshTokenFromCookie = () => {
+//   const match = document.cookie.match(new RegExp("(^| )refreshToken=([^;]+)"));
+//   return match ? match[2] : null;
+// };

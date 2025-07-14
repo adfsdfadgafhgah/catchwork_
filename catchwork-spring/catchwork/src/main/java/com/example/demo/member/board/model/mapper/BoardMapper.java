@@ -19,7 +19,7 @@ public interface BoardMapper {
 	 * @param query
 	 * @return
 	 */
-	List<Board> selectBoardList(@Param("sort") String sort, @Param("query") String query, @Param("memNo") String memNo);
+	List<Board> selectBoardList(@Param("sort") String sort, @Param("query") String query, @Param("memNo") String memNo,@Param("limit") Integer limit);
 
 	// -----------------------------------------------------------------
 

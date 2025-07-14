@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 
 
 @Slf4j
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("company")
 public class CompanyInfoController {
@@ -40,18 +39,22 @@ public class CompanyInfoController {
     @GetMapping("")
     public ResponseEntity<?> selectCompanyList(
     		@RequestParam(value = "query", required = false, defaultValue = "") String query,
-    		@RequestParam(value = "memNo", required = false) String memNo) {
+    		@RequestParam(value = "memNo", required = false) String memNo,
+            // 메인페이지용용
+            @RequestParam(value = "sort", required = false, defaultValue = "likes") String sort,
+            @RequestParam(value = "limit", required = false) Integer limit
+            ) {
     	
-    	 log.info("기업 목록 조회 요청. 검색어: {}, memNo: {}", query, memNo);
+    	//  log.info("기업 목록 조회 요청. 검색어: {}, memNo: {}", query, memNo);
     	 
         try {  
-        	List<CompanyInfo> companyList = companyInfoService.selectCompanyList(query.trim(), memNo);
+        	List<CompanyInfo> companyList = companyInfoService.selectCompanyList(query.trim(), memNo,sort,limit);
         
             if (companyList.isEmpty()) {
-                log.info("조회된 기업 정보가 없습니다.");
+                // log.info("조회된 기업 정보가 없습니다.");
                 return ResponseEntity.status(HttpStatus.NO_CONTENT).body("기업 정보 없음");
             }
-            log.info("기업 목록 조회 성공. 총 {}개", companyList.size());
+            // log.info("기업 목록 조회 성공. 총 {}개", companyList.size());
             return ResponseEntity.ok(companyList); // 200 OK
         } catch (Exception e) {
         	log.error("기업 목록 조회 중 오류 발생: {}", e.getMessage(), e);

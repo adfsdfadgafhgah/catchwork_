@@ -22,7 +22,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("memberRecruit")
 @RequiredArgsConstructor
@@ -70,8 +69,11 @@ private final MemRecruitService memRecruitService;
 		    @RequestParam(name = "corpType", required = false) String corpType,
 		    @RequestParam(name = "recruitType", required = false) String recruitType,
 		    @RequestParam(name = "query", required = false) String query,
-		    @RequestParam(name = "memNo", required = false) String memNo
-	    
+		    @RequestParam(name = "memNo", required = false) String memNo,
+			// 메인페이지용용
+			@RequestParam(value = "sort", required = false, defaultValue = "latest") String sort,
+			@RequestParam(value = "limit", required = false) Integer limit,
+			@RequestParam(value = "type", required = false) String type
 	) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("recruitJobName", recruitJobName);
@@ -82,6 +84,11 @@ private final MemRecruitService memRecruitService;
 	    paramMap.put("recruitType", recruitType);
 	    paramMap.put("query", query);
 	    paramMap.put("memNo", memNo);
+		// 메인페이지용용
+	    paramMap.put("sort", sort);
+	    paramMap.put("limit", limit);
+		paramMap.put("type", type);
+
 
 	    List<Recruit> recruitList = memRecruitService.getRecruitList(paramMap);
 	    return ResponseEntity.ok(recruitList);

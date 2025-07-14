@@ -8,8 +8,7 @@ import "./Header.css";
 import HeaderNav from "./HeaderNav";
 
 const Header = () => {
-  const { memType,memName, memNickname, signin, signOut } = useAuthStore(); // zustand 상태    memName 명하 추가
-  console.log("Header memName:", memName);
+  const { memType, memNickname, signin, signOut } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState(""); // 검색어
   const [result, setResult] = useState(""); // 상태 메시지
 
@@ -44,7 +43,7 @@ const Header = () => {
   // 개인 회원 임시 로그인
   // 개인 회원 임시 로그인
   const handleSignin = async () => {
-    const { success, message } = await signin("Test_286", "Test");
+    const { message } = await signin("Test_286", "Test");
     setResult(message);
   };
   // 기업 회원 임시 로그인
@@ -53,7 +52,7 @@ const Header = () => {
   // 기업 회원 임시 로그인
   // 기업 회원 임시 로그인
   const handleCorpSignin = async () => {
-    const { success, message } = await signin("Test_107", "Test");
+    const { message } = await signin("Test_107", "Test");
     setResult(message);
   };
 
@@ -99,11 +98,12 @@ const Header = () => {
               <>
                 {memType === 1 ? (
                   <button onClick={() => navigate("/corpmypage")}>
-                    {memName} 님 {/* memNickname -> memName으로 바꿈  명하 */ }
+                    {memNickname} 님
+                    {/* memNickname -> memName으로 바꿈  명하 */}
                   </button>
                 ) : (
                   <button onClick={() => navigate("/mypage")}>
-                    {memNickname} 님{" "}
+                    {memNickname} 님
                     {/* 기업회원은 닉네임 null인데 어떻게 할까요? */}
                   </button>
                 )}

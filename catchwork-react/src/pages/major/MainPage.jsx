@@ -1,88 +1,113 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import BoardItem from "../../components/board/BoardItem";
+import CompanyItem from "../../components/company/CompanyItem";
+import MemberRecruitItem from "../../components/recruit/MemberRecruitItem";
+import { axiosApi } from "../../api/axiosAPI";
+import { useAuthStore } from "../../stores/authStore";
 import "./MainPage.css";
 
 const MainPage = () => {
+  const { memType } = useAuthStore(); // memType: 0(개인), 1(기업)
+  const isCorp = memType === 1;
+
+  const [customRecruits, setCustomRecruits] = useState([]);
+  const [popularRecruits, setPopularRecruits] = useState([]);
+  const [latestRecruits, setLatestRecruits] = useState([]);
+  const [popularCompanies, setPopularCompanies] = useState([]);
+  const [popularBoards, setPopularBoards] = useState([]);
+
+  useEffect(() => {
+    // 맞춤형 공고 (API에 맞게 수정 필요)
+    // axiosApi
+    //   .get("/memberRecruit/list", { params: { type: "custom", limit: 3 } })
+    //   .then((res) => setCustomRecruits(res.data));
+    // 인기 공고
+    axiosApi
+      .get("/memberRecruit/list", { params: { sort: "likes", limit: 6 } })
+      .then((res) => setPopularRecruits(res.data));
+    // 최신 공고
+    axiosApi
+      .get("/memberRecruit/list", { params: { sort: "latest", limit: 6 } })
+      .then((res) => setLatestRecruits(res.data));
+    // 인기 기업
+    axiosApi
+      .get("/company", { params: { sort: "main", limit: 6 } })
+      .then((res) => setPopularCompanies(res.data));
+    // 인기 게시글
+    axiosApi
+      .get("/board/boardList", { params: { sort: "main", limit: 6 } })
+      .then((res) => setPopularBoards(res.data));
+  }, []);
+
   return (
     <div className="main-page">
-      <section className="section">
-        <h2 className="section-title">맞춤형 채용공고</h2>
-        <div className="card-grid">
-          {[...Array(4)].map((_, i) => (
-            <div className="post-card" key={i}>
-              <div className="card-header">잡담</div>
-              <h3 className="card-title">오늘 날씨 미쳤다.. 진짜 너무 덥네</h3>
-              <div className="card-footer">
-                <span>좋아요 23</span>
-                <span>댓글 4</span>
-              </div>
+      {/* 개인 */}
+      {!isCorp && (
+        <>
+          {/* 공고 */}
+          {memType === 0 && (
+            <>
+              <section>
+                <h2>맞춤형 채용공고</h2>
+                <div className="card-grid two-cols">
+                  {customRecruits.map((item) => (
+                    <MemberRecruitItem key={item.id} recruit={item} />
+                  ))}
+                </div>
+              </section>
+              <br></br>
+              <hr></hr>
+            </>
+          )}
+          <section>
+            <h2>인기 채용공고</h2>
+            <div className="card-grid two-cols">
+              {popularRecruits.map((item) => (
+                <MemberRecruitItem key={item.recruitNo} recruit={item} />
+              ))}
             </div>
-          ))}
-        </div>
-      </section>
+          </section>
+          <br></br>
+          <hr></hr>
+          <section>
+            <h2>최신 채용공고</h2>
+            <div className="card-grid two-cols">
+              {latestRecruits.map((item) => (
+                <MemberRecruitItem key={item.recruitNo} recruit={item} />
+              ))}
+            </div>
+          </section>
+          <br></br>
+          <hr></hr>
+          {/* 기업 */}
+          <section>
+            <h2>인기 기업정보</h2>
+            <div className="card-grid two-cols">
+              {popularCompanies.map((item) => (
+                <CompanyItem key={item.corpNo} company={item} />
+              ))}
+            </div>
+          </section>
+          <br></br>
+          <hr></hr>
+          {/* 게시글 */}
+          <section>
+            <h2>인기 게시글</h2>
+            <div className="card-grid two-cols">
+              {popularBoards.map((item) => (
+                <BoardItem key={item.boardNo} board={item} />
+              ))}
+            </div>
+          </section>
+        </>
+      )}
 
-      <section className="section">
-        <h2 className="section-title">인기 채용공고</h2>
-        <div className="card-grid">
-          {[...Array(4)].map((_, i) => (
-            <div className="post-card" key={i}>
-              <div className="card-header">자소서</div>
-              <h3 className="card-title">자소서 이 문장 어때요?</h3>
-              <div className="card-footer">
-                <span>좋아요 18</span>
-                <span>댓글 2</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="section">
-        <h2 className="section-title">최신 채용공고</h2>
-        <div className="card-grid">
-          {[...Array(4)].map((_, i) => (
-            <div className="post-card" key={i}>
-              <div className="card-header">면접</div>
-              <h3 className="card-title">오늘 면접 후기 남깁니다</h3>
-              <div className="card-footer">
-                <span>좋아요 9</span>
-                <span>댓글 1</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="section">
-        <h2 className="section-title">인기 기업정보</h2>
-        <div className="card-grid">
-          {[...Array(4)].map((_, i) => (
-            <div className="post-card" key={i}>
-              <div className="card-header">면접</div>
-              <h3 className="card-title">오늘 면접 후기 남깁니다</h3>
-              <div className="card-footer">
-                <span>좋아요 9</span>
-                <span>댓글 1</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="section">
-        <h2 className="section-title">인기 후기글</h2>
-        <div className="card-grid">
-          {[...Array(4)].map((_, i) => (
-            <div className="post-card" key={i}>
-              <div className="card-header">면접</div>
-              <h3 className="card-title">오늘 면접 후기 남깁니다</h3>
-              <div className="card-footer">
-                <span>좋아요 9</span>
-                <span>댓글 1</span>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
+      {/* 기업 */}
+      {isCorp && (
+        <>
+          <div></div>
+        </>
+      )}
     </div>
   );
 };
