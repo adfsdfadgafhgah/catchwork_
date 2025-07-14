@@ -18,7 +18,7 @@ public interface CompanyInfoMapper {
 	     * @param memNo 회원 번호 (관심기업 여부 체크용)
 	     * @return 기업 정보 리스트
 	     */
-	    List<CompanyInfo> selectCompanyListWithRecruitInfo(@Param("query") String query, @Param("memNo") String memNo);
+	    List<CompanyInfo> selectCompanyListWithRecruitInfo(@Param("query") String query, @Param("memNo") String memNo, @Param("sort") String sort, @Param("limit") Integer limit);
 	    
 	    /**
 		 * 특정 기업 조회->detail로 가기 위한

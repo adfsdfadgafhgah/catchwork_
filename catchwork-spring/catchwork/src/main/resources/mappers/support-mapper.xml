@@ -90,7 +90,7 @@
          MEM_NO,
          SUPPORT_DATE
     	) VALUES (
-         SUPPORT_SEQ.NEXTVAL,
+         SEQ_SUPPORT_NO.NEXTVAL,
          #{supportTitle},
          #{supportContent},
          #{supportCategoryCode},

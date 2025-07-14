@@ -19,7 +19,7 @@ public interface BoardMapper {
 	 * @param query
 	 * @return
 	 */
-	List<Board> selectBoardList(@Param("sort") String sort, @Param("query") String query, @Param("memNo") String memNo);
+	List<Board> selectBoardList(@Param("sort") String sort, @Param("query") String query, @Param("memNo") String memNo,@Param("limit") Integer limit);
 
 	// -----------------------------------------------------------------
 
@@ -115,5 +115,13 @@ public interface BoardMapper {
 	 * @param boardNo
 	 */
 	void readCount(int boardNo);
+
+	/**
+	 * 게시글 썸네일 삭제
+	 * 
+	 * @author JAEHO
+	 * @param boardNo
+	 */
+	void deleteBoardThumbnail(int boardNo);
 
 }

@@ -13,9 +13,18 @@ import useMembershipData from "../../hooks/useMembershipData";
 const clientKey = import.meta.env.VITE_CLIENT_KEY;
 
 function MembershipPage() {
-  const { loginMember, setLoginMember } = useOutletContext(); // outlet context에서 loginMember 받아오기
+  const { memNo } = useOutletContext();
   const navigate = useNavigate();
   const [payment, setPayment] = useState(null); // TossPayments 인스턴스
+  const [loginMember, setLoginMember] = useState(null);
+
+  // 로그인 유저 정보 조회
+  const getLoginMember = async () => {
+    const resp = await axiosApi.post("/member/getLoginMember", { memNo });
+    if (resp.status === 200) {
+      setLoginMember(resp.data);
+    }
+  };
 
   // useMembershipData에서 모든 데이터와 함수들을 받아옴
   const {
@@ -28,11 +37,11 @@ function MembershipPage() {
 
   // 로그인 유저 정보 갱신
   useEffect(() => {
-    setLoginMember();
+    getLoginMember();
     if (loginMember?.memNo) {
       getSubscription(loginMember.memNo);
     }
-  }, [loginMember?.memGrade, subscription?.memGrade]);
+  }, [loginMember?.memGrade, subscription?.memGrade, memNo]);
 
   // TossPayments 위젯 초기화
   useEffect(() => {
@@ -49,7 +58,7 @@ function MembershipPage() {
       }
     }
     fetchPayment();
-  }, [clientKey, loginMember.memNo]);
+  }, [clientKey, loginMember?.memNo]);
 
   // 모달 관련 로직
   const {

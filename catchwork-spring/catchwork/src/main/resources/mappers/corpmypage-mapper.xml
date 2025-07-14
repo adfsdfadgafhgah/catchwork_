@@ -5,25 +5,46 @@
 
 <mapper namespace="com.example.demo.corp.myPage.model.mapper.CorpMyPageMapper">
 
- <!-- 회원 정보 수정 -->
-  <update id="updateMemberInfo">
+
+  <!-- 기업 마이페이지 정보 조회 -->
+  <select id="getCorpMyPage">
+  	SELECT 
+    	M.MEM_NO,
+    	M.MEM_ID,
+    	M.MEM_EMAIL,
+    	M.MEM_NAME,           
+    	M.MEM_TEL,
+    	CM.CORP_MEM_DEPT,
+    	CM.CORP_NAME
+    FROM 
+    	MEMBER M
+    	JOIN CORPORATE_MEMBER CM ON M.MEM_NO = CM.MEM_NO
+  	WHERE 
+    M.MEM_NO = #{memNo}
+  </select>
+
+  <!-- 회원 정보 수정 -->
+  <update id="updateMemberCoreInfo">
     UPDATE MEMBER
-    SET MEM_NICKNAME = #{memNickname}, 
-    MEM_NAME = #{memName}, 
-    MEM_TEL = #{memTel}, 
-    MEM_EMAIL = #{memEmail}, 
-    MEM_BIRTHDAY = #{memBirthday}, 
-    MEM_GENDER = #{memGender}, 
-    MEM_ADDR = #{memAddr}, 
-    MEM_SMS_FL = #{memSmsFl}
+    SET 
+      MEM_NAME = #{memName}, 
+      MEM_TEL = #{memTel}, 
+      MEM_EMAIL = #{memEmail}
     WHERE MEM_NO = #{memNo}
   </update>
+  
+  <!-- 부서명 수정 -->
+  <update id="updateCorporateMemberDepartment">
+  	UPDATE CORPORATE_MEMBER
+  	SET CORP_MEM_DEPT = #{corpDepartment}
+  	WHERE MEM_NO = #{memNo}
+  </update>
 
-  <!-- 회원 조회 -->
+  <!-- 회원 비밀번호 조회 -->
   <select id="selectMemberPassword">
-	SELECT MEM_PW
-	FROM MEMBER 
-	WHERE MEM_NO = #{memNo}
+    SELECT MEM_PW
+    FROM MEMBER 
+    WHERE MEM_NO = #{memNo}
   </select>
 
   <!-- 비밀번호 변경 -->
@@ -37,7 +58,7 @@
   <update id="withdraw">
     UPDATE MEMBER
     SET MEM_STATUS = 1,
-    MEM_STATUS_DATE = SYSDATE
+        MEM_STATUS_DATE = SYSDATE
     WHERE MEM_NO = #{memNo}
   </update>
 

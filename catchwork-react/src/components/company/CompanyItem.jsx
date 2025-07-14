@@ -11,7 +11,7 @@ const CompanyItem = ({ company: companyInfo }) => {
   const [company, setCompany] = useState(companyInfo);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log("기업 정보 확인:", company);
+  // console.log("기업 정보 확인:", company);
 
   const handleToggleBookmark = async (e) => {
     e.preventDefault(); // 링크 이동 방지

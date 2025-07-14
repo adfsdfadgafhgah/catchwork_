@@ -3,7 +3,7 @@ import { axiosApi } from "../../api/axiosAPI";
 import MemberRecruitList from "../../components/recruit/MemberRecruitList";
 import styles from "../corpMajor/CorpRecruitListPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import useLoginMember from "../../stores/loginMember";
 import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 
@@ -11,9 +11,9 @@ export default function MemberRecruitListPage() {
   const [recruits, setRecruits] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const { loginMember, setLoginMember } = useLoginMember();
   const navigate = useNavigate();
   const [confirmedSearchTerm, setConfirmedSearchTerm] = useState(""); // 실제 검색에 쓸 값
+  const { memNo } = useOutletContext();
   // 직무, 근무지역, 경력, 학력, 기업형태, 고용형태 필터
   const [recruitJobNameFilter, setRecruitJobNameFilter] = useState("all"); // 직무
   const [recruitJobAreaFilter, setRecruitJobAreaFilter] = useState("all"); // 근무지역
@@ -24,15 +24,11 @@ export default function MemberRecruitListPage() {
 
   // 로그인 정보 세팅
   useEffect(() => {
-    // 로그인 정보가 없다면 비동기적으로 불러옵니다.
-    // 이 부분이 완료될 때까지 기다려야 합니다.
-    if (!loginMember?.memNo) {
-      setLoginMember();
-      // 로그인 정보가 없으면 API 요청을 보내지 않고 여기서 함수 종료
+    if (memNo === undefined) {
       return;
     }
 
-    // 로그인 정보가 성공적으로 불러와진 후에만 API 요청을 보냅니다.
+    // 로그인 정보가 성공적으로 불러와진 후에만 API 요청을 보냄
     const fetchRecruitList = async () => {
       try {
         setIsLoading(true);
@@ -45,7 +41,7 @@ export default function MemberRecruitListPage() {
             corpType: corpTypeFilter,
             recruitType: recruitTypeFilter,
             query: confirmedSearchTerm,
-            memNo: loginMember.memNo,
+            memNo: memNo,
           },
         });
 
@@ -69,7 +65,7 @@ export default function MemberRecruitListPage() {
     corpTypeFilter,
     recruitTypeFilter,
     confirmedSearchTerm,
-    loginMember?.memNo,
+    memNo,
   ]);
 
   // 엔터 입력 시 confirmedSearchTerm 확정
@@ -222,9 +218,9 @@ export default function MemberRecruitListPage() {
         <h1>Loading...</h1>
       ) : recruits.length > 0 ? (
         <MemberRecruitList
-          key={loginMember?.memNo}
+          // key={memNo} // 필요 시 주석 풀기
           recruits={recruits}
-          loginMember={loginMember}
+          memNo={memNo}
         />
       ) : (
         <p className={styles.noResult}>검색 결과가 없습니다.</p>

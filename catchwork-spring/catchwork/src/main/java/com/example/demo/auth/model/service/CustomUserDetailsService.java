@@ -3,6 +3,8 @@ package com.example.demo.auth.model.service;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -33,7 +35,13 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (memberEntity == null) {
             throw new UsernameNotFoundException("사용자를 찾을 수 없습니다: " + username);
         }
-        
+        if (memberEntity.getMemStatus() == 1) {
+        	// 탈퇴
+            throw new DisabledException("비활성화된 계정입니다.");
+        } else if (memberEntity.getMemStatus() == 2) {
+        	// 정지
+            throw new LockedException("비활성화된 계정입니다.");
+        }
 
         
         return new CustomUserDetails(memberEntity);

@@ -3,25 +3,20 @@ import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import SectionHeader from "../../components/common/SectionHeader";
 import "./WriteBoardPage.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import ThumbnailUploader from "../../components/common/ThumbnailUploader";
 import { axiosApi } from "../../api/axiosAPI";
-import useLoginMember from "../../stores/loginMember";
+// import useLoginMember from "../../stores/loginMember";
 
 export default function WriteBoardPage() {
   const baseUrl = import.meta.env.VITE_BASE_URL;
   const editorRef = useRef();
   const [title, setTitle] = useState("");
   const navigate = useNavigate();
-  const { loginMember, setLoginMember } = useLoginMember();
+  // const { loginMember, setLoginMember } = useLoginMember();
+  const { memNo } = useOutletContext();
   const [isFormValid, setIsFormValid] = useState(false);
   const thumbnailUploaderRef = useRef();
-
-  useEffect(() => {
-    if (!loginMember?.memNo) {
-      setLoginMember(); // 로그인 상태 미존재 시 초기화
-    }
-  }, []);
 
   // Toast UI Editor 로딩 후 placeholder 깨짐 보정
   useEffect(() => {
@@ -39,23 +34,9 @@ export default function WriteBoardPage() {
     setIsFormValid(title.trim() !== "" && contentMarkdown.trim() !== "");
   }, [title]);
 
-  // 썸네일 업로드 핸들러
-  const handleThumbnailUpload = async (file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      const resp = await axiosApi.post("/board/thumbnail", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-    } catch (err) {
-      alert("썸네일 업로드 실패");
-    }
-  };
-
   // 글 등록 버튼 클릭 시
   const handleSubmit = async () => {
-    if (!loginMember?.memNo) {
+    if (!memNo) {
       alert("로그인이 필요합니다.");
       return;
     }
@@ -64,7 +45,7 @@ export default function WriteBoardPage() {
     const formData = new FormData();
     formData.append("boardTitle", title);
     formData.append("boardContent", contentMarkdown);
-    formData.append("memNo", loginMember.memNo);
+    formData.append("memNo", memNo);
     if (thumbnailUploaderRef.current.getImageFile()) {
       formData.append(
         "thumbnailFile",

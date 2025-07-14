@@ -45,10 +45,20 @@
 	    <when test="sort == 'views'">
 	      ORDER BY B.BOARD_READ_COUNT DESC
 	    </when>
+	    <when test="sort == 'main'">
+	      ORDER BY (
+	        B.BOARD_READ_COUNT +
+	        2 * (SELECT COUNT(*) FROM FAV_BOARD F WHERE F.BOARD_NO = B.BOARD_NO) +
+	        2 * (SELECT COUNT(*) FROM "COMMENT" C WHERE C.BOARD_NO = B.BOARD_NO AND C.COMMENT_STATUS = 0)
+	      ) DESC
+		</when>
 	    <otherwise>
 	      ORDER BY B.BOARD_WRITE_DATE DESC
 	    </otherwise>
 	  </choose>
+	    <if test="limit != null">
+			FETCH FIRST #{limit} ROWS ONLY
+	    </if>
 	</select>
   
 	  <!-- 게시글 상세 -->
@@ -114,8 +124,7 @@
 	  SET 
 	    BOARD_TITLE = #{boardTitle},
 	    BOARD_CONTENT = #{boardContent},
-	    BOARD_EDIT_DATE = SYSDATE,
-	    BOARD_THUMBNAIL_URL = #{boardThumbnailUrl}
+	    BOARD_EDIT_DATE = SYSDATE
 	  WHERE BOARD_NO = #{boardNo}
 	</update>
 
@@ -150,6 +159,13 @@
 	<update id="uploadBoardThumbnail">
 		UPDATE BOARD
 		SET BOARD_THUMBNAIL_URL = #{thumbnailUrl}
+		WHERE BOARD_NO = #{boardNo}
+	</update>
+
+	<!-- 게시글 썸네일 삭제 -->
+	<update id="deleteBoardThumbnail">
+		UPDATE BOARD
+		SET BOARD_THUMBNAIL_URL = NULL
 		WHERE BOARD_NO = #{boardNo}
 	</update>
 

@@ -14,7 +14,7 @@ public interface BoardService {
 	 * @param trim
 	 * @return
 	 */
-	List<Board> selectBoardList(String sort, String query, String memNo);
+	List<Board> selectBoardList(String sort, String query, String memNo, Integer limit);
 
 	/** 게시글 상세 서비스
 	 * @author BAEBAE
@@ -29,7 +29,7 @@ public interface BoardService {
 	 * @param board
 	 * @return
 	 */
-	int editBoard(Board board);
+	int editBoard(Board board, MultipartFile thumbnailFile, Boolean isDelete);
 
 	/** 게시글 좋아요
 	 * @author BAEBAE

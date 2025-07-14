@@ -18,7 +18,7 @@ import CeoSignUpPage from "./pages/member/CeoSignUpPage";
 
 // Id,PW 찾기
 import FindIdPage from "./pages/member/FindIdPage";
-import FindPWPage from "./pages/member/FindPWPage";
+import FindPwPage from "./pages/member/FindPwPage";
 
 // 네비게이션
 import MemberRecruitPage from "./pages/major/MemberRecruitPage";
@@ -102,6 +102,14 @@ import CorpCVListPage from "./pages/corpMajor/CorpCVListPage";
 // 신고하기
 import ReportModalPage from "./pages/support/ReportModalPage";
 
+// 관리자
+import AdminPage from "./pages/admin/AdminPage";                    // 감싸는 놈
+import AdminMainPage from "./pages/admin/AdminMainPage";            // 메인 리스트
+import AdminSupportPage from "./pages/admin/AdminSupportPage";      // 문의 리스트
+import AdminReportPage from "./pages/admin/AdminReportPage";        // 신고 리스트
+import AdminBanPage from "./pages/admin/AdminBanPage";              // 정지 리스트
+import AdminRestorePage from "./pages/admin/AdminRestorePage";      // 복구 리스트
+
 //test
 import AuthTest from "./pages/member/AuthTest";
 
@@ -137,7 +145,7 @@ const router = createBrowserRouter([
 
       // Id,PW 찾기
       { path: "findid", element: <FindIdPage /> },
-      { path: "findpw", element: <FindPWPage /> },
+      { path: "findpw", element: <FindPwPage /> },
 
       // 로그인 필요, 개인회원 전용 예시
       {
@@ -181,8 +189,22 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <BoardListPage /> },
           { path: ":boardNo", element: <BoardDetailPage /> },
-          { path: "write", element: <WriteBoardPage /> },
-          { path: "edit/:boardNo", element: <EditBoardPage /> },
+          {
+            path: "write",
+            element: (
+              <ProtectedRoute allowedType={0}>
+                <WriteBoardPage />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: "edit/:boardNo",
+            element: (
+              <ProtectedRoute allowedType={0}>
+                <EditBoardPage />
+              </ProtectedRoute>
+            ),
+          },
         ],
       },
 
@@ -248,7 +270,11 @@ const router = createBrowserRouter([
       // 기업 공고
       {
         path: "corprecruit",
-        element: <CorpRecruitPage />,
+        element: (
+          <ProtectedRoute allowedType={1}>
+            <CorpRecruitPage />
+          </ProtectedRoute>
+        ),
         children: [
           { index: true, element: <CorpRecruitListPage /> },
           { path: "write", element: <WriteRecruitPage /> },
@@ -272,7 +298,7 @@ const router = createBrowserRouter([
       { path: "corpcvlist", element: <CorpCVListPage /> },
 
       // 기업 마이 페이지
-   {
+      {
         path: "/corpmypage",
         element: (
           <ProtectedRoute allowedType={1}>
@@ -290,6 +316,49 @@ const router = createBrowserRouter([
       },
     ],
   },
+
+  /* 
+    ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+    ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+    ㅣ                                관리자                                        ㅣ
+    ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+    ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
+  */
+  { // 상세 페이지 경로 미리 추가(주석)
+    path: "/admin",
+    element: <AdminPage />,
+    children: [
+      { index: true, element: <AdminMainPage /> },
+      {
+        path: "support",
+        children: [
+          { index: true, element: <AdminSupportPage /> },
+          // { path: ":id", element: <AdminSupportDetailPage /> },
+        ],
+      },
+      {
+        path: "report",
+        children: [
+          { index: true, element: <AdminReportPage /> },
+          // { path: ":id", element: <AdminReportDetailPage /> },
+        ],
+      },
+      {
+        path: "ban",
+        children: [
+          { index: true, element: <AdminBanPage /> },
+          // { path: ":id", element: <AdminBanDetailPage /> },
+        ],
+      },
+      {
+        path: "restore",
+        children: [
+          { index: true, element: <AdminRestorePage /> },
+          // { path: ":id", element: <AdminRestoreDetailPage /> },
+        ],
+      },
+    ],
+  }
 ]);
 
 export default router;

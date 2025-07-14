@@ -5,22 +5,23 @@ import { axiosApi } from "../../api/axiosAPI";
 import BoardList from "../../components/board/BoardList";
 import BoardCss from "./BoardListPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
-import useLoginMember from "../../stores/loginMember";
 import ScrollToTopButton from "../../components/common/ScrollToTopButton";
+// import useLoginMember from "../../stores/loginMember";
 
 export default function BoardListPage() {
   const [boards, setBoards] = useState([]); // 게시글 목록 조회
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태
   const [searchTerm, setSearchTerm] = useState(""); // 검색
   const [confirmedSearchTerm, setConfirmedSearchTerm] = useState(""); // 검색 실행에 사용
-  const { loginMember, setLoginMember } = useLoginMember(); // 로그인 사용자
+  // const { loginMember, setLoginMember } = useLoginMember(); // 로그인 사용자
   const [sortOrder, setSortOrder] = useState("latest"); // 정렬 기준 상태
   const navigate = useNavigate();
+  const { memNo } = useOutletContext();
 
-  // API 호출 로직을 useEffect 안으로 이동
+  // API 호출 로직
   const getBoardList = async () => {
     try {
       setIsLoading(true);
@@ -28,7 +29,7 @@ export default function BoardListPage() {
         params: {
           sort: sortOrder,
           query: confirmedSearchTerm,
-          memNo: loginMember?.memNo,
+          memNo: memNo, // props로 받은 memNo 사용
         },
       });
 
@@ -42,16 +43,12 @@ export default function BoardListPage() {
     }
   };
 
+  // memNo가 변경될 때마다 API 호출
   useEffect(() => {
-    // 로그인 정보가 없으면 비동기적으로 불러옵니다.
-    if (!loginMember?.memNo) {
-      setLoginMember();
-      return; // 로그인 정보가 없으면 API 요청을 보내지 않고 함수를 종료
-    }
-
-    // 로그인 정보가 준비된 후에만 API 호출
+    // memNo가 초기 로딩될 때 (null 또는 값) API 호출이 한 번만 일어나도록 함
+    // 이렇게 하면 로그인 상태가 변경될 때마다 정확히 새로고침됩니다.
     getBoardList();
-  }, [sortOrder, confirmedSearchTerm, loginMember?.memNo]); //searchTerm 추가
+  }, [sortOrder, confirmedSearchTerm, memNo]);
 
   const handleSearchKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -66,7 +63,8 @@ export default function BoardListPage() {
 
   // 글 작성하기 버튼
   const handleWrite = () => {
-    if (!loginMember.memNo) {
+    console.log("memNo : ", memNo);
+    if (!memNo) {
       alert("로그인 후 이용해주세요");
       navigate("/signin");
       return;
@@ -114,7 +112,7 @@ export default function BoardListPage() {
       {isLoading ? (
         <h1>Loading...</h1>
       ) : boards.length > 0 ? (
-        <BoardList boards={boards} loginMember={loginMember} />
+        <BoardList boards={boards} memNo={memNo} />
       ) : (
         <p className={BoardCss.noResult}>검색 결과가 없습니다.</p>
       )}

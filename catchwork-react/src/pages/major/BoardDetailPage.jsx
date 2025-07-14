@@ -1,7 +1,4 @@
-//----------------------------------------------------------------------
-// 추후 서버 구현 후 쓸 코드
-
-import { useParams } from "react-router-dom";
+import { useOutletContext, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
 import BoardCss from "./BoardDetailPage.module.css";
@@ -11,42 +8,38 @@ import CommentList from "../../components/board/CommentList";
 import { formatTimeAgo } from "../../components/common/formatTimeAgo";
 import ReportModalPage from "../support/ReportModalPage";
 import { Viewer } from "@toast-ui/react-editor"; // Toast UI Viewer 추가
-import useLoginMember from "../../stores/loginMember";
 import defaultImg from "../../assets/icon.png";
 
 export default function BoardDetailPage() {
   const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
+  const { memNo } = useOutletContext();
   const { boardNo } = useParams();
   const [board, setBoard] = useState(null);
-  const { loginMember, setLoginMember } = useLoginMember();
   const [liked, setLiked] = useState(false); // 좋아요 기능
   const [likeCount, setLikeCount] = useState(0); // 좋아요 기능
   const navigate = useNavigate(); // ← 페이지 이동을 위해 추가
   const [showReportModal, setShowReportModal] = useState(false);
   const [likeLoading, setLikeLoading] = useState(false);
-  const isWriter = loginMember?.memNo && loginMember.memNo === board?.memNo;
+
+  // 작성자
+  const isWriter = memNo && memNo === board?.memNo;
 
   // 신고하기 관련
   const [reportTargetNo, setReportTargetNo] = useState(null);
   const [reportTargetType, setReportTargetType] = useState(null);
   const [reportTargetNickname, setReportTargetNickname] = useState(null);
 
-  // loginMember 가져오기
-  useEffect(() => {
-    if (!loginMember?.memNo) {
-      const fetchLoginMember = async () => {
-        await setLoginMember(); // loginMember를 zustand에 갱신
-      };
-      fetchLoginMember();
-    }
-  }, []);
-
   // 게시글 상세 조회 API
   useEffect(() => {
+    // memNo가 undefined (아직 로딩 중)일 경우 대기
+    if (memNo === undefined) {
+      return;
+    }
+
     const fetchDetail = async () => {
       try {
         const resp = await axiosApi.get(`/board/detail/${boardNo}`, {
-          params: { memNo: loginMember?.memNo },
+          params: { memNo: memNo },
         });
         const data = resp.data;
         setBoard(data);
@@ -54,11 +47,14 @@ export default function BoardDetailPage() {
         setLikeCount(data.likeCount);
       } catch (err) {
         console.error("상세 조회 실패:", err);
+        // 게시글이 없거나 접근 권한이 없을 경우 목록으로 이동
+        alert("게시글을 불러오지 못했습니다.");
+        navigate("/board");
       }
     };
 
     fetchDetail();
-  }, [boardNo, loginMember?.memNo]);
+  }, [boardNo, memNo, navigate]);
 
   // 게시글 조회수 증가
   useEffect(() => {
@@ -83,16 +79,27 @@ export default function BoardDetailPage() {
 
   // 수정 페이지로!
   const handleEdit = () => {
+    // 수정은 로그인된 사용자만 가능하며, 자신의 게시글만 가능
+    if (!memNo || memNo !== board?.memNo) {
+      alert("수정 권한이 없습니다.");
+      return;
+    }
     navigate(`/board/edit/${boardNo}`);
   };
 
   // 게시글 삭제 함수
   const handleDelete = async () => {
+    // 삭제는 로그인된 사용자만 가능하며, 자신의 게시글만 가능
+    if (!memNo || memNo !== board?.memNo) {
+      alert("삭제 권한이 없습니다.");
+      return;
+    }
+
     if (!window.confirm("정말 삭제하시겠습니까?")) return;
 
     try {
       const resp = await axiosApi.delete(`/board/delete/${boardNo}`, {
-        data: { memNo: loginMember.memNo },
+        data: { memNo: memNo },
       });
 
       if (resp.status === 200) {
@@ -109,8 +116,9 @@ export default function BoardDetailPage() {
 
   // 좋아요 토글 함수 추가
   const toggleLike = async () => {
-    if (!loginMember) {
+    if (!memNo) {
       alert("로그인 후 이용 가능합니다.");
+      navigate(`/signin`);
       return;
     }
 
@@ -120,7 +128,7 @@ export default function BoardDetailPage() {
     try {
       const resp = await axiosApi.post("/board/like", {
         boardNo: board.boardNo,
-        memNo: loginMember.memNo,
+        memNo: memNo,
       });
 
       if (resp.data.result === "liked") {
@@ -140,8 +148,8 @@ export default function BoardDetailPage() {
   // 신고하기
   const handleReportClick = (targetNo, targetType, targetNickname) => {
     console.log("신고 대상 이름:", targetNickname);
-    
-    if (!loginMember || !loginMember.memNo) {
+
+    if (!memNo) {
       alert("로그인 후 이용해주세요.");
       navigate("/signin");
       return;
@@ -159,13 +167,6 @@ export default function BoardDetailPage() {
   };
 
   if (!board) return <h2>Loading...</h2>;
-
-  // 오류 날 시 찍을 콘솔
-  // console.log("🧪 board:", board);
-  // console.log("🧪 loginMember:", loginMember);
-  // console.log("🧪 board.member.memNo:", board?.memNo);
-  // console.log("🧪 loginMember.memNo:", loginMember?.memNo);
-  // console.log("🧪 작성자 여부:", loginMember?.memNo === board?.memNo);
 
   return (
     <>
@@ -219,7 +220,7 @@ export default function BoardDetailPage() {
             {likeCount} &nbsp;&nbsp;
             {/* 신고하기 버튼 조건 렌더링 */}
             {!isWriter && (
-             <button
+              <button
                 className={BoardCss.actionBtn}
                 onClick={() =>
                   handleReportClick(
@@ -247,7 +248,7 @@ export default function BoardDetailPage() {
         </div>
       </div>
       {/* 댓글 컴포넌트 */}
-      <CommentList boardNo={board.boardNo} loginMember={loginMember} />
+      <CommentList boardNo={board.boardNo} memNo={memNo} />
 
       {/* 신고하기 모달 */}
       {showReportModal && reportTargetNo && (
@@ -255,11 +256,10 @@ export default function BoardDetailPage() {
           targetNo={reportTargetNo}
           targetType={reportTargetType}
           targetNickname={reportTargetNickname}
-          memberNo={loginMember.memNo}
+          memberNo={memNo}
           onClose={handleCloseReport}
         />
       )}
-
     </>
   );
 }

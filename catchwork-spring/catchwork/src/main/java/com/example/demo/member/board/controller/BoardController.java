@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 // @RequiredArgsConstructor
 public class BoardController {
 
-    // private final BoardS`ervice boardService;
+    // private final BoardService boardService;
     // private final ImageUploadService imageUploadService;
 
     @Autowired
@@ -52,10 +52,13 @@ public class BoardController {
     public ResponseEntity<?> selectBoardList(
             @RequestParam(name = "sort") String sort,
             @RequestParam(name = "query", required = false, defaultValue = "") String query,
-            @RequestParam(name = "memNo", required = false) String memNo) {
+            @RequestParam(name = "memNo", required = false) String memNo,
+            
+            @RequestParam(name = "limit", required = false) Integer limit
+) {
     	System.out.println();
         try {
-            List<Board> boards = boardService.selectBoardList(sort, query.trim(), memNo);
+            List<Board> boards = boardService.selectBoardList(sort, query.trim(), memNo, limit);
             return ResponseEntity.ok(boards);
         } catch (Exception e) {
             e.printStackTrace(); // 이게 콘솔에 뭐라고 찍히는지 확인해줘!
@@ -96,10 +99,20 @@ public class BoardController {
      */
     @PutMapping("edit/{boardNo}")
     public ResponseEntity<?> editBoard(@PathVariable("boardNo")int boardNo,
-    								   @RequestBody Board board) {
+                                       @RequestParam("boardTitle") String boardTitle,
+                                       @RequestParam("boardContent") String boardContent,
+                                       @RequestParam("memNo") String memNo,
+                                       @RequestParam(value = "thumbnailFile", required = false) MultipartFile thumbnailFile,
+                                       @RequestParam(value = "isDelete", required = false, defaultValue = "false") Boolean isDelete) {
+
+        Board board = new Board();
+        board.setBoardTitle(boardTitle);
+        board.setBoardContent(boardContent);
+        board.setMemNo(memNo);
+        board.setBoardNo(boardNo);
+
         try {
-            board.setBoardNo(boardNo); // 경로 변수로 넘어온 boardNo를 DTO에 주입
-            int result = boardService.editBoard(board);
+            int result = boardService.editBoard(board, thumbnailFile, isDelete);
             if (result > 0) {
                 return ResponseEntity.ok().body("게시글이 수정되었습니다.");
             } else {

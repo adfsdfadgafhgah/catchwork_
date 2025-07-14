@@ -36,6 +36,7 @@
 		CI.CORP_BENEFIT_DETAIL AS corpBenefitDetail,
 		
 		M.MEM_NICKNAME AS memNickname,
+		M.MEM_NAME AS memName,
 	
 	    NVL(LC.LIKE_COUNT, 0) AS likeCount,
 	
@@ -94,6 +95,7 @@
 			
 		-- 기업회원 정보
 		M.MEM_NICKNAME AS memNickname,
+		M.MEM_NAME AS memName,
 	    
 	    -- 좋아요 수
 	    (SELECT COUNT(*) FROM FAV_RECRUIT F WHERE F.RECRUIT_NO = R.RECRUIT_NO) AS likeCount,
@@ -138,6 +140,7 @@
 		    OR R.RECRUIT_HIRE_DETAIL LIKE CONCAT(CONCAT('%', #{query}), '%')
 		    OR R.RECRUIT_ETC LIKE CONCAT(CONCAT('%', #{query}), '%')
 		    OR M.MEM_NICKNAME LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR M.MEM_NAME LIKE CONCAT(CONCAT('%', #{query}), '%')
 		    OR CI.CORP_NAME LIKE CONCAT(CONCAT('%', #{query}), '%')
 		    OR CI.CORP_BENEFIT LIKE CONCAT(CONCAT('%', #{query}), '%')
 		    OR CI.CORP_BENEFIT_DETAIL LIKE CONCAT(CONCAT('%', #{query}), '%')
@@ -168,9 +171,32 @@
     <if test="recruitType != null and recruitType != '' and recruitType != 'all'">
       AND R.RECRUIT_TYPE = #{recruitType}
     </if>
-  </where>
 
-  ORDER BY R.RECRUIT_NO DESC
+  </where>
+<!-- 정렬 -->
+	<choose>
+	  <when test="sort == 'latest'">
+	    ORDER BY R.RECRUIT_WRITE_DATE DESC
+	  </when>
+	  <when test="sort == 'oldest'">
+	    ORDER BY R.RECRUIT_WRITE_DATE ASC
+	  </when>
+	  <when test="sort == 'likes'">
+	    ORDER BY (SELECT COUNT(*) FROM FAV_RECRUIT F WHERE F.RECRUIT_NO = R.RECRUIT_NO) DESC
+	  </when>
+	  <when test="sort == 'views'">
+	    ORDER BY R.RECRUIT_READCOUNT DESC
+	  </when>
+  	  <when test="sort == 'main'">
+  	  <!-- 인기 공고 로직 어떻게하지 -->
+	  </when>
+	  <otherwise>
+	    ORDER BY R.RECRUIT_NO DESC
+	  </otherwise>
+	</choose>
+	<if test="limit != null">
+		FETCH FIRST #{limit} ROWS ONLY
+	</if>
 </select>
 	
 	<!-- endDate 지나면 자동으로 마감처리 -->
