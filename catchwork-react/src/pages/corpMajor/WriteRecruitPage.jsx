@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import styles from "./WriteRecruitPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
 import { axiosApi } from "../../api/axiosAPI";
 // import useLoginMember from "../../stores/loginMember";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
-import { useAuthStore } from "../../stores/authStore";
+// import { useAuthStore } from "../../stores/authStore";
 import KakaoMapPreview from "../../components/common/KakaoMapPreview";
 import defaultImg from "../../assets/icon.png";
 
@@ -14,8 +14,10 @@ export default function WriteRecruitPage() {
   const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
   const navigate = useNavigate();
   // const { loginMember, setLoginMember } = useLoginMember();
-  const { memNo, memType, memNickname } = useAuthStore();
+  // const { memNo, memType, memNickname } = useAuthStore();
+  const { memNo, memType } = useOutletContext();
   const [corpInfo, setCorpInfo] = useState(null);
+  const [corpMemRoleCheck, setCorpMemRoleCheck] = useState("N"); // 'Y'면 대표이사
 
   const [formData, setFormData] = useState({
     recruitTitle: "",
@@ -38,12 +40,23 @@ export default function WriteRecruitPage() {
   });
 
   useEffect(() => {
+    if (memNo === undefined || memType === undefined) {
+      return;
+    }
+    if (!memNo || memType !== 1) {
+      alert("기업회원만 채용공고를 작성할 수 있습니다.");
+      navigate("/corpRecruit"); // 기업 채용공고 목록 페이지로 리다이렉트
+      return;
+    }
+
     if (memNo) {
       const fetchCorpInfo = async () => {
         try {
           const resp = await axiosApi.get(`/corpcompany/info/${memNo}`);
           const info = resp.data;
           setCorpInfo(info);
+          setCorpMemRoleCheck(info.corpMemRoleCheck || "N"); // corpMemRoleCheck도 함께 저장
+
           setFormData((prev) => ({
             ...prev,
             corpName: info.corpName,
@@ -58,7 +71,7 @@ export default function WriteRecruitPage() {
       };
       fetchCorpInfo();
     }
-  }, [memNo]);
+  }, [memNo, memType, navigate]);
 
   // 카카오맵 주소 핸들러
   const handleAddressSearch = () => {
@@ -86,8 +99,26 @@ export default function WriteRecruitPage() {
   const handleWrite = async (e) => {
     e.preventDefault();
 
-    if (!memNo) {
-      alert("로그인이 필요합니다.");
+    if (!memNo || memType !== 1) {
+      alert("기업회원만 채용공고를 작성할 수 있습니다.");
+      return;
+    }
+    if (corpMemRoleCheck === "Y") {
+      // 대표이사 계정은 공고 작성 불가능
+      alert("대표이사 계정은 공고 작성이 불가능합니다.");
+      return;
+    }
+
+    // 필수 입력 필드 유효성 검사
+    if (
+      !formData.recruitTitle.trim() ||
+      !formData.recruitJobName ||
+      !formData.recruitJobDetail.trim() ||
+      !formData.recruitStartDate ||
+      !formData.recruitEndDate ||
+      !formData.recruitJobArea.trim()
+    ) {
+      alert("필수 항목(*)을 모두 입력해주세요.");
       return;
     }
 
@@ -95,6 +126,7 @@ export default function WriteRecruitPage() {
       ...formData,
       recruitResultDate: formData.recruitResultDate || null,
       memNo: memNo, // 로그인한 사용자 번호 추가
+      corpNo: corpInfo.corpNo,
     };
 
     try {
@@ -113,6 +145,14 @@ export default function WriteRecruitPage() {
   const handleCancel = () => {
     navigate(`/corpRecruit`);
   };
+
+  if (
+    memNo === undefined ||
+    memType === undefined ||
+    (memType === 1 && corpInfo === null)
+  ) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <div className={styles.detailPageWrap}>

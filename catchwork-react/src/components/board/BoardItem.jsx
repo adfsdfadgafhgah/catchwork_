@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 import iconImg from "../../assets/icon.png";
 import BoardCss from "./BoardItem.module.css";
@@ -11,6 +11,7 @@ import defaultImg from "../../assets/icon.png";
 export default function BoardItem({ board, memNo }) {
   const profileImgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
   const boardImgUrl = import.meta.env.VITE_FILE_BOARD_IMG_URL;
+  const navigate = useNavigate();
 
   // 💡 likeCount와 liked 상태를 props에서 직접 초기화합니다.
   const [likeCount, setLikeCount] = useState(board.likeCount);
@@ -28,6 +29,7 @@ export default function BoardItem({ board, memNo }) {
     // 💡 memNo prop을 사용하여 로그인 여부를 확인합니다.
     if (!memNo) {
       alert("로그인 후 이용해 주세요.");
+      navigate(`/signin`);
       return;
     }
 

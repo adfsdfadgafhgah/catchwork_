@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styles from "./RecruitItem.module.css";
 import { useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
@@ -6,6 +6,7 @@ import defaultImg from "../../assets/icon.png";
 
 export default function MemberRecruitItem({ recruit, onLikeToggle, memNo }) {
   const logoImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
+  const navigate = useNavigate();
   const [likeCount, setLikeCount] = useState(recruit.likeCount || 0);
   const [liked, setLiked] = useState(
     recruit.likedByCurrentUser === true || recruit.likedByCurrentUser === 1
@@ -17,6 +18,7 @@ export default function MemberRecruitItem({ recruit, onLikeToggle, memNo }) {
 
     if (!memNo) {
       alert("로그인 후 이용해 주세요.");
+      navigate("/signin");
       return;
     }
 

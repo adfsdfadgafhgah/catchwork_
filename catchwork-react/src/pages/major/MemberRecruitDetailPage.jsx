@@ -79,6 +79,7 @@ export default function MemberRecruitDetailPage() {
   const toggleLike = async () => {
     if (!memNo) {
       alert("로그인 후 이용 가능합니다.");
+      navigate("/signin");
       return;
     }
 
@@ -171,7 +172,7 @@ export default function MemberRecruitDetailPage() {
           <span className={styles.corpType}>{recruit.corpType}</span>
           {/* 채용 제목 */}
           <h2 className={styles.recruitTitle}>
-            [{recruit.memNickname}] {recruit.recruitTitle}
+            [{recruit.memName}] {recruit.recruitTitle}
           </h2>
           <p className={styles.recruitDates}>
             {recruit.recruitStartDate} ~ {recruit.recruitEndDate}
