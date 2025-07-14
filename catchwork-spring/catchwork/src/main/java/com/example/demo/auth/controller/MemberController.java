@@ -242,7 +242,7 @@ public class MemberController {
 		
 	/** 로그인 회원의 정보 조회
 	 * @param memNo
-	 * @author 허재호
+	 * @author JAEHO
 	 */
 	@PostMapping("member/getLoginMember")
 	private ResponseEntity<Object> getLoginMember(@RequestBody Map<String, String> map) {
@@ -279,5 +279,60 @@ public class MemberController {
 	    }
 	}
 
-	
+	/** 아이디 찾기
+	 * @author JAEHO
+	 * @param map
+	 * @return
+	 */
+	@PostMapping("/member/findId")
+	public ResponseEntity<?> findId(
+	    @RequestParam("memName") String memName,
+	    @RequestParam("memEmail") String memEmail,
+	    @RequestParam("memType") int memType,
+	    @RequestParam(value = "corpRegNo", required = false) String corpRegNo
+	) {
+		try {
+			String memId = service.findId(memName, memEmail, corpRegNo, memType);
+			if(memId != null) {
+				return ResponseEntity.ok(memId);
+			} else {
+				return ResponseEntity.status(404).body(Map.of("message", "아이디 찾기 실패"));
+			}
+		} catch (Exception e) {
+			return ResponseEntity.status(500).body(e.getMessage());
+		}
+	}
+
+	/** 이메일 인증번호 발송
+	 * @author JAEHO
+	 * @param paramMap
+	 * @return
+	 */
+	@PostMapping("/member/sendEmail")
+	public ResponseEntity<?> sendEmail(@RequestBody Map<String, String> paramMap) {
+		String memEmail = paramMap.get("memEmail");
+		boolean result = service.sendEmail(memEmail);
+		if(result) {
+			return ResponseEntity.ok(Map.of("message", "인증번호가 발송되었습니다."));
+		} else {
+			return ResponseEntity.status(500).body(Map.of("message", "인증번호 발송 실패"));
+		}
+	}
+
+	/** 이메일 인증번호 확인
+	 * @author JAEHO
+	 * @param paramMap
+	 * @return
+	 */
+	@PostMapping("/member/checkAuthKey")
+	public ResponseEntity<?> checkAuthKey(@RequestBody Map<String, String> paramMap) {
+		String memEmail = paramMap.get("memEmail");
+		String authKey = paramMap.get("authKey");
+		boolean result = service.checkAuthKey(memEmail, authKey);
+		if(result) {
+			return ResponseEntity.ok(Map.of("message", "인증번호가 확인되었습니다."));
+		} else {
+			return ResponseEntity.status(500).body(Map.of("message", "인증번호가 확인되지 않았습니다."));
+		}
+	}
 }

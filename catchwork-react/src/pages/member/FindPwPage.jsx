@@ -26,8 +26,8 @@ const FindPwPage = () => {
           <input type="text" placeholder="이름을 입력해주세요" />
         </label>
         <label>
-          전화번호
-          <input type="tel" placeholder="전화번호를 입력해주세요" />
+          이메일
+          <input type="email" placeholder="이메일을 입력해주세요" />
           <button type="button">인증번호 발송</button>
         </label>
         <label>

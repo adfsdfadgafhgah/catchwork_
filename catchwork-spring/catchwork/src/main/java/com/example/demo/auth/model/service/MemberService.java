@@ -15,5 +15,15 @@ public interface MemberService {
     // 로그인 회원의 정보 조회
     Member getLoginMember(String memNo);
     
+    // 기업 로그인 회원의 정보 조회
     Member getCorpLoginMember(String memNo);
+
+    // 아이디 찾기
+    String findId(String memName, String memEmail, String corpRegNo, int memType);
+
+    // 이메일 인증번호 발송
+    boolean sendEmail(String memEmail);
+
+    // 이메일 인증번호 확인
+    boolean checkAuthKey(String memEmail, String authKey);
 }

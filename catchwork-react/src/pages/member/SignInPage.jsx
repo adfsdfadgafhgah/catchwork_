@@ -97,6 +97,7 @@ const SignInPage = () => {
             onClick={() =>
               navigate("/findid?type=" + (isCorp ? "corporate" : "personal"))
             }
+            className="find-btn"
           >
             아이디 찾기
           </span>
@@ -104,6 +105,7 @@ const SignInPage = () => {
             onClick={() =>
               navigate("/findpw?type=" + (isCorp ? "corporate" : "personal"))
             }
+            className="find-btn"
           >
             비밀번호 찾기
           </span>
