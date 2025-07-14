@@ -6,14 +6,14 @@ import SectionHeader from "../../components/common/SectionHeader";
 import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 
 const FavCompanyPage = () => {
-  const { loginMember } = useOutletContext();
+  const { memNo } = useOutletContext();
   const [companyList, setCompanyList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getCorpList();
-  }, [loginMember.memNo]);
+  }, [memNo]);
 
   //기업 목록
   const getCorpList = async () => {
@@ -21,7 +21,7 @@ const FavCompanyPage = () => {
 
     try {
       const params = {
-        memNo: loginMember.memNo,
+        memNo: memNo,
         query: searchTerm.trim(),
       };
 
@@ -43,12 +43,19 @@ const FavCompanyPage = () => {
 
   // 검색어 입력 후 엔터 누르면 검색
   const handleSearch = (e) => {
-    if (e.target.value.trim() !== "" && e.key === "Enter") {
-      const currentSearchTerm = e.target.value;
-      setSearchTerm(currentSearchTerm);
+    if (e.key === "Enter") {
+      setSearchTerm(e.target.value);
       getCorpList();
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="loading">
+        <i className="fa-solid fa-spinner fa-spin"></i> Loading...
+      </div>
+    );
+  }
 
   return (
     <>

@@ -10,7 +10,7 @@ import defaultImg from "../../assets/icon.png";
 export default function CommentItem({
   comment,
   childComments,
-  loginMember,
+  memNo,
   onRefresh,
 }) {
   const [isReplyOpen, setIsReplyOpen] = useState(false); // 대댓글 입력창 열림 여부
@@ -18,10 +18,16 @@ export default function CommentItem({
   const [showReportModal, setShowReportModal] = useState(false);
   const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
 
-  const isWriter = loginMember && loginMember.memNo === comment.memNo;
+  const isWriter = memNo && memNo === comment.memNo;
 
   // 댓글 삭제
   const handleDelete = async () => {
+    // 삭제는 로그인된 사용자만 가능하며, 자신의 댓글만 가능
+    if (!memNo || memNo !== comment.memNo) {
+      alert("삭제 권한이 없습니다.");
+      return;
+    }
+
     if (!window.confirm("댓글을 삭제하시겠습니까?")) return;
     try {
       await axiosApi.delete(`/comment/delete/${comment.commentNo}`);
@@ -34,7 +40,8 @@ export default function CommentItem({
 
   // 신고하기 버튼 클릭 핸들러
   const handleReport = () => {
-    if (!loginMember) {
+    // memNo prop을 사용하여 로그인 여부를 확인합니다.
+    if (!memNo) {
       alert("로그인 후 이용해주세요.");
       return;
     }
@@ -55,6 +62,7 @@ export default function CommentItem({
       {isEditing ? (
         <CommentEdit
           comment={comment}
+          memNo={memNo}
           onCancel={() => setIsEditing(false)}
           onSuccess={() => {
             setIsEditing(false);
@@ -146,7 +154,7 @@ export default function CommentItem({
         <div className={CommentCss.replyInputBox}>
           <CommentWrite
             boardNo={comment.boardNo}
-            loginMember={loginMember}
+            memNo={memNo}
             parentCommentNo={comment.commentNo}
             onAdd={(success) => {
               if (success) setIsReplyOpen(false); // 🔥 작성 후 닫기
@@ -163,7 +171,7 @@ export default function CommentItem({
             key={child.commentNo}
             comment={child}
             childComments={[]} // 대댓글의 자식은 없음
-            loginMember={loginMember}
+            memNo={memNo}
             onRefresh={onRefresh}
           />
         ))}
@@ -174,7 +182,7 @@ export default function CommentItem({
           targetNo={comment.commentNo.toString()}
           targetType="comment"
           targetNickname={comment.memNickname}
-          memberNo={loginMember?.memNo}
+          memberNo={memNo}
           onClose={handleCloseReport}
         />
       )}

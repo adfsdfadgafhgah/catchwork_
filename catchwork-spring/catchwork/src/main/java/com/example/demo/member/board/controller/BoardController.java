@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 // @RequiredArgsConstructor
 public class BoardController {
 
-    // private final BoardS`ervice boardService;
+    // private final BoardService boardService;
     // private final ImageUploadService imageUploadService;
 
     @Autowired
@@ -99,10 +99,20 @@ public class BoardController {
      */
     @PutMapping("edit/{boardNo}")
     public ResponseEntity<?> editBoard(@PathVariable("boardNo")int boardNo,
-    								   @RequestBody Board board) {
+                                       @RequestParam("boardTitle") String boardTitle,
+                                       @RequestParam("boardContent") String boardContent,
+                                       @RequestParam("memNo") String memNo,
+                                       @RequestParam(value = "thumbnailFile", required = false) MultipartFile thumbnailFile,
+                                       @RequestParam(value = "isDelete", required = false, defaultValue = "false") Boolean isDelete) {
+
+        Board board = new Board();
+        board.setBoardTitle(boardTitle);
+        board.setBoardContent(boardContent);
+        board.setMemNo(memNo);
+        board.setBoardNo(boardNo);
+
         try {
-            board.setBoardNo(boardNo); // 경로 변수로 넘어온 boardNo를 DTO에 주입
-            int result = boardService.editBoard(board);
+            int result = boardService.editBoard(board, thumbnailFile, isDelete);
             if (result > 0) {
                 return ResponseEntity.ok().body("게시글이 수정되었습니다.");
             } else {

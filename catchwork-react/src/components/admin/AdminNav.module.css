@@ -1,0 +1,41 @@
+.nav {
+  width: 220px;
+  height: 100%;
+  padding: 15px 20px;
+  background-color: var(--white);
+  border-right: 1px solid var(--stroke-color1);
+}
+
+.logoSection {
+  margin-bottom: 20px;
+}
+
+
+.logo {
+  width: 180px;
+  height: 40px;
+}
+
+.menu {
+  list-style: none;
+  padding-left: 10px;
+  margin: 0;
+}
+
+.menu li {
+  margin-bottom: 20px;
+}
+
+.menu li a {
+  text-decoration: none;
+  color: var(--dark-gray);
+  font-size: 20px;
+}
+
+.menu li a:hover {
+  color: var(--main-color-dark);
+}
+
+.active {
+  color: var(--main-color) !important;
+}

@@ -29,7 +29,7 @@ public interface BoardService {
 	 * @param board
 	 * @return
 	 */
-	int editBoard(Board board);
+	int editBoard(Board board, MultipartFile thumbnailFile, Boolean isDelete);
 
 	/** 게시글 좋아요
 	 * @author BAEBAE

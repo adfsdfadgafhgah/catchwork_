@@ -24,6 +24,13 @@
     WHERE MEM_NO = #{memNo}
   </update>
 
+  <!-- 프로필 이미지 삭제 -->
+  <update id="deleteProfileImg">
+    UPDATE MEMBER
+    SET MEM_PROFILE_PATH = NULL
+    WHERE MEM_NO = #{memNo}
+  </update>
+
   <!-- 회원 조회 -->
   <select id="selectMember">
     SELECT MEM_PW
@@ -204,13 +211,16 @@
       WHERE MEM_NO = #{memNo}
     )
 		<if test="query != null and query != ''">
-			AND LOWER(ci.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%'
-      OR LOWER(ci.CORP_TYPE) LIKE '%' || LOWER(#{query}) || '%'
-      OR LOWER(ci.CORP_ADDR) LIKE '%' || LOWER(#{query}) || '%'
-      OR LOWER(ci.CORP_BM) LIKE '%' || LOWER(#{query}) || '%'
-      OR LOWER(ci.CORP_DETAIL) LIKE '%' || LOWER(#{query}) || '%'
-      OR LOWER(ci.CORP_BENEFIT) LIKE '%' || LOWER(#{query}) || '%'
-      OR LOWER(ci.CORP_BENEFIT_DETAIL) LIKE '%' || LOWER(#{query}) || '%'
+			AND 
+      (
+        LOWER(ci.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%'
+        OR LOWER(ci.CORP_TYPE) LIKE '%' || LOWER(#{query}) || '%'
+        OR LOWER(ci.CORP_ADDR) LIKE '%' || LOWER(#{query}) || '%'
+        OR LOWER(ci.CORP_BM) LIKE '%' || LOWER(#{query}) || '%'
+        OR LOWER(ci.CORP_DETAIL) LIKE '%' || LOWER(#{query}) || '%'
+        OR LOWER(ci.CORP_BENEFIT) LIKE '%' || LOWER(#{query}) || '%'
+        OR LOWER(ci.CORP_BENEFIT_DETAIL) LIKE '%' || LOWER(#{query}) || '%'
+      )
 		</if>
 		
 		ORDER BY ci.CORP_NAME ASC

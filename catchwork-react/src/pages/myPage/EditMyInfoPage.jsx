@@ -9,10 +9,24 @@ import defaultImg from "../../assets/icon.png";
 const EditMyInfoPage = () => {
   const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
   const navigate = useNavigate();
-  const { loginMember } = useOutletContext();
+  const { memNo } = useOutletContext();
   const [previewSrc, setPreviewSrc] = useState("");
   const [imgFile, setImgFile] = useState(null);
+  const [loginMember, setLoginMember] = useState(null);
   const fileInputRef = useRef(null);
+  const isDeleted = useRef(false);
+
+  // 로그인 유저 정보 조회
+  const getLoginMember = async () => {
+    const resp = await axiosApi.post("/member/getLoginMember", { memNo });
+    if (resp.status === 200) {
+      setLoginMember(resp.data);
+    }
+  };
+
+  useEffect(() => {
+    getLoginMember();
+  }, [memNo]);
 
   // 비밀번호 확인 모달 상태 관리
   const [modalState, setModalState] = useState({
@@ -131,13 +145,12 @@ const EditMyInfoPage = () => {
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
+      isDeleted.current = false;
       const previewUrl = URL.createObjectURL(file);
       setPreviewSrc(previewUrl);
       setImgFile(file);
     }
   };
-
-  const imgRef = useRef(null);
 
   // 프로필 이미지 업로드 버튼 클릭 시
   const handleClick = () => {
@@ -150,7 +163,7 @@ const EditMyInfoPage = () => {
       // 프로필 이미지 업로드
       const resp = await axiosApi.post(
         "/myPage/uploadProfileImg",
-        { imgFile, memNo: loginMember.memNo },
+        { imgFile, memNo: loginMember?.memNo },
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
@@ -160,10 +173,24 @@ const EditMyInfoPage = () => {
       if (resp.status === 200) {
         navigate("/myPage/home");
       }
-      console.log("resp", resp.status);
     } catch (error) {
       console.error("프로필 이미지 업로드 실패", error);
       alert("프로필 이미지 업로드 중 오류 발생");
+      return false;
+    }
+  };
+
+  // 프로필 이미지 삭제 핸들러
+  const handleProfileImageDelete = async () => {
+    try {
+      const formData = new FormData();
+      formData.append("memNo", loginMember?.memNo);
+
+      const resp = await axiosApi.post("/myPage/deleteProfileImg", formData);
+      return resp.status === 200;
+    } catch (error) {
+      console.error("프로필 이미지 삭제 실패", error);
+      return false;
     }
   };
 
@@ -214,7 +241,6 @@ const EditMyInfoPage = () => {
         // 비밀번호가 일치하는 경우 모달 닫기
         closeModal();
         // submit 로직 수행
-        console.log("submit 로직 수행");
         await performSubmit();
       } else {
         alert("비밀번호가 일치하지 않습니다.");
@@ -246,23 +272,37 @@ const EditMyInfoPage = () => {
     };
 
     try {
-      console.log("try 실행");
-      console.log(requestData);
+      // 1. 회원 정보 업데이트
       const resp = await axiosApi.post("/myPage/updateMemberInfo", requestData);
-      console.log("resp 실행");
+
       if (resp.status === 200) {
-        if (imgFile) {
-          console.log("imgFile 있음");
-          handleFileUpload();
-        } else {
-          console.log("imgFile 없음");
+        // 2. 이미지 처리
+        let imageProcessSuccess = true;
+
+        if (isDeleted.current) {
+          // 기본 이미지로 변경 요청
+          imageProcessSuccess = await handleProfileImageDelete();
+        } else if (imgFile) {
+          // 새 이미지 업로드
+          imageProcessSuccess = await handleFileUpload();
         }
-        navigate("/myPage/home");
+
+        // 3. 모든 처리가 성공하면 홈으로 이동
+        if (imageProcessSuccess) {
+          navigate("/myPage/home");
+        }
       }
     } catch (error) {
       console.error("회원 정보 수정 실패", error);
       alert("회원 정보 수정 중 오류 발생");
     }
+  };
+
+  // 기본 이미지로 변경 버튼 클릭 시
+  const handleDelete = () => {
+    isDeleted.current = true;
+    setImgFile(null);
+    setPreviewSrc(null);
   };
 
   if (!loginMember || !loginMember.memId) {
@@ -278,14 +318,20 @@ const EditMyInfoPage = () => {
             <div className="edit-profile-img" onClick={handleClick}>
               {previewSrc || loginMember?.memProfilePath ? (
                 <img
-                  ref={imgRef}
-                  src={
-                    previewSrc
-                      ? previewSrc
-                      : loginMember?.memProfilePath
-                      ? `${imgUrl}/${loginMember.memProfilePath}`
-                      : defaultImg
-                  }
+                  src={(() => {
+                    // 새로 선택한 이미지가 있으면 미리보기 표시
+                    if (previewSrc) {
+                      return previewSrc;
+                    }
+
+                    // 기존 프로필 이미지가 있고 삭제되지 않았다면 기존 이미지 표시
+                    if (loginMember?.memProfilePath && !isDeleted.current) {
+                      return `${imgUrl}/${loginMember.memProfilePath}`;
+                    }
+
+                    // 그 외의 경우 기본 이미지 표시
+                    return defaultImg;
+                  })()}
                   alt="프로필"
                 />
               ) : (
@@ -300,6 +346,13 @@ const EditMyInfoPage = () => {
                 style={{ display: "none" }}
               />
             </div>
+            <button
+              type="button"
+              onClick={handleDelete}
+              className="check-button"
+            >
+              기본 이미지로 변경
+            </button>
           </div>
 
           {/* 기본 정보 */}

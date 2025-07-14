@@ -43,7 +43,7 @@ public class MyInfoServiceImpl implements MyInfoService {
 	// 회원 정보 수정
 	@Override
 	public int updateMemberInfo(Member member) {
-		System.out.println("서비스 실행");
+		log.debug("회원 정보 수정 서비스 실행 - memNo: {}", member.getMemNo());
 		return myInfoMapper.updateMemberInfo(member);
 	}
 
@@ -89,6 +89,12 @@ public class MyInfoServiceImpl implements MyInfoService {
 		return result;
 	}
 
+	// 프로필 이미지 삭제
+	@Override
+	public int deleteProfileImg(String memNo) {
+		return myInfoMapper.deleteProfileImg(memNo);
+	}
+
 	// 비밀번호 확인
 	@Override
 	public int verifyPassword(Member loginMember) {
@@ -110,9 +116,9 @@ public class MyInfoServiceImpl implements MyInfoService {
 	// 회원 탈퇴
 	@Override
 	public int withdraw(Member loginMember) {
-		// System.out.println("탈퇴 서비스 실행");
+		log.debug("회원 탈퇴 서비스 실행 - memNo: {}", loginMember.getMemNo());
 		int result = myInfoMapper.withdraw(loginMember);
-		// System.out.println("result: " + result);
+		log.debug("회원 탈퇴 결과: {}", result);
 		return result;
 	}
 

@@ -278,4 +278,6 @@ public class MemberController {
 	        return ResponseEntity.status(500).body(e.getMessage());
 	    }
 	}
+
+	
 }

@@ -36,6 +36,7 @@
 		CI.CORP_BENEFIT_DETAIL AS corpBenefitDetail,
 		
 		M.MEM_NICKNAME AS memNickname,
+		M.MEM_NAME AS memName,
 	
 	    NVL(LC.LIKE_COUNT, 0) AS likeCount,
 	
@@ -94,6 +95,7 @@
 			
 		-- 기업회원 정보
 		M.MEM_NICKNAME AS memNickname,
+		M.MEM_NAME AS memName,
 	    
 	    -- 좋아요 수
 	    (SELECT COUNT(*) FROM FAV_RECRUIT F WHERE F.RECRUIT_NO = R.RECRUIT_NO) AS likeCount,
@@ -138,6 +140,7 @@
 		    OR R.RECRUIT_HIRE_DETAIL LIKE CONCAT(CONCAT('%', #{query}), '%')
 		    OR R.RECRUIT_ETC LIKE CONCAT(CONCAT('%', #{query}), '%')
 		    OR M.MEM_NICKNAME LIKE CONCAT(CONCAT('%', #{query}), '%')
+		    OR M.MEM_NAME LIKE CONCAT(CONCAT('%', #{query}), '%')
 		    OR CI.CORP_NAME LIKE CONCAT(CONCAT('%', #{query}), '%')
 		    OR CI.CORP_BENEFIT LIKE CONCAT(CONCAT('%', #{query}), '%')
 		    OR CI.CORP_BENEFIT_DETAIL LIKE CONCAT(CONCAT('%', #{query}), '%')

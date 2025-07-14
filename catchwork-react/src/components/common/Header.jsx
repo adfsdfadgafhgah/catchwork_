@@ -99,12 +99,10 @@ const Header = () => {
                 {memType === 1 ? (
                   <button onClick={() => navigate("/corpmypage")}>
                     {memNickname} 님
-                    {/* memNickname -> memName으로 바꿈  명하 */}
                   </button>
                 ) : (
                   <button onClick={() => navigate("/mypage")}>
                     {memNickname} 님
-                    {/* 기업회원은 닉네임 null인데 어떻게 할까요? */}
                   </button>
                 )}
                 <button onClick={handleSignOut}>로그아웃</button>

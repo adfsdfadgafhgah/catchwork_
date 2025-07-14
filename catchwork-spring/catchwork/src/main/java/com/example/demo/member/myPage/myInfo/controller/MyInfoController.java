@@ -35,16 +35,13 @@ public class MyInfoController {
 	// 회원 정보 수정
 	@PostMapping("updateMemberInfo")
 	public ResponseEntity<String> updateMemberInfo(@RequestBody Member member) {
-		System.out.println("광고성 수신동의 : "+member.getMemSmsFl());
 		try {
-			System.out.println("try 실행");
 			int result = myInfoService.updateMemberInfo(member);
-			System.out.println("값이 나오나");
 			if (result > 0) {
-				System.out.println("수정 완료");
+				log.info("회원 정보 수정 완료");
 				return ResponseEntity.status(200).body("회원 정보 수정 완료");
 			}
-			System.out.println("수정 실패");
+			log.warn("회원 정보 수정 실패");
 			return ResponseEntity.status(500).body("회원 정보 수정 실패");
 		} catch (Exception e) {
 			log.error("회원 정보 수정 실패", e);
@@ -56,9 +53,7 @@ public class MyInfoController {
 	@PostMapping("uploadProfileImg")
 	public ResponseEntity<String> updateProfileImg(@RequestParam("imgFile") MultipartFile profileImg,
 			@RequestParam("memNo") String memNo) {
-		System.out.println("메서드 매핑됨");
-		System.out.println(memNo);
-		System.out.println(profileImg.getOriginalFilename());
+		log.debug("프로필 이미지 업로드 요청 - memNo: {}, fileName: {}", memNo, profileImg.getOriginalFilename());
 		try {
 			int result = myInfoService.updateProfileImg(profileImg, memNo);
 			if (result > 0)
@@ -70,17 +65,27 @@ public class MyInfoController {
 		}
 	}
 
+	// 프로필 이미지 삭제
+	@PostMapping("deleteProfileImg")
+	public ResponseEntity<String> deleteProfileImg(@RequestParam("memNo") String memNo) {
+		log.debug("프로필 이미지 삭제 요청 - memNo: {}", memNo);
+		int result = myInfoService.deleteProfileImg(memNo);
+		if (result > 0)
+			return ResponseEntity.status(200).body("프로필 이미지 삭제 완료");
+		return ResponseEntity.status(500).body("프로필 이미지 삭제 실패");
+	}
+
 	// 비밀번호 확인
 	@PostMapping("verifyPassword")
 	public ResponseEntity<Boolean> verifyPassword(@RequestBody Member loginMember) {
-		System.out.println("비밀번호 확인 메서드 매핑");
+		log.debug("비밀번호 확인 요청 - memNo: {}", loginMember.getMemNo());
 		try {
 			int result = myInfoService.verifyPassword(loginMember);
 			if (result > 0) {
-				System.out.println("비밀번호 일치");
+				log.debug("비밀번호 확인 성공");
 				return ResponseEntity.status(200).body(true);
 			}
-			System.out.println("비밀번호 불일치");
+			log.warn("비밀번호 불일치");
 			return ResponseEntity.status(500).body(false);
 		} catch (Exception e) {
 			log.error("비밀번호 확인 실패", e);
@@ -92,7 +97,7 @@ public class MyInfoController {
 	@PostMapping("changePw")
 	public ResponseEntity<String> changePw(@RequestParam("currentPw") String currentPw,
 			@RequestParam("memPw") String memPw, @RequestParam("memNo") String memNo) {
-		System.out.println("비밀번호 변경 메서드 매핑");
+		log.debug("비밀번호 변경 요청 - memNo: {}", memNo);
 
 		Member loginMember = new Member();
 		loginMember.setMemNo(memNo);
@@ -105,13 +110,13 @@ public class MyInfoController {
 				// 비밀번호 변경
 				result = myInfoService.changePw(memPw, memNo);
 				if (result > 0) {
-					System.out.println("비밀번호 변경 완료");
+					log.info("비밀번호 변경 완료");
 					return ResponseEntity.status(200).body("비밀번호 변경 완료");
 				}
-				System.out.println("비밀번호 변경 실패");
+				log.warn("비밀번호 변경 실패");
 				return ResponseEntity.status(500).body("비밀번호 변경 실패");
 			}
-			System.out.println("비밀번호 확인 실패");	
+			log.warn("비밀번호 확인 실패");	
 			return ResponseEntity.status(500).body("비밀번호 확인 실패");
 		} catch (Exception e) {
 			log.error("비밀번호 변경 실패", e);
