@@ -12,6 +12,16 @@ export default function AdminSupportPage() {
   const [error, setError] = useState(null);
   const itemsPerPage = 10;
 
+  // 날짜 포맷팅 헬퍼 함수 (yyyy-mm-dd 형식)
+  const formatDate = (dateString) => {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   // 필터 및 정렬 상태
   const [filterStatus, setFilterStatus] = useState("all"); // 'all', 'pending', 'completed'
   const [sortOrder, setSortOrder] = useState("latest"); // 'latest', 'oldest'
@@ -145,7 +155,7 @@ export default function AdminSupportPage() {
                     >
                       {item.supportTitle}
                     </td>
-                    <td>{item.supportDate || "-"}</td>
+                    <td>{formatDate(item.supportDate)}</td>
                     <td
                       className={
                         item.supportStatus === "Y"
