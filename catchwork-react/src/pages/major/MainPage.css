@@ -1,6 +1,8 @@
 .main-page {
   padding: 2rem 1rem;
   background-color: #f9fafb;
+  max-width: 1080px;
+  margin: 0 auto;
 }
 
 .section {
@@ -20,11 +22,17 @@
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
 }
 
+.card-grid.two-cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
 .post-card {
   background-color: white;
   border: 1px solid #e5e7eb;
   border-radius: 0.75rem;
-  padding: 1.25rem;
+  /* padding: 1.25rem; */
   display: flex;
   flex-direction: column;
   justify-content: space-between;

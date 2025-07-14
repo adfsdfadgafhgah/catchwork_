@@ -9,7 +9,6 @@ export const useAuthStore = create(
     (set) => ({
       memNo: null,
       memNickname: null,
-      memName : null, // 명하 추가
       memType: null,
 
       signin: async (memId, memPw) => {
@@ -19,23 +18,21 @@ export const useAuthStore = create(
           if (token) {
             localStorage.setItem("accessToken", token);
             const decoded = getDecodedToken(token);
-            console.log("Decoded Token in signin:", decoded);
             set({
               memNo: decoded.memNo,
               memNickname: decoded.memNickname,
-              memName: decoded.memName, // 명하 추가
               memType: decoded.memType,
             });
             await useLoginMember.getState().setLoginMember();
-            return { success: true, message: "로그인 성공, 토큰 저장됨" };
+            return { success: true, message: "로그인 성공" };
           }
-          return { success: true, message: "로그인 성공, 하지만 토큰 없음" };
+          return { success: true, message: "로그인 성공( 토큰 발급 실패 )" };
         } catch (err) {
           const message =
             err.response?.data?.message ||
             err.response?.data?.error ||
             err.message;
-          return { success: false, message: "로그인 실패: " + message };
+          return { success: false, message: message };
         }
       },
 
@@ -46,7 +43,6 @@ export const useAuthStore = create(
           set({
             memNo: null,
             memNickname: null,
-            memName: null, // 명하 추가
             memType: null,
           });
           useLoginMember.getState().clearLoginMember();

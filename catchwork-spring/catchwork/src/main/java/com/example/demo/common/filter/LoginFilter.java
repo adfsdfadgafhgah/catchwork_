@@ -7,6 +7,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -129,9 +131,28 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException failed) throws IOException {
-        log.warn("로그인 실패 - 이유: {}", failed.getMessage());
-		//로그인 실패시 401 응답 코드 반환
-        response.setStatus(401);
+	    String message;
+	    int status;
+
+	    if (failed instanceof DisabledException) {
+	        message = "탈퇴한 계정입니다.";
+	        status = HttpServletResponse.SC_FORBIDDEN; // 403
+	    } else if (failed instanceof LockedException) {
+	        message = "정지된 계정입니다.";
+	        status = HttpServletResponse.SC_FORBIDDEN; // 403
+	    } else {
+	        message = "아이디 또는 비밀번호가 올바르지 않습니다.";
+	        status = HttpServletResponse.SC_BAD_REQUEST; // 400
+	    }
+
+
+	    response.setStatus(status);
+	    response.setContentType("application/json");
+	    response.setCharacterEncoding("UTF-8");
+	
+	    response.getWriter().write("{\"message\": \"" + message + "\"}");
         
     }
 }
+
+

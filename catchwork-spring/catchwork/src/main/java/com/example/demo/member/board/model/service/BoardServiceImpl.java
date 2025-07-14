@@ -25,8 +25,8 @@ public class BoardServiceImpl implements BoardService {
 	 * @author BAEBAE
 	 */
 	@Override
-	public List<Board> selectBoardList(String sort, String query, String memNo) {
-		return boardMapper.selectBoardList(sort, query, memNo);
+	public List<Board> selectBoardList(String sort, String query, String memNo, Integer limit) {
+		return boardMapper.selectBoardList(sort, query, memNo, limit);
 	}
 
 	/**

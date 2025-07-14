@@ -54,7 +54,23 @@
 			</if>
 
 		</where>
-		ORDER BY ci.CORP_NAME ASC
+	    <choose>
+			<when test="sort == 'main'">
+	            ORDER BY (
+	                2 * (SELECT COUNT(*) FROM FAV_CORP fc WHERE fc.CORP_NO = ci.CORP_NO) +
+	                1 * (SELECT COUNT(*) 
+	                     FROM RECRUIT r 
+	                     JOIN CORP_MEM cm ON r.MEM_NO = cm.MEM_NO 
+	                     WHERE cm.CORP_NO = ci.CORP_NO AND r.RECRUIT_STATUS = 0)
+	            ) DESC
+			</when>
+	        <otherwise>
+				ORDER BY ci.CORP_NAME ASC
+	        </otherwise>
+	    </choose>
+	    <if test="limit != null">
+    		FETCH FIRST #{limit} ROWS ONLY
+	    </if>
 	</select>
 
 	<!-- 기업 상세 -->

@@ -3,6 +3,7 @@ import "./CeoSignUpPage.css";
 import useSignUpFormHandler from "../../hooks/useSignUpFormHandler";
 import { useLocation, useNavigate } from "react-router-dom";
 import { postCEOSignUp } from "../../api/signupAPI";
+import { useAuthStore } from "../../stores/authStore";
 
 const CeoSignUpPage = () => {
   const location = useLocation();
@@ -139,8 +140,9 @@ const CeoSignUpPage = () => {
     };
 
     try {
-      const res = await postCEOSignUp(dataToSend);
-      console.log("회원가입 성공:", res);
+      await postCEOSignUp(dataToSend);
+      await useAuthStore.getState().signOut();
+
       alert("회원가입이 완료되었습니다.");
       navigate("/signin");
     } catch (err) {
