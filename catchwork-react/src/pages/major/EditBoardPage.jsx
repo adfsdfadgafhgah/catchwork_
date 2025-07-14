@@ -8,9 +8,8 @@ import ThumbnailUploader from "../../components/common/ThumbnailUploader";
 import { axiosApi } from "../../api/axiosAPI";
 import { useAuthStore } from "../../stores/authStore";
 
-
 export default function EditBoardPage() {
-  const { memNo } = useAuthStore();
+  // const { memNo } = useAuthStore();
   const { boardNo } = useParams();
   const navigate = useNavigate();
   const editorRef = useRef();
@@ -26,7 +25,6 @@ export default function EditBoardPage() {
     if (memNo === undefined) {
       return;
     }
- 
 
     const fetchBoard = async () => {
       // 게시글 수정은 로그인된 사용자만 가능하므로, memNo가 없으면 리다이렉트
@@ -39,7 +37,6 @@ export default function EditBoardPage() {
       try {
         const resp = await axiosApi.get(`/board/detail/${boardNo}`, {
           params: { memNo: memNo }, // memNo prop 사용
-
         });
         const data = resp.data;
         setTitle(data.boardTitle);
@@ -51,7 +48,6 @@ export default function EditBoardPage() {
           // 에디터가 아직 마운트되지 않았다면 content 상태에 저장하여 initialValue로 사용
           setContent(data.boardContent);
         }
-
       } catch (err) {
         console.error("게시글 불러오기 실패:", err);
         alert("게시글을 불러오지 못했습니다.");
@@ -59,7 +55,6 @@ export default function EditBoardPage() {
       }
     };
     fetchBoard();
-
   }, [boardNo, memNo, navigate]); // loginMember 대신 memNo를 의존성 배열에 추가
 
   // Toast UI Editor 로딩 후 placeholder 깨짐 보정 (기존과 동일)
@@ -91,7 +86,6 @@ export default function EditBoardPage() {
     setThumbnailUrl(null);
   };
 
-
   // 수정 요청
   const handleUpdate = async () => {
     // memNo prop을 사용하여 로그인 여부를 다시 확인
@@ -116,10 +110,8 @@ export default function EditBoardPage() {
     }
 
     try {
-
       const resp = await axiosApi.put(`/board/edit/${boardNo}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
-
       });
 
       if (resp.status === 200) {
