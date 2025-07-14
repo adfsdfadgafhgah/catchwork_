@@ -9,6 +9,15 @@ export default function ThumbnailUploader({ thumbnailUrl, ref }) {
   const [previewSrc, setPreviewSrc] = useState("");
   // 썸네일 이미지 파일
   const [imgFile, setImgFile] = useState(null);
+  // 썸네일 삭제 여부
+  const isDelete = useRef(false);
+
+  // 썸네일 미리보기 이미지 설정
+  useEffect(() => {
+    if (thumbnailUrl) {
+      setPreviewSrc(`${boardImgUrl}/${thumbnailUrl}`);
+    }
+  }, [thumbnailUrl]);
 
   // 미리보기 이미지 정리
   useEffect(() => {
@@ -23,6 +32,7 @@ export default function ThumbnailUploader({ thumbnailUrl, ref }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      isDelete.current = false;
       const previewUrl = URL.createObjectURL(file);
       setPreviewSrc(previewUrl);
       setImgFile(file);
@@ -34,9 +44,17 @@ export default function ThumbnailUploader({ thumbnailUrl, ref }) {
     inputRef.current.click();
   };
 
+  // 썸네일 삭제 핸들러
+  const handleInputDelete = () => {
+    document.getElementById("thumbnail-input").value = "";
+  };
+
   // 부모에서 ref로 접근 가능한 기능 정의
   useImperativeHandle(ref, () => ({
     getImageFile: () => imgFile,
+    // 썸네일 삭제
+    isDelete: () => isDelete.current,
+    // 썸네일 초기화
     clearImage: () => {
       setImgFile(null);
       setPreviewSrc("");
@@ -49,10 +67,10 @@ export default function ThumbnailUploader({ thumbnailUrl, ref }) {
       <p className="desc">썸네일은 리스트에 80×80으로 노출됩니다.</p>
 
       <div className="upload-box" onClick={handleClick}>
-        {thumbnailUrl || previewSrc ? (
+        {previewSrc ? (
           <>
             <img
-              src={thumbnailUrl ? `${boardImgUrl}${thumbnailUrl}` : previewSrc}
+              src={previewSrc}
               alt="썸네일 미리보기"
               className="thumbnail-preview"
             />
@@ -62,6 +80,8 @@ export default function ThumbnailUploader({ thumbnailUrl, ref }) {
                 e.stopPropagation();
                 setPreviewSrc("");
                 setImgFile(null);
+                isDelete.current = true;
+                handleInputDelete();
               }}
             >
               ✕
@@ -74,6 +94,7 @@ export default function ThumbnailUploader({ thumbnailUrl, ref }) {
           </div>
         )}
         <input
+          id="thumbnail-input"
           type="file"
           ref={inputRef}
           accept="image/*"

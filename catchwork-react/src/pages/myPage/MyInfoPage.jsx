@@ -1,12 +1,45 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import "./MyInfoPage.css";
 import defaultImg from "../../assets/icon.png";
+import { axiosApi } from "../../api/axiosAPI";
 
 function MyInfo() {
   const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
-  const { loginMember } = useOutletContext();
+  const { memNo } = useOutletContext();
+  const [loginMember, setLoginMember] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // 로그인 멤버 정보 조회
+  const getLoginMember = async () => {
+    const resp = await axiosApi.post("/member/getLoginMember", { memNo });
+    if (resp.status === 200) {
+      setLoginMember(resp.data);
+    }
+  };
+
+  // 최초 마운트 시, 로그인 멤버 정보 조회
+  useEffect(() => {
+    getLoginMember();
+  }, []);
+
+  // 로그인 멤버 정보 조회 후, 로딩 종료
+  useEffect(() => {
+    if (loginMember) {
+      setIsLoading(false);
+    }
+  }, [loginMember]);
+
+  // 로딩 중일 때, 로딩 중 메시지 출력
+  if (isLoading) {
+    return (
+      <div className="loading">
+        <i className="fa-solid fa-spinner fa-spin"></i> Loading...
+      </div>
+    );
+  }
+
+  // 로그인 멤버 정보 조회 후, 프로필 정보 출력
   return (
     <div className="myinfo-container">
       <div className="profile-section">

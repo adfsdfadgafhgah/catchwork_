@@ -65,9 +65,27 @@ public class BoardServiceImpl implements BoardService {
 	 * @author BAEBAE
 	 */
 	@Override
-	public int editBoard(Board board) {
+	public int editBoard(Board board, MultipartFile thumbnailFile, Boolean isDelete) {
 
-		return boardMapper.editBoard(board);
+		if (thumbnailFile != null) {
+			System.out.println("이미지 있음 thumbnailFile: " + thumbnailFile);
+			System.out.println("board.getBoardNo(): " + board.getBoardNo());
+			int result = imageUploadService.uploadBoardThumbnail(thumbnailFile, board.getBoardNo());
+			if (result <= 0) { // 썸네일 이미지 업로드 실패
+				throw new RuntimeException("썸네일 이미지 업로드 실패");
+			}
+			System.out.println("이미지 업로드 성공 result: " + result);
+		}
+
+		if (isDelete) {
+			boardMapper.deleteBoardThumbnail(board.getBoardNo());
+		}
+
+		int result = boardMapper.editBoard(board);
+		if (result <= 0) { // 게시글 수정 실패
+			throw new RuntimeException("게시글 수정 실패");
+		}
+		return result;
 	}
 
 	/**

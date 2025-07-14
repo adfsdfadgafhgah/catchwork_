@@ -114,8 +114,7 @@
 	  SET 
 	    BOARD_TITLE = #{boardTitle},
 	    BOARD_CONTENT = #{boardContent},
-	    BOARD_EDIT_DATE = SYSDATE,
-	    BOARD_THUMBNAIL_URL = #{boardThumbnailUrl}
+	    BOARD_EDIT_DATE = SYSDATE
 	  WHERE BOARD_NO = #{boardNo}
 	</update>
 
@@ -150,6 +149,13 @@
 	<update id="uploadBoardThumbnail">
 		UPDATE BOARD
 		SET BOARD_THUMBNAIL_URL = #{thumbnailUrl}
+		WHERE BOARD_NO = #{boardNo}
+	</update>
+
+	<!-- 게시글 썸네일 삭제 -->
+	<update id="deleteBoardThumbnail">
+		UPDATE BOARD
+		SET BOARD_THUMBNAIL_URL = NULL
 		WHERE BOARD_NO = #{boardNo}
 	</update>
 

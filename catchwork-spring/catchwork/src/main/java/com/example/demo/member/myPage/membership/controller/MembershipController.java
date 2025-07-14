@@ -31,7 +31,7 @@ public class MembershipController {
 	// 멤버십 리스트 조회
 	@GetMapping("getMembershipList")
 	private ResponseEntity<Object> getMembershipList() {
-//		System.out.println("@@ 멤버십 아이템 리스트 로드 @@");
+		log.debug("멤버십 아이템 리스트 조회 요청");
 		List<MemberGrade> membershipList = service.getMembershipList();
 
 		try {
@@ -45,9 +45,8 @@ public class MembershipController {
 	// 구독 정보 조회
 	@PostMapping("getSubscription")
 	private ResponseEntity<Object> getSubscription(@RequestBody Subscription targetSubscription) {
-//		System.out.println("@@ 구독 정보 조회 @@");
 		String memNo = targetSubscription.getMemNo();
-//		System.out.println(memNo);
+		log.debug("구독 정보 조회 요청 - memNo: {}", memNo);
 		try {
 			Subscription subscription = service.getSubscription(memNo);
 

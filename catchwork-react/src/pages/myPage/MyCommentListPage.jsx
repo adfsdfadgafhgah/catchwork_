@@ -7,19 +7,19 @@ import BoardCss from "../major/BoardListPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
 
 const MyCommentListPage = () => {
-  const { loginMember } = useOutletContext();
+  const { memNo } = useOutletContext();
   const [isloading, setIsLoading] = useState(true); // 로딩 상태
   const [searchTerm, setSearchTerm] = useState(""); // 검색
   const [comments, setComments] = useState([]); // 댓글 목록 조회
 
   useEffect(() => {
     getMyCommentList();
-  }, [loginMember.memNo]);
+  }, [memNo]);
 
   // 댓글 목록 조회
   const getMyCommentList = async () => {
     const resp = await axiosApi.get("/myPage/myCommentList", {
-      params: { memNo: loginMember?.memNo, query: searchTerm },
+      params: { memNo: memNo, query: searchTerm },
     });
     if (resp.status === 200) {
       setComments(resp.data);
@@ -58,7 +58,7 @@ const MyCommentListPage = () => {
       ) : comments.length > 0 ? (
         <MyCommentList
           comments={comments}
-          loginMember={loginMember}
+          memNo={memNo}
           onRefresh={getMyCommentList}
         />
       ) : (

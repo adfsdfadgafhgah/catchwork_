@@ -5,7 +5,7 @@ import { axiosApi } from "../../api/axiosAPI";
 import "./ChangePwPage.css";
 
 const ChangePwPage = () => {
-  const { loginMember } = useOutletContext();
+  const { memNo } = useOutletContext();
   const [currentPw, setCurrentPw] = useState("");
   const navigate = useNavigate();
 
@@ -45,11 +45,10 @@ const ChangePwPage = () => {
     const requestData = new URLSearchParams();
     requestData.append("currentPw", currentPw);
     requestData.append("memPw", formData.memPw);
-    requestData.append("memNo", loginMember.memNo);
+    requestData.append("memNo", memNo);
 
     try {
       const response = await axiosApi.post("/myPage/changePw", requestData);
-      console.log(response);
       if (response.status === 200) {
         alert(response.data);
         navigate("/mypage/home");

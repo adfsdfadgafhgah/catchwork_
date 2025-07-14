@@ -46,8 +46,9 @@
 		JOIN
 		CORP_MEM CM ON R.MEM_NO = CM.MEM_NO
 		WHERE CM.CORP_NO = #{corpNo}
-		ORDER
-		BY RC.RECRUIT_CV_NO DESC
+		ORDER BY R.RECRUIT_TITLE ASC, RC.RECRUIT_CV_DATE DESC
+
+
 	</select>
 
 
@@ -66,6 +67,7 @@
 		ORDER BY RC.RECRUIT_CV_NO DESC
 	</select>
 
+	<!-- 필터링 (학력, 경력) -->
 	<!-- 필터링 (학력, 경력) -->
 	<select id="getCVList" resultMap="recruitCVMap">
 		SELECT
@@ -100,6 +102,7 @@
 		</trim>
 		ORDER BY R.RECRUIT_TITLE ASC
 	</select>
+
 
 
 	<!-- 경로 저장 -->
