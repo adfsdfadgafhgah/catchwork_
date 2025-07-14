@@ -14,7 +14,7 @@ public interface BoardService {
 	 * @param trim
 	 * @return
 	 */
-	List<Board> selectBoardList(String sort, String query, String memNo, Integer limit);
+	List<Board> selectBoardList(String sort, String query, String memNo,Integer page,Integer size, Integer limit);
 
 	/** 게시글 상세 서비스
 	 * @author BAEBAE
