@@ -3,8 +3,15 @@ package com.example.demo.corp.myPage.model.service;
 import com.example.demo.corp.myPage.model.dto.CorpMyPage;
 
 public interface CorpMyPageService {
+    // 기업 회원 정보 조회 - 파라미터 타입 String
+    CorpMyPage getCorpMyPage(String memNo);
+
+    // 기업 회원 정보 수정
     void updateMemberInfo(CorpMyPage corpMyPage);
-    String selectMemberPassword(int memNo);
-    void changePassword(CorpMyPage corpMyPage);
-    void withdraw(int memNo);
-}
+
+    // 멤버 비밀번호 조회 - 파라미터 타입 String
+    String selectMemberPassword(String memNo);
+
+	boolean verifyPassword(String memNo, String inputPassword);
+
+}	
