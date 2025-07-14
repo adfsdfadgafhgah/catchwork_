@@ -189,9 +189,8 @@ public class MemberServiceImpl implements MemberService {
 		return mapper.getLoginMember(memNo);
 	}
 
-	@Override
-	public Member getCorpLoginMember(String memNo) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+//	@Override
+//	public Member getCorpLoginMember(String memNo) {
+//		return mapper.getCorpLoginMember(memNo);
+//	}
 }

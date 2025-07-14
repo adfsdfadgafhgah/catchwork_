@@ -157,7 +157,7 @@ export default function CommentItem({
             memNo={memNo}
             parentCommentNo={comment.commentNo}
             onAdd={(success) => {
-              if (success) setIsReplyOpen(false); // 🔥 작성 후 닫기
+              if (success) setIsReplyOpen(false); // 작성 후 닫기
               onRefresh(); // 목록 새로고침
             }}
           />

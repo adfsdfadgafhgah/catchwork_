@@ -1,16 +1,11 @@
-package com.example.demo.admin.model.mapper;
+package com.example.demo.admin.model.service;
 
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Mapper;
-
-import com.example.demo.admin.model.dto.Admin;
 import com.example.demo.support.model.dto.Support;
 
-@Mapper
-public interface AdminMapper {
-    Admin findByAdminId(String adminId);
+public interface AdminService {
 
 	/** 관리자가 문의 목록 조회
 	 * @author BAEBAE
@@ -25,4 +20,5 @@ public interface AdminMapper {
 	 * @return
 	 */
 	Support getSupportDetail(int supportNo);
+
 }

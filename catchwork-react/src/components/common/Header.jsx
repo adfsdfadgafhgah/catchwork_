@@ -8,7 +8,7 @@ import "./Header.css";
 import HeaderNav from "./HeaderNav";
 
 const Header = () => {
-  const { memType, memNickname, signin, signOut } = useAuthStore();
+  const { memType, memName, memNickname, signin, signOut } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState(""); // 검색어
   const [result, setResult] = useState(""); // 상태 메시지
 
@@ -98,7 +98,7 @@ const Header = () => {
               <>
                 {memType === 1 ? (
                   <button onClick={() => navigate("/corpmypage")}>
-                    {memNickname} 님
+                    {memName} 님
                   </button>
                 ) : (
                   <button onClick={() => navigate("/mypage")}>
