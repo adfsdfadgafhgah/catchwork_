@@ -46,4 +46,7 @@ public interface MyInfoMapper {
 
   // 내가 지원한 채용공고 목록 조회
   List<Recruit> getMyRecruitList(Map<String, Object> paramMap); 
+
+  // 프로필 이미지 삭제
+  int deleteProfileImg(String memNo);
 }

@@ -7,7 +7,7 @@ import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 import styles from "../corpMajor/CorpRecruitListPage.module.css";
 
 const FavRecruitPage = () => {
-  const { loginMember } = useOutletContext();
+  const { memNo } = useOutletContext();
   const [recruits, setRecruits] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -30,12 +30,12 @@ const FavRecruitPage = () => {
     recruitEduFilter,
     corpTypeFilter,
     recruitTypeFilter,
-    loginMember.memNo,
+    memNo,
   ]);
 
   // 검색어 입력 후 엔터 누르면 검색 모드 해제
   const handleSearch = (e) => {
-    if (e.target.value.trim() !== "" && e.key === "Enter") {
+    if (e.key === "Enter") {
       const currentSearchTerm = e.target.value;
       setSearchTerm(currentSearchTerm);
       fetchRecruitList();
@@ -52,7 +52,7 @@ const FavRecruitPage = () => {
       corpType: corpTypeFilter,
       recruitType: recruitTypeFilter,
       query: searchTerm,
-      memNo: loginMember.memNo,
+      memNo: memNo,
     };
 
     try {
@@ -71,7 +71,11 @@ const FavRecruitPage = () => {
   };
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return (
+      <div className="loading">
+        <i className="fa-solid fa-spinner fa-spin"></i> Loading...
+      </div>
+    );
   }
 
   return (
@@ -209,7 +213,7 @@ const FavRecruitPage = () => {
       </div>
 
       {recruits.length > 0 ? (
-        <MemberRecruitList recruits={recruits} loginMember={loginMember} />
+        <MemberRecruitList recruits={recruits} memNo={memNo} />
       ) : (
         <p className={styles.noResult}>검색 결과가 없습니다.</p>
       )}

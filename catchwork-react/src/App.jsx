@@ -18,7 +18,7 @@ import CeoSignUpPage from "./pages/member/CeoSignUpPage";
 
 // Id,PW 찾기
 import FindIdPage from "./pages/member/FindIdPage";
-import FindPWPage from "./pages/member/FindPWPage";
+import FindPwPage from "./pages/member/FindPwPage";
 
 // 네비게이션
 import MemberRecruitPage from "./pages/major/MemberRecruitPage";
@@ -137,7 +137,7 @@ const router = createBrowserRouter([
 
       // Id,PW 찾기
       { path: "findid", element: <FindIdPage /> },
-      { path: "findpw", element: <FindPWPage /> },
+      { path: "findpw", element: <FindPwPage /> },
 
       // 로그인 필요, 개인회원 전용 예시
       {
@@ -272,7 +272,7 @@ const router = createBrowserRouter([
       { path: "corpcvlist", element: <CorpCVListPage /> },
 
       // 기업 마이 페이지
-   {
+      {
         path: "/corpmypage",
         element: (
           <ProtectedRoute allowedType={1}>

@@ -116,4 +116,12 @@ public interface BoardMapper {
 	 */
 	void readCount(int boardNo);
 
+	/**
+	 * 게시글 썸네일 삭제
+	 * 
+	 * @author JAEHO
+	 * @param boardNo
+	 */
+	void deleteBoardThumbnail(int boardNo);
+
 }

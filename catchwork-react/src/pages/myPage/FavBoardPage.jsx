@@ -10,12 +10,12 @@ const FavBoardPage = () => {
   const [boards, setBoards] = useState([]); // 게시글 목록 조회
   const [isloading, setIsLoading] = useState(true); // 로딩 상태
   const [searchTerm, setSearchTerm] = useState(""); // 검색
-  const { loginMember } = useOutletContext(); // 로그인 사용자
+  const { memNo } = useOutletContext(); // 로그인 사용자
   const [sortOrder, setSortOrder] = useState("latest"); // 정렬 기준 상태
 
   useEffect(() => {
     getFavBoardList(); // 로그인 여부 관계없이 항상 호출
-  }, [sortOrder, loginMember?.memNo]);
+  }, [sortOrder, memNo]);
 
   // 정렬 선택
   const handleSortChange = (e) => {
@@ -25,7 +25,7 @@ const FavBoardPage = () => {
   // 즐겨찾기 게시글 목록 조회
   const getFavBoardList = async () => {
     const requestData = {
-      memNo: loginMember?.memNo,
+      memNo: memNo,
       sort: sortOrder,
       query: searchTerm,
     };
@@ -89,7 +89,7 @@ const FavBoardPage = () => {
         </div>
       </div>
       {boards.length > 0 ? (
-        <BoardList boards={boards} loginMember={loginMember} />
+        <BoardList boards={boards} memNo={memNo} />
       ) : (
         <p className={BoardCss.noResult}>검색 결과가 없습니다.</p>
       )}

@@ -21,4 +21,9 @@ public class Utility {
     return today + "_" + uuid + ext;
   }
 
+  // 인증번호 생성
+  public static String CreateAuthKey(int size) {
+    return UUID.randomUUID().toString().replace("-", "").substring(0, size);
+  }
+
 }
