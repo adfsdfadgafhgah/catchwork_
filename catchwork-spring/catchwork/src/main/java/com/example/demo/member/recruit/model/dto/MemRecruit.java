@@ -50,6 +50,7 @@ public class MemRecruit {
 	// 멤버 타입1 기업회원 정보
 	private String memNo;
 	private String memNickname;
+	private String memName;
 	private String memProfilePath;
 	
 	private int likeCount;

@@ -35,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 // @RequiredArgsConstructor
 public class BoardController {
 
-    // private final BoardS`ervice boardService;
+    // private final BoardService boardService;
     // private final ImageUploadService imageUploadService;
 
     @Autowired

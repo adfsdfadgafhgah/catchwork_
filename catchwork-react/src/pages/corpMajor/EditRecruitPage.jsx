@@ -1,9 +1,8 @@
-import { useState, useEffect, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import styles from "./WriteRecruitPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
 import { axiosApi } from "../../api/axiosAPI";
-import useLoginMember from "../../stores/loginMember";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import KakaoMapPreview from "../../components/common/KakaoMapPreview";
@@ -13,10 +12,10 @@ export default function EditRecruitPage() {
   const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
   const { recruitNo } = useParams();
   const navigate = useNavigate();
-  const { loginMember, setLoginMember } = useLoginMember();
-  // const [corpInfo, setCorpInfo] = useState(null);
-  const [recruit, setRecruit] = useState(null);
+  const { memNo, memType } = useOutletContext();
+  const [isLoading, setIsLoading] = useState(true);
 
+  const [recruit, setRecruit] = useState(null);
   const [formData, setFormData] = useState({
     recruitTitle: "",
     recruitStartDate: "",
@@ -37,24 +36,33 @@ export default function EditRecruitPage() {
     recruitEtc: "",
     corpBenefit: "",
     corpBenefitDetail: "",
+    corpLogo: "",
+    corpName: "",
+    corpType: "",
   });
-
-  // 로그인 정보 세팅
-  useEffect(() => {
-    if (!loginMember?.memNo) {
-      setLoginMember();
-    }
-  }, []);
 
   // 기존 데이터 불러오기
   useEffect(() => {
+    if (memNo === undefined || memType === undefined) {
+      return;
+    }
+
     const fetchRecruit = async () => {
+      setIsLoading(true);
       try {
         const resp = await axiosApi.get(`/corpRecruit/detail/${recruitNo}`, {
-          params: { memNo: loginMember?.memNo },
+          params: { memNo: memNo },
         });
 
         const data = resp.data;
+        setRecruit(data); // 원본 데이터 저장
+
+        if (!memNo || memType !== 1 || memNo !== data.memNo) {
+          alert("채용공고 수정 권한이 없습니다.");
+          navigate("/corpRecruit"); // 권한 없으면 목록으로 리다이렉트
+          return;
+        }
+
         setFormData({
           recruitTitle: data.recruitTitle,
           recruitStartDate: data.recruitStartDate,
@@ -74,22 +82,22 @@ export default function EditRecruitPage() {
           recruitHireDetail: data.recruitHireDetail,
           recruitEtc: data.recruitEtc,
           corpBenefit: data.corpBenefit,
+          corpBenefitDetail: data.corpBenefitDetail,
           corpLogo: data.corpLogo,
           corpName: data.corpName,
           corpType: data.corpType,
-          corpBenefitDetail: data.corpBenefitDetail,
         });
       } catch (err) {
         console.error("공고 불러오기 실패:", err);
         alert("공고 정보를 불러오는 중 오류 발생");
         navigate("/corpRecruit");
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    if (loginMember?.memNo) {
-      fetchRecruit();
-    }
-  }, [recruitNo, loginMember]);
+    fetchRecruit();
+  }, [recruitNo, memNo, memType, navigate]);
 
   // 카카오맵 주소 핸들러
   const handleAddressSearch = () => {
@@ -113,12 +121,30 @@ export default function EditRecruitPage() {
   };
 
   const handleEdit = async () => {
+    if (!memNo || memType !== 1 || memNo !== recruit?.memNo) {
+      alert("채용공고 수정 권한이 없습니다.");
+      return;
+    }
+
+    // 필수 입력 필드 유효성 검사 (WriteRecruitPage와 동일하게 적용)
+    if (
+      !formData.recruitTitle.trim() ||
+      !formData.recruitJobName ||
+      !formData.recruitJobDetail.trim() ||
+      !formData.recruitStartDate ||
+      !formData.recruitEndDate ||
+      !formData.recruitJobArea.trim()
+    ) {
+      alert("필수 항목(*)을 모두 입력해주세요.");
+      return;
+    }
+
     try {
       const submitData = {
         ...formData,
         recruitHeadcount:
           formData.recruitHeadcount === "" ? null : formData.recruitHeadcount,
-        memNo: loginMember.memNo,
+        memNo: memNo,
         recruitNo,
       };
 
@@ -142,6 +168,10 @@ export default function EditRecruitPage() {
   const handleCancel = () => {
     navigate(`/corpRecruit/${recruitNo}`);
   };
+
+  if (isLoading || memNo === undefined || memType === undefined) {
+    return <h1>Loading...</h1>;
+  }
 
   return (
     <div className={styles.detailPageWrap}>
