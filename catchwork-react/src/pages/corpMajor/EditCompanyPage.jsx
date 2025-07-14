@@ -244,6 +244,7 @@ const EditCompanyPage = () => {
               />
               <button
                 type="button"
+                className="btn-address"
                 onClick={handleAddressSearch}
                 style={{ height: "40px" }}
               >

@@ -58,7 +58,7 @@ const CorpCompanyDetailPage = () => {
   const handleWithdraw = () => {
     const confirm = window.confirm("정말 회원 탈퇴하시겠습니까?");
     if (confirm) {
-      navigate("/corpwithdraw");
+      navigate("/corpmypage/withdraw");
     }
   };
 
