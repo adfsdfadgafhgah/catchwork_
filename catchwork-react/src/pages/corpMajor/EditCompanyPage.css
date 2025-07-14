@@ -15,3 +15,15 @@
   border: 1px solid var(--stroke-color1);
   border-radius: 6px;
 }
+.btn-address {
+  display: inline-block;
+  padding: 6px 16px;
+  margin-left: 16px;
+  color: var(--black);
+  border: 1px solid var(--stroke-color2);
+  background-color: var(--white);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  box-shadow: var(--box-shadow);
+}
