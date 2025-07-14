@@ -2,7 +2,7 @@ import React from "react";
 import { useSearchParams } from "react-router-dom";
 import "./FindPage.css";
 
-const FindPWPage = () => {
+const FindPwPage = () => {
   const [params] = useSearchParams();
   const isCorp = params.get("type") === "corporate";
 
@@ -43,4 +43,4 @@ const FindPWPage = () => {
   );
 };
 
-export default FindPWPage;
+export default FindPwPage;

@@ -93,8 +93,20 @@ const SignInPage = () => {
         </button>
 
         <div className="links">
-          <span onClick={() => navigate("/findid")}>아이디 찾기</span>
-          <span onClick={() => navigate("/findpw")}>비밀번호 찾기</span>
+          <span
+            onClick={() =>
+              navigate("/findid?type=" + (isCorp ? "corporate" : "personal"))
+            }
+          >
+            아이디 찾기
+          </span>
+          <span
+            onClick={() =>
+              navigate("/findpw?type=" + (isCorp ? "corporate" : "personal"))
+            }
+          >
+            비밀번호 찾기
+          </span>
         </div>
       </form>
     </div>

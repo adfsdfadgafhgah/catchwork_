@@ -24,6 +24,13 @@
     WHERE MEM_NO = #{memNo}
   </update>
 
+  <!-- 프로필 이미지 삭제 -->
+  <update id="deleteProfileImg">
+    UPDATE MEMBER
+    SET MEM_PROFILE_PATH = NULL
+    WHERE MEM_NO = #{memNo}
+  </update>
+
   <!-- 회원 조회 -->
   <select id="selectMember">
     SELECT MEM_PW
