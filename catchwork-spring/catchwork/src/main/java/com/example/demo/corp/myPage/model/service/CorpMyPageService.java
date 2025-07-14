@@ -14,4 +14,4 @@ public interface CorpMyPageService {
 
 	boolean verifyPassword(String memNo, String inputPassword);
 
-}
+}	
