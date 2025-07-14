@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,7 +33,7 @@ public class AdminController {
         return "Welcome Admin!";
     }
     
-    /** 관리자가 문의 목록 조회
+    /** 전체 문의 목록 조회 (관리자용)
      * @author BAEBAE
      * @param status
      * @param sort
@@ -79,6 +81,30 @@ public class AdminController {
         }
     }
     
+    /** 문의 답변 등록 (관리자용)
+     * @author BAEBAE
+     * @param support 답변 내용 및 문의 번호가 포함된 Support DTO
+     * @return 성공 여부
+     */
+    @PutMapping("/supportanswer")
+    public ResponseEntity<?> submitSupportAnswer(@RequestBody Support support) {
+        try {
+        	
+        	int AdminNo = 6; // 예시: 임시 관리자 번호를 1L로 설정
+            support.setAdminNo(AdminNo);
+        	int result = adminService.submitSupportAnswer(support);
+            if (result > 0) {
+                log.info("문의 답변 등록 성공. 문의 번호: {}", support.getSupportNo());
+                return ResponseEntity.ok("답변이 성공적으로 등록되었습니다.");
+            } else {
+                log.warn("문의 답변 등록 실패. 문의 번호: {}", support.getSupportNo());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("답변 등록 실패");
+            }
+        } catch (Exception e) {
+            log.error("문의 답변 등록 중 오류 발생: {}", e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("답변 등록 중 오류가 발생했습니다.");
+        }
+    }
    
     
     

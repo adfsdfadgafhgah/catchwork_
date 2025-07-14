@@ -124,5 +124,18 @@
         WHERE
             s.SUPPORT_NO = #{supportNo}
     </select>
+    
+    <!-- 문의 답변 등록 -->
+    <update id="submitSupportAnswer" parameterType="com.example.demo.support.model.dto.Support">
+        UPDATE SUPPORT
+        SET
+            SUPPORT_ANSWER = #{supportAnswer},
+            SUPPORT_STATUS = 'Y',
+            ADMIN_NO = #{adminNo},
+            SUPPORT_ANSWER_DATE = #{supportAnswerDate}
+        WHERE
+            SUPPORT_NO = #{supportNo}
+            AND SUPPORT_STATUS = 'N'
+    </update>
 
 </mapper>

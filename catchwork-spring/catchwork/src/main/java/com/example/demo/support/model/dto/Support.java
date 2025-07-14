@@ -1,9 +1,6 @@
 package com.example.demo.support.model.dto;
 
-import java.util.Date;
-
-import com.example.demo.admin.model.dto.Admin;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDateTime;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,11 +22,8 @@ public class Support {
     private String supportCategoryName;		// 문의 카테고리 이름
     private int supportCategoryCode;		// 문의 카테고리 코드
     
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-    private String supportDate;				// 문의 작성 날짜
-    
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd", timezone = "Asia/Seoul")
-    private String supportAnswerDate;		// 문의 답변 날짜
+    private LocalDateTime supportDate; 		// 문의 작성일
+    private LocalDateTime supportAnswerDate; // LocalDateTime으로 타입 변경
     
     private int seqNo; 						// 문의 회원별 순번
     
@@ -42,5 +36,9 @@ public class Support {
     private int adminNo;					// 관리자 번호
     private String adminNickname;
     private String adminName;
+    
+	
+
+	
     
 }

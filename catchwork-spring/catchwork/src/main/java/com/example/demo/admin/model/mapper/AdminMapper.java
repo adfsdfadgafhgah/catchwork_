@@ -12,7 +12,7 @@ import com.example.demo.support.model.dto.Support;
 public interface AdminMapper {
     Admin findByAdminId(String adminId);
 
-	/** 관리자가 문의 목록 조회
+	/** 전체 문의 목록 조회 (관리자용)
 	 * @author BAEBAE
 	 * @param params
 	 * @return
@@ -25,4 +25,11 @@ public interface AdminMapper {
 	 * @return
 	 */
 	Support getSupportDetail(int supportNo);
+
+	/** 문의 답변 등록 (관리자용)
+	 * @author BAEBAE
+	 * @param support
+	 * @return
+	 */
+	int submitSupportAnswer(Support support);
 }
