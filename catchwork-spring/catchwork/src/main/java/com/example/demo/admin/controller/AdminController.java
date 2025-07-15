@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.demo.admin.model.service.AdminService;
 import com.example.demo.support.model.dto.Support;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,6 @@ import com.example.demo.admin.model.dto.ReportList;
 
 @RestController
 @RequestMapping("/admin")
-@RequiredArgsConstructor
 @Slf4j
 public class AdminController {
 

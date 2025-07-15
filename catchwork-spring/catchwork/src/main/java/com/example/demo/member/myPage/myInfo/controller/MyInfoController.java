@@ -221,7 +221,7 @@ public class MyInfoController {
 
 	// 내가 쓴 댓글 목록
 	@GetMapping("myCommentList")
-	public ResponseEntity<List<Comment>> getMyCommentList(
+	public ResponseEntity<List<Map<String, Object>>> getMyCommentList(
 			@RequestParam(value = "query", required = false, defaultValue = "") String query,
 			@RequestParam(value = "memNo", required = false) String memNo
 	) {
@@ -229,9 +229,10 @@ public class MyInfoController {
 		paramMap.put("query", query);
 		paramMap.put("memNo", memNo);
 
-		List<Comment> commentList = myInfoService.getMyCommentList(paramMap);
+		List<Map<String, Object>> commentList = myInfoService.getMyCommentList(paramMap);
+		System.out.println("commentList : " + commentList);
 		return ResponseEntity.ok(commentList);
-		}
+	}
 
 	// 내가 지원한 채용공고 목록
 	@GetMapping("myRecruitList")
