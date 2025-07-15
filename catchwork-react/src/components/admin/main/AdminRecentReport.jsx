@@ -35,16 +35,18 @@ const AdminRecentReport = () => {
     <div className={styles.reportWrapper}>
       <div className={styles.header}>
         <h2 className={styles.title}>미처리 신고 내역</h2>
-        {!countLoading && count && (
-          <div style={{ marginBottom: "10px" }}>
-            <strong>총 미처리 신고 수:</strong> {count.TOTAL_COUNT || 0}{" "}
-            &nbsp;/&nbsp;
-            <strong>신고 대상 수:</strong> {count.TARGET_COUNT || 0}
-          </div>
-        )}
-        <button className={styles.moreButton} onClick={handleMoreClick}>
-          +
-        </button>
+        <div className={styles.content}>
+          {!countLoading && count && (
+            <div>
+              <strong>총 미처리 신고 수:</strong> {count.TOTAL_COUNT || 0}{" "}
+              &nbsp;/&nbsp;
+              <strong>신고 대상 수:</strong> {count.TARGET_COUNT || 0}
+            </div>
+          )}
+          <button className={styles.moreButton} onClick={handleMoreClick}>
+            +
+          </button>
+        </div>
       </div>
 
       <ul className={styles.list}>
@@ -64,16 +66,16 @@ const AdminRecentReport = () => {
               className={styles.item}
             >
               <p>
-                <strong>대상 타입:</strong> {item.reportTargetType}
+                <span className={styles.itemTitle}>대상 타입 </span>: {item.reportTargetType}
               </p>
               <p>
-                <strong>대상 번호:</strong> {item.reportTargetNo}
+                <span className={styles.itemTitle}>대상 번호 </span>: {item.reportTargetNo}
               </p>
               <p>
-                <strong>대표 신고 내용:</strong> {item.reportContent}
+                <span className={styles.itemTitle}>대표 신고 내용 </span>: {item.reportContent}
               </p>
               <p>
-                <strong>미처리 신고 건수:</strong> {item.reportCount}
+                <span className={styles.itemTitle}>미처리 신고 건수 </span>: {item.reportCount}
               </p>
             </li>
           );

@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 import com.example.demo.admin.model.dto.Admin;
 import com.example.demo.support.model.dto.Support;
 import com.example.demo.admin.model.dto.ReportList;
+import com.example.demo.admin.model.dto.SupportList;
 
 @Mapper
 public interface AdminMapper {
@@ -49,6 +50,15 @@ public interface AdminMapper {
 	List<ReportList> selectRecentReportList(Map<String, Object> param);
 
 	/**
+	 * 최근 미처리 문의 목록 조회
+	 * 
+	 * @param param
+	 * @return
+	 * @author 민장
+	 */
+	List<SupportList> selectRecentSupportList(Map<String, Object> param);
+
+	/**
 	 * 최근 미처리 신고 개수 조회
 	 * 
 	 * @return
@@ -56,4 +66,11 @@ public interface AdminMapper {
 	 */
 	Map<String, Object> selectRecentReportCount();
 
+    /**
+     * 최근 미처리 문의 개수 조회
+     * 
+     * @return
+     * @author 민장
+     */
+    Map<String, Object> selectRecentSupportCount();
 }

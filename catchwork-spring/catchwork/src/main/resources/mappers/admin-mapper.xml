@@ -4,7 +4,20 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.admin.model.mapper.AdminMapper">
 
-<!-- Support DTO 매핑 (getAllSupportList용) -->
+	<!--
+		
+	  ░██████                                                           ░██    
+	 ░██   ░██                                                          ░██    
+	░██         ░██    ░██ ░████████  ░████████   ░███████  ░██░████ ░████████ 
+	 ░████████  ░██    ░██ ░██    ░██ ░██    ░██ ░██    ░██ ░███        ░██    
+	        ░██ ░██    ░██ ░██    ░██ ░██    ░██ ░██    ░██ ░██         ░██    
+	 ░██   ░██  ░██   ░███ ░███   ░██ ░███   ░██ ░██    ░██ ░██         ░██    
+	  ░██████    ░█████░██ ░██░█████  ░██░█████   ░███████  ░██          ░████ 
+	                       ░██        ░██                                      
+	                       ░██        ░██                                      
+	                                                                           	
+	-->
+	<!-- Support DTO 매핑 (getAllSupportList용) -->
     <resultMap id="supportResultMap" type="com.example.demo.support.model.dto.Support">
         <id property="supportNo" column="SUPPORT_NO"/>
         <result property="supportTitle" column="SUPPORT_TITLE"/>
@@ -140,8 +153,20 @@
             SUPPORT_NO = #{supportNo}
             AND SUPPORT_STATUS = 'N'
     </update>
+    
+	<!--
+		░█████████                                               ░██    
+		░██     ░██                                              ░██    
+		░██     ░██  ░███████  ░████████   ░███████  ░██░████ ░████████ 
+		░█████████  ░██    ░██ ░██    ░██ ░██    ░██ ░███        ░██    
+		░██   ░██   ░█████████ ░██    ░██ ░██    ░██ ░██         ░██    
+		░██    ░██  ░██        ░███   ░██ ░██    ░██ ░██         ░██    
+		░██     ░██  ░███████  ░██░█████   ░███████  ░██          ░████ 
+		                       ░██                                      
+		                       ░██                                      
+	-->
 	
-	<!-- Terrace
+	<!--
 		░███     ░███            ░██           
 		░████   ░████                          
 		░██░██ ░██░██  ░███████  ░██░█████████
@@ -150,8 +175,8 @@
 		░██       ░██ ░██   ░██  ░██░██    ░██ 
 		░██       ░██  ░████████ ░██░██    ░██
 	-->
-	<!-- 최근 미처리 신고 목록 조회 -->
-    <select id="selectRecentReportList" resultType="com.example.demo.admin.model.dto.ReportList">
+	<!-- 미처리 문의 신고 조회 (무한스크롤) -->
+    <select id="selectRecentReportList">
 	    SELECT *
 	    FROM (
 	        SELECT
@@ -171,6 +196,32 @@
 	    WHERE RNUM BETWEEN #{startRow} AND #{endRow}
 	</select>
 	
+	<!-- 미처리 문의 목록 조회 (무한스크롤) -->
+	<select id="selectRecentSupportList">
+	    SELECT *
+	    FROM (
+	        SELECT
+	            S.SUPPORT_NO,
+	            C.SUPPORT_CATEGORY_NAME,
+	            S.SUPPORT_TITLE,
+	            M.MEM_NICKNAME,
+	            TO_CHAR(S.SUPPORT_DATE, 'YYYY-MM-DD') AS SUPPORT_DATE,
+	            S.SUPPORT_STATUS,
+	            ROW_NUMBER() OVER (ORDER BY S.SUPPORT_DATE DESC) AS RNUM
+	        FROM
+	            SUPPORT S
+	            JOIN SUPPORT_CATEGORY C
+	                ON S.SUPPORT_CATEGORY_CODE = C.SUPPORT_CATEGORY_CODE
+	            JOIN MEMBER M
+	                ON S.MEM_NO = M.MEM_NO
+	        WHERE
+	            S.SUPPORT_STATUS = 'N'
+	    )
+	    WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	
+	<!-- 미처리 신고 수 통계 -->
 	<select id="selectRecentReportCount" resultType="map">
 	    SELECT
 	        COUNT(*) AS TARGET_COUNT,
@@ -189,5 +240,14 @@
 	            REPORT_TARGET_TYPE
 	    )
 	</select>
-
+	
+	<!-- 미처리 문의 수 통계 -->
+	<select id="selectRecentSupportCount" resultType="map">
+	    SELECT
+	        COUNT(*) AS TOTAL_COUNT
+	    FROM
+	        SUPPORT
+	    WHERE
+	        SUPPORT_STATUS = 'N'
+	</select>
 </mapper>

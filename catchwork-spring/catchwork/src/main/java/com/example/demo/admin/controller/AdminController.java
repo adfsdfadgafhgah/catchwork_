@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import com.example.demo.admin.model.dto.ReportList;
+import com.example.demo.admin.model.dto.SupportList;
 
 @RestController
 @RequestMapping("/admin")
@@ -38,17 +39,49 @@ public class AdminController {
 	 * @return
 	 * @author 민장
 	 */
-	@GetMapping("recentReport/list")
+	@GetMapping("recentReportList")
 	public List<ReportList> selectRecentReportList(@RequestParam("page") int page, @RequestParam("size") int size) {
 		int startRow = (page - 1) * size + 1;
 		int endRow = page * size;
 		return adminService.selectRecentReportList(startRow, endRow);
 	}
+	
+	/**
+	 * 최근 미처리 문의 목록 조회
+	 * 
+	 * @param page
+	 * @param size
+	 * @return
+	 * @author 민장
+	 */
+	@GetMapping("recentSupportList")
+	public List<SupportList> selectRecentSupportList(@RequestParam("page") int page, @RequestParam("size") int size) {
+		int startRow = (page - 1) * size + 1;
+		int endRow = page * size;
+		return adminService.selectRecentSupportList(startRow, endRow);
+	}
 
-	@GetMapping("recentReport/count")
+	/**
+	 * 최근 미처리 신고 개수 조회
+	 * 
+	 * @return
+	 * @author 민장
+	 */
+	@GetMapping("recentReportCount")
 	public Map<String, Object> selectRecentReportCount() {
 		return adminService.selectRecentReportCount();
 	}
+	
+	/**
+	 * 최근 미처리 문의 개수 조회
+	 * 
+	 * @return
+	 * @author 민장
+	 */
+    @GetMapping("recentSupportCount")
+    public Map<String, Object> selectRecentSupportCount() {
+        return adminService.selectRecentSupportCount();
+    }
 
 	/**
 	 * 전체 문의 목록 조회 (관리자용)
