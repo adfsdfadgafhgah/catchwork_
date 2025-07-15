@@ -194,10 +194,7 @@ export default function AdminSupportDetailPage() {
             </button>
           )}
 
-          <button
-            className={styles.backButton}
-            onClick={() => navigate("/admin/support")}
-          >
+          <button className={styles.backButton} onClick={() => navigate(-1)}>
             목록으로
           </button>
         </div>

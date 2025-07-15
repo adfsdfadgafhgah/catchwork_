@@ -108,6 +108,7 @@ import AdminMainPage from "./pages/admin/AdminMainPage"; // 메인 리스트
 import AdminSupportPage from "./pages/admin/AdminSupportPage"; // 문의 리스트
 import AdminSupportDetailPage from "./pages/admin/AdminSupportDetailPage"; // 문의 상세
 import AdminReportPage from "./pages/admin/AdminReportPage"; // 신고 리스트
+import AdminReportDetailPage from "./pages/admin/AdminReportDetailPage"; // 신고 상세
 import AdminBanPage from "./pages/admin/AdminBanPage"; // 정지 리스트
 import AdminRestorePage from "./pages/admin/AdminRestorePage"; // 복구 리스트
 
@@ -342,7 +343,7 @@ const router = createBrowserRouter([
         path: "report",
         children: [
           { index: true, element: <AdminReportPage /> },
-          // { path: ":id", element: <AdminReportDetailPage /> },
+          { path: ":reportNo", element: <AdminReportDetailPage /> },
         ],
       },
       {

@@ -1,16 +1,17 @@
 import { useEffect, useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
 import Pagination from "../../components/common/Pagination";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import styles from "./AdminSupportPage.module.css";
 
 export default function AdminSupportPage() {
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(1);
   const [supportItems, setSupportItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const itemsPerPage = 10;
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [currentPage, setCurrentPage] = useState(1);
 
   // 날짜 포맷팅 헬퍼 함수 (yyyy-mm-dd 형식)
   const formatDate = (dateString) => {
@@ -28,24 +29,31 @@ export default function AdminSupportPage() {
   const [searchTerm, setSearchTerm] = useState(""); // 검색어 입력 상태
   const [confirmedSearchTerm, setConfirmedSearchTerm] = useState(""); // 실제 검색에 사용될 확정된 검색어
 
-  // 모든 문의 내역 데이터 로드
+  // 모든 문의 내역 데이터 로드 (의존성 배열에서 navigate 제거)
   useEffect(() => {
-    fetchSupportData();
-  }, [navigate, filterStatus, sortOrder, confirmedSearchTerm]); // 필터, 정렬, 검색어 변경 시 재요청
+    // 추가: URL 파라미터를 읽어 필터 상태를 설정합니다.
+    // 이렇게 하면 페이지를 새로고침해도 필터 값이 유지됩니다.
+    const pageFromUrl = parseInt(searchParams.get("page") || "1", 10);
+    const statusFromUrl = searchParams.get("status") || "all";
+    const sortFromUrl = searchParams.get("sort") || "latest";
+    const queryFromUrl = searchParams.get("query") || "";
 
-  const fetchSupportData = async () => {
+    setCurrentPage(pageFromUrl);
+    setFilterStatus(statusFromUrl);
+    setSortOrder(sortFromUrl);
+    setSearchTerm(queryFromUrl);
+
+    fetchSupportData(pageFromUrl, statusFromUrl, sortFromUrl, queryFromUrl);
+  }, [searchParams]); // URL 파라미터가 변경될 때마다 이 효과를 실행
+
+  const fetchSupportData = async (page, status, sort, query) => {
     setLoading(true);
     setError(null);
     try {
       const response = await axiosApi.get("/admin/supportlist", {
-        params: {
-          status: filterStatus, // 답변 상태 필터
-          sort: sortOrder, // 정렬 순서
-          query: confirmedSearchTerm, // 검색어
-        },
+        params: { status, sort, query },
       });
-      // ERD에 따르면 supportItems의 각 item에 memNickname 또는 corpName이 포함되어야 작성자 표시 가능
-      // 또한, 답변 관리자를 표시하려면 item에 answerAdminNickname 또는 answerAdminName 필드가 포함되어야 함
+
       setSupportItems(response.data);
     } catch (err) {
       console.error("문의 내역 불러오기 실패:", err);
@@ -64,9 +72,21 @@ export default function AdminSupportPage() {
   const currentItems = supportItems.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(supportItems.length / itemsPerPage);
 
-  const handleSearch = () => {
-    setCurrentPage(1); // 검색 시 페이지 1로 초기화
-    setConfirmedSearchTerm(searchTerm); // 검색어 확정
+  // 페이지를 변경할 때 URL의 'page' 파라미터도 함께 업데이트합니다.
+  const handlePageChange = (page) => {
+    setCurrentPage(page); // 현재 페이지 상태 업데이트
+    // URL 파라미터를 업데이트합니다. 기존 필터, 정렬, 검색 값은 유지합니다.
+    searchParams.set("page", page.toString());
+    setSearchParams(searchParams);
+  };
+
+  // 수정: 필터, 정렬, 검색 시 페이지를 1로 초기화하고 URL도 업데이트하도록 변경
+  const applyFilters = () => {
+    searchParams.set("status", filterStatus);
+    searchParams.set("sort", sortOrder);
+    searchParams.set("query", searchTerm);
+    searchParams.set("page", "1"); // 검색 시 1페이지로 초기화
+    setSearchParams(searchParams);
   };
 
   const goToDetail = (supportNo) => {
@@ -79,7 +99,7 @@ export default function AdminSupportPage() {
 
   return (
     <div className={styles.adminSupportListContainer}>
-      <h1 className={styles.pageTitle}>모든 회원의 문의 목록</h1>
+      <h1 className={styles.pageTitle}>문의 목록</h1>
 
       {/* 필터 및 검색 UI */}
       <div className={styles.controlsSection}>
@@ -88,7 +108,13 @@ export default function AdminSupportPage() {
           <select
             id="filterStatus"
             value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value)}
+            onChange={(e) => {
+              setFilterStatus(e.target.value);
+              // 수정: 값이 바뀔 때마다 바로 URL 업데이트
+              searchParams.set("status", e.target.value);
+              searchParams.set("page", "1");
+              setSearchParams(searchParams);
+            }}
           >
             <option value="all">전체</option>
             <option value="pending">답변 대기</option>
@@ -101,7 +127,13 @@ export default function AdminSupportPage() {
           <select
             id="sortOrder"
             value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
+            onChange={(e) => {
+              setSortOrder(e.target.value);
+              // 수정: 값이 바뀔 때마다 바로 URL 업데이트
+              searchParams.set("sort", e.target.value);
+              searchParams.set("page", "1");
+              setSearchParams(searchParams);
+            }}
           >
             <option value="latest">최신순</option>
             <option value="oldest">오래된순</option>
@@ -111,16 +143,16 @@ export default function AdminSupportPage() {
         <div className={styles.searchGroup}>
           <input
             type="text"
-            placeholder="제목 검색..."
+            placeholder="문의 검색"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                handleSearch();
+                // 수정: 검색 실행 함수 호출
+                applyFilters();
               }
             }}
           />
-          <button onClick={handleSearch}>검색</button>
         </div>
       </div>
 
@@ -187,7 +219,7 @@ export default function AdminSupportPage() {
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              onPageChange={(page) => setCurrentPage(page)}
+              onPageChange={handlePageChange}
             />
           )}
         </>

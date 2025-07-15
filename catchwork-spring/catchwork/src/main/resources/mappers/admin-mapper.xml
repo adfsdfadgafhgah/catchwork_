@@ -79,7 +79,10 @@
 	        </if>
 	        
 	        <if test="query != null and query != ''">
-	            AND s.SUPPORT_TITLE LIKE '%' || #{query} || '%'
+	            AND (
+	     		 s.SUPPORT_TITLE LIKE CONCAT(CONCAT('%', #{query}), '%')
+		 		 OR s.SUPPORT_CONTENT LIKE CONCAT(CONCAT('%', #{query}), '%')
+		 		 )
 	        </if>
 	       	 ORDER BY
 	        <choose>
