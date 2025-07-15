@@ -1,0 +1,9 @@
+.chartWrapper {
+  width: 100%;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}

@@ -10,12 +10,12 @@
   <result property="supportContent" column="SUPPORT_CONTENT" />
   <result property="supportAnswer" column="SUPPORT_ANSWER" />
   <result property="supportStatus" column="SUPPORT_STATUS" />
-  <result property="supportDate" column="SUPPORT_DATE" />
   <result property="supportCategoryCode" column="SUPPORT_CATEGORY_CODE" />
   <result property="supportCategoryName" column="SUPPORT_CATEGORY_NAME" />
   <result property="memNo" column="MEM_NO" />
   <result property="adminNo" column="ADMIN_NO" />
-  <result property="supportDate" column="SUPPORT_DATE" javaType="java.lang.String"/> 
+  <result property="supportDate" column="SUPPORT_DATE" javaType="java.time.LocalDateTime"/> 
+  <result property="supportAnswerDate" column="SUPPORT_ANSWER_DATE" javaType="java.time.LocalDateTime"/>
   <result property="seqNo" column="SEQ_NO"/>
 </resultMap>
 
@@ -32,7 +32,7 @@
       	S.ADMIN_NO,
      	S.SUPPORT_CATEGORY_CODE,
      	C.SUPPORT_CATEGORY_NAME,
-     	TO_CHAR(S.SUPPORT_DATE, 'YYYY-MM-DD') AS SUPPORT_DATE   <!-- 년 월 일 조회 -->
+     	S.SUPPORT_DATE
   	 FROM SUPPORT S
  	 LEFT JOIN SUPPORT_CATEGORY C
      ON S.SUPPORT_CATEGORY_CODE = C.SUPPORT_CATEGORY_CODE
@@ -53,7 +53,7 @@
 	    S.ADMIN_NO,
 	    S.SUPPORT_CATEGORY_CODE,
 	    C.SUPPORT_CATEGORY_NAME,
-	    TO_CHAR(S.SUPPORT_DATE, 'YYYY-MM-DD') AS SUPPORT_DATE
+	    S.SUPPORT_DATE
 	  FROM SUPPORT S
 	  LEFT JOIN SUPPORT_CATEGORY C
 	    ON S.SUPPORT_CATEGORY_CODE = C.SUPPORT_CATEGORY_CODE

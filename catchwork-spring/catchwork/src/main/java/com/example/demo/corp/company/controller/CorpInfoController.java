@@ -140,7 +140,6 @@ public class CorpInfoController {
 	@GetMapping("corpNo")
 	public ResponseEntity<?> getCorpNoByMemNo(@RequestParam("memNo") String memNo) {
 
-// 07/10 수정됨
 	    try {
 	        CorpInfo corpInfo = corpInfoService.getCorpInfoByMember(memNo);
 	        if (corpInfo == null || corpInfo.getCorpNo() == 0) {
@@ -151,17 +150,6 @@ public class CorpInfoController {
 	        e.printStackTrace();
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("corpNo 조회 중 오류 발생");
 	    }
-
-//     try {
-// 			CorpInfo corpInfo = corpInfoService.getCorpInfoByMember(memNo);
-// 			if (corpInfo == null || corpInfo.getCorpNo() == 0) {
-// 				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("해당 회원의 corpNo를 찾을 수 없습니다.");
-// 			}
-// 			return ResponseEntity.ok(corpInfo.getCorpNo());
-// 		} catch (Exception e) {
-// 			e.printStackTrace();
-// 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("corpNo 조회 중 오류 발생");
-// 		}
 	}
 
 }

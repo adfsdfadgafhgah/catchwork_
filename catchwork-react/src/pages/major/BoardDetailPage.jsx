@@ -29,6 +29,25 @@ export default function BoardDetailPage() {
   const [reportTargetType, setReportTargetType] = useState(null);
   const [reportTargetNickname, setReportTargetNickname] = useState(null);
 
+  // 쿠키 헬퍼 함수 정의
+  const setCookie = (name, value, days) => {
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/";
+  };
+
+  const getCookie = (name) => {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === " ") c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  };
+
   // 게시글 상세 조회 API
   useEffect(() => {
     // memNo가 undefined (아직 로딩 중)일 경우 대기
@@ -59,21 +78,20 @@ export default function BoardDetailPage() {
   // 게시글 조회수 증가
   useEffect(() => {
     const key = `viewed_${boardNo}`;
-    const lastViewed = localStorage.getItem(key);
     const now = new Date();
+    const today = now.toDateString();
+    const lastViewed = getCookie(key);
 
-    if (
-      !lastViewed ||
-      new Date(lastViewed).toDateString() !== now.toDateString()
-    ) {
-      localStorage.setItem(key, now.toISOString()); // react18버전 때문에 조회수 2증가 방지
+    if (!lastViewed || new Date(lastViewed).toDateString() !== today) {
+      setCookie(key, now.toISOString(), 1);
       axiosApi
         .get(`/board/readCount/${boardNo}`)
         .then(() => {
-          localStorage.setItem(key, now.toISOString());
-          console.log("📈 조회수 증가");
+          console.log("조회수 증가");
         })
         .catch((err) => console.error("조회수 증가 실패:", err));
+    } else {
+      console.log("오늘 이미 조회함 (쿠키 확인)");
     }
   }, [boardNo]);
 

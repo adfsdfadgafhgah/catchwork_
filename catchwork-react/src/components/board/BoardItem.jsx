@@ -3,7 +3,7 @@ import { axiosApi } from "../../api/axiosAPI";
 import iconImg from "../../assets/icon.png";
 import BoardCss from "./BoardItem.module.css";
 import { formatTimeAgo } from "./../common/formatTimeAgo";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import defaultImg from "../../assets/icon.png";
 // import useLoginMember from "../../stores/loginMember";
 

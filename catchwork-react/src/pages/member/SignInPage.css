@@ -116,3 +116,7 @@
   border-radius: 5px;
   cursor: pointer;
 }
+
+.find-btn {
+  cursor: pointer;
+}

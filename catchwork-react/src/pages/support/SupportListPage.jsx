@@ -12,6 +12,16 @@ const SupportListPage = () => {
   const [error, setError] = useState(null);
   const itemsPerPage = 10;
 
+  // 날짜 포맷팅 헬퍼 함수 (yyyy-mm-dd 형식)
+  const formatDate = (dateString) => {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
     if (!token) {
@@ -22,14 +32,21 @@ const SupportListPage = () => {
 
     const fetchSupportData = async () => {
       try {
-        const response = await axiosApi.get("http://localhost:8080/support/list", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axiosApi.get(
+          "http://localhost:8080/support/list",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setSupportItems(response.data);
       } catch (err) {
-        setError(err.response?.data?.message || err.message || "데이터를 가져오는 중 오류 발생");
+        setError(
+          err.response?.data?.message ||
+            err.message ||
+            "데이터를 가져오는 중 오류 발생"
+        );
       } finally {
         setLoading(false);
       }
@@ -80,7 +97,7 @@ const SupportListPage = () => {
             <tbody>
               {currentItems.length > 0 ? (
                 currentItems.map((item) => (
-                <tr key={item.supportNo}>
+                  <tr key={item.supportNo}>
                     <td>{item.seqNo}</td> {/* ← 수정된 부분! */}
                     <td>{item.supportCategoryName}</td>
                     <td
@@ -90,7 +107,7 @@ const SupportListPage = () => {
                     >
                       {item.supportTitle}
                     </td>
-                    <td>{item.supportDate || "-"}</td>
+                    <td>{formatDate(item.supportDate)}</td>
                     <td
                       className={
                         item.supportStatus === "Y"
@@ -100,7 +117,7 @@ const SupportListPage = () => {
                     >
                       {item.supportStatus === "Y" ? "답변 완료" : "답변 대기"}
                     </td>
-                </tr>
+                  </tr>
                 ))
               ) : (
                 <tr>

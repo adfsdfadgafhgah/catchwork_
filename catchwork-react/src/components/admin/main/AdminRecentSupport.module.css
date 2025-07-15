@@ -1,0 +1,42 @@
+.supportWrapper {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.moreButton {
+  background: var(--main-color);
+  color: #fff;
+  border: none;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.moreButton:hover {
+  background: var(--main-color-dark);
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+}
+
+.item {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+}

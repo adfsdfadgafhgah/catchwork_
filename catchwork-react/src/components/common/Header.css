@@ -1,7 +1,7 @@
 .header {
   background-color: white;
   border-bottom: 1px solid var(--gray01);
-  padding: 1rem;
+  padding: 16px;
 }
 
 .header-top {
@@ -15,11 +15,11 @@
 
 .logo {
   font-weight: bold;
-  font-size: 1.25rem;
+  font-size: 20px;
   color: var(--main-color);
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
 /* 검색창 */
@@ -50,7 +50,7 @@
 }
 
 .user-info span {
-  margin-right: 1rem;
+  margin-right: 16px;
 }
 
 .nav {
