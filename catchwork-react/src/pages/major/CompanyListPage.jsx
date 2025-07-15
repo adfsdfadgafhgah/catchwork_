@@ -101,7 +101,7 @@ const CompanyListPage = () => {
             </button>
             <input
               type="text"
-              placeholder="진중한 이야기, 취중진담"
+              placeholder=" 기업명을 검색해보세요"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
