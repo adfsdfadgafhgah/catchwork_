@@ -26,7 +26,10 @@ public class CompanyInfoServiceImpl implements CompanyInfoService{
 		@Override
 		public List<CompanyInfo> selectCompanyList(String query, String memNo, Integer page,Integer size,String sort, Integer limit) {
 //			log.info("전달된 query: {}, memNo: {}", query, memNo);
-			int offset = (page - 1) * size;
+			Integer offset = null;
+			if(page!=null) {
+				offset = (page - 1) * size;				
+			}
 		    try {
 		        List<CompanyInfo> result = companyInfoMapper.selectCompanyListWithRecruitInfo(query, memNo,offset,size,sort,limit);
 //		        log.info("조회된 기업 수: {}", result != null ? result.size() : "null");

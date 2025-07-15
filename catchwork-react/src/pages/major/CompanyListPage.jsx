@@ -46,7 +46,7 @@ const CompanyListPage = () => {
         params.query = searchTerm.trim(); //검색어 전달
       }
       params.page = pageNum;
-      params.size = 9;
+      params.size = 12;
       const res = await axiosApi.get("/company", { params });
 
       if (res.status === 200) {
@@ -56,7 +56,7 @@ const CompanyListPage = () => {
         } else {
           setCompanyList((prev) => [...prev, ...newCorpInfo]);
         }
-        setHasMore(newCorpInfo.length === 9);
+        setHasMore(newCorpInfo.length === 12);
       } else if (res.status === 204) {
         setCompanyList([]);
         setHasMore(false);

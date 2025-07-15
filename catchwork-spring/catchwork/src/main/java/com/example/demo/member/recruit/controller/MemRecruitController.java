@@ -78,7 +78,10 @@ private final MemRecruitService memRecruitService;
 			@RequestParam(value = "limit", required = false) Integer limit,
 			@RequestParam(value = "type", required = false) String type
 	) {
-		int offset = (page - 1) * size;
+		Integer offset = null;
+		if(page!=null) {
+			offset = (page - 1) * size;
+		}
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("recruitJobName", recruitJobName);
 	    paramMap.put("recruitJobArea", recruitJobArea);
