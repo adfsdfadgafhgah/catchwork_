@@ -6,4 +6,5 @@ public interface CorpService {
     boolean checkCorpRegNo(CorpInfo corp);
     boolean checkCorpCEOName(CorpInfo corp);
     boolean authCorpRegNo(CorpInfo corp);
+	String findMemName(String memNo);
 }

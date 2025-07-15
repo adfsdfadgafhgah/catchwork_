@@ -14,13 +14,19 @@ const ConfirmPwModal = ({ isOpen, onClose, onConfirm, loading = false }) => {
     }
   };
 
+  const handleOverlayClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
   const handleClose = () => {
     setPw(""); // 비밀번호 초기화
     onClose();
   };
 
   return (
-    <div className="modal-overlay">
+    <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal-content">
         <div className="modal-header">
           <h3>비밀번호 확인</h3>

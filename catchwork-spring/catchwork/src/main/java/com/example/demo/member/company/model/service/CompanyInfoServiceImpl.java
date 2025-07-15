@@ -24,10 +24,14 @@ public class CompanyInfoServiceImpl implements CompanyInfoService{
 		 *@param memNo
 		 */
 		@Override
-		public List<CompanyInfo> selectCompanyList(String query, String memNo, String sort, Integer limit) {
+		public List<CompanyInfo> selectCompanyList(String query, String memNo, Integer page,Integer size,String sort, Integer limit) {
 //			log.info("전달된 query: {}, memNo: {}", query, memNo);
+			Integer offset = null;
+			if(page!=null) {
+				offset = (page - 1) * size;				
+			}
 		    try {
-		        List<CompanyInfo> result = companyInfoMapper.selectCompanyListWithRecruitInfo(query, memNo,sort,limit);
+		        List<CompanyInfo> result = companyInfoMapper.selectCompanyListWithRecruitInfo(query, memNo,offset,size,sort,limit);
 //		        log.info("조회된 기업 수: {}", result != null ? result.size() : "null");
 		        return result;
 		    } catch (Exception e) {

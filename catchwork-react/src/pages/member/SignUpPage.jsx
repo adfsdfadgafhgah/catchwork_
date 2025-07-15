@@ -29,18 +29,29 @@ const SignUpPage = () => {
 
   // config 사용해서 useSignUpForm을 Handle하기
   const config = {
-    fields: [
-      "memId",
-      "memPw",
-      "memPwConfirm",
-      "memEmail",
-      "memTel",
-      "memName",
-      "memNickname",
-      "memBirthday",
-      "memGender",
-      "memAddr",
-    ],
+    fields:
+      userType === "corporate"
+        ? [
+            "corpMemDept",
+            "memId",
+            "memPw",
+            "memPwConfirm",
+            "memName",
+            "memEmail",
+            "memTel",
+          ]
+        : [
+            "memId",
+            "memPw",
+            "memPwConfirm",
+            "memEmail",
+            "memTel",
+            "memName",
+            "memNickname",
+            "memBirthday",
+            "memGender",
+            "memAddr",
+          ],
     idField: "memId",
     pwField: "memPw",
     pwConfirmField: "memPwConfirm",
@@ -87,7 +98,17 @@ const SignUpPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!validateForm()) return;
+    if (userType === "corporate") {
+      if (!isCorpVerified) {
+        alert("기업 인증을 먼저 완료해주세요.");
+        return;
+      }
+      if (!validateForm()) {
+        return;
+      }
+    } else {
+      if (!validateForm()) return;
+    }
 
     let dataToSend;
 
@@ -239,7 +260,14 @@ const SignUpPage = () => {
                 name="corpMemDept"
                 value={formData.corpMemDept}
                 onChange={handleInputChange}
+                style={{
+                  borderColor:
+                    validity.corpMemDept === false ? "red" : undefined,
+                }}
               />
+              {validity.corpMemDept === false && (
+                <small style={{ color: "red" }}>부서명을 입력해주세요.</small>
+              )}
             </label>
           </>
         )}

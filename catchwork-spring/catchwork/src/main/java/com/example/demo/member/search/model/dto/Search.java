@@ -16,6 +16,7 @@ public class Search {
 	    private String status;
 	    private String sort;
 	    private String recruitJobName;
+	    private String recruitJobArea;
 	    private String recruitCareer;
 	    private String recruitEdu;
 	    private String corpType;
