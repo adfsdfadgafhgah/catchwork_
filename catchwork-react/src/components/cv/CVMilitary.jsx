@@ -50,7 +50,8 @@ const CVMilitary = ({ formData, onChange, isSubmitted }) => {
               onChange={(e) => onChange("cvMiliBranch", e.target.value)}
               disabled={formData.cvMiliClass !== "군필"}
             >
-              {formData.cvMiliClass === "미필" || formData.cvMiliClass === "면제" ? (
+              {formData.cvMiliClass === "미필" ||
+              formData.cvMiliClass === "면제" ? (
                 <option value="-">-</option>
               ) : (
                 <>
@@ -67,22 +68,26 @@ const CVMilitary = ({ formData, onChange, isSubmitted }) => {
         </div>
 
         <div className={styles.militaryRight}>
-          {/* 입대일 ~ 전역일 */}
-          <div>
-            <YearMonthPicker
-              value={formData.cvMiliStartDate}
-              onChange={(val) => onChange("cvMiliStartDate", val)}
-            />
-          </div>
+          {formData.cvMiliClass === "군필" && (
+            <>
+              {/* 입대일 ~ 전역일 */}
+              <div>
+                <YearMonthPicker
+                  value={formData.cvMiliStartDate}
+                  onChange={(val) => onChange("cvMiliStartDate", val)}
+                />
+              </div>
 
-          <span className={styles.dateSeparator}>~</span>
+              <span className={styles.dateSeparator}>~</span>
 
-          <div>
-            <YearMonthPicker
-              value={formData.cvMiliEndDate}
-              onChange={(val) => onChange("cvMiliEndDate", val)}
-            />
-          </div>
+              <div>
+                <YearMonthPicker
+                  value={formData.cvMiliEndDate}
+                  onChange={(val) => onChange("cvMiliEndDate", val)}
+                />
+              </div>
+            </>
+          )}
         </div>
       </div>
       <div className={styles.militaryWoman}>

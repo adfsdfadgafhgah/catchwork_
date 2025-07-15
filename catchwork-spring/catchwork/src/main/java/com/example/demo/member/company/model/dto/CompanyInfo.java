@@ -28,8 +28,8 @@ public class CompanyInfo {
     private String corpDetail;          // 기업_기업소개상세
     private String corpBenefit;         // 기업_복리후생_카테고리
     private String corpBenefitDetail;   // 기업_복리후생_내용
-    private String corpBanFl;           // 기업_정지_플래그 String으로 받는게 맞나?
-    private Date corpBanDate;           // 기업_정지일
+    private String corpStatus;           // 기업_정지_플래그 String으로 받는게 맞나?
+    private Date corpStatusDate;           // 기업_정지일
 
     // MEMBER 테이블 조인
  	private String memNo;

@@ -16,3 +16,7 @@
   flex-direction: column;
   gap: 10px;
 }
+
+.withdraw-content {
+  margin-top: 80px;
+}

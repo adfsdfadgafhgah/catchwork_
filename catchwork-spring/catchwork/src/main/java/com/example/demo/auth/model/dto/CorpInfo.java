@@ -1,7 +1,6 @@
 package com.example.demo.auth.model.dto;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -26,4 +25,6 @@ public class CorpInfo {
     private String corpBenefit;
     private String corpBenefitDetail;
     private String corpLogo; //MultipartFile로 분리 필요
+    private Integer corpStatus;
+    private LocalDate corpStatusDate;
 }

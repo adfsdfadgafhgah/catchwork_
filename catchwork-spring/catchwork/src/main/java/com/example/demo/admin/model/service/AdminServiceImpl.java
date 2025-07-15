@@ -20,6 +20,7 @@ import com.example.demo.admin.model.dto.AdminReport;
 import com.example.demo.admin.model.dto.ReportList;
 import com.example.demo.admin.model.dto.ReportSearchCriteria;
 import com.example.demo.admin.model.dto.ReportSummary;
+import com.example.demo.admin.model.dto.SupportList;
 
 @Service
 @RequiredArgsConstructor
@@ -59,7 +60,10 @@ public class AdminServiceImpl implements AdminService {
 
 	}
 
-	// 최근 미처리 신고 목록 조회 (민장)
+
+	/** 최근 미처리 신고 목록 조회
+	 * @author 민장
+	 */
 	@Override
 	public List<ReportList> selectRecentReportList(int startRow, int endRow) {
 		Map<String, Object> param = new HashMap<>();
@@ -68,11 +72,32 @@ public class AdminServiceImpl implements AdminService {
 		return adminMapper.selectRecentReportList(param);
 	}
 
-	// 최근 미처리 신고 개수 조회 (민장)
+	/** 최근 미처리 문의 목록 조회
+	 * @author 민장
+	 */
+    @Override
+    public List<SupportList> selectRecentSupportList(int startRow, int endRow) {
+        Map<String, Object> param = new HashMap<>();
+        param.put("startRow", startRow);
+        param.put("endRow", endRow);
+        return adminMapper.selectRecentSupportList(param);
+    }
+	
+	/** 최근 미처리 신고 개수 조회
+	 * @author 민장
+	 */
 	@Override
 	public Map<String, Object> selectRecentReportCount() {
 		return adminMapper.selectRecentReportCount();
 	}
+  
+  /** 최근 미처리 문의 개수 조회
+	 * @author 민장
+	 */
+   @Override
+    public Map<String, Object> selectRecentSupportCount() {
+        return adminMapper.selectRecentSupportCount();
+    }
 	
 	// 신고 목록 조회 (배령)
 	@Override

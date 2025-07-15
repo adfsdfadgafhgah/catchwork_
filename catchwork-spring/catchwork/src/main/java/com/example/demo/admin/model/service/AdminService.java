@@ -9,6 +9,7 @@ import com.example.demo.admin.model.dto.ReportList;
 import com.example.demo.admin.model.dto.ReportSearchCriteria;
 import com.example.demo.admin.model.dto.ReportSummary;
 import com.example.demo.report.model.dto.Report;
+import com.example.demo.admin.model.dto.SupportList;
 
 public interface AdminService {
 
@@ -47,7 +48,17 @@ public interface AdminService {
 	 * @author 민장
 	 */
 	List<ReportList> selectRecentReportList(int startRow, int endRow);
-
+	
+	/**
+	 * 최근 미처리 문의 목록 조회
+	 * 
+	 * @param startRow
+	 * @param endRow
+	 * @return
+	 * @author 민장
+	 */
+	List<SupportList> selectRecentSupportList(int startRow, int endRow);
+	
 	/**
 	 * 최근 미처리 신고 개수 조회
 	 * 
@@ -55,8 +66,15 @@ public interface AdminService {
 	 * @author 민장
 	 */
 	Map<String, Object> selectRecentReportCount();
-	
-	
+  
+	/**
+	 * 최근 미처리 문의 개수 조회
+	 * 
+	 * @return
+	 * @author 민장
+	 */
+   Map<String, Object> selectRecentSupportCount();
+  
 	/** 신고 목록 조회
 	 * @author BAEBAE
 	 * @param criteria
@@ -77,5 +95,6 @@ public interface AdminService {
 	 * @return
 	 */
 	int processReport(Report report);
+
 
 }
