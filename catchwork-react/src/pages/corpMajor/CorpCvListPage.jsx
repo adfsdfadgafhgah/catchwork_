@@ -215,7 +215,7 @@ const CorpCVListPage = () => {
 
   const { careerMin, careerMax } = getCareerRange(selectedExp);
   return (
-    <main className="container">
+    <main className="corp-container">
       <SectionHeader title="이력서 목록 조회" />
 
       {/* 필터 영역 */}
