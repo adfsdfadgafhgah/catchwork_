@@ -1,3 +1,7 @@
+.resume-container {
+  padding-top: 25px;
+}
+
 /* 전역 h2 폰트 크기 */
 .resume-container h2 {
   font-size: 20px;
