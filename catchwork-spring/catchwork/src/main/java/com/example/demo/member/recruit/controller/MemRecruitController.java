@@ -70,8 +70,8 @@ private final MemRecruitService memRecruitService;
 		    @RequestParam(name = "recruitType", required = false) String recruitType,
 		    @RequestParam(name = "query", required = false) String query,
 		    @RequestParam(name = "memNo", required = false) String memNo,
-            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
+            @RequestParam(name = "page", required = false) Integer page,
+            @RequestParam(name = "size", required = false) Integer size,
             
 			// 메인페이지용용
 			@RequestParam(value = "sort", required = false, defaultValue = "latest") String sort,
