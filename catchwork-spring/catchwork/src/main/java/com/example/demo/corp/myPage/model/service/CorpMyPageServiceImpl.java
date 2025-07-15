@@ -30,6 +30,7 @@ public class CorpMyPageServiceImpl implements CorpMyPageService {
     @Override
     @Transactional
     public void updateMemberInfo(CorpMyPage corpMyPage) {
+   
         corpMyPageMapper.updateMemberCoreInfo(corpMyPage);
         corpMyPageMapper.updateCorporateMemberDepartment(corpMyPage);
     }
