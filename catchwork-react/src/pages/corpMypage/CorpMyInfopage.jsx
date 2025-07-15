@@ -1,19 +1,20 @@
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import "./CorpMyInfoPage.css";
-import defaultImg from "../../assets/icon.png";
+import defaultLogo from "../../assets/icon.png"; // 기업 기본 로고로 사용
 import { axiosApi } from "../../api/axiosAPI";
 
 function CorpMyInfo() {
-  const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
-  const { loginMember } = useOutletContext();  // 로그인 멤버 정보는 그대로 둠
-  const [corpInfo, setCorpInfo] = useState(null); // 기업 정보만 별도로 상태관리
+  const logoImgUrl = import.meta.env.VITE_FILE_COMPANY_LOGO_URL; // 회사 로고용 이미지 경로 환경변수
+  const { loginMember } = useOutletContext();
+  const [corpInfo, setCorpInfo] = useState(null);
 
   useEffect(() => {
-    axiosApi.get("/corp/mypage", { withCredentials: true })
+    axiosApi
+      .get("/corp/mypage", { withCredentials: true })
       .then((res) => {
         console.log("✅ 백엔드 응답 데이터:", res.data);
-        setCorpInfo(res.data); // 기업 정보만 저장
+        setCorpInfo(res.data);
       })
       .catch((err) => {
         console.error("기업 정보 조회 실패", err);
@@ -21,7 +22,7 @@ function CorpMyInfo() {
   }, []);
 
   if (!loginMember || !corpInfo) {
-    return <div>기억 정보를 불러오는 중...</div>;
+    return <div>기업 정보를 불러오는 중...</div>;
   }
 
   return (
@@ -29,8 +30,13 @@ function CorpMyInfo() {
       <div className="profile-section">
         <div className="corpmyinfo-profile-img">
           <img
-            src={loginMember.memProfilePath ? `${imgUrl}/${loginMember.memProfilePath}` : defaultImg}
-            alt="프로필"
+            src={
+              corpInfo.corpLogo
+                ? `${logoImgUrl}/${corpInfo.corpLogo}`
+                : defaultLogo
+            }
+            alt="기업로고"
+            className="company-logo"
           />
         </div>
         <div className="profile-info">
@@ -61,7 +67,7 @@ function CorpMyInfo() {
 
         <div className="info-content">
           <span className="info-label">이름</span>
-          <span className="info-value">{loginMember.memName || "-"}</span>
+          <span className="info-value">{corpInfo.memName || "-"}</span>
         </div>
 
         <div className="info-content">
