@@ -42,11 +42,11 @@
   </update>
   
   <!-- 부서명 수정 -->
-  <update id="updateCorpMemDept">
+  <update id="updateCorporateMemberDepartment">
     UPDATE CORP_MEM
     SET 
       CORP_MEM_DEPT = #{corpMemDept}
-    WHERE MEM_NO = #{memNo};
+    WHERE MEM_NO = #{memNo}
   </update>
 
   <!-- 회원 비밀번호 조회 -->

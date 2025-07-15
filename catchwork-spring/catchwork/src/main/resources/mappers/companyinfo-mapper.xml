@@ -19,8 +19,8 @@
 		<result property="corpBenefit" column="CORP_BENEFIT" />
 		<result property="corpBenefitDetail"
 			column="CORP_BENEFIT_DETAIL" />
-		<result property="corpBanFl" column="CORP_BAN_FL" />
-		<result property="corpBanDate" column="CORP_BAN_DATE" />
+		<result property="corpStatus" column="CORP_STATUS" />
+		<result property="corpStatusDate" column="CORP_STATUS_DATE" />
 		<result property="recruitCount" column="RECRUIT_COUNT" />
 		<result property="favs" column="TOTAL_FAVS" />
 		<result property="memNo" column="MEM_NO" />

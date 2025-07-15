@@ -6,8 +6,9 @@ import ConfirmPwModal from "../../components/myPage/ConfirmPwModal";
 
 const CorpEditMyInfoPage = () => {
   const navigate = useNavigate();
-  const { loginMember, corpInfo } = useOutletContext();
+const { loginMember, corpInfo } = useOutletContext();
   
+
   const [modalState, setModalState] = useState({
     isOpen: false,
     type: null,
@@ -21,14 +22,14 @@ const CorpEditMyInfoPage = () => {
     corpMemDept: "",
   });
 
-  useEffect(() => {
+  useEffect(() => { 
     setFormData({
       memEmail: loginMember?.memEmail || "",
       memTel: loginMember?.memTel || "",
       memName: loginMember?.memName || "",
-      corpMemDept: loginMember?.corpMemDept || "",
+      corpMemDept: corpInfo?.corpMemDept || "",
     });
-  }, [loginMember]);
+  }, [loginMember, corpInfo ]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -56,7 +57,7 @@ const CorpEditMyInfoPage = () => {
   const verifyPassword = async (password) => {
     try {
       setModalState((prev) => ({ ...prev, loading: true }));
-      const response = await axiosApi.post("/myPage/verifyPassword", {
+      const response = await axiosApi.post("/corp/verifyPassword", {
         memNo: loginMember.memNo,
         memPw: password,
       });
@@ -89,9 +90,9 @@ const CorpEditMyInfoPage = () => {
     };
 
     try {
-      const resp = await axiosApi.post("/myPage/updateMemberInfo", requestData);
+      const resp = await axiosApi.post("/corp/updateMemberInfo", requestData);
       if (resp.status === 200) {
-        navigate("/corpmypage/myinfo");
+        navigate("/corpmypage");
       }
     } catch (error) {
       console.error("회원 정보 수정 실패", error);
