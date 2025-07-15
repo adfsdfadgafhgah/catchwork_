@@ -25,8 +25,9 @@ public class BoardServiceImpl implements BoardService {
 	 * @author BAEBAE
 	 */
 	@Override
-	public List<Board> selectBoardList(String sort, String query, String memNo, Integer limit) {
-		return boardMapper.selectBoardList(sort, query, memNo, limit);
+	public List<Board> selectBoardList(String sort, String query, String memNo,Integer page,Integer size, Integer limit) {
+		int offset = (page - 1) * size;
+		return boardMapper.selectBoardList(sort, query, memNo, offset,size, limit);
 	}
 
 	/**

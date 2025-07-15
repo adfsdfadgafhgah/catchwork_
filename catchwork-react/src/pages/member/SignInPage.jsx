@@ -14,7 +14,7 @@ const SignInPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault(); // form 기본 제출 막기
 
-    const result = await signin(memId, memPw);
+    const result = await signin(memId, memPw, isCorp ? 1 : 0);
     if (result.success) {
       const { memType } = useAuthStore.getState();
 

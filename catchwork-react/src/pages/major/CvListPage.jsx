@@ -5,6 +5,7 @@ import CVItem from "../../components/cv/CVItem";
 import { axiosApi } from "../../api/axiosAPI";
 import { Outlet } from "react-router-dom";
 import "./CVListPage.css";
+import SectionHeader from "../../components/common/SectionHeader";
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search);
@@ -94,9 +95,9 @@ const CVListPage = () => {
 
   return (
     <div className="cv-list-container">
+      <SectionHeader title="내 이력서" />
       <div className="cv-list-top">
-        <h1 className="cv-list-title">내 이력서</h1>
-        <span>
+        <div className="button-box">
           {mode === "edit" && (
             <>
               {cvList.length < gradeLimits[loginMember.memGrade || 0] ? (
@@ -113,7 +114,7 @@ const CVListPage = () => {
               )}
             </>
           )}
-        </span>
+        </div>
       </div>
 
       {isLoadingList ? (
