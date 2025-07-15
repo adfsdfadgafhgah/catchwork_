@@ -329,6 +329,7 @@ const router = createBrowserRouter([
     element: <AdminPage />,
     children: [
       { index: true, element: <AdminMainPage /> },
+      { path: "*", element: <NotFound /> },
       {
         path: "support",
         children: [
