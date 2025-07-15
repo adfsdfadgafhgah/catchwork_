@@ -15,15 +15,11 @@
   padding: 0 20px;
 }
 
-.admin-logo-text {
+.admin-title-text {
   font-size: 20px;
   font-weight: bold;
   color: var(--main-color);
   text-decoration: none;
-}
-
-.admin-logo-text:hover {
-  color: var(--main-color-dark);
 }
 
 .admin-info {

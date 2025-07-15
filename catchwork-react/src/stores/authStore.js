@@ -11,13 +11,19 @@ export const useAuthStore = create(
       memNickname: null,
       memType: null,
 
-      signin: async (memId, memPw) => {
+      signin: async (memId, memPw, expectedType) => {
         try {
           const res = await axiosApi.post("/signin", { memId, memPw });
           const token = res.headers.authorization?.split(" ")[1];
           if (token) {
             localStorage.setItem("accessToken", token);
             const decoded = getDecodedToken(token);
+            if (decoded.memType !== expectedType) {
+              return {
+                success: false,
+                message: "잘못된 아이디, 비밀번호입니다.",
+              };
+            }
             set({
               memNo: decoded.memNo,
               memNickname: decoded.memNickname,

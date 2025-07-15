@@ -1,23 +1,19 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
 
+import { useAdminTitle, handleAdminLogout } from "../../hooks/admin/headerUtils";
 import styles from "./AdminHeader.module.css";
 
 const AdminHeader = () => {
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    navigate("/");
-  };
+  const title = useAdminTitle();
+  const handleLogout = handleAdminLogout();
 
   return (
     <header className={styles["admin-header"]}>
       <div className={styles["admin-header-top"]}>
-        {/* 로고 */}
-        <div className={styles["admin-logo"]}>
-          <Link to="/admin" className={styles["admin-logo-text"]}>
-            캐치워크
-          </Link>
+        <div className={styles["admin-title"]}>
+          <h1 className={styles["admin-title-text"]}>
+            {title}
+          </h1>
         </div>
         <div className={styles["admin-info"]}>
           <p className={styles["admin-name"]}>관리자</p>

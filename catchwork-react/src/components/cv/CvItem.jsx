@@ -20,30 +20,30 @@ const CvItem = ({ cv, recruitNo, mode, onEdit, onDelete, onSubmit }) => {
       </div>
 
       <div className={styles.cvActions}>
-      {mode === "submit" ? (
+        {mode === "submit" ? (
           <button
             className={`${styles.cvButton} ${styles.submitButton}`}
             onClick={() => onSubmit(cv.cvNo, recruitNo)}
           >
             제출하기
           </button>
-        ):(    
+        ) : (
           <>
             <button
               className={`${styles.cvButton} ${styles.editButton}`}
               onClick={() => onEdit(cv.cvNo)}
             >
+              <i className="fa-regular fa-pen-to-square"></i>
               수정하기
             </button>
             <button
               className={`${styles.cvButton} ${styles.deleteButton}`}
               onClick={() => onDelete(cv.cvNo)}
             >
-              삭제하기
+              <i className="fa-regular fa-trash-can"></i>삭제하기
             </button>
-          </>    
-        )
-      }
+          </>
+        )}
       </div>
     </div>
   );

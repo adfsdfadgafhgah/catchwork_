@@ -129,10 +129,10 @@ const useCorpFormHandler = (initialValues) => {
   };
 
   const handleCorpJoinCheck = async () => {
-    const { corpRegNo } = formData;
+    const { corpRegNo, corpCEOName, corpOpenDate } = formData;
 
-    if (!corpRegNo) {
-      alert("사업자등록번호를 입력해주세요.");
+    if (!corpRegNo || !corpCEOName || !corpOpenDate) {
+      alert("필수 정보를 입력해주세요.");
       setIsCorpVerified(false);
       return;
     }

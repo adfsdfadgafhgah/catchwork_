@@ -15,6 +15,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import com.example.demo.auth.model.dto.CorpInfo;
 import com.example.demo.auth.model.entity.CorpInfoEntity;
 import com.example.demo.auth.model.repository.CorpInfoRepository;
+import com.example.demo.auth.model.repository.MemberRepository;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -23,13 +24,14 @@ public class CorpServiceImpl implements CorpService {
 
     @Value("${corp.service.key}")
     private String serviceKey;
-	
+	private final MemberRepository memberRepository;
 	private final CorpInfoRepository corpInfoRepository;
     private final WebClient webClient;
 
-	public CorpServiceImpl(CorpInfoRepository corpInfoRepository, WebClient webClient) {
+	public CorpServiceImpl(CorpInfoRepository corpInfoRepository, WebClient webClient, MemberRepository memberRepository) {
 		this.corpInfoRepository = corpInfoRepository;
 		this.webClient = webClient;
+		this.memberRepository = memberRepository;
 	}
 
 	@Override
@@ -98,5 +100,11 @@ public class CorpServiceImpl implements CorpService {
 
         return false;
     }
+
+	@Override
+	public String findMemName(String memNo) {
+		String memName = memberRepository.findByMemNo(memNo).getMemName();
+		return memName;
+	}
 
 }

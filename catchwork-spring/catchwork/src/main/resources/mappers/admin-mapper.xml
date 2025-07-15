@@ -140,5 +140,54 @@
             SUPPORT_NO = #{supportNo}
             AND SUPPORT_STATUS = 'N'
     </update>
+	
+	<!-- Terrace
+		░███     ░███            ░██           
+		░████   ░████                          
+		░██░██ ░██░██  ░███████  ░██░█████████
+		░██ ░████ ░██       ░██  ░██░██    ░██ 
+		░██  ░██  ░██  ░███████  ░██░██    ░██ 
+		░██       ░██ ░██   ░██  ░██░██    ░██ 
+		░██       ░██  ░████████ ░██░██    ░██
+	-->
+	<!-- 최근 미처리 신고 목록 조회 -->
+    <select id="selectRecentReportList" resultType="com.example.demo.admin.model.dto.ReportList">
+	    SELECT *
+	    FROM (
+	        SELECT
+	            REPORT_TARGET_NO,
+	            REPORT_TARGET_TYPE,
+	            MAX(REPORT_CONTENT) AS REPORT_CONTENT,
+	            COUNT(*) AS REPORT_COUNT,
+	            ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS RNUM
+	        FROM
+	            REPORT
+	        WHERE
+	            REPORT_STATUS = 'N'
+	        GROUP BY
+	            REPORT_TARGET_NO,
+	            REPORT_TARGET_TYPE
+	    )
+	    WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<select id="selectRecentReportCount" resultType="map">
+	    SELECT
+	        COUNT(*) AS TARGET_COUNT,
+	        SUM(REPORT_COUNT) AS TOTAL_COUNT
+	    FROM (
+	        SELECT
+	            REPORT_TARGET_NO,
+	            REPORT_TARGET_TYPE,
+	            COUNT(*) AS REPORT_COUNT
+	        FROM
+	            REPORT
+	        WHERE
+	            REPORT_STATUS = 'N'
+	        GROUP BY
+	            REPORT_TARGET_NO,
+	            REPORT_TARGET_TYPE
+	    )
+	</select>
 
 </mapper>
