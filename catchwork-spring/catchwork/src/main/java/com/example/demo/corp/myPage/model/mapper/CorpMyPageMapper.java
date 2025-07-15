@@ -15,7 +15,7 @@ public interface CorpMyPageMapper {
     // 기업 회원(CORPORATE_MEMBER) 테이블의 부서명을 수정
     void updateCorporateMemberDepartment(CorpMyPage corpMyPage);
 
-    // 멤버 비밀번호 조회
+    // 멤버 비밀번호 조회	
     String selectMemberPassword(String memNo);
 
 }

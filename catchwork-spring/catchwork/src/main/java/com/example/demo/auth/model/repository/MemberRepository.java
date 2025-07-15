@@ -12,4 +12,10 @@ public interface MemberRepository extends JpaRepository<MemberEntity, String> {
 
     MemberEntity findByMemId(String memId);
     MemberEntity findByMemNo(String memNo);
+
+    // 아이디 찾기
+    MemberEntity findByMemNameAndMemEmail(String memName, String memEmail);
+
+    // 비밀번호 찾기
+    MemberEntity findByMemIdAndMemNameAndMemEmail(String memId, String memName, String memEmail);
 }

@@ -5,9 +5,10 @@ import MemberRecruitItem from "../../components/recruit/MemberRecruitItem";
 import { axiosApi } from "../../api/axiosAPI";
 import { useAuthStore } from "../../stores/authStore";
 import "./MainPage.css";
+import MainBoardItem from "../../components/board/MainBoardItem";
 
 const MainPage = () => {
-  const { memType } = useAuthStore(); // memType: 0(개인), 1(기업)
+  const { memType, memNo } = useAuthStore(); // memType: 0(개인), 1(기업)
   const isCorp = memType === 1;
 
   const [customRecruits, setCustomRecruits] = useState([]);
@@ -15,9 +16,10 @@ const MainPage = () => {
   const [latestRecruits, setLatestRecruits] = useState([]);
   const [popularCompanies, setPopularCompanies] = useState([]);
   const [popularBoards, setPopularBoards] = useState([]);
+  const [edu, setEdu] = useState("");
 
   useEffect(() => {
-    // 맞춤형 공고 (API에 맞게 수정 필요)
+    // 맞춤형 공고
     // axiosApi
     //   .get("/memberRecruit/list", { params: { type: "custom", limit: 3 } })
     //   .then((res) => setCustomRecruits(res.data));
@@ -95,7 +97,7 @@ const MainPage = () => {
             <h2>인기 게시글</h2>
             <div className="card-grid two-cols">
               {popularBoards.map((item) => (
-                <BoardItem key={item.boardNo} board={item} />
+                <MainBoardItem key={item.boardNo} board={item} memNo={memNo} />
               ))}
             </div>
           </section>

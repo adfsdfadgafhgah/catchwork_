@@ -1,6 +1,7 @@
 package com.example.demo.admin.model.service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,13 +13,20 @@ import com.example.demo.support.model.dto.Support;
 
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.example.demo.admin.model.dto.ReportList;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
 public class AdminServiceImpl implements AdminService {
 	
 	private final AdminMapper adminMapper;
-
+  
+	@Autowired
+	private AdminMapper mapper;
+  
 	/** 전체 문의 목록 조회 (관리자용)
 	 * @author BAEBAE
 	 */
@@ -48,6 +56,20 @@ public class AdminServiceImpl implements AdminService {
         return adminMapper.submitSupportAnswer(support);
 		
 	}
-	
 
+
+	// 최근 미처리 신고 목록 조회 (민장)
+	@Override
+	public List<ReportList> selectRecentReportList(int startRow, int endRow) {
+	    Map<String, Object> param = new HashMap<>();
+	    param.put("startRow", startRow);
+	    param.put("endRow", endRow);
+	    return mapper.selectRecentReportList(param);
+	}
+	
+	// 최근 미처리 신고 개수 조회 (민장)
+	@Override
+	public Map<String, Object> selectRecentReportCount() {
+	    return mapper.selectRecentReportCount();
+	}
 }

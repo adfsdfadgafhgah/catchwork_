@@ -14,7 +14,7 @@ const SignInPage = () => {
   const handleLogin = async (e) => {
     e.preventDefault(); // form 기본 제출 막기
 
-    const result = await signin(memId, memPw);
+    const result = await signin(memId, memPw, isCorp ? 1 : 0);
     if (result.success) {
       const { memType } = useAuthStore.getState();
 
@@ -97,6 +97,7 @@ const SignInPage = () => {
             onClick={() =>
               navigate("/findid?type=" + (isCorp ? "corporate" : "personal"))
             }
+            className="find-btn"
           >
             아이디 찾기
           </span>
@@ -104,6 +105,7 @@ const SignInPage = () => {
             onClick={() =>
               navigate("/findpw?type=" + (isCorp ? "corporate" : "personal"))
             }
+            className="find-btn"
           >
             비밀번호 찾기
           </span>

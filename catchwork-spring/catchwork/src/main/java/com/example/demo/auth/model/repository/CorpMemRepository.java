@@ -8,4 +8,5 @@ import com.example.demo.auth.model.entity.CorpMemEntity;
 @Repository
 public interface CorpMemRepository extends JpaRepository<CorpMemEntity, String> {
 
+    CorpMemEntity findByMemNo(String memNo);
 }

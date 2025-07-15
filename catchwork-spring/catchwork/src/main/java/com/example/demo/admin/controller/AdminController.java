@@ -20,6 +20,9 @@ import com.example.demo.support.model.dto.Support;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.admin.model.dto.ReportList;
+
 @RestController
 @RequestMapping("/admin")
 @RequiredArgsConstructor
@@ -28,9 +31,28 @@ public class AdminController {
 	
 	private final AdminService adminService;
 
-    @GetMapping("/main")
-    public String adminMain() {
-        return "Welcome Admin!";
+    @Autowired
+    private AdminService service;
+
+    /** 최근 미처리 신고 목록 조회
+     * @param page
+     * @param size
+     * @return
+     * @author 민장
+     */
+    @GetMapping("recentReport/list")
+    public List<ReportList> selectRecentReportList(
+        @RequestParam("page") int page,
+        @RequestParam("size") int size
+    ) {
+        int startRow = (page - 1) * size + 1;
+        int endRow = page * size;
+        return service.selectRecentReportList(startRow, endRow);
+    }
+    
+    @GetMapping("recentReport/count")
+    public Map<String, Object> selectRecentReportCount() {
+        return service.selectRecentReportCount();
     }
     
     /** 전체 문의 목록 조회 (관리자용)

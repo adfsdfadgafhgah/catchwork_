@@ -16,7 +16,7 @@ public interface CompanyInfoService {
 	 * 
 	 * @return
 	 */
-	List<CompanyInfo> selectCompanyList(String query,String memNo, String sort, Integer limit);
+	List<CompanyInfo> selectCompanyList(String query,String memNo,Integer page,Integer size,String sort,Integer limit);
 	
 
 	/** 기업 상세 조회
