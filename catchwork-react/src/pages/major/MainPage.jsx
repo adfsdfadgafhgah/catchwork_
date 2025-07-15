@@ -16,9 +16,10 @@ const MainPage = () => {
   const [latestRecruits, setLatestRecruits] = useState([]);
   const [popularCompanies, setPopularCompanies] = useState([]);
   const [popularBoards, setPopularBoards] = useState([]);
+  const [edu, setEdu] = useState("");
 
   useEffect(() => {
-    // 맞춤형 공고 (API에 맞게 수정 필요)
+    // 맞춤형 공고
     // axiosApi
     //   .get("/memberRecruit/list", { params: { type: "custom", limit: 3 } })
     //   .then((res) => setCustomRecruits(res.data));

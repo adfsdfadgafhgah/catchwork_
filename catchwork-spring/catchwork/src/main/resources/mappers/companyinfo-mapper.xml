@@ -67,13 +67,18 @@
 				WHERE cm.CORP_NO = ci.CORP_NO AND r.RECRUIT_STATUS = 0)
 				) DESC
 			</when>
-			<otherwise>
-				ORDER BY ci.CORP_NAME ASC
-			</otherwise>
+      <otherwise>
+        ORDER BY ci.CORP_NAME ASC
+      </otherwise>
+	    </choose>
+		<choose>
+		  <when test="offset != null and size != null">
+		    OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+		  </when>
+		  <when test="limit != null">
+		    FETCH FIRST #{limit} ROWS ONLY
+		  </when>
 		</choose>
-		<if test="limit != null">
-			FETCH FIRST #{limit} ROWS ONLY
-		</if>
 	</select>
 
 	<!-- 기업 상세 -->
