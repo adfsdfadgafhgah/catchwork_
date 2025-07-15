@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.example.demo.member.company.model.mapper.CompanyInfoMapper">
+<mapper
+	namespace="com.example.demo.member.company.model.mapper.CompanyInfoMapper">
 
 	<resultMap id="companyInfoResultMap" type="CompanyInfo">
 		<id property="corpNo" column="CORP_NO" />
@@ -50,27 +51,29 @@
 		<where>
 			1=1
 			<if test="query != null and query != ''">
-				AND ci.CORP_NAME LIKE '%' || #{query} || '%'
+				AND LOWER(ci.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%'
 			</if>
 
+
 		</where>
-	    <choose>
+		<choose>
 			<when test="sort == 'main'">
-	            ORDER BY (
-	                2 * (SELECT COUNT(*) FROM FAV_CORP fc WHERE fc.CORP_NO = ci.CORP_NO) +
-	                1 * (SELECT COUNT(*) 
-	                     FROM RECRUIT r 
-	                     JOIN CORP_MEM cm ON r.MEM_NO = cm.MEM_NO 
-	                     WHERE cm.CORP_NO = ci.CORP_NO AND r.RECRUIT_STATUS = 0)
-	            ) DESC
+				ORDER BY (
+				2 * (SELECT COUNT(*) FROM FAV_CORP fc WHERE fc.CORP_NO = ci.CORP_NO)
+				+
+				1 * (SELECT COUNT(*)
+				FROM RECRUIT r
+				JOIN CORP_MEM cm ON r.MEM_NO = cm.MEM_NO
+				WHERE cm.CORP_NO = ci.CORP_NO AND r.RECRUIT_STATUS = 0)
+				) DESC
 			</when>
-	        <otherwise>
+			<otherwise>
 				ORDER BY ci.CORP_NAME ASC
-	        </otherwise>
-	    </choose>
-	    <if test="limit != null">
-    		FETCH FIRST #{limit} ROWS ONLY
-	    </if>
+			</otherwise>
+		</choose>
+		<if test="limit != null">
+			FETCH FIRST #{limit} ROWS ONLY
+		</if>
 	</select>
 
 	<!-- 기업 상세 -->

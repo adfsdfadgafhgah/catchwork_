@@ -10,6 +10,7 @@
   align-items: center;
   padding-bottom: 16px;
   transition: transform 0.2s ease;
+  width: 300px;
 }
 
 .company-item:hover {
@@ -19,7 +20,7 @@
 /* 로고 영역 */
 .company-item-logo-area {
   width: 100%;
-  height: 140px;
+  height: 200px;
   background-color: var(--sub-color);
   display: flex;
   justify-content: center;
