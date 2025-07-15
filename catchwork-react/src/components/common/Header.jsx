@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "../../stores/authStore";
 
@@ -6,11 +6,13 @@ import logo from "../../assets/logo.png";
 
 import "./Header.css";
 import HeaderNav from "./HeaderNav";
+import { axiosApi } from "../../api/axiosAPI";
 
 const Header = () => {
-  const { memType, memNickname, signin, signOut } = useAuthStore();
+  const { memType, memNickname, memNo, signin, signOut } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState(""); // 검색어
   const [result, setResult] = useState(""); // 상태 메시지
+  const [memName, setMemName] = useState("");
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -37,31 +39,20 @@ const Header = () => {
     }
   };
 
-  // 개인 회원 임시 로그인
-  // 개인 회원 임시 로그인
-  // 개인 회원 임시 로그인
-  // 개인 회원 임시 로그인
-  // 개인 회원 임시 로그인
-  const handleSignin = async () => {
-    const { message } = await signin("Test_286", "Test");
-    setResult(message);
-  };
-  // 기업 회원 임시 로그인
-  // 기업 회원 임시 로그인
-  // 기업 회원 임시 로그인
-  // 기업 회원 임시 로그인
-  // 기업 회원 임시 로그인
-  const handleCorpSignin = async () => {
-    const { message } = await signin("Test_107", "Test");
-    setResult(message);
-  };
-
   const handleSignOut = () => {
     signOut(); // zustand 초기화
     localStorage.removeItem("accessToken");
 
     navigate("/");
   };
+
+  useEffect(() => {
+    if (memNo != null) {
+      axiosApi
+        .get("/auth/corpmem/name", { params: { memNo } })
+        .then((res) => setMemName(res.data));
+    }
+  }, []);
 
   return (
     <header className="header">
@@ -98,7 +89,7 @@ const Header = () => {
               <>
                 {memType === 1 ? (
                   <button onClick={() => navigate("/corpmypage")}>
-                    {memNickname} 님
+                    {memName} 님
                   </button>
                 ) : (
                   <button onClick={() => navigate("/mypage")}>
@@ -118,11 +109,6 @@ const Header = () => {
         )}
       </div>
 
-      {/* 임시 로그인 버튼 (개인/기업) */}
-      <div style={{ position: "absolute", top: 0, right: 0 }}>
-        <button onClick={handleSignin}>개인 로그인</button>
-        <button onClick={handleCorpSignin}>기업 로그인</button>
-      </div>
       {/* 네비게이션 메뉴 */}
       {!isAuthPage && <HeaderNav />}
     </header>

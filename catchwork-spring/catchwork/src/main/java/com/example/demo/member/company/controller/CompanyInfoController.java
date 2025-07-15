@@ -40,6 +40,9 @@ public class CompanyInfoController {
     public ResponseEntity<?> selectCompanyList(
     		@RequestParam(value = "query", required = false, defaultValue = "") String query,
     		@RequestParam(value = "memNo", required = false) String memNo,
+    		@RequestParam(value = "page", required = false) Integer page,
+    		@RequestParam(value = "size", required = false) Integer size,
+    		
             // 메인페이지용용
             @RequestParam(value = "sort", required = false, defaultValue = "likes") String sort,
             @RequestParam(value = "limit", required = false) Integer limit
@@ -48,7 +51,7 @@ public class CompanyInfoController {
     	//  log.info("기업 목록 조회 요청. 검색어: {}, memNo: {}", query, memNo);
     	 
         try {  
-        	List<CompanyInfo> companyList = companyInfoService.selectCompanyList(query.trim(), memNo,sort,limit);
+        	List<CompanyInfo> companyList = companyInfoService.selectCompanyList(query.trim(), memNo,page,size,sort,limit);
         
             if (companyList.isEmpty()) {
                 // log.info("조회된 기업 정보가 없습니다.");
