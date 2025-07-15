@@ -53,8 +53,8 @@ public class BoardController {
             @RequestParam(name = "sort") String sort,
             @RequestParam(name = "query", required = false, defaultValue = "") String query,
             @RequestParam(name = "memNo", required = false) String memNo,
-            @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-            @RequestParam(name = "size", required = false, defaultValue = "10") Integer size,
+            @RequestParam(name = "page", required = false) Integer page,
+            @RequestParam(name = "size", required = false) Integer size,
             
             @RequestParam(name = "limit", required = false) Integer limit
         ) {

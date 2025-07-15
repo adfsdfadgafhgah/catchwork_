@@ -38,7 +38,10 @@ const MainPage = () => {
     // 인기 게시글
     axiosApi
       .get("/board/boardList", { params: { sort: "main", limit: 6 } })
-      .then((res) => setPopularBoards(res.data));
+      .then((res) => {
+        const companies = Array.isArray(res.data) ? res.data : [];
+        setPopularCompanies(companies);
+      });
   }, []);
 
   return (
@@ -85,9 +88,10 @@ const MainPage = () => {
           <section>
             <h2>인기 기업정보</h2>
             <div className="card-grid two-cols">
-              {popularCompanies.map((item) => (
-                <CompanyItem key={item.corpNo} company={item} />
-              ))}
+              {Array.isArray(popularCompanies) &&
+                popularCompanies.map((item) => (
+                  <CompanyItem key={item.corpNo} company={item} />
+                ))}
             </div>
           </section>
           <br></br>
