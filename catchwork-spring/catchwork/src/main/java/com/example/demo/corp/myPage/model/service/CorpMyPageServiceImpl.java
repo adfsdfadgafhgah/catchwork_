@@ -1,11 +1,12 @@
 package com.example.demo.corp.myPage.model.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import com.example.demo.corp.myPage.model.dto.CorpMyPage;
 import com.example.demo.corp.myPage.model.mapper.CorpMyPageMapper;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class CorpMyPageServiceImpl implements CorpMyPageService {
@@ -18,7 +19,12 @@ public class CorpMyPageServiceImpl implements CorpMyPageService {
 
     @Override
     public CorpMyPage getCorpMyPage(String memNo) {
-        return corpMyPageMapper.getCorpMyPage(memNo);
+        try {
+            return corpMyPageMapper.getCorpMyPage(memNo);
+        } catch (Exception e) {
+            e.printStackTrace();  // 예외 내용 출력
+            throw e;  // 다시 던져서 500 에러 유지
+        }
     }
 
     @Override
