@@ -84,14 +84,4 @@
     WHERE CM.MEM_NO = #{memNo}
 	</select>
 
-	<!-- <select id="selectCorpNoAndRoleCheck" resultType="map">
-	  SELECT 
-	    CORP_NO,
-	    CORP_MEM_ROLE_CHECK
-	  FROM 
-	    CORP_MEM
-	  WHERE 
-	    MEM_NO = #{memNo}
-	</select>  -->
-
 </mapper>

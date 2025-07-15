@@ -122,6 +122,7 @@
 
 .detailSections {
   margin-bottom: 40px;
+  white-space: pre-wrap;
 }
 
 .sectionTitle {

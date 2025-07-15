@@ -15,11 +15,11 @@ public interface MemberMapper {
 	String selectCorporateNameByNo(int corpNo);
 	
 	
-	// ----------------------- 배령 추가
-	// 기업회원 로그인 조회
-	Member getCorpLoginMember(String memNo);
-
-	// corpNo 조회
-	Integer getCorpNoByMemNo(String memNo);
+//	// ----------------------- 배령 추가
+//	// 기업회원 로그인 조회
+//	Member getCorpLoginMember(String memNo);
+//
+//	// corpNo 조회
+//	Integer getCorpNoByMemNo(String memNo);
 
 }

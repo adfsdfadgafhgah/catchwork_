@@ -570,5 +570,4 @@ public class MemberServiceImpl implements MemberService {
          + "</body>"
          + "</html>";
 	}
-	
 }

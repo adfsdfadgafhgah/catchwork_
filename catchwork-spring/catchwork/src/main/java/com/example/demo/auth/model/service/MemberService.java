@@ -14,7 +14,7 @@ public interface MemberService {
 
     // 로그인 회원의 정보 조회
     Member getLoginMember(String memNo);
-    
+
     // 기업 로그인 회원의 정보 조회
     Member getCorpLoginMember(String memNo);
 

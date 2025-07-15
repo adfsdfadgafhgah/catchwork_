@@ -25,6 +25,25 @@ export default function CorpRecruitDetailPage() {
   const [reportTargetType, setReportTargetType] = useState(null); // 신고 대상 타입
   const [reportTargetNickname, setReportTargetNickname] = useState(null); // 신고 대상 닉네임
 
+  // 쿠키 헬퍼 함수 정의
+  const setCookie = (name, value, days) => {
+    const date = new Date();
+    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+    const expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + value + ";" + expires + ";path=/";
+  };
+
+  const getCookie = (name) => {
+    const nameEQ = name + "=";
+    const ca = document.cookie.split(";");
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) === " ") c = c.substring(1, c.length);
+      if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+  };
+
   // 공고 상세 조회 + 조회수 증가
   useEffect(() => {
     if (memNo === undefined || memType === undefined) {
@@ -34,7 +53,7 @@ export default function CorpRecruitDetailPage() {
     const key = `viewed_recruit_${recruitNo}`;
     const now = new Date();
     const today = now.toDateString();
-    const lastViewed = localStorage.getItem(key);
+    const lastViewed = getCookie(key);
 
     const fetchDetail = async () => {
       try {
@@ -54,17 +73,17 @@ export default function CorpRecruitDetailPage() {
       try {
         // 조회수 증가 로직
         if (!lastViewed || new Date(lastViewed).toDateString() !== today) {
-          localStorage.setItem(key, now.toISOString());
+          setCookie(key, now.toISOString(), 1); // setCookie 사용 (1일 유효)
           await axiosApi.get(`/corpRecruit/recruitReadCount/${recruitNo}`);
-          console.log("📈 조회수 증가 후 상세 다시 조회");
+          console.log("조회수 증가 후 상세 다시 조회");
         } else {
-          console.log("✅ 오늘 이미 조회함");
+          console.log("오늘 이미 조회함");
         }
 
         // 항상 상세 재조회
         await fetchDetail();
       } catch (err) {
-        console.error("❌ 전체 로직 실패:", err);
+        console.error("전체 로직 실패:", err);
       }
     };
 
@@ -151,6 +170,15 @@ export default function CorpRecruitDetailPage() {
     }
   };
 
+  // 카카오맵 마커 클릭 핸들러
+  // 이 함수가 정의되지 않았을 가능성을 낮추기 위해 컴포넌트 최상단에 정의합니다.
+  const handleMapClick = (address) => {
+    const kakaoMapUrl = `https://map.kakao.com/link/search/${encodeURIComponent(
+      address
+    )}`;
+    window.open(kakaoMapUrl, "_blank");
+  };
+
   if (!recruit) return <div>로딩 중...</div>;
 
   return (
@@ -171,7 +199,7 @@ export default function CorpRecruitDetailPage() {
           <span className={styles.corpType}>{recruit.corpType}</span>
           {/* 채용 제목 */}
           <h2 className={styles.recruitTitle}>
-            [{recruit.memNickname}] {recruit.recruitTitle}
+            [{recruit.memName}] {recruit.recruitTitle}
           </h2>
           <p className={styles.recruitDates}>
             {recruit.recruitStartDate} ~ {recruit.recruitEndDate}
@@ -227,7 +255,10 @@ export default function CorpRecruitDetailPage() {
         </table>
       </section>
 
-      <KakaoMapPreview address={recruit.recruitJobArea} />
+      <KakaoMapPreview
+        address={recruit.recruitJobArea}
+        onClick={handleMapClick}
+      />
 
       {/* 상세 정보 섹션 */}
       <section className={styles.detailSections}>
@@ -261,7 +292,7 @@ export default function CorpRecruitDetailPage() {
           targetNo={reportTargetNo}
           targetType={reportTargetType}
           targetNickname={reportTargetNickname}
-          memberNo={memNo} // ✅ memNo prop 사용
+          memberNo={memNo}
           onClose={handleCloseReport}
         />
       )}
