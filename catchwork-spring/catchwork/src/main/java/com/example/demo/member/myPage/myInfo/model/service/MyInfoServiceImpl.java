@@ -148,7 +148,7 @@ public class MyInfoServiceImpl implements MyInfoService {
 
 	// 내가 쓴 댓글 목록 조회
 	@Override
-	public List<Comment> getMyCommentList(Map<String, Object> paramMap) {
+	public List<Map<String, Object>> getMyCommentList(Map<String, Object> paramMap) {
 		return myInfoMapper.getMyCommentList(paramMap);
 	}	
 

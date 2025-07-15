@@ -1,30 +1,14 @@
 import MyCommentItem from "./MyCommentItem";
-import CommentCss from "../board/CommentList.module.css";
 
-export default function MyCommentList({ comments, loginMember, onRefresh }) {
-  // 부모 댓글 추출 + 최신순 정렬
-  const parentComments = comments
-    .filter((c) => c.parentCommentNo === 0 || c.parentCommentNo === null)
-    .sort(
-      (a, b) => new Date(b.commentWriteDate) - new Date(a.commentWriteDate)
-    );
-
+export default function MyCommentList({ comments, memNo, onRefresh }) {
   return (
-    <div className={CommentCss.commentList}>
-      {parentComments.map((parent) => {
-        const childComments = comments
-          .filter((c) => c.parentCommentNo === parent.commentNo)
-          .sort(
-            (a, b) =>
-              new Date(a.commentWriteDate) - new Date(b.commentWriteDate)
-          );
-
+    <div className="commentList" style={{ marginTop: "20px" }}>
+      {comments.map((comment) => {
         return (
           <MyCommentItem
-            key={parent.commentNo}
-            comment={parent}
-            childComments={childComments}
-            loginMember={loginMember}
+            key={comment.commentNo}
+            comment={comment}
+            memNo={memNo}
             onRefresh={onRefresh}
           />
         );

@@ -42,7 +42,7 @@ public interface MyInfoMapper {
   List<Board> getMyBoardList(Map<String, Object> paramMap);
 
   // 내가 쓴 댓글 목록 조회
-  List<Comment> getMyCommentList(Map<String, Object> paramMap);
+  List<Map<String, Object>> getMyCommentList(Map<String, Object> paramMap);
 
   // 내가 지원한 채용공고 목록 조회
   List<Recruit> getMyRecruitList(Map<String, Object> paramMap); 
