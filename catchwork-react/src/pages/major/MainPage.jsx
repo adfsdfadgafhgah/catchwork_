@@ -90,7 +90,7 @@ const MainPage = () => {
             <div className="card-grid two-cols">
               {Array.isArray(popularCompanies) &&
                 popularCompanies.map((item) => (
-                  <CompanyItem key={item.corpNo} company={item} />
+                  <CompanyItem key={item.corpRegNo} company={item} />
                 ))}
             </div>
           </section>
