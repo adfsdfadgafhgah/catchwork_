@@ -28,107 +28,106 @@ import com.example.demo.admin.model.dto.ReportList;
 @RequiredArgsConstructor
 @Slf4j
 public class AdminController {
-	
-	private final AdminService adminService;
 
-    @Autowired
-    private AdminService service;
+	@Autowired
+	private AdminService adminService;
 
-    /** 최근 미처리 신고 목록 조회
-     * @param page
-     * @param size
-     * @return
-     * @author 민장
-     */
-    @GetMapping("recentReport/list")
-    public List<ReportList> selectRecentReportList(
-        @RequestParam("page") int page,
-        @RequestParam("size") int size
-    ) {
-        int startRow = (page - 1) * size + 1;
-        int endRow = page * size;
-        return service.selectRecentReportList(startRow, endRow);
-    }
-    
-    @GetMapping("recentReport/count")
-    public Map<String, Object> selectRecentReportCount() {
-        return service.selectRecentReportCount();
-    }
-    
-    /** 전체 문의 목록 조회 (관리자용)
-     * @author BAEBAE
-     * @param status
-     * @param sort
-     * @param query
-     * @return
-     */
-    @GetMapping("supportlist")
-    public ResponseEntity<?> getAllSupportList(
-    		@RequestParam(value = "status", defaultValue = "all") String status,
-    		@RequestParam(value = "sort", defaultValue = "latest") String sort,
-    		@RequestParam(value = "query", required = false) String query) {
-    	try {
-    		// 파라미터를 Map에 달아 서비스로 전달
-    		Map<String, Object> params = new HashMap<>();
-    		params.put("status", status);
-    		params.put("sort", sort);
-    		params.put("query", query);
-    		
-    		List<Support> supportList = adminService.getAllSupportList(params);
-    		return ResponseEntity.ok(supportList);
-    	} catch (Exception e) {
-    		e.printStackTrace();
-    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("문의 목록 조회에 실패했습니다");
-    	}
-    }
-    
-    /** 특정 문의 상세 조회 (관리자용)
-     * @author BAEBAE
-     * @param supportNo 문의 번호
-     * @return 문의 상세 정보
-     */
-    @GetMapping("supportdetail/{supportNo}") // /admin/supportdetail/{supportNo}
-    public ResponseEntity<?> getSupportDetail(@PathVariable("supportNo") int supportNo) {
-        try {
-            Support support = adminService.getSupportDetail(supportNo);
-            if (support == null) {
-                log.warn("문의 상세 조회 실패: 문의 번호 {}를 찾을 수 없습니다.", supportNo);
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("문의를 찾을 수 없습니다.");
-            }
-            log.info("문의 상세 조회 성공. 문의 번호: {}", supportNo);
-            return ResponseEntity.ok(support);
-        } catch (Exception e) {
-            log.error("문의 상세 조회 중 오류 발생: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("문의 상세 조회에 실패했습니다.");
-        }
-    }
-    
-    /** 문의 답변 등록 (관리자용)
-     * @author BAEBAE
-     * @param support 답변 내용 및 문의 번호가 포함된 Support DTO
-     * @return 성공 여부
-     */
-    @PutMapping("/supportanswer")
-    public ResponseEntity<?> submitSupportAnswer(@RequestBody Support support) {
-        try {
-        	
-        	int AdminNo = 6; // 예시: 임시 관리자 번호를 1L로 설정
-            support.setAdminNo(AdminNo);
-        	int result = adminService.submitSupportAnswer(support);
-            if (result > 0) {
-                log.info("문의 답변 등록 성공. 문의 번호: {}", support.getSupportNo());
-                return ResponseEntity.ok("답변이 성공적으로 등록되었습니다.");
-            } else {
-                log.warn("문의 답변 등록 실패. 문의 번호: {}", support.getSupportNo());
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("답변 등록 실패");
-            }
-        } catch (Exception e) {
-            log.error("문의 답변 등록 중 오류 발생: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("답변 등록 중 오류가 발생했습니다.");
-        }
-    }
-   
-    
-    
-    
+	/**
+	 * 최근 미처리 신고 목록 조회
+	 * 
+	 * @param page
+	 * @param size
+	 * @return
+	 * @author 민장
+	 */
+	@GetMapping("recentReport/list")
+	public List<ReportList> selectRecentReportList(@RequestParam("page") int page, @RequestParam("size") int size) {
+		int startRow = (page - 1) * size + 1;
+		int endRow = page * size;
+		return adminService.selectRecentReportList(startRow, endRow);
+	}
+
+	@GetMapping("recentReport/count")
+	public Map<String, Object> selectRecentReportCount() {
+		return adminService.selectRecentReportCount();
+	}
+
+	/**
+	 * 전체 문의 목록 조회 (관리자용)
+	 * 
+	 * @author BAEBAE
+	 * @param status
+	 * @param sort
+	 * @param query
+	 * @return
+	 */
+	@GetMapping("supportlist")
+	public ResponseEntity<?> getAllSupportList(@RequestParam(value = "status", defaultValue = "all") String status,
+			@RequestParam(value = "sort", defaultValue = "latest") String sort,
+			@RequestParam(value = "query", required = false) String query) {
+		try {
+			// 파라미터를 Map에 달아 서비스로 전달
+			Map<String, Object> params = new HashMap<>();
+			params.put("status", status);
+			params.put("sort", sort);
+			params.put("query", query);
+
+			List<Support> supportList = adminService.getAllSupportList(params);
+			return ResponseEntity.ok(supportList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("문의 목록 조회에 실패했습니다");
+		}
+	}
+
+	/**
+	 * 특정 문의 상세 조회 (관리자용)
+	 * 
+	 * @author BAEBAE
+	 * @param supportNo 문의 번호
+	 * @return 문의 상세 정보
+	 */
+	@GetMapping("supportdetail/{supportNo}") // /admin/supportdetail/{supportNo}
+	public ResponseEntity<?> getSupportDetail(@PathVariable("supportNo") int supportNo) {
+		try {
+			Support support = adminService.getSupportDetail(supportNo);
+			if (support == null) {
+				log.warn("문의 상세 조회 실패: 문의 번호 {}를 찾을 수 없습니다.", supportNo);
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body("문의를 찾을 수 없습니다.");
+			}
+			log.info("문의 상세 조회 성공. 문의 번호: {}", supportNo);
+			return ResponseEntity.ok(support);
+		} catch (Exception e) {
+			log.error("문의 상세 조회 중 오류 발생: {}", e.getMessage(), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("문의 상세 조회에 실패했습니다.");
+		}
+	}
+
+	/**
+	 * 문의 답변 등록 (관리자용)
+	 * 
+	 * @author BAEBAE
+	 * @param support 답변 내용 및 문의 번호가 포함된 Support DTO
+	 * @return 성공 여부
+	 */
+	@PutMapping("/supportanswer")
+	public ResponseEntity<?> submitSupportAnswer(@RequestBody Support support) {
+		try {
+
+			int AdminNo = 6; // 예시: 임시 관리자 번호를 1L로 설정
+			support.setAdminNo(AdminNo);
+			int result = adminService.submitSupportAnswer(support);
+			if (result > 0) {
+				log.info("문의 답변 등록 성공. 문의 번호: {}", support.getSupportNo());
+				return ResponseEntity.ok("답변이 성공적으로 등록되었습니다.");
+			} else {
+				log.warn("문의 답변 등록 실패. 문의 번호: {}", support.getSupportNo());
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("답변 등록 실패");
+			}
+		} catch (Exception e) {
+			log.error("문의 답변 등록 중 오류 발생: {}", e.getMessage(), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("답변 등록 중 오류가 발생했습니다.");
+		}
+	}
+
 }
