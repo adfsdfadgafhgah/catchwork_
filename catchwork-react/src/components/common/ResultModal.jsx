@@ -1,16 +1,11 @@
-import { NavLink } from "react-router-dom";
-
 const ResultModal = ({
   isOpen,
   onClose,
   onConfirm,
   loading = false,
-  isCorp,
   type,
   modalData,
 }) => {
-  const baseUrl = import.meta.env.VITE_BASE_URL;
-
   if (!isOpen) return null;
 
   const getModalContent = () => {
@@ -19,10 +14,16 @@ const ResultModal = ({
         return {
           title: "아이디 찾기 결과",
           content: <p>아이디: {modalData.id}</p>,
-          link:
-            baseUrl +
-            "/signin?type=" +
-            (modalData.isCorp ? "corporate" : "personal"),
+          buttonText: "확인",
+        };
+      case "pw":
+        return {
+          title: "비밀번호 찾기 결과",
+          content: modalData.isIssuedTempPw ? (
+            <p>{modalData.email}로 임시 비밀번호가 발송되었습니다.</p>
+          ) : (
+            <p>{modalData.email}로 임시 비밀번호가 발송중입니다.</p>
+          ),
           buttonText: "확인",
         };
     }

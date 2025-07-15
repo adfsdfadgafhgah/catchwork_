@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,14 +22,15 @@ import com.example.demo.auth.model.service.TransactionService;
 import com.example.demo.auth.token.entity.RefreshTokenEntity;
 import com.example.demo.auth.token.repository.RefreshTokenRepository;
 import com.example.demo.common.util.JWTUtil;
-
-import io.jsonwebtoken.Jwts;
+import com.example.demo.member.board.controller.BoardController;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 public class MemberController {
+
+    private final BoardController boardController;
 
     private final JWTUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -41,11 +41,12 @@ public class MemberController {
 			MemberService service, 
 			JWTUtil jwtUtil, 
 			RefreshTokenRepository refreshTokenRepository,
-			TransactionService transactionService) {	
+			TransactionService transactionService, BoardController boardController) {	
 		this.service = service;	
 		this.jwtUtil = jwtUtil;
 		this.refreshTokenRepository = refreshTokenRepository;
 		this.transactionService = transactionService;
+		this.boardController = boardController;
 	}
 	
 	/**
@@ -303,6 +304,32 @@ public class MemberController {
 		}
 	}
 
+	/** 비밀번호 찾기
+	 * @author JAEHO
+	 * @param paramMap
+	 * @return
+	 */
+	@PostMapping("/member/findPw")
+	public ResponseEntity<?> findPw(@RequestParam("memId") String memId, 
+																	@RequestParam("memName") String memName, 
+																	@RequestParam("memEmail") String memEmail, 
+																	@RequestParam("memType") int memType, 
+																	@RequestParam(value = "corpRegNo", required = false, defaultValue = "") String corpRegNo) {
+
+		try {
+			Boolean isVerified = service.findPw(memId, memName, memEmail, memType, corpRegNo);
+			if(isVerified) {
+				return ResponseEntity.ok(true);
+			} else {
+				System.out.println("비밀번호 찾기 실패");
+				return ResponseEntity.status(404).body(Map.of("message", "비밀번호 찾기 실패"));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(500).body(e.getMessage());
+		}
+	}
+
 	/** 이메일 인증번호 발송
 	 * @author JAEHO
 	 * @param paramMap
@@ -328,11 +355,31 @@ public class MemberController {
 	public ResponseEntity<?> checkAuthKey(@RequestBody Map<String, String> paramMap) {
 		String memEmail = paramMap.get("memEmail");
 		String authKey = paramMap.get("authKey");
+
 		boolean result = service.checkAuthKey(memEmail, authKey);
 		if(result) {
 			return ResponseEntity.ok(Map.of("message", "인증번호가 확인되었습니다."));
 		} else {
 			return ResponseEntity.status(500).body(Map.of("message", "인증번호가 확인되지 않았습니다."));
+		}
+	}
+
+	/** 임시 비밀번호 발송
+	 * @author JAEHO
+	 * @param paramMap
+	 * @return
+	 */
+	@PostMapping("/member/sendTempPw")
+	public ResponseEntity<?> sendTempPw(@RequestBody Map<String, String> paramMap) {
+		String memEmail = paramMap.get("memEmail");
+		String memId = paramMap.get("memId");
+		String memName = paramMap.get("memName");
+		
+		boolean result = service.sendTempPw(memEmail, memId, memName);
+		if(result) {
+			return ResponseEntity.ok(Map.of("message", "임시 비밀번호가 발송되었습니다."));
+		} else {
+			return ResponseEntity.status(500).body(Map.of("message", "임시 비밀번호 발송 실패"));
 		}
 	}
 }

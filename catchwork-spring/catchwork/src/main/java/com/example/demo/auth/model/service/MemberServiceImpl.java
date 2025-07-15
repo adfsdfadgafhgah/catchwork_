@@ -248,6 +248,40 @@ public class MemberServiceImpl implements MemberService {
 		return null;
 	}
 
+	/** 비밀번호 찾기
+	 * @author JAEHO
+	 * @param memId
+	 * @param memName
+	 * @param memEmail
+	 * @param memType
+	 * @param corpRegNo
+	 * @return
+	 */
+	@Override
+	public Boolean findPw(String memId, String memName, String memEmail, int memType, String corpRegNo) {
+
+		if(memType == 0) { // 개인 회원
+			MemberEntity memberEntity = memberRepository.findByMemIdAndMemNameAndMemEmail(memId, memName, memEmail);
+			if(memberEntity != null) return true;
+		}
+		else if(memType == 1) { // 기업 회원
+			MemberEntity memberEntity = memberRepository.findByMemIdAndMemNameAndMemEmail(memId, memName, memEmail);
+			if(memberEntity == null) return false;
+
+			// 기업 회원 정보 조회
+			CorpMemEntity corpMemEntity = corpMemRepository.findByMemNo(memberEntity.getMemNo());
+			if(corpMemEntity == null) return false;
+
+			// 기업 정보 조회
+			CorpInfoEntity corpInfoEntity = corpMemEntity.getCorpInfo();
+			if (corpInfoEntity == null) return false;
+
+			// 기업 등록번호 비교
+			if (corpInfoEntity.getCorpRegNo().equals(corpRegNo)) return true;
+		}
+		return false;
+	}
+
 	/** 이메일 인증번호 발송
 	 * @author JAEHO
 	 * @param memEmail
@@ -392,4 +426,149 @@ public class MemberServiceImpl implements MemberService {
          + "</body>"
          + "</html>";
 	}
+
+	/** 임시 비밀번호 발송
+	 * @author JAEHO
+	 * @param memEmail
+	 */
+	@Override
+	public boolean sendTempPw(String memEmail, String memId, String memName) {	
+		// 임시 비밀번호 발송
+		String tempPw = Utility.createTempPw();
+
+		// 회원 정보 조회
+		MemberEntity memberEntity = memberRepository.findByMemIdAndMemNameAndMemEmail(memId, memName, memEmail);
+		if(memberEntity == null) {
+			throw new RuntimeException("회원 정보 조회 실패");
+		}
+
+		String memNo = memberEntity.getMemNo();
+		String memPw = bcrypt.encode(tempPw);
+
+		// 임시 비밀번호 저장
+		if(!changePw(memNo, memPw)) {
+			throw new RuntimeException("인증번호 저장 실패");
+		}
+
+		MimeMessage message = emailSender.createMimeMessage(); // 메일발송에 사용하는 객체
+
+		try {
+			// 메일 발송에 사용하는 객체
+			MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+
+			// 메일 발송에 사용하는 객체
+			helper.setTo(memEmail);
+			helper.setSubject("Catchwork 임시 비밀번호");
+			helper.setText(loadTempPwHtml(tempPw), true);
+			helper.addInline("logo", new ClassPathResource("static/images/logo.png"));
+
+			// 메일 발송
+			emailSender.send(message);
+
+			return true;
+		} catch (Exception e) {
+			throw new RuntimeException("이메일 발송 실패: " + e.getMessage());
+		}
+	}
+	
+	/**
+	 * JPA를 사용한 비밀번호 변경 메서드
+	 * @param memNo 회원 번호
+	 * @param memPw 암호화된 비밀번호
+	 * @return 업데이트 성공 여부
+	 */
+	private boolean changePw(String memNo, String memPw) {
+		try {
+			// 회원 엔티티 조회
+			MemberEntity memberEntity = memberRepository.findByMemNo(memNo);
+			if (memberEntity == null) {
+				return false;
+			}
+			
+			// 비밀번호 업데이트
+			memberEntity.setMemPw(memPw);
+			
+			// JPA save 메서드로 업데이트
+			memberRepository.save(memberEntity);
+			
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	/** 임시 비밀번호 HTML 생성 메서드
+	 * @author JAEHO
+	 */
+	private String loadTempPwHtml(String tempPw) {
+    return "<!DOCTYPE html>"
+         + "<html lang='ko'>"
+         + "<head>"
+         + "<meta charset='UTF-8'>"
+         + "<meta name='viewport' content='width=device-width, initial-scale=1.0'>"
+         + "<title>Catchwork 임시 비밀번호</title>"
+         + "</head>"
+         + "<body style='margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif; background-color: #f5f7fa; color: #333;'>"
+         + "<div style='max-width: 600px; margin: 0 auto; background-color: #ffffff; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);'>"
+         
+         // 헤더
+         + "<div style='background: linear-gradient(135deg, #46B5AB 0%, #46B5AB 100%); padding: 40px 20px; text-align: center; border-radius: 8px 8px 0 0;'>"
+         + "<div style='background-color: rgba(255, 255, 255, 0.2); display: inline-block; border-radius: 50%; margin-bottom: 20px; overflow: hidden;'>"
+         + "<img src='cid:logo' alt='Catchwork 로고' width='200' height='200' style='display: block; margin: 0 auto; object-fit: contain;'/>"
+         + "</div>"
+         + "<h1 style='margin: 0; color: white; font-size: 28px; font-weight: 700; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);'>Catchwork</h1>"
+         + "<p style='margin: 10px 0 0 0; color: rgba(255, 255, 255, 0.9); font-size: 16px; font-weight: 400;'>임시 비밀번호 발급</p>"
+         + "</div>"
+         
+         // 메인 콘텐츠
+         + "<div style='padding: 40px 30px;'>"
+         + "<div style='text-align: center; margin-bottom: 30px;'>"
+         + "<h2 style='margin: 0 0 16px 0; color: #1a1a1a; font-size: 24px; font-weight: 600;'>임시 비밀번호가 발급되었습니다</h2>"
+         + "<p style='margin: 0; color: #666; font-size: 16px; line-height: 1.5;'>아래 임시 비밀번호로 로그인 후 새로운 비밀번호로 변경해주세요.</p>"
+         + "</div>"
+         
+         // 임시 비밀번호 박스
+         + "<div style='background: linear-gradient(135deg, #f8f9ff 0%, #e8f2ff 100%); border: 2px solid #46B5AB; border-radius: 16px; padding: 30px; margin: 30px 0; text-align: center; position: relative; overflow: hidden;'>"
+         + "<div style='position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(25, 118, 210, 0.05) 0%, transparent 70%); animation: pulse 2s ease-in-out infinite;'></div>"
+         + "<p style='margin: 0 0 10px 0; color: #666; font-size: 14px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px;'>임시 비밀번호</p>"
+         + "<h1 style='margin: 0; color: #46B5AB; font-size: 48px; font-weight: 700; letter-spacing: 8px; text-shadow: 0 2px 4px rgba(25, 118, 210, 0.2); position: relative; z-index: 1;'>" + tempPw + "</h1>"
+         + "</div>"
+         
+         // 보안 안내
+         + "<div style='background-color: #fff3e0; border-left: 4px solid #ff9800; padding: 20px; margin: 30px 0; border-radius: 0 8px 8px 0;'>"
+         + "<div style='display: flex; align-items: center;'>"
+         + "<div style='margin-right: 12px;'>"
+         + "<svg width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='#ff9800' stroke-width='2'>"
+         + "<path d='M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z'></path>"
+         + "</svg>"
+         + "</div>"
+         + "<p style='margin: 0; color: #e65100; font-size: 14px; font-weight: 500;'>"
+         + "<strong>보안 안내:</strong> 로그인 후 반드시 새로운 비밀번호로 변경해주세요."
+         + "</p>"
+         + "</div>"
+         + "</div>"
+         
+         // 추가 안내사항
+         + "<div style='background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin: 30px 0;'>"
+         + "<h3 style='margin: 0 0 12px 0; color: #333; font-size: 16px; font-weight: 600;'>📋 안내사항</h3>"
+         + "<ul style='margin: 0; padding-left: 20px; color: #666; font-size: 14px; line-height: 1.6;'>"
+         + "<li>임시 비밀번호는 숫자, 영문, 특수문자가 포함되어 있습니다.</li>"
+         + "<li>로그인 후 마이페이지에서 비밀번호를 변경해주세요.</li>"
+         + "<li>보안을 위해 임시 비밀번호를 타인과 공유하지 마세요.</li>"
+         + "</ul>"
+         + "</div>"
+         + "</div>"
+         
+         // 푸터
+         + "<div style='background-color: #f8f9fa; padding: 30px; text-align: center; border-radius: 0 0 8px 8px; border-top: 1px solid #e9ecef;'>"
+         + "<p style='margin: 0 0 8px 0; color: #666; font-size: 14px;'>본 메일은 발신전용입니다.</p>"
+         + "<p style='margin: 0; color: #999; font-size: 12px;'>© 2025 Catchwork. All rights reserved.</p>"
+         + "</div>"
+         
+         + "</div>"
+         + "</body>"
+         + "</html>";
+	}
+	
 }

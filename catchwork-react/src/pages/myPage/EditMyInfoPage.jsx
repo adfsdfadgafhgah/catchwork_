@@ -265,7 +265,7 @@ const EditMyInfoPage = () => {
       memName: formData.memName,
       memTel: formData.memTel,
       memEmail: formData.memEmail,
-      memBirthday: formData.memBirthday.replaceAll("-", ""),
+      memBirthday: formData.memBirthday,
       memAddr: addrData,
       memGender: formData.memGender,
       memSmsFl: formData.memSmsFl ? "Y" : "N",

@@ -98,6 +98,7 @@
 	    FROM FAV_RECRUIT F
 	    WHERE F.RECRUIT_NO = R.RECRUIT_NO
 	    AND F.MEM_NO = #{memNo}
+      AND R.RECRUIT_STATUS IN (0, 3)
       ) AS likedByCurrentUser
 	
     FROM RECRUIT R
@@ -210,6 +211,7 @@
       FROM FAV_CORP
       WHERE MEM_NO = #{memNo}
     )
+    AND ci.CORP_STATUS = 0
 		<if test="query != null and query != ''">
 			AND 
       (

@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 import useConfirmEmail from "../../hooks/useConfirmEmail";
-import "./FindPage.css";
 import ResultModal from "../../components/common/ResultModal";
+import "./FindPage.css";
 
 const FindIdPage = () => {
   const navigate = useNavigate(); // 페이지 이동
@@ -21,6 +21,7 @@ const FindIdPage = () => {
   const [successMsg, setSuccessMsg] = useState(""); // 성공 메시지
   const { sendEmail, checkAuthKey, startTimer, stopTimer, timeLeft } =
     useConfirmEmail(); // 인증번호 관련 함수
+  const [isClicked, setIsClicked] = useState(false); // 인증번호 발송 클릭 여부
 
   // 아이디 찾기 제출 함수
   const handleSubmit = async (e) => {
@@ -54,7 +55,7 @@ const FindIdPage = () => {
       if (error.response && error.response.status === 404) {
         alert(error.response.data.message);
       } else {
-        alert("아이디 찾기 실패");
+        alert("회원 정보가 일치하지 않습니다.");
       }
     }
   };
@@ -68,12 +69,12 @@ const FindIdPage = () => {
 
   // 인증번호 발송 함수
   const handleSendEmail = async () => {
-    if (!memEmail) {
+    if (!memEmail || memEmail.includes("@") === false) {
+      e.preventDefault();
       alert("이메일을 입력해주세요"); // 이메일 입력 안 됨
       return;
     }
-
-    alert("인증번호가 발송되었습니다.");
+    setIsClicked(true);
     const isSent = await sendEmail(memEmail); // 인증번호 발송
     if (isSent) {
       startTimer(); // 인증번호 유효 타이머 시작
@@ -141,43 +142,74 @@ const FindIdPage = () => {
             onChange={(e) => setMemEmail(e.target.value)}
             required
           />
-          <button
-            type="button"
-            className="check-button"
-            onClick={handleSendEmail}
-            disabled={isVerified}
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              width: "100%",
+              justifyContent: "space-between",
+              paddingLeft: "10px",
+            }}
           >
-            인증번호 발송
-          </button>
-        </label>
-        <label>
-          <div className="email-input-container">
-            인증번호
-            <input
-              type="text"
-              placeholder="인증번호를 입력해주세요"
-              value={authKey}
-              onChange={(e) => setAuthKey(e.target.value)}
-              required
-            />
+            {isIssued ? (
+              <small style={{ color: "#aaa" }}>이메일이 발송되었습니다.</small>
+            ) : isClicked ? (
+              <small style={{ color: "#aaa" }}>이메일 발송 중입니다.</small>
+            ) : (
+              <small style={{ color: "#aaa" }}>이메일을 입력해주세요</small>
+            )}
             <button
               type="button"
-              className="check-button"
+              className="auth-button"
+              onClick={handleSendEmail}
+              disabled={isVerified}
+            >
+              인증번호 발송
+            </button>
+          </div>
+        </label>
+        <label>
+          인증번호
+          <input
+            type="text"
+            placeholder="인증번호를 입력해주세요"
+            value={authKey}
+            onChange={(e) => setAuthKey(e.target.value)}
+            required
+          />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              width: "100%",
+              justifyContent: "space-between",
+              paddingLeft: "10px",
+            }}
+          >
+            {isVerified && successMsg ? (
+              <small style={{ color: "green" }}>{successMsg}</small>
+            ) : errorMsg ? (
+              <small style={{ color: "red" }}>{errorMsg}</small>
+            ) : timeLeft > 0 ? (
+              <small style={{ color: "#333" }}>
+                남은 시간: {timeFormat()}초
+              </small>
+            ) : isIssued ? (
+              <small style={{ color: "red" }}>인증번호 만료</small>
+            ) : (
+              <small style={{ color: "#aaa" }}>
+                인증번호 발송을 클릭해주세요
+              </small>
+            )}
+            <button
+              type="button"
+              className="auth-button"
               onClick={handleCheckAuthKey}
               disabled={!isIssued || isVerified}
             >
               인증번호 확인
             </button>
           </div>
-          {isVerified && successMsg ? (
-            <small style={{ color: "green" }}>{successMsg}</small>
-          ) : errorMsg ? (
-            <small style={{ color: "red" }}>{errorMsg}</small>
-          ) : timeLeft > 0 ? (
-            <small style={{ color: "#555" }}>남은 시간: {timeFormat()}초</small>
-          ) : (
-            isIssued && <small style={{ color: "red" }}>인증번호 만료</small>
-          )}
         </label>
         <button
           type="submit"
@@ -196,7 +228,6 @@ const FindIdPage = () => {
         loading={false}
         type={"id"}
         modalData={findResult}
-        isCorp={isCorp}
       />
     </div>
   );

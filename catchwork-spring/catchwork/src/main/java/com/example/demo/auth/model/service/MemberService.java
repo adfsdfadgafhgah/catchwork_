@@ -21,9 +21,15 @@ public interface MemberService {
     // 아이디 찾기
     String findId(String memName, String memEmail, String corpRegNo, int memType);
 
+    // 비밀번호 찾기
+    Boolean findPw(String memId, String memName, String memEmail, int memType, String corpRegNo);
+
     // 이메일 인증번호 발송
     boolean sendEmail(String memEmail);
 
     // 이메일 인증번호 확인
     boolean checkAuthKey(String memEmail, String authKey);
+
+    // 임시 비밀번호 발송
+    boolean sendTempPw(String memEmail, String memId, String memName);
 }
