@@ -162,3 +162,19 @@
   text-align: center;
   padding: 20px;
 }
+
+.processButton {
+  background-color: #0d6efd; /* 부트스트랩 primary blue */
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.processButton:hover {
+  background-color: #0b5ed7;
+}

@@ -9,13 +9,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.admin.model.mapper.AdminMapper;
+import com.example.demo.report.model.dto.Report;
 import com.example.demo.support.model.dto.Support;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.example.demo.admin.model.dto.AdminReport;
 import com.example.demo.admin.model.dto.ReportList;
+import com.example.demo.admin.model.dto.ReportSearchCriteria;
+import com.example.demo.admin.model.dto.ReportSummary;
 import com.example.demo.admin.model.dto.SupportList;
 
 @Service
@@ -26,9 +30,7 @@ public class AdminServiceImpl implements AdminService {
 	@Autowired
 	private AdminMapper adminMapper;
 
-	/**
-	 * 전체 문의 목록 조회 (관리자용)
-	 * 
+	/** 전체 문의 목록 조회 (관리자용)
 	 * @author BAEBAE
 	 */
 	@Override
@@ -36,9 +38,7 @@ public class AdminServiceImpl implements AdminService {
 		return adminMapper.getAllSupportList(params);
 	}
 
-	/**
-	 * 특정 문의 상세 조회 (관리자용)
-	 * 
+	/** 특정 문의 상세 조회 (관리자용)
 	 * @author BAEBAE
 	 */
 	@Override
@@ -46,9 +46,7 @@ public class AdminServiceImpl implements AdminService {
 		return adminMapper.getSupportDetail(supportNo);
 	}
 
-	/**
-	 * 문의 답변 등록 (관리자용)
-	 * 
+	/** 문의 답변 등록 (관리자용)
 	 * @author BAEBAE
 	 */
 	@Override
@@ -92,12 +90,30 @@ public class AdminServiceImpl implements AdminService {
 	public Map<String, Object> selectRecentReportCount() {
 		return adminMapper.selectRecentReportCount();
 	}
-	
-	/** 최근 미처리 문의 개수 조회
+  
+  /** 최근 미처리 문의 개수 조회
 	 * @author 민장
 	 */
-    @Override
+   @Override
     public Map<String, Object> selectRecentSupportCount() {
         return adminMapper.selectRecentSupportCount();
     }
+	
+	// 신고 목록 조회 (배령)
+	@Override
+	public List<AdminReport> getReportList(ReportSearchCriteria criteria) {
+		return adminMapper.getReportList(criteria);
+	}
+	
+	// 신고 요약 정보 조회 (배령)
+	@Override
+	public ReportSummary getReportSummary(ReportSearchCriteria criteria) {
+		return adminMapper.getReportSummary(criteria);
+	}
+	
+	// 신고 처리 상태 변경 (배령)
+	@Override
+	public int processReport(Report report) {
+		return adminMapper.updateReportStatusToComplete(report);
+	}
 }

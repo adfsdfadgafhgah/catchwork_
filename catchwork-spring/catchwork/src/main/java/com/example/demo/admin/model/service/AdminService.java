@@ -4,7 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.demo.support.model.dto.Support;
+import com.example.demo.admin.model.dto.AdminReport;
 import com.example.demo.admin.model.dto.ReportList;
+import com.example.demo.admin.model.dto.ReportSearchCriteria;
+import com.example.demo.admin.model.dto.ReportSummary;
+import com.example.demo.report.model.dto.Report;
 import com.example.demo.admin.model.dto.SupportList;
 
 public interface AdminService {
@@ -62,12 +66,35 @@ public interface AdminService {
 	 * @author 민장
 	 */
 	Map<String, Object> selectRecentReportCount();
-	
+  
 	/**
 	 * 최근 미처리 문의 개수 조회
 	 * 
 	 * @return
 	 * @author 민장
 	 */
-    Map<String, Object> selectRecentSupportCount();
+   Map<String, Object> selectRecentSupportCount();
+  
+	/** 신고 목록 조회
+	 * @author BAEBAE
+	 * @param criteria
+	 * @return
+	 */
+	List<AdminReport> getReportList(ReportSearchCriteria criteria);
+
+	/** 신고 요약 정보 조회
+	 * @author BAEBAE
+	 * @param criteria
+	 * @return
+	 */
+	ReportSummary getReportSummary(ReportSearchCriteria criteria);
+
+	/** 신고 처리 상태 변경
+	 * @author BAEBAE
+	 * @param reportToProcess
+	 * @return
+	 */
+	int processReport(Report report);
+
+
 }
