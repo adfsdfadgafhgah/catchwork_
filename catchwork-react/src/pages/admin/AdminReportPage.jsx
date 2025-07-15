@@ -129,9 +129,9 @@ export default function AdminReportPage() {
     setSearchParams(newSearchParams);
   };
 
-  // 상세 페이지 이동 (추후 구현)
+  // 상세 페이지 이동
   const goToDetail = (reportNo) => {
-    // navigate(`/admin/report/${reportNo}`);
+    navigate(`/admin/report/${reportNo}`);
     alert(`신고 번호 ${reportNo} 상세 페이지로 이동합니다.`);
   };
 
@@ -155,9 +155,8 @@ export default function AdminReportPage() {
               <option value="">전체</option>
               <option value="BOARD">게시글</option>
               <option value="COMMENT">댓글</option>
-              <option value="CORPORATE">기업</option>
+              <option value="COMPANY">기업</option>
               <option value="RECRUIT">공고</option>
-              {/* 필요한 다른 타입 추가 */}
             </select>
           </div>
           <div className={styles.filterGroup}>
