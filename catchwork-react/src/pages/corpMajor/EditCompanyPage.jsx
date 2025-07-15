@@ -8,6 +8,7 @@ import { axiosApi } from "../../api/axiosAPI";
 import "./EditCompanyPage.css";
 
 const EditCompanyPage = () => {
+  const corpLogoUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
   const navigate = useNavigate();
   const { loginMember, setLoginMember } = useLoginMember();
 
@@ -191,7 +192,7 @@ const EditCompanyPage = () => {
             src={
               corpLogoPreview
                 ? corpLogoPreview
-                : `${import.meta.env.VITE_BASE_URL}${company.corpLogo}`
+                : `${corpLogoUrl}/${company.corpLogo}`
             }
             alt="기업로고"
             className="company-logo"

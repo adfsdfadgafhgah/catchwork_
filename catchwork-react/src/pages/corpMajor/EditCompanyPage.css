@@ -27,3 +27,10 @@
   font-size: 14px;
   box-shadow: var(--box-shadow);
 }
+.company-logo {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+}
