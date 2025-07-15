@@ -37,8 +37,4 @@ public class Support {
     private String adminNickname;
     private String adminName;
     
-	
-
-	
-    
 }

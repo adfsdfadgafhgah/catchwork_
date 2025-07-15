@@ -238,7 +238,7 @@ export default function CorpRecruitListPage() {
           memType={memType}
         />
       ) : (
-        <p className={styles.noResult}>검색 결과가 없습니다.</p>
+        <p className={styles.noResult}>채용 공고가 없습니다.</p>
       )}
 
       {memNo && memType === 1 && corpMemRoleCheck !== "Y" ? (

@@ -11,7 +11,7 @@ import KakaoMapPreview from "../../components/common/KakaoMapPreview";
 import defaultImg from "../../assets/icon.png";
 
 export default function WriteRecruitPage() {
-  const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
+  const logoImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
   const navigate = useNavigate();
   // const { loginMember, setLoginMember } = useLoginMember();
   // const { memNo, memType, memNickname } = useAuthStore();
@@ -162,7 +162,9 @@ export default function WriteRecruitPage() {
       <div className={styles.corpHeader}>
         <img
           src={
-            formData.corpLogo ? `${imgUrl}/${formData.corpLogo}` : defaultImg
+            formData.corpLogo
+              ? `${logoImgUrl}/${formData.corpLogo}`
+              : defaultImg
           }
           alt="기업로고"
           className={styles.corpLogo}

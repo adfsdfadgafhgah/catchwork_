@@ -60,10 +60,10 @@ export default function AdminReportPage() {
     setError(null);
     try {
       // API 호출 시 필터 객체를 params로 전달
-      const listResponse = await axiosApi.get("/admin/reportlist", {
+      const listResponse = await axiosApi.get("/admin/report/list", {
         params: currentFilters,
       });
-      const summaryResponse = await axiosApi.get("/admin/reportssummary", {
+      const summaryResponse = await axiosApi.get("/admin/reports/summary", {
         params: currentFilters,
       });
 
@@ -74,6 +74,28 @@ export default function AdminReportPage() {
       setError(err.message || "데이터를 가져오는 중 오류 발생");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // 신고 처리 API를 호출하는 핸들러 함수
+  const handleProcessReport = async (reportNo, e) => {
+    e.stopPropagation(); // 행 클릭 이벤트(상세 페이지 이동)가 함께 실행되는 것을 방지
+
+    if (!window.confirm(`신고 번호 ${reportNo}번을 처리하시겠습니까?`)) {
+      return;
+    }
+
+    try {
+      const response = await axiosApi.put("/admin/report/process", {
+        reportNo,
+      });
+      alert(response.data); // 성공 메시지 출력
+
+      // 중요: 처리 후 목록을 새로고침하여 변경된 상태를 즉시 반영
+      fetchReportsAndSummary(filters);
+    } catch (err) {
+      console.error("신고 처리 실패:", err);
+      alert(err.response?.data || "신고 처리 중 오류가 발생했습니다.");
     }
   };
 
@@ -221,14 +243,16 @@ export default function AdminReportPage() {
                 <th>신고자</th>
                 <th>신고일</th>
                 <th>처리 상태</th>
+                <th>관리</th> {/* 추가: 처리 버튼을 위한 컬럼 헤더 */}
               </tr>
             </thead>
             <tbody>
               {reports.length > 0 ? (
                 reports.map((report) => (
                   <tr
-                    key={report.reportNo}
-                    onClick={() => goToDetail(report.reportNo)}
+                    key={
+                      report.reportNo
+                    } /* 상세 페이지 이동이 필요하다면 onClick 추가 */
                   >
                     <td>{report.reportNo}</td>
                     <td>{report.reportTargetType}</td>
@@ -248,11 +272,27 @@ export default function AdminReportPage() {
                         {report.reportStatus === "N" ? "미처리" : "처리 완료"}
                       </span>
                     </td>
+                    {/* 추가: 처리 버튼이 있는 테이블 셀 */}
+                    <td>
+                      {report.reportStatus === "N" ? (
+                        <button
+                          className={styles.processButton}
+                          onClick={(e) =>
+                            handleProcessReport(report.reportNo, e)
+                          }
+                        >
+                          처리하기
+                        </button>
+                      ) : (
+                        <span>-</span>
+                      )}
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6">해당하는 신고 내역이 없습니다.</td>
+                  {/* 수정: colSpan을 7로 변경 */}
+                  <td colSpan="7">해당하는 신고 내역이 없습니다.</td>
                 </tr>
               )}
             </tbody>
