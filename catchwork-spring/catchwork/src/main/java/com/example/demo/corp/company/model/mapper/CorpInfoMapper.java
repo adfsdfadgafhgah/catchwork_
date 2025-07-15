@@ -1,6 +1,6 @@
 package com.example.demo.corp.company.model.mapper;
 
-import java.util.Map;
+import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -36,6 +36,11 @@ public interface CorpInfoMapper {
 	 */
 	CorpInfo selectCorpInfoByMember(String memNo);
 	
-//	Map<String, Object> selectCorpNoAndRoleCheck(String memNo);
-
+	/**
+	 * 사용중인 이미지 조회(스케줄러)
+	 * 
+	 * @author JAEHO
+	 * @return
+	 */
+	List<String> selectUsedImage();
 }
