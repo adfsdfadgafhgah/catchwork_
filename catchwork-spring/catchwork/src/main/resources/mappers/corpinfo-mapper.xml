@@ -84,4 +84,11 @@
     WHERE CM.MEM_NO = #{memNo}
 	</select>
 
+	<!-- 사용중인 이미지 조회(스케줄러) -->
+	<select id="selectUsedImage">
+		SELECT CORP_LOGO
+		FROM CORP_INFO
+		WHERE CORP_LOGO IS NOT NULL
+	</select>
+
 </mapper>

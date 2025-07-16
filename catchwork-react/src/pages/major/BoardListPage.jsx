@@ -92,6 +92,14 @@ export default function BoardListPage() {
     navigate("/board/write");
   };
 
+  if (isLoading) {
+    return (
+      <div className="loading">
+        <i className="fa-solid fa-spinner fa-spin"></i> Loading...
+      </div>
+    );
+  }
+
   return (
     <div className={BoardCss.boardListPage}>
       {/* 섹션 헤더 */}

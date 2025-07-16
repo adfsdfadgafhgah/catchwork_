@@ -59,4 +59,16 @@ public interface BoardService {
 	 * @param boardNo
 	 */
 	void readCount(int boardNo);
+
+	/** 이미지 처리(스케줄러)
+	 * @author JAEHO
+	 * @return
+	 */
+	int deleteUnusedImage();
+
+	/** 게시글 삭제(스케줄러)
+	 * @author JAEHO
+	 * @return
+	 */
+	int removeTargetBoard(int deleteTargetPeriod);
 }

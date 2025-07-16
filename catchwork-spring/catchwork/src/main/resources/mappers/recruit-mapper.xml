@@ -345,6 +345,11 @@
     WHERE RECRUIT_NO = #{recruitNo}
 	</update>
 	
-	
+	<!-- 채용공고 삭제(스케줄러) -->
+	<delete id="removeTargetRecruit">
+		DELETE FROM RECRUIT
+		WHERE RECRUIT_STATUS = 1
+		AND RECRUIT_STATUS_DATE &lt; SYSDATE - #{deleteTargetPeriod} DAY
+	</delete>
 
 </mapper>
