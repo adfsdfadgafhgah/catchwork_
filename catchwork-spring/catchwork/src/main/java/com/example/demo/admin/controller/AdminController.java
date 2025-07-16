@@ -86,6 +86,28 @@ public class AdminController {
     public Map<String, Object> selectRecentSupportCount() {
         return adminService.selectRecentSupportCount();
     }
+    
+    /**
+     * 최근 7일 신고수 통계
+     * 
+     * @return
+     * @author 민장
+     */
+    @GetMapping("recentReportChart")
+    public List<Map<String, Object>> selectRecentReportChart() {
+        return adminService.selectRecentReportChart();
+    }
+    
+    /**
+     * 최근 7일 문의수 통계
+     * 
+     * @return
+     * @author 민장
+     */
+    @GetMapping("recentSupportChart")
+    public List<Map<String, Object>> selectRecentSupportChart() {
+        return adminService.selectRecentSupportChart();
+    }
 
 	/**
 	 * 전체 문의 목록 조회 (관리자용)

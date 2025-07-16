@@ -90,13 +90,34 @@ public class AdminServiceImpl implements AdminService {
 		return adminMapper.selectRecentReportCount();
 	}
   
-  /** 최근 미처리 문의 개수 조회
+	/** 최근 미처리 문의 개수 조회
 	 * @author 민장
 	 */
-   @Override
+	@Override
     public Map<String, Object> selectRecentSupportCount() {
         return adminMapper.selectRecentSupportCount();
     }
 	
+	/** 최근 7일 신고수 통계
+	 * @author 민장
+	 */
+	@Override
+	public List<Map<String, Object>> selectRecentReportChart() {
+		return adminMapper.selectRecentReportChart();
+	}
+	
+    /** 최근 7일 문의수 통계
+     * @author 민장
+     */
+    @Override
+    public List<Map<String, Object>> selectRecentSupportChart() {
+        return adminMapper.selectRecentSupportChart();
+    }
+
+	// 신고 목록 조회 (배령)
+	@Override
+	public List<AdminReport> getReportList(ReportSearchCriteria criteria) {
+		return adminMapper.getReportList(criteria);
+	}
 	
 }
