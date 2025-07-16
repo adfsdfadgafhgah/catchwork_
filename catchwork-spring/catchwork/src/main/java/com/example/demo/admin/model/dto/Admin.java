@@ -1,7 +1,5 @@
 package com.example.demo.admin.model.dto;
 
-import com.example.demo.corp.recruit.model.dto.Recruit;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
