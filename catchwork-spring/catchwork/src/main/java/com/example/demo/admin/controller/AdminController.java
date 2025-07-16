@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,13 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.admin.model.dto.AdminReport;
 import com.example.demo.admin.model.dto.ReportList;
 import com.example.demo.admin.model.dto.SupportList;
-import com.example.demo.admin.model.dto.ReportSearchCriteria;
-import com.example.demo.admin.model.dto.ReportSummary;
 import com.example.demo.admin.model.service.AdminService;
-import com.example.demo.report.model.dto.Report;
 import com.example.demo.support.model.dto.Support;
 
 import lombok.extern.slf4j.Slf4j;
