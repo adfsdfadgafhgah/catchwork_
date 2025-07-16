@@ -6,7 +6,6 @@ import { axiosApi } from "../../api/axiosAPI";
 import { useAuthStore } from "../../stores/authStore";
 import "./MainPage.css";
 import MainBoardItem from "../../components/board/MainBoardItem";
-import CorpRecruitListPage from "../corpMajor/CorpRecruitListPage";
 
 const MainPage = () => {
   const { memType, memNo } = useAuthStore(); // memType: 0(개인), 1(기업)

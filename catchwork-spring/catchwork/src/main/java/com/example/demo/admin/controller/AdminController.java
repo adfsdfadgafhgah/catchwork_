@@ -9,14 +9,17 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo.admin.model.dto.Admin;
 import com.example.demo.admin.model.dto.ReportList;
 import com.example.demo.admin.model.dto.SupportList;
+import com.example.demo.admin.model.entity.AdminEntity;
 import com.example.demo.admin.model.service.AdminService;
 import com.example.demo.support.model.dto.Support;
 
@@ -29,6 +32,38 @@ public class AdminController {
 
 	@Autowired
 	private AdminService adminService;
+
+	@PostMapping("auth")
+	public ResponseEntity<?> authenticationAdmin(@RequestBody Admin inputAdmin) {
+	    try {
+	        AdminEntity admin = adminService.auth(inputAdmin);
+	        return ResponseEntity.ok(Map.of(
+	            "message", "Authentication Complete",
+	            "adminId", admin.getAdminId(),
+	            "adminNickname", admin.getAdminNickname()
+	        ));
+	    } catch (IllegalArgumentException e) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+	            .body(Map.of("error", e.getMessage()));
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+	            .body(Map.of("error", "Authentication Failed", "details", e.getMessage()));
+	    }
+	}
+
+
+	@PostMapping("register")
+	public ResponseEntity<?> registrationAdmin(@RequestBody Admin inputAdmin) {
+		try {
+			Object res = adminService.register(inputAdmin);
+			return ResponseEntity.ok(Map.of("message", "Registraion Complete", res));
+		} catch (Exception e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body(Map.of("error", "Regitration Failed", "details", e.getMessage()));
+		}
+	}
 
 	/**
 	 * 최근 미처리 신고 목록 조회
@@ -44,7 +79,7 @@ public class AdminController {
 		int endRow = page * size;
 		return adminService.selectRecentReportList(startRow, endRow);
 	}
-	
+
 	/**
 	 * 최근 미처리 문의 목록 조회
 	 * 
@@ -70,39 +105,39 @@ public class AdminController {
 	public Map<String, Object> selectRecentReportCount() {
 		return adminService.selectRecentReportCount();
 	}
-	
+
 	/**
 	 * 최근 미처리 문의 개수 조회
 	 * 
 	 * @return
 	 * @author 민장
 	 */
-    @GetMapping("recentSupportCount")
-    public Map<String, Object> selectRecentSupportCount() {
-        return adminService.selectRecentSupportCount();
-    }
-    
-    /**
-     * 최근 7일 신고수 통계
-     * 
-     * @return
-     * @author 민장
-     */
-    @GetMapping("recentReportChart")
-    public List<Map<String, Object>> selectRecentReportChart() {
-        return adminService.selectRecentReportChart();
-    }
-    
-    /**
-     * 최근 7일 문의수 통계
-     * 
-     * @return
-     * @author 민장
-     */
-    @GetMapping("recentSupportChart")
-    public List<Map<String, Object>> selectRecentSupportChart() {
-        return adminService.selectRecentSupportChart();
-    }
+	@GetMapping("recentSupportCount")
+	public Map<String, Object> selectRecentSupportCount() {
+		return adminService.selectRecentSupportCount();
+	}
+
+	/**
+	 * 최근 7일 신고수 통계
+	 * 
+	 * @return
+	 * @author 민장
+	 */
+	@GetMapping("recentReportChart")
+	public List<Map<String, Object>> selectRecentReportChart() {
+		return adminService.selectRecentReportChart();
+	}
+
+	/**
+	 * 최근 7일 문의수 통계
+	 * 
+	 * @return
+	 * @author 민장
+	 */
+	@GetMapping("recentSupportChart")
+	public List<Map<String, Object>> selectRecentSupportChart() {
+		return adminService.selectRecentSupportChart();
+	}
 
 	/**
 	 * 전체 문의 목록 조회 (관리자용)
@@ -157,6 +192,7 @@ public class AdminController {
 
 	/**
 	 * 문의 답변 등록 (관리자용)
+	 * 
 	 * @author BAEBAE
 	 * @param support 답변 내용 및 문의 번호가 포함된 Support DTO
 	 * @return 성공 여부
@@ -181,11 +217,5 @@ public class AdminController {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("답변 등록 중 오류가 발생했습니다.");
 		}
 	}
-	
-	
-	
-	
-	
-	
 
 }
