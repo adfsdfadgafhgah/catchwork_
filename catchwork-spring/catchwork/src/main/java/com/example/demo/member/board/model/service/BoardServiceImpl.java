@@ -1,8 +1,13 @@
 package com.example.demo.member.board.model.service;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -11,6 +16,7 @@ import com.example.demo.member.board.model.dto.Board;
 import com.example.demo.member.board.model.mapper.BoardMapper;
 
 @Service
+@Transactional(value = "myBatisTransactionManager", rollbackFor = Exception.class)
 public class BoardServiceImpl implements BoardService {
 
 	@Autowired
@@ -18,6 +24,9 @@ public class BoardServiceImpl implements BoardService {
 
 	@Autowired
 	private ImageUploadService imageUploadService;
+
+	@Value("${file.upload.board-img-path}")
+	private String uploadPath;
 	
 	/**
 	 * 게시판 목록 조회
@@ -25,8 +34,12 @@ public class BoardServiceImpl implements BoardService {
 	 * @author BAEBAE
 	 */
 	@Override
-	public List<Board> selectBoardList(String sort, String query, String memNo, Integer limit) {
-		return boardMapper.selectBoardList(sort, query, memNo, limit);
+	public List<Board> selectBoardList(String sort, String query, String memNo,Integer page,Integer size, Integer limit) {
+		Integer offset = null;
+		if(page!=null) {			
+		offset = (page - 1) * size;
+		}
+		return boardMapper.selectBoardList(sort, query, memNo, offset,size, limit);
 	}
 
 	/**
@@ -154,5 +167,77 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public void readCount(int boardNo) {
 		boardMapper.readCount(boardNo);
+	}
+
+	/**
+	 * 이미지 처리(스케줄러)
+	 * 
+	 * @author JAEHO
+	 */
+	@Override
+	public int deleteUnusedImage() {
+
+		// 파일시스템의 이미지 목록 조회
+		File dir = new File(uploadPath);
+		File[] files = dir.listFiles((d, name) -> name.endsWith(".jpg") || name.endsWith(".png"));
+
+		if (files == null) return 0;
+
+		List<String> fileSystemImageList = Arrays.stream(files)
+			.map(File::getName)
+			.collect(Collectors.toList());
+
+
+		// DB에서 사용 중인 이미지 목록 조회
+		List<String> usedImageList = boardMapper.selectUsedImage();
+
+		// 비교하여 사용되지 않는 이미지 식별
+		List<String> unusedImageList = new ArrayList<>();
+		for (String image : fileSystemImageList) {
+			if (!usedImageList.contains(image)) {
+				unusedImageList.add(image);
+			}
+		}
+
+		// 파일 시스템에서 해당 이미지 삭제
+		int deleteCount = 0;
+		for (String image : unusedImageList) {
+			File file = new File(uploadPath, image);
+			if (file.exists()) {
+				file.delete();
+				deleteCount++;
+			}
+		}
+
+		return deleteCount;
+	}
+
+	/**
+	 * 게시글 삭제(스케줄러)
+	 * 
+	 * @author JAEHO
+	 */
+	@Override
+	public int removeTargetBoard(int deleteTargetPeriod) {
+
+		// 삭제 대상 게시글 조회(정지 대상 제외)
+		List<Integer> targetBoardNoList = boardMapper.selectTargetBoardNo(deleteTargetPeriod);
+
+		// 삭제 대상 게시글에 달린 댓글 조회
+		List<Integer> targetCommentNoList = boardMapper.selectTargetCommentNo(targetBoardNoList);
+
+		// 댓글이 있다면 삭제
+		for (Integer commentNo : targetCommentNoList) {
+			boardMapper.deleteComment(commentNo);
+		}
+
+		// 게시글 삭제
+		int deleteBoardCount = 0;	
+		for (Integer boardNo : targetBoardNoList) {
+			boardMapper.removeTargetBoard(boardNo);
+			deleteBoardCount++;
+		}
+
+		return deleteBoardCount;
 	}
 }

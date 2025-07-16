@@ -38,7 +38,6 @@ const SupportDetailPage = () => {
 
       <div className="meta-row">
         <span className="category">카테고리 : {support.supportCategoryName}</span>
-        {/* 필요하면 날짜 필드 추가 가능 */}
       </div>
 
       <section className="form-group">

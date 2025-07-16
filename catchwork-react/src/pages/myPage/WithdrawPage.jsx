@@ -6,7 +6,7 @@ import { useAuthStore } from "../../stores/authStore";
 
 const WithdrawPage = () => {
   const navigate = useNavigate();
-  const { loginMember } = useOutletContext();
+  const { memNo } = useOutletContext();
   const [agree, setAgree] = useState(false);
   const [password, setPassword] = useState("");
   const [isRead, setIsRead] = useState(false);
@@ -25,7 +25,7 @@ const WithdrawPage = () => {
       try {
         const resp = await axiosApi.put("/myPage/withdraw", {
           memPw: password,
-          memNo: loginMember.memNo,
+          memNo: memNo,
         });
         if (resp.status === 200) {
           alert(resp.data);

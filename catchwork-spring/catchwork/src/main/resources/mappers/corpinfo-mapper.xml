@@ -22,8 +22,8 @@
 		ci.CORP_DETAIL,
 		ci.CORP_BENEFIT,
 		ci.CORP_BENEFIT_DETAIL,
-		ci.CORP_BAN_FL,
-		ci.CORP_BAN_DATE,
+		ci.CORP_STATUS,
+		ci.CORP_STATUS_DATE,
 		cm.MEM_NO,
 		cm.CORP_MEM_ROLE_CHECK
 		FROM
@@ -84,14 +84,11 @@
     WHERE CM.MEM_NO = #{memNo}
 	</select>
 
-	<!-- <select id="selectCorpNoAndRoleCheck" resultType="map">
-	  SELECT 
-	    CORP_NO,
-	    CORP_MEM_ROLE_CHECK
-	  FROM 
-	    CORP_MEM
-	  WHERE 
-	    MEM_NO = #{memNo}
-	</select>  -->
+	<!-- 사용중인 이미지 조회(스케줄러) -->
+	<select id="selectUsedImage">
+		SELECT CORP_LOGO
+		FROM CORP_INFO
+		WHERE CORP_LOGO IS NOT NULL
+	</select>
 
 </mapper>

@@ -1,0 +1,252 @@
+/* Header.module.css */
+
+.header {
+  background-color: white;
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.headerTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  height: 70px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.logo {
+  flex-shrink: 0;
+}
+
+.logo a {
+  display: inline-block;
+  line-height: 0;
+}
+
+.logo img {
+  vertical-align: middle;
+  transition: opacity 0.3s ease;
+}
+
+.logo img:hover {
+  opacity: 0.8;
+}
+
+.searchBox {
+  display: flex;
+  align-items: center;
+  background-color: var(--white);
+  border-radius: 25px;
+  padding: 0px 20px;
+  max-width: 500px;
+  flex: 1;
+  margin: 0 40px;
+  border: 1px solid var(--main-color);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.searchBox:focus-within {
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 2px rgba(70, 181, 171, 0.2);
+}
+
+.searchBox i {
+  color: var(--main-color);
+  margin-right: 10px;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.searchBox i:hover {
+  color: var(--main-color-dark);
+}
+
+.searchBox input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.searchBox input::placeholder {
+  color: #888;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-shrink: 0;
+}
+
+.userInfo button {
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.userInfo button:hover {
+  background-color: var(--white);
+  color: var(--main-color);
+}
+
+.userInfo a {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.userInfo a:hover {
+  background-color: var(--white);
+  color: var(--main-color);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .headerTop {
+    padding: 0 15px;
+    height: 60px;
+  }
+
+  .searchBox {
+    margin: 0 20px;
+    max-width: 300px;
+  }
+
+  .userInfo {
+    gap: 10px;
+  }
+
+  .userInfo button,
+  .userInfo a {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .headerTop {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 10px 15px;
+  }
+
+  .searchBox {
+    order: 3;
+    width: 100%;
+    margin: 10px 0 0 0;
+  }
+
+  .userInfo {
+    gap: 8px;
+  }
+}
+
+.headerNav {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.navLink {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  font-weight: 500;
+  font-size: 1rem;
+  color: var(--text);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  border-bottom: 1px solid var(--white);
+}
+
+.navLink::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: var(--main-color);
+  transition: width 0.3s ease;
+}
+
+.navLink:hover {
+  color: var(--main-color);
+}
+
+.navLink:hover::after {
+  width: 100%;
+}
+
+.navLink.active {
+  background-color: var(--white);
+  color: var(--main-color);
+}
+
+.navLink.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background-color: var(--main-color);
+  transform: translateX(-50%);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .nav {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+  }
+
+  .navLink {
+    padding: 0.75rem 1rem;
+    font-size: 0.9rem;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav {
+    gap: 0.25rem;
+  }
+
+  .navLink {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+  }
+}

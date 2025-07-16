@@ -1,5 +1,5 @@
 .company-item {
-  height: 100%;
+  height: 300px;
   border: var(--stroke-color2);
   border-radius: 12px;
   overflow: hidden;
@@ -10,6 +10,7 @@
   align-items: center;
   padding-bottom: 16px;
   transition: transform 0.2s ease;
+  width: 300px;
 }
 
 .company-item:hover {
@@ -19,8 +20,8 @@
 /* 로고 영역 */
 .company-item-logo-area {
   width: 100%;
-  height: 100px;
-  background-color: var(--sub-color);
+  height: 200px;
+  background-color: var(--white);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -38,6 +39,18 @@
   font-weight: 600;
   font-size: 16px;
   margin-top: 12px;
+  max-height: 1.4em;
+  display: -webkit-box;
+  -webkit-line-clamp: 1; /* 최대 1줄 */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  padding: 0 16px; /* 좌우 여백 주면 더 보기 좋아요 */
+  text-align: center; /* 텍스트 가운데 정렬 */
+  height: 20px; /* 높이를 고정해서 세로 가운데 느낌 */
+  line-height: 1.4em;
+  display: -webkit-box !important;
 }
 
 /* 기업형태 + 공고 */

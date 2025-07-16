@@ -1,7 +1,7 @@
 .company-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 20px 20px;
+  padding: 0px 20px;
 }
 
 .section-header-with-search {
@@ -13,7 +13,16 @@
 }
 
 .company-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center; /* ← 또는 flex-start, 안전하게 정렬 */
+  box-sizing: border-box;
+  padding: 0 12px;
+}
+.company-end-message {
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--gray01);
+  padding: 40px 0;
 }

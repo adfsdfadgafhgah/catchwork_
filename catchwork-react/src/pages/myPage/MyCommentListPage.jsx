@@ -22,6 +22,7 @@ const MyCommentListPage = () => {
       params: { memNo: memNo, query: searchTerm },
     });
     if (resp.status === 200) {
+      console.log("resp.data : " + JSON.stringify(resp.data));
       setComments(resp.data);
     }
     setIsLoading(false);

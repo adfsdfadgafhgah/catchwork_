@@ -1,7 +1,32 @@
-.mainTitle {
-  background-color: red;
-  color: blue;
-  font-size: 32px;
-  font-weight: 700;
-  padding: 10px;
+.mainPage {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.topSection {
+  display: flex;
+  gap: 30px;
+}
+
+.bottomSection {
+  display: flex;
+  gap: 30px;
+}
+
+.chartBox {
+  flex: 1;
+}
+
+.infoBox {
+  flex: 1;
+}
+
+.supportBox {
+  flex: 1;
+}
+
+.reportBox {
+  flex: 1;
 }

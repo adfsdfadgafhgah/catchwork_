@@ -84,30 +84,35 @@
 
 			<!-- 추가 필터 조건들 -->
 
-			<if
-				test="recruitJobName != null and recruitJobName != '' and recruitJobName != 'all'">
-				AND R.RECRUIT_JOB_NAME = #{recruitJobName}
-			</if>
+			  <!-- 직무 필터 -->
+    <if test="recruitJobName != null and recruitJobName != '' and recruitJobName != 'all'">
+      AND R.RECRUIT_JOB_NAME = #{recruitJobName}
+    </if>
 
-			<if
-				test="recruitCareer != null and recruitCareer != '' and recruitCareer != 'all'">
-				AND R.RECRUIT_CAREER = #{recruitCareer}
-			</if>
+    <!-- 근무지역 필터 -->
+    <if test="recruitJobArea != null and recruitJobArea != '' and recruitJobArea != 'all'">
+      AND R.RECRUIT_JOB_AREA LIKE '%' || #{recruitJobArea} || '%'
+    </if>
 
-			<if
-				test="recruitEdu != null and recruitEdu != '' and recruitEdu != 'all'">
-				AND R.RECRUIT_EDU = #{recruitEdu}
-			</if>
+    <!-- 경력 -->
+    <if test="recruitCareer != null and recruitCareer != '' and recruitCareer != 'all'">
+      AND R.RECRUIT_CAREER = #{recruitCareer}
+    </if>
 
-			<if
-				test="recruitType != null and recruitType != '' and recruitType != 'all'">
-				AND R.RECRUIT_TYPE = #{recruitType}
-			</if>
+    <!-- 학력 -->
+    <if test="recruitEdu != null and recruitEdu != '' and recruitEdu != 'all'">
+      AND R.RECRUIT_EDU = #{recruitEdu}
+    </if>
 
-			<if
-				test="corpType != null and corpType != '' and corpType != 'all'">
-				AND CI.CORP_TYPE = #{corpType}
-			</if>
+    <!-- 고용형태 -->
+    <if test="recruitType != null and recruitType != '' and recruitType != 'all'">
+      AND R.RECRUIT_TYPE = #{recruitType}
+    </if>
+
+    <!-- 기업형태 -->
+    <if test="corpType != null and corpType != '' and corpType != 'all'">
+      AND CI.CORP_TYPE = #{corpType}
+    </if>
 
 		</where>
 

@@ -53,12 +53,14 @@ public class BoardController {
             @RequestParam(name = "sort") String sort,
             @RequestParam(name = "query", required = false, defaultValue = "") String query,
             @RequestParam(name = "memNo", required = false) String memNo,
+            @RequestParam(name = "page", required = false) Integer page,
+            @RequestParam(name = "size", required = false) Integer size,
             
             @RequestParam(name = "limit", required = false) Integer limit
-) {
+        ) {
     	System.out.println();
         try {
-            List<Board> boards = boardService.selectBoardList(sort, query.trim(), memNo, limit);
+            List<Board> boards = boardService.selectBoardList(sort, query.trim(), memNo, page, size, limit);
             return ResponseEntity.ok(boards);
         } catch (Exception e) {
             e.printStackTrace(); // 이게 콘솔에 뭐라고 찍히는지 확인해줘!

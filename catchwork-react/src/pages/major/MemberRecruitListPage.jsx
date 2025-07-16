@@ -4,8 +4,8 @@ import MemberRecruitList from "../../components/recruit/MemberRecruitList";
 import styles from "../corpMajor/CorpRecruitListPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import useLoginMember from "../../stores/loginMember";
 import ScrollToTopButton from "../../components/common/ScrollToTopButton";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function MemberRecruitListPage() {
   const [recruits, setRecruits] = useState([]);
@@ -22,41 +22,57 @@ export default function MemberRecruitListPage() {
   const [corpTypeFilter, setCorpTypeFilter] = useState("all"); // 기업형태
   const [recruitTypeFilter, setRecruitTypeFilter] = useState("all"); // 고용형태
 
+  const [page, setPage] = useState(1); // 페이지 번호
+  const [hasMore, setHasMore] = useState(true); // 더 불러올 데이터가 있는지 여부 확인인
+
+  const fetchRecruitList = async (pageNum = 1, isNewSearch = false) => {
+    try {
+      setIsLoading(true);
+      const resp = await axiosApi.get("/memberRecruit/list", {
+        params: {
+          recruitJobName: recruitJobNameFilter,
+          recruitJobArea: recruitJobAreaFilter,
+          recruitCareer: recruitCareerFilter,
+          recruitEdu: recruitEduFilter,
+          corpType: corpTypeFilter,
+          recruitType: recruitTypeFilter,
+          query: confirmedSearchTerm,
+          memNo: memNo,
+          page: pageNum,
+          size: 9,
+        },
+      });
+
+      if (resp.status === 200) {
+        const list = resp.data;
+        if (isNewSearch) {
+          setRecruits(list);
+        } else {
+          setRecruits((prev) => [...prev, ...list]);
+        }
+        setHasMore(list.length === 9); // 10개 미만이면 더 없음
+      }
+    } catch (err) {
+      console.error("채용공고 목록 조회 실패:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const fetchMoreData = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchRecruitList(nextPage);
+  };
+
   // 로그인 정보 세팅
   useEffect(() => {
-    if (memNo === undefined) {
-      return;
-    }
+    if (memNo === undefined) return;
 
     // 로그인 정보가 성공적으로 불러와진 후에만 API 요청을 보냄
-    const fetchRecruitList = async () => {
-      try {
-        setIsLoading(true);
-        const resp = await axiosApi.get("/memberRecruit/list", {
-          params: {
-            recruitJobName: recruitJobNameFilter,
-            recruitJobArea: recruitJobAreaFilter,
-            recruitCareer: recruitCareerFilter,
-            recruitEdu: recruitEduFilter,
-            corpType: corpTypeFilter,
-            recruitType: recruitTypeFilter,
-            query: confirmedSearchTerm,
-            memNo: memNo,
-          },
-        });
-
-        if (resp.status === 200) {
-          const list = resp.data;
-          setRecruits(list);
-        }
-      } catch (err) {
-        console.error("채용공고 목록 조회 실패:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchRecruitList();
+    setRecruits([]);
+    setPage(1);
+    setHasMore(true);
+    fetchRecruitList(1, true);
   }, [
     recruitJobNameFilter,
     recruitJobAreaFilter,
@@ -76,7 +92,11 @@ export default function MemberRecruitListPage() {
   };
 
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return (
+      <div className="loading">
+        <i className="fa-solid fa-spinner fa-spin"></i> Loading...
+      </div>
+    );
   }
 
   return (
@@ -212,19 +232,32 @@ export default function MemberRecruitListPage() {
           />
         </div>
       </div>
-
-      {/* 검색 결과 유무에 따른 조건 렌더링 */}
-      {isLoading ? (
-        <h1>Loading...</h1>
-      ) : recruits.length > 0 ? (
-        <MemberRecruitList
-          // key={memNo} // 필요 시 주석 풀기
-          recruits={recruits}
-          memNo={memNo}
-        />
-      ) : (
-        <p className={styles.noResult}>검색 결과가 없습니다.</p>
-      )}
+      {/* 그냥 혹시 몰라서 대충 만들어 놈 */}
+      <button
+        type="button"
+        className={styles.resetButton}
+        onClick={() => {
+          setRecruitJobNameFilter("all");
+          setRecruitJobAreaFilter("all");
+          setRecruitCareerFilter("all");
+          setRecruitEduFilter("all");
+          setCorpTypeFilter("all");
+          setRecruitTypeFilter("all");
+        }}
+      >
+        초기화
+      </button>
+      <InfiniteScroll
+        dataLength={recruits.length}
+        next={fetchMoreData}
+        hasMore={hasMore}
+        loader={<h4>Loading...</h4>}
+        endMessage={
+          <p className={styles.noResult}>더 이상 채용공고가 없습니다.</p>
+        }
+      >
+        <MemberRecruitList recruits={recruits} memNo={memNo} />
+      </InfiniteScroll>
 
       <ScrollToTopButton />
     </div>

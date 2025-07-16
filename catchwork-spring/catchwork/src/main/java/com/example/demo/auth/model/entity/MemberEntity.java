@@ -38,7 +38,7 @@ public class MemberEntity {
     @Column(name = "MEM_TEL", nullable = false, length = 11, unique = true)
     private String memTel;
 
-    @Column(name = "MEM_EMAIL", nullable = false, length = 20, unique = true)
+    @Column(name = "MEM_EMAIL", nullable = false, length = 50, unique = true)
     private String memEmail;
 
     @Column(name = "MEM_BIRTHDAY")

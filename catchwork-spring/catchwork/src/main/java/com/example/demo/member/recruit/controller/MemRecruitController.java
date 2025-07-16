@@ -70,11 +70,18 @@ private final MemRecruitService memRecruitService;
 		    @RequestParam(name = "recruitType", required = false) String recruitType,
 		    @RequestParam(name = "query", required = false) String query,
 		    @RequestParam(name = "memNo", required = false) String memNo,
+            @RequestParam(name = "page", required = false) Integer page,
+            @RequestParam(name = "size", required = false) Integer size,
+            
 			// 메인페이지용용
 			@RequestParam(value = "sort", required = false, defaultValue = "latest") String sort,
 			@RequestParam(value = "limit", required = false) Integer limit,
 			@RequestParam(value = "type", required = false) String type
 	) {
+		Integer offset = null;
+		if(page!=null) {
+			offset = (page - 1) * size;
+		}
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("recruitJobName", recruitJobName);
 	    paramMap.put("recruitJobArea", recruitJobArea);
@@ -84,6 +91,8 @@ private final MemRecruitService memRecruitService;
 	    paramMap.put("recruitType", recruitType);
 	    paramMap.put("query", query);
 	    paramMap.put("memNo", memNo);
+	    paramMap.put("offset", offset);
+	    paramMap.put("size", size);
 		// 메인페이지용용
 	    paramMap.put("sort", sort);
 	    paramMap.put("limit", limit);

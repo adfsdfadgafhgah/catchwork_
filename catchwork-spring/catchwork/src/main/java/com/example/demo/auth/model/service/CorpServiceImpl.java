@@ -1,8 +1,12 @@
 package com.example.demo.auth.model.service;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -13,8 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.example.demo.auth.model.dto.CorpInfo;
-import com.example.demo.auth.model.entity.CorpInfoEntity;
+
 import com.example.demo.auth.model.repository.CorpInfoRepository;
+import com.example.demo.auth.model.repository.MemberRepository;
+import com.example.demo.corp.company.model.mapper.CorpInfoMapper;
 
 @Service
 @Transactional(rollbackFor = Exception.class)
@@ -23,13 +29,19 @@ public class CorpServiceImpl implements CorpService {
 
     @Value("${corp.service.key}")
     private String serviceKey;
-	
+	private final MemberRepository memberRepository;
 	private final CorpInfoRepository corpInfoRepository;
     private final WebClient webClient;
+    private final CorpInfoMapper mapper;
 
-	public CorpServiceImpl(CorpInfoRepository corpInfoRepository, WebClient webClient) {
+    @Value("${file.upload.company-img-path}")
+    private String uploadPath;
+    
+	public CorpServiceImpl(CorpInfoRepository corpInfoRepository, WebClient webClient, MemberRepository memberRepository, CorpInfoMapper mapper) {
 		this.corpInfoRepository = corpInfoRepository;
 		this.webClient = webClient;
+		this.memberRepository = memberRepository;
+		this.mapper = mapper;
 	}
 
 	@Override
@@ -99,4 +111,48 @@ public class CorpServiceImpl implements CorpService {
         return false;
     }
 
+	@Override
+	public String findMemName(String memNo) {
+		String memName = memberRepository.findByMemNo(memNo).getMemName();
+		return memName;
+	}
+
+    // 이미지 처리(스케줄러)
+	@Override
+	@Transactional(value = "myBatisTransactionManager", rollbackFor = Exception.class)
+	public int deleteUnusedImage() {
+				// 파일시스템의 이미지 목록 조회
+                File dir = new File(uploadPath);
+                File[] files = dir.listFiles((d, name) -> name.endsWith(".jpg") || name.endsWith(".png"));
+        
+                if (files == null) return 0;
+        
+                List<String> fileSystemImageList = Arrays.stream(files)
+                    .map(File::getName)
+                    .collect(Collectors.toList());
+        
+        
+                // DB에서 사용 중인 이미지 목록 조회
+                List<String> usedImageList = mapper.selectUsedImage();
+        
+                // 비교하여 사용되지 않는 이미지 식별
+                List<String> unusedImageList = new ArrayList<>();
+                for (String image : fileSystemImageList) {
+                    if (!usedImageList.contains(image)) {
+                        unusedImageList.add(image);
+                    }
+                }
+        
+                // 파일 시스템에서 해당 이미지 삭제
+                int deleteCount = 0;
+                for (String image : unusedImageList) {
+                    File file = new File(uploadPath, image);
+                    if (file.exists()) {
+                        file.delete();
+                        deleteCount++;
+                    }
+                }
+        
+                return deleteCount;
+	}
 }

@@ -26,5 +26,14 @@
       SYSDATE
     )
   </insert>
+  
+  <!-- 중복 신고 확인 쿼리 추가 -->
+  <select id="checkDuplicateReport" resultType="int">
+    SELECT COUNT(*) 
+    FROM REPORT 
+    WHERE REPORT_TARGET_NO = #{param1} 
+      AND REPORT_TARGET_TYPE = #{param2} 
+      AND MEM_NO = #{param3}
+  </select>
 
 </mapper>

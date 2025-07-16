@@ -1,16 +1,25 @@
 import React, { useState, useEffect } from "react";
 import "./SupportListPage.css";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom"; 
 import Pagination from "../../components/common/Pagination";
 import { axiosApi } from "../../api/axiosAPI";
 
 const SupportListPage = () => {
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(1);
+  const [searchParams, setSearchParams] = useSearchParams(); 
+
   const [supportItems, setSupportItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const itemsPerPage = 10;
+
+  const initialPage = parseInt(searchParams.get("page")) || 1; // URL에서 page 파라미터 읽기
+  const [currentPage, setCurrentPage] = useState(initialPage); // 초기값 적용
+
+  useEffect(() => {
+    setSearchParams({ page: currentPage }); // 페이지 이동 시 URL 갱신
+  }, [currentPage, setSearchParams]);
 
   useEffect(() => {
     const token = localStorage.getItem("accessToken");
@@ -29,7 +38,11 @@ const SupportListPage = () => {
         });
         setSupportItems(response.data);
       } catch (err) {
-        setError(err.response?.data?.message || err.message || "데이터를 가져오는 중 오류 발생");
+        setError(
+          err.response?.data?.message ||
+          err.message ||
+          "데이터를 가져오는 중 오류 발생"
+        );
       } finally {
         setLoading(false);
       }
@@ -43,12 +56,20 @@ const SupportListPage = () => {
   const currentItems = supportItems.slice(indexOfFirstItem, indexOfLastItem);
   const totalPages = Math.ceil(supportItems.length / itemsPerPage);
 
+  const formatDate = (dateString) => {
+    if (!dateString) return "-";
+    const date = new Date(dateString);
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(
+      date.getDate()
+    ).padStart(2, "0")}`;
+  };
+
   const goToWrite = () => {
     navigate("/writesupport");
   };
 
   const goToDetail = (supportNo) => {
-    navigate(`/supportdetail/${supportNo}`);
+    navigate(`/supportdetail/${supportNo}?page=${currentPage}`); // 현재 페이지 번호 전달
   };
 
   return (
@@ -80,8 +101,8 @@ const SupportListPage = () => {
             <tbody>
               {currentItems.length > 0 ? (
                 currentItems.map((item) => (
-                <tr key={item.supportNo}>
-                    <td>{item.seqNo}</td> {/* ← 수정된 부분! */}
+                  <tr key={item.supportNo}>
+                    <td>{item.seqNo}</td>
                     <td>{item.supportCategoryName}</td>
                     <td
                       className="title"
@@ -90,17 +111,15 @@ const SupportListPage = () => {
                     >
                       {item.supportTitle}
                     </td>
-                    <td>{item.supportDate || "-"}</td>
+                    <td>{formatDate(item.supportDate)}</td>
                     <td
                       className={
-                        item.supportStatus === "Y"
-                          ? "status-done"
-                          : "status-pending"
+                        item.supportStatus === "Y" ? "status-done" : "status-pending"
                       }
                     >
                       {item.supportStatus === "Y" ? "답변 완료" : "답변 대기"}
                     </td>
-                </tr>
+                  </tr>
                 ))
               ) : (
                 <tr>
@@ -116,7 +135,7 @@ const SupportListPage = () => {
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              onPageChange={(page) => setCurrentPage(page)}
+              onPageChange={(page) => setCurrentPage(page)} // 현재 페이지 유지
             />
           )}
         </>

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./SideBar.css";
+import styles from "./SideBar.module.css";
 import { NavLink, useLocation } from "react-router-dom";
 
 const SideBar = () => {
@@ -22,17 +22,17 @@ const SideBar = () => {
   };
 
   return (
-    <div className="sidebar">
-      <div className="sidebar-content">
-        <h2 className="sidebar-title">마이 페이지</h2>
+    <div className={styles.sidebar}>
+      <div className={styles.sidebarContent}>
+        <h2 className={styles.sidebarTitle}>마이 페이지</h2>
 
-        <nav className="sidebar-nav">
+        <nav className={styles.sidebarNav}>
           <NavLink
             to="/mypage/home"
-            className={`nav-item ${
+            className={`${styles.navItem} ${
               location.pathname === "/mypage/home" ||
               location.pathname === "/mypage"
-                ? "active"
+                ? styles.active
                 : ""
             }`}
           >
@@ -41,8 +41,8 @@ const SideBar = () => {
 
           <NavLink
             to="/mypage/myrecruit"
-            className={`nav-item ${
-              location.pathname === "/mypage/myrecruit" ? "active" : ""
+            className={`${styles.navItem} ${
+              location.pathname === "/mypage/myrecruit" ? styles.active : ""
             }`}
           >
             지원한 공고
@@ -52,38 +52,44 @@ const SideBar = () => {
           <div>
             <button
               onClick={() => toggleMenu("fav")}
-              className="nav-item nav-item-expandable"
+              className={`${styles.navItem} ${styles.navItemExpandable}`}
             >
               <span>관심 목록</span>
               <i
                 className={`material-icons ${
-                  expandedMenu.interest ? "rotate-90" : ""
+                  expandedMenu.fav ? styles.rotate90 : ""
                 }`}
               >
                 chevron_right
               </i>
             </button>
             {expandedMenu.fav && (
-              <div className="sub-nav">
+              <div className={styles.subNav}>
                 <NavLink
-                  className={`sub-nav-item ${
-                    location.pathname === "/mypage/favrecruit" ? "active" : ""
+                  className={`${styles.subNavItem} ${
+                    location.pathname === "/mypage/favrecruit"
+                      ? styles.active
+                      : ""
                   }`}
                   to="/mypage/favrecruit"
                 >
                   관심 공고
                 </NavLink>
                 <NavLink
-                  className={`sub-nav-item ${
-                    location.pathname === "/mypage/favcompany" ? "active" : ""
+                  className={`${styles.subNavItem} ${
+                    location.pathname === "/mypage/favcompany"
+                      ? styles.active
+                      : ""
                   }`}
                   to="/mypage/favcompany"
                 >
                   관심 기업
                 </NavLink>
                 <NavLink
-                  className={`sub-nav-item ${
-                    location.pathname === "/mypage/favboard" ? "active" : ""
+                  className={`${styles.subNavItem} ${
+                    location.pathname === "/mypage/favboard"
+                      ? styles.active
+                      : ""
                   }`}
                   to="/mypage/favboard"
                 >
@@ -97,30 +103,32 @@ const SideBar = () => {
           <div>
             <button
               onClick={() => toggleMenu("myContents")}
-              className="nav-item nav-item-expandable"
+              className={`${styles.navItem} ${styles.navItemExpandable}`}
             >
               <span>내가 쓴 목록</span>
               <i
                 className={`material-icons ${
-                  expandedMenu.myContents ? "rotate-90" : ""
+                  expandedMenu.myContents ? styles.rotate90 : ""
                 }`}
               >
                 chevron_right
               </i>
             </button>
             {expandedMenu.myContents && (
-              <div className="sub-nav">
+              <div className={styles.subNav}>
                 <NavLink
-                  className={`sub-nav-item ${
-                    location.pathname === "/mypage/myboard" ? "active" : ""
+                  className={`${styles.subNavItem} ${
+                    location.pathname === "/mypage/myboard" ? styles.active : ""
                   }`}
                   to="/mypage/myboard"
                 >
                   내가 쓴 게시글
                 </NavLink>
                 <NavLink
-                  className={`sub-nav-item ${
-                    location.pathname === "/mypage/mycomment" ? "active" : ""
+                  className={`${styles.subNavItem} ${
+                    location.pathname === "/mypage/mycomment"
+                      ? styles.active
+                      : ""
                   }`}
                   to="/mypage/mycomment"
                 >
@@ -132,8 +140,8 @@ const SideBar = () => {
 
           <NavLink
             to="/mypage/membership"
-            className={`nav-item ${
-              location.pathname === "/mypage/membership" ? "active" : ""
+            className={`${styles.navItem} ${
+              location.pathname === "/mypage/membership" ? styles.active : ""
             }`}
           >
             멤버쉽
@@ -143,38 +151,44 @@ const SideBar = () => {
           <div>
             <button
               onClick={() => toggleMenu("account")}
-              className="nav-item nav-item-expandable"
+              className={`${styles.navItem} ${styles.navItemExpandable}`}
             >
               <span>계정관리</span>
               <i
                 className={`material-icons ${
-                  expandedMenu.account ? "rotate-90" : ""
+                  expandedMenu.account ? styles.rotate90 : ""
                 }`}
               >
                 chevron_right
               </i>
             </button>
             {expandedMenu.account && (
-              <div className="sub-nav">
+              <div className={styles.subNav}>
                 <NavLink
-                  className={`sub-nav-item ${
-                    location.pathname === "/mypage/eitmyinfo" ? "active" : ""
+                  className={`${styles.subNavItem} ${
+                    location.pathname === "/mypage/editmyinfo"
+                      ? styles.active
+                      : ""
                   }`}
                   to="/mypage/editmyinfo"
                 >
                   내 정보 변경
                 </NavLink>
                 <NavLink
-                  className={`sub-nav-item ${
-                    location.pathname === "/mypage/changepw" ? "active" : ""
+                  className={`${styles.subNavItem} ${
+                    location.pathname === "/mypage/changepw"
+                      ? styles.active
+                      : ""
                   }`}
                   to="/mypage/changepw"
                 >
                   비밀번호 변경
                 </NavLink>
                 <NavLink
-                  className={`sub-nav-item ${
-                    location.pathname === "/mypage/withdraw" ? "active" : ""
+                  className={`${styles.subNavItem} ${
+                    location.pathname === "/mypage/withdraw"
+                      ? styles.active
+                      : ""
                   }`}
                   to="/mypage/withdraw"
                 >

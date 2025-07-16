@@ -50,7 +50,7 @@ const CompanyDetailPage = () => {
 
         if (res.status === 200) {
           const data = res.data;
-          console.log("받은 company:", data);
+          //console.log("받은 company:", data);
           setCompany({
             ...data,
             isSaved: Number(data.isSaved),
@@ -86,7 +86,7 @@ const CompanyDetailPage = () => {
 
       if (res.status === 200) {
         const result = res.data;
-        console.log("Toggle 응답:", result);
+        //console.log("Toggle 응답:", result);
 
         setCompany((prev) => ({
           ...prev,

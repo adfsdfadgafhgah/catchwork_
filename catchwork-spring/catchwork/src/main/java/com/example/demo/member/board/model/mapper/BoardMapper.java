@@ -19,7 +19,14 @@ public interface BoardMapper {
 	 * @param query
 	 * @return
 	 */
-	List<Board> selectBoardList(@Param("sort") String sort, @Param("query") String query, @Param("memNo") String memNo,@Param("limit") Integer limit);
+	
+	List<Board> selectBoardList(
+			@Param("sort") String sort, 
+			@Param("query") String query, 
+			@Param("memNo") String memNo,
+		    @Param("offset") Integer offset,
+			@Param("size") Integer size,
+			@Param("limit") Integer limit);
 
 	// -----------------------------------------------------------------
 
@@ -124,4 +131,45 @@ public interface BoardMapper {
 	 */
 	void deleteBoardThumbnail(int boardNo);
 
+	/**
+	 * 사용중인 이미지 조회(스케줄러)
+	 * 
+	 * @author JAEHO
+	 * @return
+	 */
+	List<String> selectUsedImage();
+
+	/**
+	 * 삭제 대상 게시글 조회(스케줄러)
+	 * 
+	 * @author JAEHO
+	 * @param deleteTargetPeriod
+	 * @return
+	 */
+	List<Integer> selectTargetBoardNo(int deleteTargetPeriod);
+
+	/**
+	 * 삭제 대상 댓글 조회(스케줄러)
+	 * 
+	 * @author JAEHO
+	 * @param targetBoardNoList
+	 * @return
+	 */
+	List<Integer> selectTargetCommentNo(List<Integer> targetBoardNoList);
+
+	/**
+	 * 댓글 삭제(스케줄러)
+	 * 
+	 * @author JAEHO
+	 * @param commentNo
+	 */
+	void deleteComment(int commentNo);
+
+	/**
+	 * 게시글 삭제(스케줄러)
+	 * 
+	 * @author JAEHO
+	 * @param boardNo
+	 */
+	void removeTargetBoard(int boardNo);
 }

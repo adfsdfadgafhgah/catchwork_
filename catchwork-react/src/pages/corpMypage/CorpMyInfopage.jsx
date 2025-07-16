@@ -1,83 +1,95 @@
-// src/pages/corp/myPage/CorpMyInfoPage.jsx
-
-import { useEffect } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useEffect, useState } from "react";
 import "./CorpMyInfoPage.css";
-import defaultImg from "../../assets/icon.png";
+import defaultLogo from "../../assets/icon.png";
 import { axiosApi } from "../../api/axiosAPI";
 
 function CorpMyInfo() {
-  const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL; // 프로필 이미지 기본 경로 (env 변수)
-  const { loginMember, setLoginMember } = useOutletContext();
+  const logoImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
+  const [company, setCompany] = useState(null);
+  const [detailLogo, setDetailLogo] = useState(null);
 
   useEffect(() => {
-    // 기업 마이페이지 정보 API 호출
-    axiosApi.get("http://localhost:8080/corp/mypage", { withCredentials: true })
+    // 1번 API: 기본 기업 정보
+    axiosApi
+      .get("/corp/mypage")
       .then((res) => {
-        setLoginMember(res.data);
+        setCompany(res.data);
       })
       .catch((err) => {
         console.error("기업 정보 조회 실패", err);
       });
   }, []);
 
-  console.log("✅ loginMember", loginMember);
+  useEffect(() => {
+    // 2번 API: corpLogo만 별도 호출해서 따로 저장
+    async function fetchDetailLogo() {
+      try {
+        if (!company?.memNo) return; // memNo가 있어야 호출 가능
 
-  if (!loginMember) {
-    return <div>기억 정보를 불러오는 중...</div>;
+        const res = await axiosApi.get("/corpcompany/detail", {
+          params: { memNo: company.memNo },
+        });
+        setDetailLogo(res.data.corpLogo);
+      } catch (err) {
+        console.error("상세 기업 로고 조회 실패", err);
+      }
+    }
+    fetchDetailLogo();
+  }, [company]);
+
+  if (!company) {
+    return <div>기업 정보를 불러오는 중...</div>;
   }
+
+  // detailLogo 우선, 없으면 company.corpLogo, 없으면 defaultLogo
+  const logoSrc = detailLogo
+    ? `${logoImgUrl}/${detailLogo}`
+    : company.corpLogo
+    ? `${logoImgUrl}/${company.corpLogo}`
+    : defaultLogo;
 
   return (
     <div className="corpmyinfo-container">
       <div className="profile-section">
         <div className="corpmyinfo-profile-img">
-          <img
-            src={
-              loginMember.memProfilePath
-                ? `${imgUrl}/${loginMember.memProfilePath}`
-                : defaultImg
-            }
-            alt="프로필"
-          />
+          <img src={logoSrc} alt="기업로고" className="company-logo" />
         </div>
-
         <div className="profile-info">
-          <h1>{loginMember.memName || "닉네임 없음"}</h1>
+          <h1>{company.corpName || "대표자 없음"}</h1>
         </div>
       </div>
-      
+
       <div className="corpmyinfo-info">
         <div className="info-content">
           <span className="info-label">기업명</span>
-          <span className="info-value">{loginMember.corpName || "기업명 없음"}</span>
+          <span className="info-value">{company.corpName || "기업명 없음"}</span>
         </div>
 
         <div className="info-content">
           <span className="info-label">아이디</span>
-          <span className="info-value">{loginMember.memId || "-"}</span>
+          <span className="info-value">{company.memId || "-"}</span>
         </div>
 
         <div className="info-content">
           <span className="info-label">이메일</span>
-          <span className="info-value">{loginMember.memEmail || "-"}</span>
+          <span className="info-value">{company.memEmail || "-"}</span>
         </div>
 
         <div className="info-content">
           <span className="info-label">전화번호</span>
-          <span className="info-value">{loginMember.memTel || "-"}</span>
+          <span className="info-value">{company.memTel || "-"}</span>
         </div>
 
         <div className="info-content">
           <span className="info-label">이름</span>
-          <span className="info-value">{loginMember.memName || "-"}</span>
+          <span className="info-value">{company.memName || "-"}</span>
         </div>
 
         <div className="info-content">
           <span className="info-label">부서명</span>
-          <span className="info-value">{loginMember.corpDepartment || "부서 없음"}</span>
+          <span className="info-value">{company.corpMemDept || "부서 없음"}</span>
         </div>
       </div>
-
     </div>
   );
 }

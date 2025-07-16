@@ -1,0 +1,253 @@
+/* FindPassword.module.css */
+.findContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.findWrapper {
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 100%;
+  max-width: 600px;
+  position: relative;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.findForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.inputGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.input {
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: #fafafa;
+  outline: none;
+}
+
+.input:focus {
+  border-color: var(--main-color);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.1);
+}
+
+.input:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.input::placeholder {
+  color: #999;
+}
+
+.authContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 8px;
+  padding: 0 4px;
+}
+
+.authMessage {
+  flex: 1;
+}
+
+.authMessage small {
+  font-size: 12px;
+  line-height: 1.3;
+}
+
+.infoMessage {
+  color: #666;
+}
+
+.successMessage {
+  color: #28a745;
+}
+
+.errorMessage {
+  color: #dc3545;
+}
+
+.timerMessage {
+  color: var(--main-color);
+  font-weight: 500;
+}
+
+.authButton {
+  padding: 8px 16px;
+  background: var(--main-color);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  margin-left: 12px;
+}
+
+.authButton:hover:not(.disabled) {
+  background: var(--main-color-dark);
+  transform: translateY(-1px);
+}
+
+.authButton.disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.submitButton {
+  padding: 18px;
+  background: var(--main-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.submitButton:hover:not(.disabled) {
+  background: var(--main-color-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(70, 181, 171, 0.3);
+}
+
+.submitButton.disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .findContainer {
+    padding: 10px;
+  }
+
+  .findWrapper {
+    padding: 30px 20px;
+    max-width: 100%;
+  }
+
+  .title {
+    font-size: 24px;
+    margin-bottom: 30px;
+  }
+
+  .input {
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  .authContainer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .authButton {
+    margin-left: 0;
+    align-self: flex-end;
+  }
+
+  .submitButton {
+    padding: 16px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .findWrapper {
+    padding: 20px 15px;
+  }
+
+  .title {
+    font-size: 20px;
+  }
+
+  .findForm {
+    gap: 16px;
+  }
+
+  .inputGroup {
+    gap: 6px;
+  }
+
+  .label {
+    font-size: 13px;
+  }
+
+  .input {
+    font-size: 14px;
+  }
+
+  .authMessage small {
+    font-size: 11px;
+  }
+
+  .authButton {
+    font-size: 12px;
+  }
+
+  .submitButton {
+    font-size: 14px;
+  }
+}
+
+/* 로딩 상태 */
+.authButton.loading::after {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 6px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

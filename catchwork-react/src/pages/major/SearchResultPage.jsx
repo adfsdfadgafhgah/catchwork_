@@ -24,20 +24,22 @@ const SearchResultPage = () => {
   const [recruitEdu, setRecruitEdu] = useState("all");
   const [corpType, setCorpType] = useState("all");
   const [recruitType, setRecruitType] = useState("all");
+  const [recruitJobArea, setRecruitJobArea] = useState("all");
 
   useEffect(() => {
     if (!query) return;
 
-    console.log("🧩 검색 조건 확인:", {
-      query,
-      type,
-      memNo: loginMember?.memNo,
-      recruitJobName,
-      recruitCareer,
-      recruitEdu,
-      corpType,
-      recruitType,
-    });
+    // console.log("검색 조건 확인:", {
+    //   query,
+    //   type,
+    //   memNo: loginMember?.memNo,
+    //   recruitJobName,
+    //   recruitJobArea,
+    //   recruitCareer,
+    //   recruitEdu,
+    //   corpType,
+    //   recruitType,
+    // });
     setLoading(true);
     const SearchData = async () => {
       try {
@@ -47,13 +49,14 @@ const SearchResultPage = () => {
               query,
               memNo: loginMember?.memNo || "",
               recruitJobName,
+              recruitJobArea,
               recruitCareer,
               recruitEdu,
               corpType,
               recruitType,
             },
           });
-          console.log("📦 공고 검색 응답:", res.data);
+          //console.log("공고 검색 응답:", res.data);
           setRecruitResults(res.data || []);
         } else {
           const res = await axiosApi.get("/search/company", {
@@ -62,7 +65,7 @@ const SearchResultPage = () => {
               ...(loginMember?.memNo ? { memNo: loginMember.memNo } : {}),
             },
           });
-          console.log("🏢 기업 검색 응답:", res.data);
+          //console.log("기업 검색 응답:", res.data);
           setCompanyResults(res.data || []);
         }
       } catch (err) {
@@ -77,6 +80,7 @@ const SearchResultPage = () => {
     type,
     loginMember?.memNo,
     recruitJobName,
+    recruitJobArea,
     recruitCareer,
     recruitEdu,
     corpType,
@@ -106,6 +110,7 @@ const SearchResultPage = () => {
         <div className="search-controls">
           {/* 직무 */}
           <select
+            className="select-controls"
             value={recruitJobName}
             onChange={(e) => setRecruitJobName(e.target.value)}
           >
@@ -134,8 +139,35 @@ const SearchResultPage = () => {
             <option value="기타">기타</option>
           </select>
 
+          <select
+            className="select-controls"
+            value={recruitJobArea}
+            onChange={(e) => setRecruitJobArea(e.target.value)}
+          >
+            <option value="all">근무지역</option>
+            <option value="서울">서울</option>
+            <option value="부산">부산</option>
+            <option value="대구">대구</option>
+            <option value="인천">인천</option>
+            <option value="광주">광주</option>
+            <option value="대전">대전</option>
+            <option value="울산">울산</option>
+            <option value="세종">세종</option>
+            <option value="경기">경기</option>
+            <option value="강원">강원</option>
+            <option value="충북">충북</option>
+            <option value="충남">충남</option>
+            <option value="전북">전북</option>
+            <option value="전남">전남</option>
+            <option value="경북">경북</option>
+            <option value="경남">경남</option>
+            <option value="제주">제주</option>
+            <option value="기타">기타</option>
+          </select>
+
           {/* 경력 */}
           <select
+            className="select-controls"
             value={recruitCareer}
             onChange={(e) => setRecruitCareer(e.target.value)}
           >
@@ -152,6 +184,7 @@ const SearchResultPage = () => {
 
           {/* 학력 */}
           <select
+            className="select-controls"
             value={recruitEdu}
             onChange={(e) => setRecruitEdu(e.target.value)}
           >
@@ -166,6 +199,7 @@ const SearchResultPage = () => {
 
           {/* 기업형태 */}
           <select
+            className="select-controls"
             value={corpType}
             onChange={(e) => setCorpType(e.target.value)}
           >
@@ -181,6 +215,7 @@ const SearchResultPage = () => {
 
           {/* 고용형태 */}
           <select
+            className="select-controls"
             value={recruitType}
             onChange={(e) => setRecruitType(e.target.value)}
           >
@@ -196,7 +231,7 @@ const SearchResultPage = () => {
         </div>
       )}
 
-      <h2>🔍 "{query}" 검색 결과</h2>
+      <h2> "{query}" 검색 결과</h2>
 
       {/* 로딩 중 */}
       {loading ? (
@@ -209,15 +244,16 @@ const SearchResultPage = () => {
             ))}
           </div>
         ) : (
-          <p>검색된 기업이 없습니다.</p>
+          <p>해당하는 기업이 없습니다.</p>
         )
       ) : recruitResults.length > 0 ? (
         <MemberRecruitList
           recruits={recruitResults}
           loginMember={loginMember}
+          className="recruit-card"
         />
       ) : (
-        <p>검색된 공고가 없습니다.</p>
+        <p>해당하는 공고가 없습니다.</p>
       )}
       <ScrollToTopButton />
     </main>

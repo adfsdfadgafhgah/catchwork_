@@ -4,10 +4,274 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.admin.model.mapper.AdminMapper">
 
+	<!--
+		
+	  ░██████                                                           ░██    
+	 ░██   ░██                                                          ░██    
+	░██         ░██    ░██ ░████████  ░████████   ░███████  ░██░████ ░████████ 
+	 ░████████  ░██    ░██ ░██    ░██ ░██    ░██ ░██    ░██ ░███        ░██    
+	        ░██ ░██    ░██ ░██    ░██ ░██    ░██ ░██    ░██ ░██         ░██    
+	 ░██   ░██  ░██   ░███ ░███   ░██ ░███   ░██ ░██    ░██ ░██         ░██    
+	  ░██████    ░█████░██ ░██░█████  ░██░█████   ░███████  ░██          ░████ 
+	                       ░██        ░██                                      
+	                       ░██        ░██                                      
+	                                                                           	
+	-->
+	<!-- Support DTO 매핑 (getAllSupportList용) -->
+    <resultMap id="supportResultMap" type="com.example.demo.support.model.dto.Support">
+        <id property="supportNo" column="SUPPORT_NO"/>
+        <result property="supportTitle" column="SUPPORT_TITLE"/>
+        <result property="supportContent" column="SUPPORT_CONTENT"/>
+        <result property="supportAnswer" column="SUPPORT_ANSWER"/>
+        <result property="supportStatus" column="SUPPORT_STATUS"/>
+        <result property="supportDate" column="SUPPORT_DATE"/>
+        <result property="supportAnswerDate" column="SUPPORT_ANSWER_DATE"/>
+        <result property="memNo" column="MEM_NO"/>
+        <result property="adminNo" column="ADMIN_NO"/>
+        <result property="supportCategoryCode" column="SUPPORT_CATEGORY_CODE"/>
+
+        <!-- JOIN된 MEMBER 정보 -->
+        <result property="memNickname" column="MEM_NICKNAME"/>
+        <result property="memName" column="MEM_NAME"/>
+        <!-- MEM_NAME은 DTO에 없으므로 MEM_NICKNAME으로 통일하거나 DTO에 추가해야 합니다.
+             현재 Support DTO에는 memNickname만 있으므로 MEM_NICKNAME을 사용합니다. -->
+
+        <!-- JOIN된 ADMIN 정보 (답변 관리자) -->
+        <result property="adminNickname" column="ADMIN_NICKNAME"/>
+        <result property="adminName" column="ADMIN_NAME"/>
+
+        <!-- JOIN된 SUPPORT_CATEGORY 정보 -->
+        <result property="supportCategoryName" column="SUPPORT_CATEGORY_NAME"/>
+    </resultMap>
+
     <select id="findByAdminId" >
         SELECT *
         FROM ADMIN
         WHERE ADMIN_ID = #{adminId}
     </select>
+    
+    <!-- 관리자가 모든 문의 목록 조회 -->
+    <select id="getAllSupportList" resultType="com.example.demo.support.model.dto.Support">
+    	SELECT
+            s.SUPPORT_NO,
+            s.SUPPORT_TITLE,
+            s.SUPPORT_CONTENT,
+            s.SUPPORT_ANSWER,
+            s.SUPPORT_STATUS,
+            s.SUPPORT_DATE,
+            s.SUPPORT_ANSWER_DATE,
+            s.MEM_NO AS memNo,
+            s.ADMIN_NO AS adminNo,
+            s.SUPPORT_CATEGORY_CODE AS supportCategoryCode,
+            
+            m.MEM_NICKNAME AS memNickname,
+            m.MEM_NAME AS memName,
+            
+            a.ADMIN_NICKNAME AS adminNickname,
+            a.ADMIN_NAME AS adminName,
+            
+            sc.SUPPORT_CATEGORY_NAME AS supportCategoryName
+            
+            FROM SUPPORT s
+            
+            LEFT JOIN
+            MEMBER m ON s.MEM_NO = m.MEM_NO
+            LEFT JOIN
+            ADMIN a ON s.ADMIN_NO = a.ADMIN_NO
+            LEFT JOIN
+            SUPPORT_CATEGORY sc ON s.SUPPORT_CATEGORY_CODE = sc.SUPPORT_CATEGORY_CODE
+            
+            WHERE 1=1
+            
+            <if test="status != null and status == 'pending'">
+	            AND s.SUPPORT_STATUS = 'N'
+	        </if>
+	        
+	        <if test="status != null and status == 'completed'">
+	            AND s.SUPPORT_STATUS = 'Y'
+	        </if>
+	        
+	        <if test="query != null and query != ''">
+	            AND (
+	     		 s.SUPPORT_TITLE LIKE CONCAT(CONCAT('%', #{query}), '%')
+		 		 OR s.SUPPORT_CONTENT LIKE CONCAT(CONCAT('%', #{query}), '%')
+		 		 )
+	        </if>
+	       	 ORDER BY
+	        <choose>
+	            <when test="sort == 'oldest'">
+	                s.SUPPORT_DATE ASC
+	            </when>
+	            <otherwise>
+	                s.SUPPORT_DATE DESC
+	            </otherwise>
+	        </choose>
+  	 </select>
+  	 
+  	 <!-- 문의 상세 조회 (관리자용) -->
+  	 <select id="getSupportDetail" parameterType="int" resultType="com.example.demo.support.model.dto.Support">
+        SELECT
+            s.SUPPORT_NO,
+            s.SUPPORT_TITLE,
+            s.SUPPORT_CONTENT,
+            s.SUPPORT_ANSWER,
+            s.SUPPORT_STATUS,
+            s.SUPPORT_DATE,
+            s.SUPPORT_ANSWER_DATE,
+            s.MEM_NO AS memNo,
+            s.ADMIN_NO AS adminNo,
+            s.SUPPORT_CATEGORY_CODE AS supportCategoryCode,
+            
+            m.MEM_NICKNAME AS memNickname,
+            m.MEM_NAME AS memName,
+            
+            a.ADMIN_NICKNAME AS adminNickname,
+            a.ADMIN_NAME AS adminName,
+            
+            sc.SUPPORT_CATEGORY_NAME AS supportCategoryName
+            
+        FROM SUPPORT s
+            
+            LEFT JOIN
+            MEMBER m ON s.MEM_NO = m.MEM_NO
+            LEFT JOIN
+            ADMIN a ON s.ADMIN_NO = a.ADMIN_NO
+            LEFT JOIN
+            SUPPORT_CATEGORY sc ON s.SUPPORT_CATEGORY_CODE = sc.SUPPORT_CATEGORY_CODE
+        WHERE
+            s.SUPPORT_NO = #{supportNo}
+    </select>
+    
+    <!-- 문의 답변 등록 (관리자용) -->
+    <update id="submitSupportAnswer" parameterType="com.example.demo.support.model.dto.Support">
+        UPDATE SUPPORT
+        SET
+            SUPPORT_ANSWER = #{supportAnswer},
+            SUPPORT_STATUS = 'Y',
+            ADMIN_NO = #{adminNo},
+            SUPPORT_ANSWER_DATE = #{supportAnswerDate}
+        WHERE
+            SUPPORT_NO = #{supportNo}
+            AND SUPPORT_STATUS = 'N'
+    </update>
+	
+	<!--
+		░███     ░███            ░██           
+		░████   ░████                          
+		░██░██ ░██░██  ░███████  ░██░█████████
+		░██ ░████ ░██       ░██  ░██░██    ░██ 
+		░██  ░██  ░██  ░███████  ░██░██    ░██ 
+		░██       ░██ ░██   ░██  ░██░██    ░██ 
+		░██       ░██  ░████████ ░██░██    ░██
+	-->
+	<!-- 미처리 신고 목록 조회 (무한스크롤) -->
+    <select id="selectRecentReportList">
+		SELECT *
+		FROM (
+			SELECT
+				REPORT_TARGET_NO,
+				REPORT_TARGET_TYPE,
+				COUNT(*) AS REPORT_COUNT,
+				ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS RNUM
+			FROM
+				REPORT
+			WHERE
+				REPORT_STATUS = 'N'
+			GROUP BY
+				REPORT_TARGET_NO,
+				REPORT_TARGET_TYPE
+		)
+		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	<!-- 미처리 문의 목록 조회 (무한스크롤) -->
+	<select id="selectRecentSupportList">
+	    SELECT *
+	    FROM (
+	        SELECT
+	            S.SUPPORT_NO,
+	            C.SUPPORT_CATEGORY_NAME,
+	            S.SUPPORT_TITLE,
+	            CASE
+	                WHEN M.MEM_TYPE = 0 THEN M.MEM_NICKNAME
+	                ELSE M.MEM_NAME
+	            END AS MEM_NICKNAME,
+	            TO_CHAR(S.SUPPORT_DATE, 'YYYY-MM-DD') AS SUPPORT_DATE,
+	            S.SUPPORT_STATUS,
+	            ROW_NUMBER() OVER (ORDER BY S.SUPPORT_DATE DESC) AS RNUM
+	        FROM
+	            SUPPORT S
+	            JOIN SUPPORT_CATEGORY C
+	                ON S.SUPPORT_CATEGORY_CODE = C.SUPPORT_CATEGORY_CODE
+	            JOIN MEMBER M
+	                ON S.MEM_NO = M.MEM_NO
+	        WHERE
+	            S.SUPPORT_STATUS = 'N'
+	    )
+	    WHERE RNUM BETWEEN #{startRow} AND #{endRow}
+	</select>
+	
+	
+	<!-- 미처리 신고 수 통계 -->
+	<select id="selectRecentReportCount" resultType="map">
+	    SELECT
+	        COUNT(*) AS TARGET_COUNT,
+	        SUM(REPORT_COUNT) AS TOTAL_COUNT
+	    FROM (
+	        SELECT
+	            REPORT_TARGET_NO,
+	            REPORT_TARGET_TYPE,
+	            COUNT(*) AS REPORT_COUNT
+	        FROM
+	            REPORT
+	        WHERE
+	            REPORT_STATUS = 'N'
+	        GROUP BY
+	            REPORT_TARGET_NO,
+	            REPORT_TARGET_TYPE
+	    )
+	</select>
+	
+  	<!-- 미처리 문의 수 통계 -->
+	<select id="selectRecentSupportCount" resultType="map">
+	    SELECT
+	        COUNT(*) AS TOTAL_COUNT
+	    FROM
+	        SUPPORT
+	    WHERE
+	        SUPPORT_STATUS = 'N'
+	</select>
+  
+
+    
+    <!-- 최근 7일 문의수 통계 -->
+	<select id="selectRecentSupportChart" resultType="map">
+	    SELECT
+	        TO_CHAR(SUPPORT_DATE, 'YYYY-MM-DD') AS SUPPORT_DT,
+	        COUNT(*) AS CNT
+	    FROM
+	        SUPPORT
+	    WHERE
+	        SUPPORT_DATE >= TRUNC(SYSDATE) - 6
+	    GROUP BY
+	        TO_CHAR(SUPPORT_DATE, 'YYYY-MM-DD')
+	    ORDER BY
+	        SUPPORT_DT
+	</select>
+	
+	<!-- 최근 7일 신고수 통계 -->
+	<select id="selectRecentReportChart" resultType="map">
+	    SELECT
+	        TO_CHAR(REPORT_DATE, 'YYYY-MM-DD') AS REPORT_DT,
+	        COUNT(*) AS CNT
+	    FROM
+	        REPORT
+	    WHERE
+	        REPORT_DATE >= TRUNC(SYSDATE) - 6
+	    GROUP BY
+	        TO_CHAR(REPORT_DATE, 'YYYY-MM-DD')
+	    ORDER BY
+	        REPORT_DT
+	</select>
 
 </mapper>

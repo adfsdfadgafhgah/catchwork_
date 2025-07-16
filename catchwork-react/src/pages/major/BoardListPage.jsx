@@ -1,5 +1,3 @@
-//----------------------------------------------------------
-// 서버 구현하면 주석 풀기!! (위에 더미데이터 제거)
 import { useEffect, useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
 import BoardList from "../../components/board/BoardList";
@@ -11,18 +9,23 @@ import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 // import useLoginMember from "../../stores/loginMember";
 
+import InfiniteScroll from "react-infinite-scroll-component";
+
 export default function BoardListPage() {
   const [boards, setBoards] = useState([]); // 게시글 목록 조회
   const [isLoading, setIsLoading] = useState(true); // 로딩 상태
   const [searchTerm, setSearchTerm] = useState(""); // 검색
   const [confirmedSearchTerm, setConfirmedSearchTerm] = useState(""); // 검색 실행에 사용
-  // const { loginMember, setLoginMember } = useLoginMember(); // 로그인 사용자
+
+  const [page, setPage] = useState(1); // 페이지 번호
+  const [hasMore, setHasMore] = useState(true); // 더 불러올 데이터가 있는지 여부 확인인
+
   const [sortOrder, setSortOrder] = useState("latest"); // 정렬 기준 상태
   const navigate = useNavigate();
   const { memNo } = useOutletContext();
 
   // API 호출 로직
-  const getBoardList = async () => {
+  const getBoardList = async (pageNum = 1, isNewSearch = false) => {
     try {
       setIsLoading(true);
       const resp = await axiosApi.get("/board/boardList", {
@@ -30,11 +33,19 @@ export default function BoardListPage() {
           sort: sortOrder,
           query: confirmedSearchTerm,
           memNo: memNo, // props로 받은 memNo 사용
+          page: pageNum,
+          size: 10, // 10개씩
         },
       });
 
       if (resp.status === 200) {
-        setBoards(resp.data);
+        const newBoards = resp.data;
+        if (isNewSearch) {
+          setBoards(newBoards);
+        } else {
+          setBoards((prev) => [...prev, ...newBoards]);
+        }
+        setHasMore(newBoards.length === 10); // 10개 미만이면 더 없음
       }
     } catch (error) {
       console.error("게시글 목록 조회 중 에러 발생:", error);
@@ -47,8 +58,17 @@ export default function BoardListPage() {
   useEffect(() => {
     // memNo가 초기 로딩될 때 (null 또는 값) API 호출이 한 번만 일어나도록 함
     // 이렇게 하면 로그인 상태가 변경될 때마다 정확히 새로고침됩니다.
-    getBoardList();
+    setBoards([]);
+    setPage(1);
+    setHasMore(true);
+    getBoardList(1, true);
   }, [sortOrder, confirmedSearchTerm, memNo]);
+
+  const fetchMoreData = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    getBoardList(nextPage);
+  };
 
   const handleSearchKeyDown = (e) => {
     if (e.key === "Enter") {
@@ -72,9 +92,12 @@ export default function BoardListPage() {
     navigate("/board/write");
   };
 
-  // 로딩 중...
   if (isLoading) {
-    return <h1>Loading...</h1>;
+    return (
+      <div className="loading">
+        <i className="fa-solid fa-spinner fa-spin"></i> Loading...
+      </div>
+    );
   }
 
   return (
@@ -108,17 +131,19 @@ export default function BoardListPage() {
         </div>
       </div>
 
-      {/* 검색 결과 유무에 따른 조건 렌더링 */}
-      {isLoading ? (
-        <h1>Loading...</h1>
-      ) : boards.length > 0 ? (
+      <InfiniteScroll
+        dataLength={boards.length}
+        next={fetchMoreData}
+        hasMore={hasMore}
+        loader={<h4>Loading...</h4>}
+        endMessage={
+          <p className={BoardCss.noResult}>더 이상 게시글이 없습니다.</p>
+        }
+      >
         <BoardList boards={boards} memNo={memNo} />
-      ) : (
-        <p className={BoardCss.noResult}>검색 결과가 없습니다.</p>
-      )}
+      </InfiniteScroll>
 
       <FloatButton buttons={FLOAT_BUTTON_PRESETS.writeOnly(handleWrite)} />
-
       <ScrollToTopButton />
     </div>
   );

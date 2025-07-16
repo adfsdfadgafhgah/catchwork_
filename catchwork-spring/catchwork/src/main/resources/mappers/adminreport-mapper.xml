@@ -1,0 +1,172 @@
+<!-- src/main/resources/mappers/AdminMapper.xml -->
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.admin.model.mapper.AdminReportMapper">
+	
+	<!-- 동적 검색 필터 -->
+ 	<sql id="searchCondition">
+        <where>
+            <if test="targetType != null and targetType != ''">AND R.REPORT_TARGET_TYPE = #{targetType}</if>
+            <if test="status != null and status != ''">AND R.REPORT_STATUS = #{status}</if>
+            <if test="startDate != null and startDate != ''">AND R.REPORT_DATE >= TO_DATE(#{startDate}, 'YYYY-MM-DD')</if>
+            <if test="endDate != null and endDate != ''">AND R.REPORT_DATE &lt;= TO_DATE(#{endDate}, 'YYYY-MM-DD') + 1</if>
+            <if test="query != null and query != ''">
+                AND (
+                    M.MEM_NICKNAME LIKE '%' || #{query} || '%' OR
+                    B.BOARD_TITLE LIKE '%' || #{query} || '%' OR
+                    C.COMMENT_CONTENT LIKE '%' || #{query} || '%' OR
+                    CI.CORP_NAME LIKE '%' || #{query} || '%' OR
+                    RC.RECRUIT_TITLE LIKE '%' || #{query} || '%'
+                )
+            </if>
+        </where>
+    </sql>
+  
+    <!-- 신고 요약 정보 조회 -->
+    <select id="getReportSummary" parameterType="ReportSearchCriteria" resultType="com.example.demo.admin.model.dto.ReportSummary">
+         SELECT
+            COUNT(*) AS totalReports,
+            COUNT(CASE WHEN R.REPORT_STATUS = 'N' THEN 1 END) AS unprocessedCount,
+            COUNT(DISTINCT R.REPORT_TARGET_NO || '-' || R.REPORT_TARGET_TYPE) AS uniqueTargets
+        FROM 
+            REPORT R
+            LEFT JOIN "MEMBER" M ON R.MEM_NO = M.MEM_NO
+            
+            <!-- ⬇️ 추가: searchCondition에서 사용하는 모든 테이블을 LEFT JOIN 합니다. -->
+            LEFT JOIN BOARD B ON R.REPORT_TARGET_NO = B.BOARD_NO AND R.REPORT_TARGET_TYPE = 'BOARD'
+            LEFT JOIN "COMMENT" C ON R.REPORT_TARGET_NO = C.COMMENT_NO AND R.REPORT_TARGET_TYPE = 'COMMENT'
+            LEFT JOIN CORP_INFO CI ON R.REPORT_TARGET_NO = TO_CHAR(CI.CORP_NO) AND R.REPORT_TARGET_TYPE = 'COMPANY'
+            LEFT JOIN RECRUIT RC ON R.REPORT_TARGET_NO = RC.RECRUIT_NO AND R.REPORT_TARGET_TYPE = 'RECRUIT'
+            
+        <include refid="searchCondition"/>
+    </select>
+	
+	<!-- 신고 처리 상태 변경 -->
+	<update id="updateReportStatusToComplete" parameterType="com.example.demo.report.model.dto.Report">
+        UPDATE REPORT
+           SET REPORT_STATUS = 'Y'
+         WHERE REPORT_NO = #{reportNo}
+           AND REPORT_STATUS = 'N'
+    </update>
+    
+    <!-- 그룹화 된 신고 목록 조회 -->
+    <select id="getGroupedReportList" parameterType="ReportSearchCriteria" 
+           resultType="com.example.demo.admin.model.dto.ReportList">
+       SELECT * FROM (
+           SELECT ROWNUM AS rnum, A.* FROM (
+               SELECT
+                   R.REPORT_TARGET_NO AS reportTargetNo,
+                   R.REPORT_TARGET_TYPE AS reportTargetType,
+                   MAX(COALESCE(
+                       TO_NCHAR(B.BOARD_TITLE), 
+                       TO_NCHAR(C.COMMENT_CONTENT), 
+                       TO_NCHAR(CI.CORP_NAME), 
+                       TO_NCHAR(RC.RECRUIT_TITLE)
+                   )) KEEP (DENSE_RANK FIRST ORDER BY R.REPORT_DATE DESC) AS reportContent,
+                   COUNT(*) AS reportCount,
+                   MAX(R.REPORT_DATE) AS latestReportDate,
+                   MIN(R.REPORT_STATUS) AS overallStatus
+               FROM 
+                   REPORT R
+                   LEFT JOIN "MEMBER" M ON R.MEM_NO = M.MEM_NO
+                   LEFT JOIN BOARD B ON R.REPORT_TARGET_NO = B.BOARD_NO AND R.REPORT_TARGET_TYPE = 'BOARD'
+                   LEFT JOIN "COMMENT" C ON R.REPORT_TARGET_NO = C.COMMENT_NO AND R.REPORT_TARGET_TYPE = 'COMMENT'
+                   LEFT JOIN CORP_INFO CI ON R.REPORT_TARGET_NO = TO_CHAR(CI.CORP_NO) AND R.REPORT_TARGET_TYPE = 'COMPANY'
+                   LEFT JOIN RECRUIT RC ON R.REPORT_TARGET_NO = RC.RECRUIT_NO AND R.REPORT_TARGET_TYPE = 'RECRUIT'
+               <include refid="searchCondition"/>
+               GROUP BY R.REPORT_TARGET_NO, R.REPORT_TARGET_TYPE
+               ORDER BY latestReportDate DESC
+           ) A
+           WHERE ROWNUM &lt;= #{endRow}
+       )
+       WHERE rnum >= #{startRow}
+   </select>
+    
+    <!-- 그룹화 된 신고의 총 건수 -->
+    <select id="getGroupedReportTotalCount" parameterType="ReportSearchCriteria" resultType="int">
+        SELECT COUNT(*) FROM (
+            SELECT 1
+            FROM REPORT R
+            LEFT JOIN "MEMBER" M ON R.MEM_NO = M.MEM_NO
+            LEFT JOIN BOARD B ON R.REPORT_TARGET_NO = B.BOARD_NO AND R.REPORT_TARGET_TYPE = 'BOARD'
+            LEFT JOIN "COMMENT" C ON R.REPORT_TARGET_NO = C.COMMENT_NO AND R.REPORT_TARGET_TYPE = 'COMMENT'
+            LEFT JOIN CORP_INFO CI ON R.REPORT_TARGET_NO = TO_CHAR(CI.CORP_NO) AND R.REPORT_TARGET_TYPE = 'COMPANY'
+            LEFT JOIN RECRUIT RC ON R.REPORT_TARGET_NO = RC.RECRUIT_NO AND R.REPORT_TARGET_TYPE = 'RECRUIT'
+            <include refid="searchCondition"/>
+            GROUP BY R.REPORT_TARGET_NO, R.REPORT_TARGET_TYPE
+        )
+    </select>
+    
+    <select id="getReportsByTarget" parameterType="map" resultType="com.example.demo.admin.model.dto.AdminReport">
+	    SELECT
+	        R.REPORT_NO AS reportNo,
+	        M.MEM_NICKNAME AS reporterMemNo,
+	        R.REPORT_CONTENT AS reportContent,
+	        R.REPORT_DATE AS reportDate,
+	        R.REPORT_STATUS AS reportStatus,
+	        R.MEM_NO AS reporterMemNo,
+	        R.REPORT_CONTENT AS reportContent,
+	        
+	        CASE
+            	WHEN M.MEM_TYPE = 1 THEN M.MEM_NAME
+           		ELSE M.MEM_NICKNAME
+        	END AS reporterNickname,
+	        
+	        CM.CORP_NO AS reporterCorpNo
+	        
+	    FROM REPORT R
+	    JOIN MEMBER M ON R.MEM_NO = M.MEM_NO
+	    LEFT JOIN CORP_MEM CM ON M.MEM_NO = CM.MEM_NO
+	    WHERE R.REPORT_TARGET_NO = #{targetNo}
+	      AND R.REPORT_TARGET_TYPE = #{targetType}
+	    ORDER BY R.REPORT_NO DESC
+	</select>
+	
+	<select id="getTargetInfo" parameterType="map" resultType="com.example.demo.admin.model.dto.TargetInfo">
+	    <choose>
+        <when test="targetType == 'COMPANY'">
+            SELECT CORP_NO AS "no", 'COMPANY' AS type, CORP_NAME AS content, NULL AS author, NULL as authorNo, CORP_STATUS as status FROM CORP_INFO WHERE CORP_NO = #{targetNo}
+        </when>
+        <when test="targetType == 'MEMBER'">
+            SELECT MEM_NO AS "no", 'MEMBER' AS type, MEM_NICKNAME AS content, NULL AS author, NULL as authorNo, MEM_STATUS as status FROM MEMBER WHERE MEM_NO = #{targetNo}
+        </when>
+        <when test="targetType == 'RECRUIT'">
+            SELECT R.RECRUIT_NO AS "no", 'RECRUIT' AS type, R.RECRUIT_TITLE AS content, M.MEM_NICKNAME AS author, M.MEM_NO AS authorNo, R.RECRUIT_STATUS as status FROM RECRUIT R JOIN MEMBER M ON R.MEM_NO = M.MEM_NO WHERE R.RECRUIT_NO = #{targetNo}
+        </when>
+        <when test="targetType == 'BOARD'">
+            SELECT B.BOARD_NO AS "no", 'BOARD' AS type, B.BOARD_TITLE AS content, M.MEM_NICKNAME AS author, M.MEM_NO AS authorNo, B.BOARD_STATUS as status FROM BOARD B JOIN MEMBER M ON B.MEM_NO = M.MEM_NO WHERE B.BOARD_NO = #{targetNo}
+        </when>
+        <when test="targetType == 'COMMENT'">
+            SELECT C.COMMENT_NO AS "no", 'COMMENT' AS type, C.COMMENT_CONTENT AS content, M.MEM_NICKNAME AS author, M.MEM_NO AS authorNo, C.COMMENT_STATUS as status FROM "COMMENT" C JOIN MEMBER M ON C.MEM_NO = M.MEM_NO WHERE C.COMMENT_NO = #{targetNo}
+        </when>
+    </choose>
+	</select>
+	
+	<insert id="insertBan" parameterType="map">
+	    INSERT INTO BAN (BAN_NO, BAN_CONTENT, BAN_TARGET_NO, BAN_TARGET_TYPE, ADMIN_NO)
+	    VALUES (SEQ_BAN_NO.NEXTVAL, #{reason}, #{targetNo}, #{targetType}, 1) </insert>
+	
+	<update id="updateTargetStatus" parameterType="map">
+	    <choose>
+	        <when test="targetType == 'COMPANY'">
+	            UPDATE CORP_INFO SET CORP_STATUS = 2 WHERE CORP_NO = #{targetNo}
+	        </when>
+	        <when test="targetType == 'MEMBER'">
+	            UPDATE MEMBER SET MEM_STATUS = 2 WHERE MEM_NO = #{targetNo}
+	        </when>
+	        <when test="targetType == 'RECRUIT'">
+	            UPDATE RECRUIT SET RECRUIT_STATUS = 2 WHERE RECRUIT_NO = #{targetNo}
+	        </when>
+	        <when test="targetType == 'BOARD'">
+	            UPDATE BOARD SET BOARD_STATUS = 2 WHERE BOARD_NO = #{targetNo}
+	        </when>
+	        <when test="targetType == 'COMMENT'">
+	            UPDATE "COMMENT" SET COMMENT_STATUS = 2 WHERE COMMENT_NO = #{targetNo}
+	        </when>
+	    </choose>
+	</update>
+    
+    
+    
+</mapper>

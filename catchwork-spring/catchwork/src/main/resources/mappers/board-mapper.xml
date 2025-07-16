@@ -12,7 +12,7 @@
 	    TO_CHAR(B.BOARD_WRITE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_WRITE_DATE,
 	    TO_CHAR(B.BOARD_EDIT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_EDIT_DATE,
 	    B.BOARD_READ_COUNT,
-	    B.BOARD_STATUS_CODE,
+	    B.BOARD_STATUS,
 	    B.BOARD_STATUS_DATE,
 	    B.BOARD_THUMBNAIL_URL,
 	    M.MEM_NO,
@@ -25,7 +25,8 @@
 	    (SELECT COUNT(*) FROM "COMMENT" C WHERE C.BOARD_NO = B.BOARD_NO AND C.COMMENT_STATUS = 0) AS COMMENT_COUNT
 	  FROM BOARD B
 	  JOIN MEMBER M ON B.MEM_NO = M.MEM_NO
-	  WHERE B.BOARD_STATUS_CODE = 0
+	  WHERE B.BOARD_STATUS = 0
+	  AND M.MEM_STATUS = 0
 	  <if test="query != null and query != ''">
 	    AND (B.BOARD_TITLE LIKE '%' || #{query} || '%'
 	      OR B.BOARD_CONTENT LIKE '%' || #{query} || '%')
@@ -56,9 +57,14 @@
 	      ORDER BY B.BOARD_WRITE_DATE DESC
 	    </otherwise>
 	  </choose>
-	    <if test="limit != null">
-			FETCH FIRST #{limit} ROWS ONLY
-	    </if>
+		<choose>
+		  <when test="offset != null and size != null">
+		    OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+		  </when>
+		  <when test="limit != null">
+		    FETCH FIRST #{limit} ROWS ONLY
+		  </when>
+		</choose>
 	</select>
   
 	  <!-- 게시글 상세 -->
@@ -70,7 +76,7 @@
 	    TO_CHAR(B.BOARD_WRITE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_WRITE_DATE,
 	    TO_CHAR(B.BOARD_EDIT_DATE, 'YYYY-MM-DD HH24:MI:SS') AS BOARD_EDIT_DATE,
 	    B.BOARD_READ_COUNT,
-	    B.BOARD_STATUS_CODE,
+	    B.BOARD_STATUS,
 	    B.BOARD_STATUS_DATE,
 	    B.BOARD_THUMBNAIL_URL,
 	    M.MEM_NO,
@@ -140,7 +146,7 @@
 	    BOARD_CONTENT,
 	    BOARD_WRITE_DATE,
 	    BOARD_EDIT_DATE,
-	    BOARD_STATUS_CODE,
+	    BOARD_STATUS,
 	    BOARD_THUMBNAIL_URL,
 	    MEM_NO
 	  ) VALUES (
@@ -179,7 +185,7 @@
   <!-- 게시글 삭제 -->
   <update id="deleteBoard">
     UPDATE BOARD 
-    SET BOARD_STATUS_CODE = 1
+    SET BOARD_STATUS = 1
     WHERE BOARD_NO = #{boardNo}
     AND MEM_NO = #{memNo, jdbcType=VARCHAR}
   </update>
@@ -190,4 +196,42 @@
     SET BOARD_READ_COUNT = BOARD_READ_COUNT + 1
     WHERE BOARD_NO = #{boardNo}
   </update>
+
+	<!-- 사용중인 이미지 조회(스케줄러) -->
+	<select id="selectUsedImage">
+		SELECT BOARD_THUMBNAIL_URL
+		FROM BOARD
+		WHERE BOARD_THUMBNAIL_URL IS NOT NULL
+	</select>
+
+	<!-- 삭제 대상 게시글 조회(스케줄러) -->
+	<select id="selectTargetBoardNo">
+		SELECT BOARD_NO
+		FROM BOARD
+		WHERE BOARD_STATUS = 1
+		AND BOARD_STATUS_DATE &lt; SYSDATE - #{deleteTargetPeriod} DAY
+	</select>
+
+	<!-- 삭제 대상 댓글 조회(스케줄러) -->
+	<select id="selectTargetCommentNo">
+		SELECT COMMENT_NO
+		FROM "COMMENT"
+		WHERE BOARD_NO IN
+		<foreach collection="targetBoardNoList" item="boardNo" open="(" separator="," close=")">
+			#{boardNo}
+		</foreach>
+	</select>
+
+	<!-- 댓글 삭제(스케줄러) -->
+	<delete id="deleteComment">
+		DELETE FROM "COMMENT"
+		WHERE COMMENT_NO = #{commentNo}
+	</delete>
+
+	<!-- 게시글 삭제(스케줄러) -->
+	<delete id="removeTargetBoard">
+		DELETE FROM BOARD
+		WHERE BOARD_NO = #{boardNo}
+	</delete>
+	
 </mapper>

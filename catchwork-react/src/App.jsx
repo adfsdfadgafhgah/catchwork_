@@ -103,12 +103,17 @@ import CorpCVListPage from "./pages/corpMajor/CorpCVListPage";
 import ReportModalPage from "./pages/support/ReportModalPage";
 
 // 관리자
-import AdminPage from "./pages/admin/AdminPage";                    // 감싸는 놈
-import AdminMainPage from "./pages/admin/AdminMainPage";            // 메인 리스트
-import AdminSupportPage from "./pages/admin/AdminSupportPage";      // 문의 리스트
-import AdminReportPage from "./pages/admin/AdminReportPage";        // 신고 리스트
-import AdminBanPage from "./pages/admin/AdminBanPage";              // 정지 리스트
-import AdminRestorePage from "./pages/admin/AdminRestorePage";      // 복구 리스트
+import AdminPage from "./pages/admin/AdminPage"; // 감싸는 놈
+import AdminMainPage from "./pages/admin/AdminMainPage"; // 메인 리스트
+import AdminSupportPage from "./pages/admin/AdminSupportPage"; // 문의 리스트
+import AdminSupportDetailPage from "./pages/admin/AdminSupportDetailPage"; // 문의 상세
+import AdminReportPage from "./pages/admin/AdminReportPage"; // 신고 리스트
+import AdminReportDetailPage from "./pages/admin/AdminReportDetailPage"; // 신고 상세
+import AdminBanPage from "./pages/admin/AdminBanPage"; // 정지 리스트
+import AdminBanDetailPage from "./pages/admin/AdminBanDetailPage"; // 정지 상세
+import AdminRestorePage from "./pages/admin/AdminRestorePage"; // 복구 리스트
+import AdminAuthPage from "./pages/admin/AdminAuthPage"; // 복구 리스트
+import AdminRegisterPage from "./pages/admin/AdminRegisterPage"; // 복구 리스트
 
 //test
 import AuthTest from "./pages/member/AuthTest";
@@ -119,7 +124,14 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     children: [
-      { index: true, element: <MainPage /> },
+      {
+        index: true,
+        element: (
+          <ProtectedRoute blockedType={1}>
+            <MainPage />
+          </ProtectedRoute>
+        ),
+      },
       // 등록된 주소 외 모든 주소 예외 처리
       { path: "*", element: <NotFound /> },
       // 로그인/회원가입
@@ -324,30 +336,37 @@ const router = createBrowserRouter([
     ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
     ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
   */
-  { // 상세 페이지 경로 미리 추가(주석)
+  { path: "/admin-auth", element: <AdminAuthPage /> },
+  { path: "/admin-register", element: <AdminRegisterPage /> },
+  {
+    // 상세 페이지 경로 미리 추가(주석)
     path: "/admin",
     element: <AdminPage />,
     children: [
       { index: true, element: <AdminMainPage /> },
+      { path: "*", element: <NotFound /> },
       {
         path: "support",
         children: [
           { index: true, element: <AdminSupportPage /> },
-          // { path: ":id", element: <AdminSupportDetailPage /> },
+          { path: ":supportNo", element: <AdminSupportDetailPage /> },
         ],
       },
       {
         path: "report",
         children: [
           { index: true, element: <AdminReportPage /> },
-          // { path: ":id", element: <AdminReportDetailPage /> },
+          {
+            path: "target/:targetType/:targetNo",
+            element: <AdminReportDetailPage />,
+          },
         ],
       },
       {
         path: "ban",
         children: [
           { index: true, element: <AdminBanPage /> },
-          // { path: ":id", element: <AdminBanDetailPage /> },
+          { path: ":banNo", element: <AdminBanDetailPage /> },
         ],
       },
       {
@@ -358,7 +377,7 @@ const router = createBrowserRouter([
         ],
       },
     ],
-  }
+  },
 ]);
 
 export default router;

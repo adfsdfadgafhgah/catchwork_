@@ -1,58 +1,84 @@
 .cvItem {
-  border: 1px solid #ddd;
+  border: 1px solid var(--img-color);
   border-radius: 8px;
-  padding: 16px;
-  margin-bottom: 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  padding: 20px 24px;
+  margin: 16px auto;
+  max-width: 1000px;
   background: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .cvTitle {
   font-size: 18px;
   font-weight: 600;
+  margin-top: 16px;
   color: #333;
 }
 
 .cvActions {
   display: flex;
-  gap: 8px;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-left: auto;
 }
 
 .cvButton {
   border: none;
-  padding: 8px 12px;
-  border-radius: 4px;
+  border-radius: 6px;
+  padding: 6px 12px;
+  background-color: var(--white);
+  box-shadow: var(--box-shadow);
   cursor: pointer;
   font-size: 14px;
-  font-weight: 500;
+  transition: background-color 0.2s ease;
 }
-
+.cvButton i {
+  margin-right: 4px;
+}
 .submitButton {
-  background-color: var(--main-color);
-  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  background-color: var(--white);
+  box-shadow: var(--box-shadow);
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
 }
 
 .submitButton:hover {
-  background-color: var(--main-color-dark);
+  color: var(--main-color-dark);
 }
 
 .editButton {
-  background-color: var(--main-color);
-  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  background-color: var(--white);
+  box-shadow: var(--box-shadow);
+  cursor: pointer;
+  font-size: 14px;
 }
 
 .editButton:hover {
-  background-color: var(--main-color-dark);
+  color: var(--main-color-dark);
 }
 
 .deleteButton {
-  background-color: #68aaa5;
-  color: var(--white);
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  color: var(--black);
+  background-color: var(--white);
+  box-shadow: var(--box-shadow);
+  cursor: pointer;
+  font-size: 14px;
 }
 
 .deleteButton:hover {
-  background-color: var(--main-color-dark);
+  color: var(--main-color-dark);
 }

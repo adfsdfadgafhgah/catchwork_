@@ -1,0 +1,53 @@
+.reportWrapper {
+  width: 100%;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.moreButton {
+  background: var(--main-color);
+  color: var(--white);
+  border: none;
+  width: 30px;
+  height: 30px;
+  font-size: 18px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.moreButton:hover {
+  background: var(--main-color-dark);
+}
+
+.list {
+  list-style: none;
+  padding: 0;
+}
+
+.item {
+  border: 1px solid var(--stroke-color1);
+  padding: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.itemTitle {
+  color: var(--main-color);
+}

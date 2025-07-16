@@ -8,6 +8,7 @@ import { axiosApi } from "../../api/axiosAPI";
 import "./EditCompanyPage.css";
 
 const EditCompanyPage = () => {
+  const corpLogoUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
   const navigate = useNavigate();
   const { loginMember, setLoginMember } = useLoginMember();
 
@@ -41,7 +42,7 @@ const EditCompanyPage = () => {
         const res = await axiosApi.get("/corpcompany/detail", {
           params: { memNo: loginMember.memNo },
         });
-        console.log("✅ 기업 정보:", res.data);
+        //console.log("✅ 기업 정보:", res.data);
         setCompany(res.data);
       } catch (err) {
         console.error("기업 정보 불러오기 실패", err);
@@ -191,7 +192,7 @@ const EditCompanyPage = () => {
             src={
               corpLogoPreview
                 ? corpLogoPreview
-                : `${import.meta.env.VITE_BASE_URL}${company.corpLogo}`
+                : `${corpLogoUrl}/${company.corpLogo}`
             }
             alt="기업로고"
             className="company-logo"

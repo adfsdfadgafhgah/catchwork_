@@ -31,8 +31,8 @@ public class CorpInfo {
     private String corpDetail;          // 기업_기업소개상세
     private String corpBenefit;         // 기업_복리후생_카테고리
     private String corpBenefitDetail;   // 기업_복리후생_내용
-    private String corpBanFl;           // 기업_정지_플래그
-    private Date corpBanDate;           // 기업_정지일
+    private int corpStatus;           // 기업_정지_상태 ( 0 영업중, 1,2)
+    private Date corpStatusDate;       // 기업_정지일
    
     //기업 최고 담당 인사자
     private String corpMemRoleCheck;

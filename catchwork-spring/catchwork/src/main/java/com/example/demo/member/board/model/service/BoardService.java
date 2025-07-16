@@ -14,7 +14,7 @@ public interface BoardService {
 	 * @param trim
 	 * @return
 	 */
-	List<Board> selectBoardList(String sort, String query, String memNo, Integer limit);
+	List<Board> selectBoardList(String sort, String query, String memNo,Integer page,Integer size, Integer limit);
 
 	/** 게시글 상세 서비스
 	 * @author BAEBAE
@@ -59,4 +59,16 @@ public interface BoardService {
 	 * @param boardNo
 	 */
 	void readCount(int boardNo);
+
+	/** 이미지 처리(스케줄러)
+	 * @author JAEHO
+	 * @return
+	 */
+	int deleteUnusedImage();
+
+	/** 게시글 삭제(스케줄러)
+	 * @author JAEHO
+	 * @return
+	 */
+	int removeTargetBoard(int deleteTargetPeriod);
 }

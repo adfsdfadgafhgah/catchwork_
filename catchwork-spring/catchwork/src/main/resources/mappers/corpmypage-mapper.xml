@@ -5,39 +5,48 @@
 
 <mapper namespace="com.example.demo.corp.myPage.model.mapper.CorpMyPageMapper">
 
+<resultMap id="corpMyPageResultMap" type="com.example.demo.corp.myPage.model.dto.CorpMyPage">
+  <result property="memNo" column="MEM_NO" />
+  <result property="memId" column="MEM_ID" />
+  <result property="memName" column="MEM_NAME" />
+  <result property="memEmail" column="MEM_EMAIL" />
+  <result property="memTel" column="MEM_TEL" />
+  <result property="corpMemDept" column="CORP_MEM_DEPT" />
+  <result property="corpName" column="CORP_NAME" />
+</resultMap>
+
 
   <!-- 기업 마이페이지 정보 조회 -->
-  <select id="getCorpMyPage">
-  	SELECT 
-    	M.MEM_NO,
-    	M.MEM_ID,
-    	M.MEM_EMAIL,
-    	M.MEM_NAME,           
-    	M.MEM_TEL,
-    	CM.CORP_MEM_DEPT,
-    	CM.CORP_NAME
-    FROM 
-    	MEMBER M
-    	JOIN CORPORATE_MEMBER CM ON M.MEM_NO = CM.MEM_NO
-  	WHERE 
-    M.MEM_NO = #{memNo}
+  <select id="getCorpMyPage" resultMap="corpMyPageResultMap">
+    SELECT
+      M.MEM_NO,
+      M.MEM_ID,
+      M.MEM_NAME,
+      M.MEM_EMAIL,
+      M.MEM_TEL,
+      CM.CORP_MEM_DEPT,
+      CI.CORP_NAME
+    FROM MEMBER M
+    JOIN CORP_MEM CM ON M.MEM_NO = CM.MEM_NO
+    JOIN CORP_INFO CI ON CM.CORP_NO = CI.CORP_NO
+    WHERE M.MEM_NO = #{memNo}
   </select>
 
   <!-- 회원 정보 수정 -->
   <update id="updateMemberCoreInfo">
     UPDATE MEMBER
     SET 
-      MEM_NAME = #{memName}, 
-      MEM_TEL = #{memTel}, 
-      MEM_EMAIL = #{memEmail}
+        MEM_NAME = #{memName},
+        MEM_TEL = #{memTel}
     WHERE MEM_NO = #{memNo}
   </update>
   
   <!-- 부서명 수정 -->
   <update id="updateCorporateMemberDepartment">
-  	UPDATE CORPORATE_MEMBER
-  	SET CORP_MEM_DEPT = #{corpDepartment}
-  	WHERE MEM_NO = #{memNo}
+    UPDATE CORP_MEM
+    SET 
+      CORP_MEM_DEPT = #{corpMemDept}
+    WHERE MEM_NO = #{memNo}
   </update>
 
   <!-- 회원 비밀번호 조회 -->

@@ -1,0 +1,136 @@
+.adminSupportListContainer {
+  padding: 40px 24px;
+  max-width: 1080px;
+  margin: 0 auto;
+  font-family: "Noto Sans KR", sans-serif;
+  color: var(--text); /* 기본 텍스트 색상 변수 사용 */
+}
+
+/* Page title styling */
+.pageTitle {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 24px;
+  color: var(--deep-gray); /* 수정: 제목용 색상 변수(--deep-gray)로 변경 */
+}
+
+/* Section for filter, sort, and search controls */
+.controlsSection {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 24px;
+  padding: 16px;
+  background-color: var(
+    --input-color
+  ); /* 수정: 입력창 배경색 변수(--input-color)로 변경 */
+  border: 1px solid var(--stroke-color1); /* 수정: 테두리색 변수(--stroke-color1)로 변경 */
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+/* Styling for individual control groups (filter, sort, search) */
+.filterGroup,
+.sortGroup,
+.searchGroup {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.controlsSection label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--deep-gray); /* 라벨 텍스트 색상 변수 사용 */
+}
+
+/* Styling for select dropdowns and text input */
+.controlsSection select,
+.controlsSection input[type="text"] {
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1.5px solid var(--stroke-color1); /* 수정: 테두리색 변수(--stroke-color1)로 변경 */
+  border-radius: 6px;
+  background-color: var(--white); /* 수정: 흰색 변수(--white)로 변경 */
+  transition: border-color 0.2s ease;
+}
+
+.controlsSection select:focus,
+.controlsSection input[type="text"]:focus {
+  outline: none;
+  border-color: var(--main-color); /* 포커스 시 메인 색상 변수 사용 */
+}
+
+.controlsSection input[type="text"] {
+  min-width: 250px; /* 검색창 너비 유지 */
+}
+
+/* Main table for support items */
+.supportTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+}
+
+/* Table header and cell styling */
+.supportTable th,
+.supportTable td {
+  border-bottom: 1px solid var(--stroke-color2); /* 수정: 상세 항목용 테두리색 변수(--stroke-color2)로 변경 */
+  padding: 14px 12px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.supportTable th {
+  background-color: var(
+    --input-color
+  ); /* 수정: 입력창 배경색 변수(--input-color)와 통일 */
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--text); /* 수정: 기본 텍스트 색상 변수로 변경 */
+}
+
+/* Clickable title cell */
+.title {
+  color: var(--text); /* 수정: 기본 텍스트 색상 변수로 변경 */
+  cursor: pointer;
+  text-align: left;
+  width: 40%;
+}
+
+.title:hover {
+  text-decoration: underline;
+  color: var(--main-color); /* 호버 시 메인 색상 변수 사용 */
+}
+
+/* Status indicator styles */
+.statusDone {
+  color: var(--main-color); /* 완료 상태는 메인 색상 변수 사용 */
+  font-weight: bold;
+}
+
+.statusPending {
+  color: var(--gray01); /* 수정: 대기 상태는 회색 변수(--gray01)로 변경 */
+}
+
+/* Message for when no items are found */
+.noItems {
+  padding: 60px 0;
+  text-align: center;
+  color: var(--gray01); /* 수정: 회색 변수(--gray01)로 변경 */
+  font-size: 16px;
+}
+
+/* Loading and error message styles */
+.loadingMessage,
+.errorMessage {
+  text-align: center;
+  padding: 60px 0;
+  font-size: 16px;
+  color: var(--deep-gray); /* 수정: 진한 회색 변수(--deep-gray)로 변경 */
+}
+
+.errorMessage {
+  color: var(--red); /* 수정: 오류 메시지는 빨간색 변수(--red)로 변경 */
+  font-weight: 500;
+}

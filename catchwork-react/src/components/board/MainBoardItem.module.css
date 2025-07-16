@@ -1,0 +1,101 @@
+/*메인화면에서 보이는 board */
+.card {
+  width: 300px;
+  height: 300px;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: var(--box-shadow);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s;
+  box-shadow: var(--box-shadow);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+.linkWrapper {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.header {
+  font-size: 12px;
+  color: #888;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  margin-top: 6px;
+}
+
+.author {
+  font-weight: 500;
+}
+
+.date {
+  color: #aaa;
+}
+
+.title {
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.content {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.4;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.meta {
+  font-size: 13px;
+  color: #888;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 8px;
+  justify-content: flex-end; /* ✅ 오른쪽으로 정렬 */
+}
+
+.thumbnail {
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.authorInfo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profileImg {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}

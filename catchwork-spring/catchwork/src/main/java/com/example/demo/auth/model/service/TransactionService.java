@@ -58,6 +58,7 @@ public class TransactionService {
 		entity.setCorpLogoPath(corp.getCorpLogo());
 		entity.setCorpOpenDate(corp.getCorpOpenDate());
 		entity.setCorpType(corp.getCorpType());
+		entity.setCorpStatus(0);
 		corpInfoRepository.save(entity);
 		return entity;
 

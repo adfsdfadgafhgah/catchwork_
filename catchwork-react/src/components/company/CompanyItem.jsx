@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
-import useLoginMember from "../../stores/loginMember";
 import "./CompanyItem.css";
 import defaultImg from "../../assets/icon.png";
+import { useAuthStore } from "../../stores/authStore";
 
 const CompanyItem = ({ company: companyInfo }) => {
   const companyImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
-  const { loginMember } = useLoginMember();
+  const { memNo } = useAuthStore();
   const [company, setCompany] = useState(companyInfo);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -16,7 +16,7 @@ const CompanyItem = ({ company: companyInfo }) => {
   const handleToggleBookmark = async (e) => {
     e.preventDefault(); // 링크 이동 방지
 
-    if (!loginMember || !loginMember.memNo) {
+    if (!memNo) {
       alert("로그인 후 이용 가능합니다.");
       return;
     }
@@ -25,7 +25,7 @@ const CompanyItem = ({ company: companyInfo }) => {
       setIsLoading(true); //  로딩 시작
       const res = await axiosApi.post("/company/toggle-favorite", {
         corpNo: company.corpNo,
-        memNo: loginMember.memNo,
+        memNo: memNo,
       });
 
       const { isSaved, totalFav } = res.data;

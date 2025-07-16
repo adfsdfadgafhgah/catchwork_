@@ -120,4 +120,11 @@ public class RecruitServiceImpl implements RecruitService {
 		recruitMapper.recruitReadCount(recruitNo);
 	}
 
+	/** 채용공고 삭제(스케줄러)
+	 * @author JAEHO
+	 */
+	@Override
+	public int removeTargetRecruit(int deleteTargetPeriod) {
+		return recruitMapper.removeTargetRecruit(deleteTargetPeriod);
+	}
 }

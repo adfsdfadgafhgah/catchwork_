@@ -288,13 +288,22 @@ const CVManagePage = () => {
       );
     });
 
+    const militaryPayload =
+      military.cvMiliClass === "군필"
+        ? military
+        : {
+            ...military,
+            cvMiliStartDate: null,
+            cvMiliEndDate: null,
+          };
+
     return {
       ...(cvNo ? { cvNo } : {}),
       ...member,
       cvImgPath,
       ...formData,
       education,
-      military,
+      military: militaryPayload,
       ...convertedSections,
       ...deletedIds,
     };
@@ -396,13 +405,14 @@ const CVManagePage = () => {
     if (formData.cvResume?.length > 2000) {
       valid = false;
     }
-    if (
-      !military.cvMiliClass ||
-      !military.cvMiliBranch ||
-      !military.cvMiliStartDate ||
-      !military.cvMiliEndDate
-    ) {
+    if (!military.cvMiliClass || !military.cvMiliBranch) {
       valid = false;
+    } else {
+      if (military.cvMiliClass === "군필") {
+        if (!military.cvMiliStartDate || !military.cvMiliEndDate) {
+          valid = false;
+        }
+      }
     }
     if (
       !education.eduName ||
@@ -828,28 +838,14 @@ const CVManagePage = () => {
     }
   })();
 
-  // // 콘솔console 찍기
-  // useEffect(() => {
-  //   console.log("모드 =", mode);
-  //   console.log("이미지 경로 =", cvImgPath);
-  //   console.log("단일 데이터 =", formData);
-  //   console.log("컴포넌트 데이터 =", components);
-  //   console.log("회원 정보 = ", memberInfo);
-  //   console.log("회원 = ", member);
-
-  //   const authStorage = localStorage.getItem("auth-storage");
-  //   if (authStorage) {
-  //     const parsed = JSON.parse(authStorage);
-  //     console.log("zustand auth-store persist 값 =", parsed);
-  //   } else {
-  //     console.log("auth-storage 값 없음 (로그인 안했거나 persist 저장 전)");
-  //   }
-  // }, [mode, cvImgPath, memberInfo, member, formData, components]);
-
   return (
     <div className="resume-container">
       <div
-        className={mode === "view" || mode === "submit" ? "resume-form view-mode" : "resume-form"}
+        className={
+          mode === "view" || mode === "submit"
+            ? "resume-form view-mode"
+            : "resume-form"
+        }
       >
         <h1 className="form-title">내 이력서</h1>
 

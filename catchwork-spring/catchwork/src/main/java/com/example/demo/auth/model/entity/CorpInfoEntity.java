@@ -61,4 +61,10 @@ public class CorpInfoEntity {
 
     @Column(name = "CORP_LOGO")
     private String corpLogoPath;
+
+    @Column(name = "CORP_STATUS")
+    private Integer corpStatus;
+
+    @Column(name = "CORP_STATUS_DATE")
+    private LocalDate corpStatusDate;
 }

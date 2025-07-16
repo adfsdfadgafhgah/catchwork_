@@ -13,4 +13,5 @@ public class Report {
     private Date reportDate;					// 신고 날짜
     private int reportCategoryCode;				// 신고 카테고리 코드
     private String memNo;  						// 로그인한 사용자 번호
+    private int adminNo;                        // 신고를 처리한 관리자 번호 (DB 컬럼 반영)
 }
