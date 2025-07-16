@@ -1,3 +1,9 @@
+.corp-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px; /* ✅ 여백 확보 */
+}
+
 .company-section textarea {
   width: 100%; /* 부모 div 기준으로 꽉 차게 */
   height: 120px;

@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 
 const CompanyPage = () => {
   return (
-    <main className="container">
+    <main className="company-container">
       <Outlet />
     </main>
   );
