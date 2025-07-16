@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.admin.model.mapper.AdminMapper">
 
- <sql id="searchCondition">
+ 	<sql id="searchCondition">
         <where>
             <if test="targetType != null and targetType != ''">AND R.REPORT_TARGET_TYPE = #{targetType}</if>
             <if test="status != null and status != ''">AND R.REPORT_STATUS = #{status}</if>
@@ -167,18 +167,6 @@
             SUPPORT_NO = #{supportNo}
             AND SUPPORT_STATUS = 'N'
     </update>
-    
-	<!--
-		░█████████                                               ░██    
-		░██     ░██                                              ░██    
-		░██     ░██  ░███████  ░████████   ░███████  ░██░████ ░████████ 
-		░█████████  ░██    ░██ ░██    ░██ ░██    ░██ ░███        ░██    
-		░██   ░██   ░█████████ ░██    ░██ ░██    ░██ ░██         ░██    
-		░██    ░██  ░██        ░███   ░██ ░██    ░██ ░██         ░██    
-		░██     ░██  ░███████  ░██░█████   ░███████  ░██          ░████ 
-		                       ░██                                      
-		                       ░██                                      
-	-->
 	
 	<!--
 		░███     ░███            ░██           
@@ -218,7 +206,10 @@
 	            S.SUPPORT_NO,
 	            C.SUPPORT_CATEGORY_NAME,
 	            S.SUPPORT_TITLE,
-	            M.MEM_NICKNAME,
+	            CASE
+	                WHEN M.MEM_TYPE = 0 THEN M.MEM_NICKNAME
+	                ELSE M.MEM_NAME
+	            END AS MEM_NICKNAME,
 	            TO_CHAR(S.SUPPORT_DATE, 'YYYY-MM-DD') AS SUPPORT_DATE,
 	            S.SUPPORT_STATUS,
 	            ROW_NUMBER() OVER (ORDER BY S.SUPPORT_DATE DESC) AS RNUM
@@ -310,4 +301,35 @@
          WHERE REPORT_NO = #{reportNo}
            AND REPORT_STATUS = 'N'
     </update>
+    
+    <!-- 최근 7일 문의수 통계 -->
+	<select id="selectRecentSupportChart" resultType="map">
+	    SELECT
+	        TO_CHAR(SUPPORT_DATE, 'YYYY-MM-DD') AS SUPPORT_DT,
+	        COUNT(*) AS CNT
+	    FROM
+	        SUPPORT
+	    WHERE
+	        SUPPORT_DATE >= TRUNC(SYSDATE) - 6
+	    GROUP BY
+	        TO_CHAR(SUPPORT_DATE, 'YYYY-MM-DD')
+	    ORDER BY
+	        SUPPORT_DT
+	</select>
+	
+	<!-- 최근 7일 신고수 통계 -->
+	<select id="selectRecentReportChart" resultType="map">
+	    SELECT
+	        TO_CHAR(REPORT_DATE, 'YYYY-MM-DD') AS REPORT_DT,
+	        COUNT(*) AS CNT
+	    FROM
+	        REPORT
+	    WHERE
+	        REPORT_DATE >= TRUNC(SYSDATE) - 6
+	    GROUP BY
+	        TO_CHAR(REPORT_DATE, 'YYYY-MM-DD')
+	    ORDER BY
+	        REPORT_DT
+	</select>
+
 </mapper>

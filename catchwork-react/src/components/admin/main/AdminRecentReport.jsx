@@ -38,9 +38,9 @@ const AdminRecentReport = () => {
         <div className={styles.content}>
           {!countLoading && count && (
             <div>
-              <strong>총 미처리 신고 수:</strong> {count.TOTAL_COUNT || 0}{" "}
+              <strong>총 미처리 신고 수 :</strong> {count.TOTAL_COUNT || 0}{" "}
               &nbsp;/&nbsp;
-              <strong>신고 대상 수:</strong> {count.TARGET_COUNT || 0}
+              <strong>신고 대상 수 :</strong> {count.TARGET_COUNT || 0}
             </div>
           )}
           <button className={styles.moreButton} onClick={handleMoreClick}>
@@ -58,12 +58,12 @@ const AdminRecentReport = () => {
             <li
               key={key}
               ref={isLast ? lastElementRef : null}
+              className={styles.item}
               onClick={() =>
                 navigate(
                   `/admin/report/detail?type=${item.reportTargetType}&no=${item.reportTargetNo}`
                 )
               }
-              className={styles.item}
             >
               <p>
                 <span className={styles.itemTitle}>대상 타입 </span>: {item.reportTargetType}
