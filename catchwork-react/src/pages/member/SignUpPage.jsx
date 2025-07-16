@@ -6,6 +6,7 @@ import // sendVerificationCode, // 나중에에 주석 해제
 import useSignUpFormHandler from "../../hooks/useSignUpFormHandler";
 import useCorpFormHandler from "../../hooks/corpFormHandler";
 import { axiosApi } from "../../api/axiosAPI";
+import useConfirmEmail from "../../hooks/useConfirmEmail";
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -94,9 +95,65 @@ const SignUpPage = () => {
     config
   );
 
+  // 이메일 인증 관련 상태 및 훅
+  const [isIssued, setIsIssued] = React.useState(false);
+  const [isVerified, setIsVerified] = React.useState(false);
+  const [authKey, setAuthKey] = React.useState("");
+  const [errorMsg, setErrorMsg] = React.useState("");
+  const [successMsg, setSuccessMsg] = React.useState("");
+  const [isClicked, setIsClicked] = React.useState(false);
+  const { sendEmail, checkAuthKey, startTimer, stopTimer, timeLeft } =
+    useConfirmEmail();
+
+  // 이메일 인증번호 발송
+  const handleSendEmail = async () => {
+    if (!formData.memEmail || formData.memEmail.includes("@") === false) {
+      alert("이메일을 입력해주세요");
+      return;
+    }
+    setIsClicked(true);
+    const isSent = await sendEmail(formData.memEmail);
+    if (isSent) {
+      startTimer();
+      setIsIssued(true);
+    }
+  };
+
+  // 이메일 인증번호 확인
+  const handleCheckAuthKey = async () => {
+    const isValid = await checkAuthKey(formData.memEmail, authKey);
+    if (isValid) {
+      stopTimer();
+      setIsVerified(true);
+      setSuccessMsg("인증되었습니다");
+      setErrorMsg("");
+    } else {
+      stopTimer();
+      setErrorMsg("인증번호가 올바르지 않습니다");
+      setIsVerified(false);
+      setSuccessMsg("");
+      setTimeout(() => {
+        setErrorMsg("");
+        startTimer();
+      }, 3000);
+    }
+  };
+
+  // 타이머 포맷
+  const timeFormat = () => {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
+
   // 제출
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // 이메일 인증 성공 여부 체크
+    if (!isVerified) {
+      alert("이메일 인증을 완료해주세요.");
+      return;
+    }
 
     if (userType === "corporate") {
       if (!isCorpVerified) {
@@ -347,7 +404,22 @@ const SignUpPage = () => {
             </small>
           )}
         </label>
-
+        <label>
+          전화번호
+          <input
+            name="memTel"
+            value={formData.memTel}
+            onChange={handleInputChange}
+            style={{
+              borderColor: validity.memTel === false ? "red" : undefined,
+            }}
+          />
+          {validity.memTel === false && (
+            <small style={{ color: "red" }}>
+              전화번호 형식이 올바르지 않습니다.
+            </small>
+          )}
+        </label>
         <label>
           이메일
           <input
@@ -357,56 +429,86 @@ const SignUpPage = () => {
             style={{
               borderColor: validity.memEmail === false ? "red" : undefined,
             }}
+            disabled={isVerified}
           />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              width: "100%",
+              justifyContent: "space-between",
+              paddingLeft: "10px",
+            }}
+          >
+            {isIssued ? (
+              <small style={{ color: "#aaa" }}>이메일이 발송되었습니다.</small>
+            ) : isClicked ? (
+              <small style={{ color: "#aaa" }}>이메일 발송 중입니다.</small>
+            ) : (
+              <small style={{ color: "#aaa" }}>이메일을 입력해주세요</small>
+            )}
+            <button
+              type="button"
+              className="auth-button"
+              onClick={handleSendEmail}
+              disabled={isVerified}
+            >
+              인증번호 발송
+            </button>
+          </div>
           {validity.memEmail === false && (
             <small style={{ color: "red" }}>
               유효한 이메일을 입력해주세요.
             </small>
           )}
         </label>
+        {/* 인증번호 입력 및 확인 */}
         <label>
-          <label>
-            전화번호
-            <input
-              name="memTel"
-              value={formData.memTel}
-              onChange={handleInputChange}
-              style={{
-                borderColor: validity.memTel === false ? "red" : undefined,
-              }}
-            />
-            {validity.memTel === false && (
-              <small style={{ color: "red" }}>
-                전화번호 형식이 올바르지 않습니다.
-              </small>
-            )}
-          </label>
-          {/* 인증번호 */}
-          <label>인증번호</label>
+          인증번호
           <div className="input-with-button">
             <input
               type="text"
               name="verificationCode"
-              value={formData.verificationCode}
-              onChange={handleInputChange}
+              value={authKey}
+              onChange={(e) => setAuthKey(e.target.value)}
               placeholder="인증번호를 입력해주세요"
-              className={
-                validity.verificationCode === false
-                  ? "error"
-                  : validity.verificationCode === true
-                  ? "success"
-                  : ""
-              }
+              className={isVerified ? "success" : errorMsg ? "error" : ""}
+              disabled={isVerified}
             />
             <button
               type="button"
-              onClick={/* handleVerifyCode 대체 필요시 추가 */ undefined}
+              onClick={handleCheckAuthKey}
               className="action-button"
+              disabled={!isIssued || isVerified}
             >
               인증번호 확인
             </button>
           </div>
-          <div className="timer"></div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              width: "100%",
+              justifyContent: "space-between",
+              paddingLeft: "10px",
+            }}
+          >
+            {isVerified && successMsg ? (
+              <small style={{ color: "green" }}>{successMsg}</small>
+            ) : errorMsg ? (
+              <small style={{ color: "red" }}>{errorMsg}</small>
+            ) : timeLeft > 0 ? (
+              <small style={{ color: "#333" }}>
+                남은 시간: {timeFormat()}초
+              </small>
+            ) : isIssued ? (
+              <small style={{ color: "red" }}>인증번호 만료</small>
+            ) : (
+              <small style={{ color: "#aaa" }}>
+                인증번호 발송을 클릭해주세요
+              </small>
+            )}
+          </div>
         </label>
 
         {/* *********************

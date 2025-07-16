@@ -6,6 +6,7 @@ import { axiosApi } from "../../api/axiosAPI";
 import { useAuthStore } from "../../stores/authStore";
 import "./MainPage.css";
 import MainBoardItem from "../../components/board/MainBoardItem";
+import CorpRecruitListPage from "../corpMajor/CorpRecruitListPage";
 
 const MainPage = () => {
   const { memType, memNo } = useAuthStore(); // memType: 0(개인), 1(기업)
@@ -17,6 +18,7 @@ const MainPage = () => {
   const [popularCompanies, setPopularCompanies] = useState([]);
   const [popularBoards, setPopularBoards] = useState([]);
   const [edu, setEdu] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     // 맞춤형 공고
@@ -25,24 +27,61 @@ const MainPage = () => {
     //   .then((res) => setCustomRecruits(res.data));
     // 인기 공고
     axiosApi
-      .get("/memberRecruit/list", { params: { sort: "likes", limit: 6 } })
+      .get("/memberRecruit/list", {
+        params: { sort: "likes", limit: 6, memNo: memNo ? memNo : null },
+      })
       .then((res) => setPopularRecruits(res.data));
     // 최신 공고
     axiosApi
-      .get("/memberRecruit/list", { params: { sort: "latest", limit: 6 } })
+      .get("/memberRecruit/list", {
+        params: { sort: "latest", limit: 6, memNo: memNo ? memNo : null },
+      })
       .then((res) => setLatestRecruits(res.data));
     // 인기 기업
     axiosApi
-      .get("/company", { params: { sort: "main", limit: 6 } })
-      .then((res) => setPopularCompanies(res.data));
-    // 인기 게시글
-    axiosApi
-      .get("/board/boardList", { params: { sort: "main", limit: 6 } })
+      .get("/company", {
+        params: { sort: "main", limit: 6, memNo: memNo ? memNo : null },
+      })
       .then((res) => {
         const companies = Array.isArray(res.data) ? res.data : [];
         setPopularCompanies(companies);
       });
+    // 인기 게시글
+    axiosApi
+      .get("/board/boardList", {
+        params: { sort: "main", limit: 6, memNo: memNo ? memNo : null },
+      })
+      .then((res) => {
+        const boards = Array.isArray(res.data) ? res.data : [];
+        setPopularBoards(boards);
+      });
   }, []);
+
+  useEffect(() => {
+    if (
+      customRecruits.length > 0 &&
+      popularRecruits.length > 0 &&
+      latestRecruits.length > 0 &&
+      popularCompanies.length > 0 &&
+      popularBoards.length > 0
+    ) {
+      setIsLoading(false);
+    }
+  }, [
+    customRecruits,
+    popularRecruits,
+    latestRecruits,
+    popularCompanies,
+    popularBoards,
+  ]);
+
+  // if (isLoading) {
+  //   return (
+  //     <div className="loading">
+  //       <i className="fa-solid fa-spinner fa-spin"></i> Loading...
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="main-page">
@@ -50,25 +89,33 @@ const MainPage = () => {
       {!isCorp && (
         <>
           {/* 공고 */}
-          {memType === 0 && (
+          {/* {memType === 0 && (
             <>
               <section>
                 <h2>맞춤형 채용공고</h2>
                 <div className="card-grid two-cols">
                   {customRecruits.map((item) => (
-                    <MemberRecruitItem key={item.id} recruit={item} />
+                    <MemberRecruitItem
+                      key={item.id}
+                      recruit={item}
+                      memNo={memNo}
+                    />
                   ))}
                 </div>
               </section>
               <br></br>
               <hr></hr>
             </>
-          )}
+          )} */}
           <section>
             <h2>인기 채용공고</h2>
             <div className="card-grid two-cols">
               {popularRecruits.map((item) => (
-                <MemberRecruitItem key={item.recruitNo} recruit={item} />
+                <MemberRecruitItem
+                  key={item.recruitNo}
+                  recruit={item}
+                  memNo={memNo}
+                />
               ))}
             </div>
           </section>
@@ -78,7 +125,11 @@ const MainPage = () => {
             <h2>최신 채용공고</h2>
             <div className="card-grid two-cols">
               {latestRecruits.map((item) => (
-                <MemberRecruitItem key={item.recruitNo} recruit={item} />
+                <MemberRecruitItem
+                  key={item.recruitNo}
+                  recruit={item}
+                  memNo={memNo}
+                />
               ))}
             </div>
           </section>
@@ -90,7 +141,11 @@ const MainPage = () => {
             <div className="card-grid two-cols">
               {Array.isArray(popularCompanies) &&
                 popularCompanies.map((item) => (
-                  <CompanyItem key={item.corpRegNo} company={item} />
+                  <CompanyItem
+                    key={item.corpRegNo}
+                    company={item}
+                    memNo={memNo}
+                  />
                 ))}
             </div>
           </section>
@@ -111,7 +166,7 @@ const MainPage = () => {
       {/* 기업 */}
       {isCorp && (
         <>
-          <div></div>
+          <div>기업 메인</div>
         </>
       )}
     </div>

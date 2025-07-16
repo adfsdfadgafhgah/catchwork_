@@ -121,7 +121,14 @@ const router = createBrowserRouter([
     path: "/",
     element: <Layout />,
     children: [
-      { index: true, element: <MainPage /> },
+      {
+        index: true,
+        element: (
+          <ProtectedRoute blockedType={1}>
+            <MainPage />
+          </ProtectedRoute>
+        ),
+      },
       // 등록된 주소 외 모든 주소 예외 처리
       { path: "*", element: <NotFound /> },
       // 로그인/회원가입

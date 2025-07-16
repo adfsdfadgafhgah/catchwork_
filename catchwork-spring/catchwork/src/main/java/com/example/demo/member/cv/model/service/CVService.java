@@ -64,7 +64,9 @@ public interface CVService {
 			String memNo, 
 			int recruitNo) throws Exception;
 
-
-
-// 	 void submitCV(String memNo, int cvNo, int recruitNo);
+	/** 이미지 처리(스케줄러)
+	 * @author JAEHO
+	 * @return
+	 */
+	int deleteUnusedImage();
 }

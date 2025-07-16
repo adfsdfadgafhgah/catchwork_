@@ -672,4 +672,11 @@
 	    SELECT SEQ_PORT_ID.NEXTVAL FROM DUAL
 	</select>
 
+	<!-- 사용중인 이미지 조회(스케줄러) -->
+	<select id="selectUsedImage">
+		SELECT CV_IMG_PATH
+		FROM CV
+		WHERE CV_IMG_PATH IS NOT NULL
+	</select>
+
 </mapper>

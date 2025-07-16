@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,13 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.admin.model.dto.AdminReport;
 import com.example.demo.admin.model.dto.ReportList;
 import com.example.demo.admin.model.dto.SupportList;
-import com.example.demo.admin.model.dto.ReportSearchCriteria;
-import com.example.demo.admin.model.dto.ReportSummary;
 import com.example.demo.admin.model.service.AdminService;
-import com.example.demo.report.model.dto.Report;
 import com.example.demo.support.model.dto.Support;
 
 import lombok.extern.slf4j.Slf4j;
@@ -85,6 +80,28 @@ public class AdminController {
     @GetMapping("recentSupportCount")
     public Map<String, Object> selectRecentSupportCount() {
         return adminService.selectRecentSupportCount();
+    }
+    
+    /**
+     * 최근 7일 신고수 통계
+     * 
+     * @return
+     * @author 민장
+     */
+    @GetMapping("recentReportChart")
+    public List<Map<String, Object>> selectRecentReportChart() {
+        return adminService.selectRecentReportChart();
+    }
+    
+    /**
+     * 최근 7일 문의수 통계
+     * 
+     * @return
+     * @author 민장
+     */
+    @GetMapping("recentSupportChart")
+    public List<Map<String, Object>> selectRecentSupportChart() {
+        return adminService.selectRecentSupportChart();
     }
 
 	/**
@@ -165,59 +182,7 @@ public class AdminController {
 		}
 	}
 	
-	/** 신고 목록 조회
-     * @author BAEBAE
-     * @param criteria 검색 및 필터 조건
-     * @return 신고 목록
-     */
-    @GetMapping("report/list")
-    public ResponseEntity<List<AdminReport>> getReportList(@ModelAttribute ReportSearchCriteria criteria) {
-        List<AdminReport> reportList = adminService.getReportList(criteria);
-        return ResponseEntity.ok(reportList);
-    }
-
-    /** 신고 요약 정보 조회
-     * @author BAEBAE
-     * @param criteria 검색 및 필터 조건
-     * @return 신고 요약 정보
-     */
-    @GetMapping("reports/summary")
-    public ResponseEntity<ReportSummary> getReportSummary(@ModelAttribute ReportSearchCriteria criteria) {
-        ReportSummary summary = adminService.getReportSummary(criteria);
-        return ResponseEntity.ok(summary);
-    }
-    
-    /** 신고 처리 상태 변경
-     * @author BAEBAE
-     * @param payload
-     * @return
-     */
-    @PutMapping("report/process")
-    public ResponseEntity<String> processReport(@RequestBody Map<String, Integer> payload) {
-        try {
-            Integer reportNo = payload.get("reportNo");
-            if (reportNo == null) {
-                return ResponseEntity.badRequest().body("신고 번호가 필요합니다.");
-            }
-
-            Report reportToProcess = new Report();
-            reportToProcess.setReportNo(reportNo);
-            reportToProcess.setAdminNo(1); // 중요: 관리자 번호 1로 하드코딩
-
-            int result = adminService.processReport(reportToProcess);
-
-            if (result > 0) {
-                log.info("신고 처리 성공. 신고 번호: {}", reportNo);
-                return ResponseEntity.ok("신고가 성공적으로 처리되었습니다.");
-            } else {
-                log.warn("신고 처리 실패 또는 이미 처리된 신고. 신고 번호: {}", reportNo);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("신고를 처리할 수 없거나 이미 처리된 항목입니다.");
-            }
-        } catch (Exception e) {
-            log.error("신고 처리 중 오류 발생: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류로 인해 신고 처리에 실패했습니다.");
-        }
-    }
+	
 	
 	
 	

@@ -69,4 +69,11 @@ public interface RecruitService {
 	 */
 	void recruitReadCount(int recruitNo);
 
+	/** 채용공고 삭제(스케줄러)
+	 * @author JAEHO
+	 * @param deleteTargetPeriod
+	 * @return
+	 */
+	int removeTargetRecruit(int deleteTargetPeriod);
 }
+

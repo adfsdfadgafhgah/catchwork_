@@ -166,15 +166,9 @@ public interface CVMapper {
     int nextTrainId();
     int nextPortId();
 
-
-
-	
-// 	// 회원번호(memNo)로 이력서 목록 조회
-//     List<CV> selectCVList(@Param("memNo") String memNo);
-
-    
-//     void insertSubmitCV(@Param("memNo") String memNo, 
-//             @Param("cvNo") int cvNo, 
-//             @Param("recruitNo") int recruitNo);
-
+	/** 사용중인 이미지 조회(스케줄러)
+	 * @author JAEHO
+	 * @return
+	 */
+	List<String> selectUsedImage();
 }

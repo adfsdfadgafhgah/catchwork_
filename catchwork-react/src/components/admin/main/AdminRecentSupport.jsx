@@ -33,16 +33,16 @@ const AdminRecentSupport = () => {
     <div className={styles.supportWrapper}>
       <div className={styles.header}>
         <h2 className={styles.title}>미처리 문의 내역</h2>
-        <div>
+        <div className={styles.content}>
           {!countLoading && count && (
-            <p>
-              <strong>총 미처리 문의 수:</strong> {count.TOTAL_COUNT || 0}
-            </p>
+            <div>
+                <strong>총 미처리 문의 수 :</strong> {count.TOTAL_COUNT || 0}
+            </div>
           )}
+          <button className={styles.moreButton} onClick={handleMoreClick}>
+            +
+          </button>
         </div>
-        <button className={styles.moreButton} onClick={handleMoreClick}>
-          +
-        </button>
       </div>
 
       <ul className={styles.list}>
@@ -54,12 +54,27 @@ const AdminRecentSupport = () => {
               key={item.supportNo}
               ref={isLast ? lastElementRef : null}
               className={styles.item}
+              onClick={() =>
+                navigate(
+                  `/admin/support/${item.supportNo}`
+                )
+              }
             >
-              <p>카테고리: {item.supportCategoryName}</p>
-              <p>제목: {item.supportTitle}</p>
-              <p>작성자: {item.memNickname}</p>
-              <p>작성일자: {item.supportDate}</p>
-              <p>처리 상태: {item.supportStatus}</p>
+              <p>
+                <span className={styles.itemTitle}>카테고리 </span>: {item.supportCategoryName}
+              </p>
+              <p>
+                <span className={styles.itemTitle}>제목 </span>: {item.supportTitle}
+              </p>
+              <p>
+                <span className={styles.itemTitle}>작성자 </span>: {item.memNickname}
+              </p>
+              <p>
+                <span className={styles.itemTitle}>작성일자 </span>: {item.supportDate}
+              </p>
+              <p>
+                <span className={styles.itemTitle}>처리 상태 </span>: {item.supportStatus}
+                </p>
             </li>
           );
         })}

@@ -139,8 +139,8 @@ const CVManagePage = () => {
   const [military, setMilitary] = useState({
     cvMiliClass: "",
     cvMiliBranch: "",
-    cvMiliStartDate: "",
-    cvMiliEndDate: "",
+    cvMiliStartDate: "0000-00",
+    cvMiliEndDate: "0000-00",
   });
 
   // 동적 섹션 항목 상태
@@ -827,24 +827,6 @@ const CVManagePage = () => {
         return [];
     }
   })();
-
-  // // 콘솔console 찍기
-  // useEffect(() => {
-  //   console.log("모드 =", mode);
-  //   console.log("이미지 경로 =", cvImgPath);
-  //   console.log("단일 데이터 =", formData);
-  //   console.log("컴포넌트 데이터 =", components);
-  //   console.log("회원 정보 = ", memberInfo);
-  //   console.log("회원 = ", member);
-
-  //   const authStorage = localStorage.getItem("auth-storage");
-  //   if (authStorage) {
-  //     const parsed = JSON.parse(authStorage);
-  //     console.log("zustand auth-store persist 값 =", parsed);
-  //   } else {
-  //     console.log("auth-storage 값 없음 (로그인 안했거나 persist 저장 전)");
-  //   }
-  // }, [mode, cvImgPath, memberInfo, member, formData, components]);
 
   return (
     <div className="resume-container">

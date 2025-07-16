@@ -18,21 +18,27 @@ import com.example.demo.admin.model.dto.SupportList;
 public interface AdminMapper {
 	Admin findByAdminId(String adminId);
 
-	/** 전체 문의 목록 조회 (관리자용)
+	/**
+	 * 전체 문의 목록 조회 (관리자용)
+	 * 
 	 * @author BAEBAE
 	 * @param params
 	 * @return
 	 */
 	List<Support> getAllSupportList(Map<String, Object> params);
 
-	/** 특정 문의 상세 조회 (관리자용)
+	/**
+	 * 특정 문의 상세 조회 (관리자용)
+	 * 
 	 * @author BAEBAE
 	 * @param supportNo
 	 * @return
 	 */
 	Support getSupportDetail(int supportNo);
 
-	/** 문의 답변 등록 (관리자용)
+	/**
+	 * 문의 답변 등록 (관리자용)
+	 * 
 	 * @author BAEBAE
 	 * @param support
 	 * @return
@@ -63,34 +69,29 @@ public interface AdminMapper {
 	 * @author 민장
 	 */
 	Map<String, Object> selectRecentReportCount();
-	
 
-	/** 신고 목록 조회
-	 * @author BAEBAE
-	 * @param criteria
+	/**
+	 * 최근 미처리 문의 개수 조회
+	 * 
 	 * @return
+	 * @author 민장
 	 */
-	List<AdminReport> getReportList(ReportSearchCriteria criteria);
+	Map<String, Object> selectRecentSupportCount();
 
-	/** 신고 요약 정보 조회
-	 * @author BAEBAE
-	 * @param criteria
+	/**
+	 * 최근 7일 문의수 통계
+	 * 
 	 * @return
+	 * @author 민장
 	 */
-	ReportSummary getReportSummary(ReportSearchCriteria criteria);
+	List<Map<String, Object>> selectRecentReportChart();
 
-	/** 신고 처리 상태 변경
-	 * @author BAEBAE
-	 * @param report
+	/**
+	 * 최근 7일 신고수 통계
+	 * 
 	 * @return
+	 * @author 민장
 	 */
-	int updateReportStatusToComplete(Report report);
+	List<Map<String, Object>> selectRecentSupportChart();
 
-    /**
-     * 최근 미처리 문의 개수 조회
-     * 
-     * @return
-     * @author 민장
-     */
-    Map<String, Object> selectRecentSupportCount();
 }

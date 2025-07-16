@@ -77,5 +77,18 @@
 	    SET COMMENT_STATUS = 1
 	    WHERE COMMENT_NO = #{commentNo}
 	</update>
+
+	<!-- 댓글 삭제(스케줄러) -->
+	<update id="removeTargetComment">
+		DELETE FROM "COMMENT"
+		WHERE COMMENT_STATUS = 1
+		AND COMMENT_STATUS_DATE &lt; SYSDATE - #{deleteTargetPeriod} DAY
+		OR PARENT_COMMENT_NO IN (
+			SELECT COMMENT_NO	
+			FROM "COMMENT"
+			WHERE COMMENT_STATUS = 1
+			AND COMMENT_STATUS_DATE &lt; SYSDATE - #{deleteTargetPeriod} DAY
+		)
+	</update>
 	
 </mapper>
