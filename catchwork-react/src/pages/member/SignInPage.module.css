@@ -55,12 +55,32 @@
   font-weight: bold;
 }
 
+/* FindId 스타일로 통일된 input */
 .input-group input {
   width: 100%;
-  padding: 10px;
+  padding: 16px;
   margin-bottom: 8px;
-  border: none;
-  border-bottom: 1px solid var(--stroke-color1);
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: #fafafa;
+  outline: none;
+}
+
+.input-group input:focus {
+  border-color: var(--main-color);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.1);
+}
+
+.input-group input:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.input-group input::placeholder {
+  color: #999;
 }
 
 .remember-me {
@@ -124,6 +144,7 @@
 .find-btn {
   cursor: pointer;
 }
+
 .signinContainer {
   display: flex;
   min-height: 100vh;
@@ -224,23 +245,30 @@
   gap: 1rem;
 }
 
+/* FindId 스타일로 통일된 inputField */
 .inputField {
-  padding: 16px 20px;
-  border: 2px solid #e1e5e9;
-  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
   font-size: 16px;
   transition: all 0.3s ease;
-  background: white;
+  background: #fafafa;
+  outline: none;
 }
 
 .inputField:focus {
-  outline: none;
   border-color: var(--main-color);
+  background: white;
   box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.1);
 }
 
+.inputField:disabled {
+  background: #f5f5f5;
+  cursor: not-allowed;
+}
+
 .inputField::placeholder {
-  color: #adb5bd;
+  color: #999;
 }
 
 .signinButton {
@@ -324,6 +352,16 @@
     max-width: 100%;
   }
 
+  .input-group input {
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  .inputField {
+    padding: 14px;
+    font-size: 14px;
+  }
+
   .links {
     flex-direction: column;
     gap: 0.5rem;
@@ -354,9 +392,14 @@
     font-size: 13px;
   }
 
+  .input-group input {
+    padding: 14px;
+    font-size: 14px;
+  }
+
   .inputField {
-    padding: 14px 16px;
-    font-size: 15px;
+    padding: 14px;
+    font-size: 14px;
   }
 
   .signinButton {

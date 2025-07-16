@@ -139,8 +139,8 @@ const CVManagePage = () => {
   const [military, setMilitary] = useState({
     cvMiliClass: "",
     cvMiliBranch: "",
-    cvMiliStartDate: "0000-00",
-    cvMiliEndDate: "0000-00",
+    cvMiliStartDate: "",
+    cvMiliEndDate: "",
   });
 
   // 동적 섹션 항목 상태
@@ -288,13 +288,22 @@ const CVManagePage = () => {
       );
     });
 
+    const militaryPayload =
+      military.cvMiliClass === "군필"
+        ? military
+        : {
+            ...military,
+            cvMiliStartDate: null,
+            cvMiliEndDate: null,
+          };
+
     return {
       ...(cvNo ? { cvNo } : {}),
       ...member,
       cvImgPath,
       ...formData,
       education,
-      military,
+      military: militaryPayload,
       ...convertedSections,
       ...deletedIds,
     };
@@ -396,13 +405,14 @@ const CVManagePage = () => {
     if (formData.cvResume?.length > 2000) {
       valid = false;
     }
-    if (
-      !military.cvMiliClass ||
-      !military.cvMiliBranch ||
-      !military.cvMiliStartDate ||
-      !military.cvMiliEndDate
-    ) {
+    if (!military.cvMiliClass || !military.cvMiliBranch) {
       valid = false;
+    } else {
+      if (military.cvMiliClass === "군필") {
+        if (!military.cvMiliStartDate || !military.cvMiliEndDate) {
+          valid = false;
+        }
+      }
     }
     if (
       !education.eduName ||
@@ -831,7 +841,11 @@ const CVManagePage = () => {
   return (
     <div className="resume-container">
       <div
-        className={mode === "view" || mode === "submit" ? "resume-form view-mode" : "resume-form"}
+        className={
+          mode === "view" || mode === "submit"
+            ? "resume-form view-mode"
+            : "resume-form"
+        }
       >
         <h1 className="form-title">내 이력서</h1>
 

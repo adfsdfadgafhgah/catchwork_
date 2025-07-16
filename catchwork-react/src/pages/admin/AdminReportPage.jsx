@@ -79,28 +79,6 @@ export default function AdminReportPage() {
     }
   };
 
-  // // 신고 처리 API를 호출하는 핸들러 함수
-  // const handleProcessReport = async (reportNo, e) => {
-  //   e.stopPropagation(); // 행 클릭 이벤트(상세 페이지 이동)가 함께 실행되는 것을 방지
-
-  //   if (!window.confirm(`신고 번호 ${reportNo}번을 처리하시겠습니까?`)) {
-  //     return;
-  //   }
-
-  //   try {
-  //     const response = await axiosApi.put("/admin/report/process", {
-  //       reportNo,
-  //     });
-  //     alert(response.data); // 성공 메시지 출력
-
-  //     // 중요: 처리 후 목록을 새로고침하여 변경된 상태를 즉시 반영
-  //     fetchReportsAndSummary(filters);
-  //   } catch (err) {
-  //     console.error("신고 처리 실패:", err);
-  //     alert(err.response?.data || "신고 처리 중 오류가 발생했습니다.");
-  //   }
-  // };
-
   // 필터 값 변경 핸들러
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
@@ -134,6 +112,12 @@ export default function AdminReportPage() {
   // 상세 페이지 이동
   const goToDetail = (reportTargetNo, reportTargetType) => {
     navigate(`/admin/report/target/${reportTargetType}/${reportTargetNo}`);
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
   };
 
   const totalPages = Math.ceil(totalGroupedCount / itemsPerPage);
@@ -197,6 +181,7 @@ export default function AdminReportPage() {
               value={filters.query}
               onChange={handleFilterChange}
               className={styles.searchInput}
+              onKeyDown={handleKeyDown}
             />
           </div>
           <div className={styles.buttonGroup}>

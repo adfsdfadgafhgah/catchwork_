@@ -14,8 +14,8 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import jakarta.servlet.MultipartConfigElement;
 
 @Configuration
-// @PropertySource("classpath:/config.properties") // 추후에 이미지 관련 속성을 config.properties로 이동후 주석 해제
-@PropertySource("classpath:/application.properties")
+@PropertySource("classpath:/config.properties")
+// @PropertySource("classpath:/application.properties")
 public class FileConfig implements WebMvcConfigurer {
   
   // 이미지 임계값
@@ -33,6 +33,10 @@ public class FileConfig implements WebMvcConfigurer {
   // 이미지 요청 크기 설정
   @Value("${spring.servlet.multipart.max-request-size}")
   private long maxRequestSize;
+
+  // 이력서 pdf 업로드 경로
+  @Value("${file.upload.cv-pdf-path}")
+  private String cvPdfPath;
 
   // ------------------------------
 

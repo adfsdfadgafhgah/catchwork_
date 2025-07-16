@@ -55,8 +55,8 @@ const ReportModalPage = ({
       alert("신고가 성공적으로 접수되었습니다.");
       onClose();
     } catch (error) {
-      console.error("신고 실패:", error);
-      alert("신고 중 오류가 발생했습니다.");
+      console.error("이미 신고한 대상입니다.", error);
+      alert("이미 신고한 대상입니다.");
     }
   };
 

@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import useConfirmEmail from "../../hooks/useConfirmEmail";
 import ResultModal from "../../components/common/ResultModal";
-import styles from "./FindPage.module.css";
+import styles from "./FindPwPage.module.css";
 import { axiosApi } from "../../api/axiosAPI";
 
 const FindPwPage = () => {
@@ -23,6 +23,7 @@ const FindPwPage = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [modalData, setModalData] = useState({});
   const navigate = useNavigate();
+  const isSending = useRef(false); // 인증번호 발송 중 여부
 
   // 비밀번호 찾기 제출 함수
   const handleSubmit = async (e) => {
@@ -95,10 +96,12 @@ const FindPwPage = () => {
       return;
     }
     setIsClicked(true);
+    isSending.current = true;
     const isSent = await sendEmail(email);
     if (isSent) {
       startTimer();
       setIsIssued(true);
+      isSending.current = false;
     }
   };
 
@@ -110,123 +113,151 @@ const FindPwPage = () => {
   };
 
   return (
-    <div className="find-container">
-      <h2>{isCorp ? "기업 회원 비밀번호 찾기" : "개인 회원 비밀번호 찾기"}</h2>
+    <div className={styles.findContainer}>
+      <div className={styles.findWrapper}>
+        <h2 className={styles.title}>
+          {isCorp ? "기업 회원 비밀번호 찾기" : "개인 회원 비밀번호 찾기"}
+        </h2>
 
-      <form className="find-form" onSubmit={handleSubmit}>
-        <label>
-          아이디
-          <input
-            type="text"
-            placeholder="아이디를 입력해주세요"
-            onChange={(e) => setId(e.target.value)}
-          />
-        </label>
-        {isCorp && (
-          <label>
-            사업자등록번호
+        <form className={styles.findForm} onSubmit={handleSubmit}>
+          <div className={styles.inputGroup}>
+            <label className={styles.label}>아이디</label>
             <input
               type="text"
-              placeholder="사업자등록번호를 입력해주세요"
-              onChange={(e) => setCorpRegNo(e.target.value)}
+              className={styles.input}
+              placeholder="아이디를 입력해주세요"
+              value={id}
+              onChange={(e) => setId(e.target.value)}
+              required
             />
-          </label>
-        )}
-        <label>
-          이름
-          <input
-            type="text"
-            placeholder="이름을 입력해주세요"
-            onChange={(e) => setName(e.target.value)}
-          />
-        </label>
-        <label>
-          이메일
-          <input
-            type="email"
-            placeholder="이메일을 입력해주세요"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              width: "100%",
-              justifyContent: "space-between",
-              paddingLeft: "10px",
-            }}
-          >
-            {isIssued ? (
-              <small style={{ color: "#aaa" }}>이메일이 발송되었습니다.</small>
-            ) : isClicked ? (
-              <small style={{ color: "#aaa" }}>이메일 발송 중입니다.</small>
-            ) : (
-              <small style={{ color: "#aaa" }}>이메일을 입력해주세요</small>
-            )}
-            <button
-              type="button"
-              onClick={handleSendEmail}
-              disabled={isVerified}
-              className="auth-button"
-            >
-              인증번호 발송
-            </button>
           </div>
-        </label>
-        <label>
-          인증번호
-          <input
-            type="text"
-            placeholder="인증번호를 입력해주세요"
-            onChange={(e) => setAuthKey(e.target.value)}
-          />
-          <div
-            style={{
-              display: "flex",
-              width: "100%",
-              justifyContent: "space-between",
-              alignItems: "center",
-              paddingLeft: "10px",
-            }}
-          >
-            {isVerified && successMsg ? (
-              <small style={{ color: "green" }}>{successMsg}</small>
-            ) : errorMsg ? (
-              <small style={{ color: "red" }}>{errorMsg}</small>
-            ) : timeLeft > 0 ? (
-              <small style={{ color: "#333" }}>
-                남은 시간: {timeFormat()}초
-              </small>
-            ) : isIssued ? (
-              <small style={{ color: "red" }}>인증번호 만료</small>
-            ) : (
-              <small style={{ color: "#aaa" }}>
-                인증번호 발송을 클릭해주세요
-              </small>
-            )}
-            <button
-              type="button"
-              className="auth-button"
-              onClick={handleCheckAuthKey}
-              disabled={!isIssued || isVerified}
-            >
-              인증번호 확인
-            </button>
-          </div>
-        </label>
-        <button type="submit" className="submit-button" disabled={!isVerified}>
-          비밀번호 찾기
-        </button>
-      </form>
 
-      <ResultModal
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-        onConfirm={handleModalConfirm}
-        loading={false}
-        type={"pw"}
-        modalData={modalData}
-      />
+          {isCorp && (
+            <div className={styles.inputGroup}>
+              <label className={styles.label}>사업자등록번호</label>
+              <input
+                type="text"
+                className={styles.input}
+                placeholder="사업자등록번호를 입력해주세요"
+                value={corpRegNo}
+                onChange={(e) => setCorpRegNo(e.target.value)}
+                required
+              />
+            </div>
+          )}
+
+          <div className={styles.inputGroup}>
+            <label className={styles.label}>이름</label>
+            <input
+              type="text"
+              className={styles.input}
+              placeholder="이름을 입력해주세요"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label className={styles.label}>이메일</label>
+            <input
+              type="email"
+              className={styles.input}
+              placeholder="이메일을 입력해주세요"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <div className={styles.authContainer}>
+              <div className={styles.authMessage}>
+                {isIssued ? (
+                  <small className={styles.infoMessage}>
+                    이메일이 발송되었습니다.
+                  </small>
+                ) : isClicked ? (
+                  <small className={styles.infoMessage}>
+                    이메일 발송 중입니다.
+                  </small>
+                ) : (
+                  <small className={styles.infoMessage}>
+                    이메일을 입력해주세요
+                  </small>
+                )}
+              </div>
+              <button
+                type="button"
+                onClick={handleSendEmail}
+                disabled={isVerified}
+                className={`${styles.authButton} ${
+                  isSending.current ? styles.loading : ""
+                }`}
+              >
+                인증번호 발송
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.inputGroup}>
+            <label className={styles.label}>인증번호</label>
+            <input
+              type="text"
+              className={styles.input}
+              placeholder="인증번호를 입력해주세요"
+              value={authKey}
+              onChange={(e) => setAuthKey(e.target.value)}
+              disabled={!isIssued}
+            />
+            <div className={styles.authContainer}>
+              <div className={styles.authMessage}>
+                {isVerified && successMsg ? (
+                  <small className={styles.successMessage}>{successMsg}</small>
+                ) : errorMsg ? (
+                  <small className={styles.errorMessage}>{errorMsg}</small>
+                ) : timeLeft > 0 ? (
+                  <small className={styles.timerMessage}>
+                    남은 시간: {timeFormat()}
+                  </small>
+                ) : isIssued ? (
+                  <small className={styles.errorMessage}>인증번호 만료</small>
+                ) : (
+                  <small className={styles.infoMessage}>
+                    인증번호 발송을 클릭해주세요
+                  </small>
+                )}
+              </div>
+              <button
+                type="button"
+                className={`${styles.authButton} ${
+                  !isIssued || isVerified ? styles.disabled : ""
+                }`}
+                onClick={handleCheckAuthKey}
+                disabled={!isIssued || isVerified}
+              >
+                인증번호 확인
+              </button>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className={`${styles.submitButton} ${
+              !isVerified ? styles.disabled : ""
+            }`}
+            disabled={!isVerified}
+          >
+            비밀번호 찾기
+          </button>
+        </form>
+
+        <ResultModal
+          isOpen={isOpen}
+          onClose={() => setIsOpen(false)}
+          onConfirm={handleModalConfirm}
+          loading={false}
+          type={"pw"}
+          modalData={modalData}
+        />
+      </div>
     </div>
   );
 };

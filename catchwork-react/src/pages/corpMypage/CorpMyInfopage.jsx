@@ -1,50 +1,61 @@
 import { useEffect, useState } from "react";
-import { useOutletContext } from "react-router-dom";
 import "./CorpMyInfoPage.css";
 import defaultLogo from "../../assets/icon.png";
 import { axiosApi } from "../../api/axiosAPI";
 
 function CorpMyInfo() {
   const logoImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
-  const { loginMember } = useOutletContext(); // 로그인 회원 정보
-  const [company, setCompany] = useState(null); // company로 이름 통일
+  const [company, setCompany] = useState(null);
+  const [detailLogo, setDetailLogo] = useState(null);
 
   useEffect(() => {
-    if (!loginMember?.memNo) return;
-
+    // 1번 API: 기본 기업 정보
     axiosApi
-      .get("/corpcompany/detail", {
-        params: { memNo: loginMember.memNo },
-      })
+      .get("/corp/mypage")
       .then((res) => {
-        console.log("✅ 기업 상세 응답:", res.data);
         setCompany(res.data);
       })
       .catch((err) => {
-        console.error("기업 상세 조회 실패", err);
+        console.error("기업 정보 조회 실패", err);
       });
-  }, [loginMember]);
+  }, []);
 
-  if (!loginMember || !company) {
+  useEffect(() => {
+    // 2번 API: corpLogo만 별도 호출해서 따로 저장
+    async function fetchDetailLogo() {
+      try {
+        if (!company?.memNo) return; // memNo가 있어야 호출 가능
+
+        const res = await axiosApi.get("/corpcompany/detail", {
+          params: { memNo: company.memNo },
+        });
+        setDetailLogo(res.data.corpLogo);
+      } catch (err) {
+        console.error("상세 기업 로고 조회 실패", err);
+      }
+    }
+    fetchDetailLogo();
+  }, [company]);
+
+  if (!company) {
     return <div>기업 정보를 불러오는 중...</div>;
   }
+
+  // detailLogo 우선, 없으면 company.corpLogo, 없으면 defaultLogo
+  const logoSrc = detailLogo
+    ? `${logoImgUrl}/${detailLogo}`
+    : company.corpLogo
+    ? `${logoImgUrl}/${company.corpLogo}`
+    : defaultLogo;
 
   return (
     <div className="corpmyinfo-container">
       <div className="profile-section">
         <div className="corpmyinfo-profile-img">
-         <img
-            src={
-              company.corpLogo  
-                ? `${logoImgUrl}/${company.corpLogo}`
-                : defaultLogo
-            }
-            alt="기업로고"
-            className="company-logo"
-          />
+          <img src={logoSrc} alt="기업로고" className="company-logo" />
         </div>
         <div className="profile-info">
-          <h1>{loginMember.memName || "닉네임 없음"}</h1>
+          <h1>{company.corpName || "대표자 없음"}</h1>
         </div>
       </div>
 
@@ -56,22 +67,22 @@ function CorpMyInfo() {
 
         <div className="info-content">
           <span className="info-label">아이디</span>
-          <span className="info-value">{loginMember.memId || "-"}</span>
+          <span className="info-value">{company.memId || "-"}</span>
         </div>
 
         <div className="info-content">
           <span className="info-label">이메일</span>
-          <span className="info-value">{loginMember.memEmail || "-"}</span>
+          <span className="info-value">{company.memEmail || "-"}</span>
         </div>
 
         <div className="info-content">
           <span className="info-label">전화번호</span>
-          <span className="info-value">{loginMember.memTel || "-"}</span>
+          <span className="info-value">{company.memTel || "-"}</span>
         </div>
 
         <div className="info-content">
-          <span className="info-label">대표자명</span>
-          <span className="info-value">{company.corpCeoName || "-"}</span>
+          <span className="info-label">이름</span>
+          <span className="info-value">{company.memName || "-"}</span>
         </div>
 
         <div className="info-content">
