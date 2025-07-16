@@ -1,27 +1,31 @@
 import { useEffect, useState } from "react";
 import { useOutletContext } from "react-router-dom";
 import "./CorpMyInfoPage.css";
-import defaultLogo from "../../assets/icon.png"; // 기업 기본 로고로 사용
+import defaultLogo from "../../assets/icon.png";
 import { axiosApi } from "../../api/axiosAPI";
 
 function CorpMyInfo() {
-  const logoImgUrl = import.meta.env.VITE_FILE_COMPANY_LOGO_URL; // 회사 로고용 이미지 경로 환경변수
-  const { loginMember } = useOutletContext();
-  const [corpInfo, setCorpInfo] = useState(null);
+  const logoImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
+  const { loginMember } = useOutletContext(); // 로그인 회원 정보
+  const [company, setCompany] = useState(null); // company로 이름 통일
 
   useEffect(() => {
+    if (!loginMember?.memNo) return;
+
     axiosApi
-      .get("/corp/mypage", { withCredentials: true })
+      .get("/corpcompany/detail", {
+        params: { memNo: loginMember.memNo },
+      })
       .then((res) => {
-        console.log("✅ 백엔드 응답 데이터:", res.data);
-        setCorpInfo(res.data);
+        console.log("✅ 기업 상세 응답:", res.data);
+        setCompany(res.data);
       })
       .catch((err) => {
-        console.error("기업 정보 조회 실패", err);
+        console.error("기업 상세 조회 실패", err);
       });
-  }, []);
+  }, [loginMember]);
 
-  if (!loginMember || !corpInfo) {
+  if (!loginMember || !company) {
     return <div>기업 정보를 불러오는 중...</div>;
   }
 
@@ -29,10 +33,10 @@ function CorpMyInfo() {
     <div className="corpmyinfo-container">
       <div className="profile-section">
         <div className="corpmyinfo-profile-img">
-          <img
+         <img
             src={
-              corpInfo.corpLogo
-                ? `${logoImgUrl}/${corpInfo.corpLogo}`
+              company.corpLogo  
+                ? `${logoImgUrl}/${company.corpLogo}`
                 : defaultLogo
             }
             alt="기업로고"
@@ -47,7 +51,7 @@ function CorpMyInfo() {
       <div className="corpmyinfo-info">
         <div className="info-content">
           <span className="info-label">기업명</span>
-          <span className="info-value">{corpInfo.corpName || "기업명 없음"}</span>
+          <span className="info-value">{company.corpName || "기업명 없음"}</span>
         </div>
 
         <div className="info-content">
@@ -66,13 +70,13 @@ function CorpMyInfo() {
         </div>
 
         <div className="info-content">
-          <span className="info-label">이름</span>
-          <span className="info-value">{corpInfo.memName || "-"}</span>
+          <span className="info-label">대표자명</span>
+          <span className="info-value">{company.corpCeoName || "-"}</span>
         </div>
 
         <div className="info-content">
           <span className="info-label">부서명</span>
-          <span className="info-value">{corpInfo.corpMemDept || "부서 없음"}</span>
+          <span className="info-value">{company.corpMemDept || "부서 없음"}</span>
         </div>
       </div>
     </div>
