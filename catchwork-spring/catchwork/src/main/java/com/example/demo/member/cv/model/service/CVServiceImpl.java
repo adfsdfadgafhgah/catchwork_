@@ -1,7 +1,10 @@
 package com.example.demo.member.cv.model.service;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,12 +25,11 @@ import com.example.demo.member.cv.model.dto.CVQualify;
 import com.example.demo.member.cv.model.dto.CVTraining;
 import com.example.demo.member.cv.model.mapper.CVMapper;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-@Transactional(rollbackFor = Exception.class)
+@Transactional(value = "myBatisTransactionManager", rollbackFor = Exception.class)
 public class CVServiceImpl implements CVService {
 
 	@Autowired
@@ -37,6 +39,8 @@ public class CVServiceImpl implements CVService {
 	@Value("${file.upload.cv-pdf-path}")
 	private String uploadDir;
 
+	@Value("${file.upload.cv-img-path}")
+	private String uploadPath;
 
 	// 이력서 pdf 업로드
 	@Override
@@ -270,5 +274,44 @@ public class CVServiceImpl implements CVService {
 
 		// 부모 테이블 CV 삭제
 		mapper.deleteCV(cvNo);
+	}
+
+
+	// 이미지 처리(스케줄러)
+	@Override
+	public int deleteUnusedImage() {
+						// 파일시스템의 이미지 목록 조회
+						File dir = new File(uploadPath);
+						File[] files = dir.listFiles((d, name) -> name.endsWith(".jpg") || name.endsWith(".png"));
+		
+						if (files == null) return 0;
+		
+						List<String> fileSystemImageList = Arrays.stream(files)
+								.map(File::getName)
+								.collect(Collectors.toList());
+		
+		
+						// DB에서 사용 중인 이미지 목록 조회
+						List<String> usedImageList = mapper.selectUsedImage();
+		
+						// 비교하여 사용되지 않는 이미지 식별
+						List<String> unusedImageList = new ArrayList<>();
+						for (String image : fileSystemImageList) {
+								if (!usedImageList.contains(image)) {
+										unusedImageList.add(image);
+								}
+						}
+		
+						// 파일 시스템에서 해당 이미지 삭제
+						int deleteCount = 0;
+						for (String image : unusedImageList) {
+								File file = new File(uploadPath, image);
+								if (file.exists()) {
+										file.delete();
+										deleteCount++;
+								}
+						}
+		
+						return deleteCount;
 	}
 }

@@ -50,6 +50,7 @@
 		FROM CORP_INFO ci
 		<where>
 			1=1
+			 AND ci.CORP_STATUS = 0
 			<if test="query != null and query != ''">
 				AND LOWER(ci.CORP_NAME) LIKE '%' || LOWER(#{query}) || '%'
 			</if>
@@ -99,6 +100,7 @@
 		#{memNo} AS MEM_NO
 		FROM CORP_INFO ci
 		WHERE ci.CORP_NO = #{corpNo}
+		 AND ci.CORP_STATUS = 0
 	</select>
 
 

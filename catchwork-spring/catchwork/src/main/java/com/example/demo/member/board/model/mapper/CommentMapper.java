@@ -36,4 +36,10 @@ public interface CommentMapper {
 	 */
 	void deleteComment(int commentNo);
 
+	/** 댓글 삭제(스케줄러)
+	 * @author JAEHO
+	 * @param deleteTargetPeriod
+	 * @return
+	 */
+	int removeTargetComment(int deleteTargetPeriod);
 }

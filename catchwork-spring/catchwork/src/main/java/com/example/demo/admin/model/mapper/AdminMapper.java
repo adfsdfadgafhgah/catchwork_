@@ -61,24 +61,24 @@ public interface AdminMapper {
 	 */
 	Map<String, Object> selectRecentReportCount();
 	
-    /** 최근 미처리 문의 개수 조회
-     * 
-     * @return
-     * @author 민장
-     */
-    Map<String, Object> selectRecentSupportCount();
-    
-    /** 최근 7일 문의수 통계
-     * @return
-     * @author 민장
-     */
-    List<Map<String, Object>> selectRecentReportChart();
-    
-    /** 최근 7일 신고수 통계
-     * @return
-     * @author 민장
-     */
-    List<Map<String, Object>> selectRecentSupportChart();
+  /** 최근 미처리 문의 개수 조회
+   * 
+   * @return
+   * @author 민장
+   */
+  Map<String, Object> selectRecentSupportCount();
+
+  /** 최근 7일 문의수 통계
+   * @return
+   * @author 민장
+   */
+  List<Map<String, Object>> selectRecentReportChart();
+
+  /** 최근 7일 신고수 통계
+   * @return
+   * @author 민장
+   */
+  List<Map<String, Object>> selectRecentSupportChart();
 	
 	/** 신고 목록 조회
 	 * @author BAEBAE

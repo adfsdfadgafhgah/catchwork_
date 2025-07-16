@@ -4,7 +4,6 @@ import MemberRecruitList from "../../components/recruit/MemberRecruitList";
 import styles from "../corpMajor/CorpRecruitListPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import useLoginMember from "../../stores/loginMember";
 import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -91,6 +90,14 @@ export default function MemberRecruitListPage() {
       setConfirmedSearchTerm(searchTerm.trim());
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="loading">
+        <i className="fa-solid fa-spinner fa-spin"></i> Loading...
+      </div>
+    );
+  }
 
   return (
     <div className={styles.recruitListPage}>

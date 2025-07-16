@@ -1,11 +1,17 @@
 package com.example.demo.auth.model.service;
 
+import java.io.File;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import jakarta.mail.internet.MimeMessage;
@@ -43,7 +49,9 @@ public class MemberServiceImpl implements MemberService {
 	private final BCryptPasswordEncoder bcrypt;
 	private final JavaMailSender emailSender;
 
-	
+	@Value("${file.upload.profile-img-path}")
+	private String uploadPath;
+
 //	@Autowired
 //	private EntityManager entityManager;
 	
@@ -192,7 +200,6 @@ public class MemberServiceImpl implements MemberService {
 		return entity;
 	}
 
-
 	/**
 	 * 로그인 회원의 정보 조회
 	 *
@@ -200,12 +207,6 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Member getLoginMember(String memNo) {
 		return mapper.getLoginMember(memNo);
-	}
-
-	@Override
-	public Member getCorpLoginMember(String memNo) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	/** 아이디 찾기
@@ -277,7 +278,9 @@ public class MemberServiceImpl implements MemberService {
 			if (corpInfoEntity == null) return false;
 
 			// 기업 등록번호 비교
-			if (corpInfoEntity.getCorpRegNo().equals(corpRegNo)) return true;
+			if (corpInfoEntity.getCorpRegNo().equals(corpRegNo)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -570,4 +573,51 @@ public class MemberServiceImpl implements MemberService {
          + "</body>"
          + "</html>";
 	}
+
+	// 탈퇴 회원 처리(스케줄러)
+	@Override
+	@Transactional(value = "myBatisTransactionManager", rollbackFor = Exception.class)
+	public int withdrawMember(int deleteTargetPeriod) {
+		return mapper.withdrawMember(deleteTargetPeriod);
+	}
+
+	// 이미지 처리(스케줄러)
+	@Override
+	@Transactional(value = "myBatisTransactionManager", rollbackFor = Exception.class)
+	public int deleteUnusedImage() {
+						// 파일시스템의 이미지 목록 조회
+						File dir = new File(uploadPath);
+						File[] files = dir.listFiles((d, name) -> name.endsWith(".jpg") || name.endsWith(".png"));
+		
+						if (files == null) return 0;
+		
+						List<String> fileSystemImageList = Arrays.stream(files)
+								.map(File::getName)
+								.collect(Collectors.toList());
+		
+		
+						// DB에서 사용 중인 이미지 목록 조회
+						List<String> usedImageList = mapper.selectUsedImage();
+		
+						// 비교하여 사용되지 않는 이미지 식별
+						List<String> unusedImageList = new ArrayList<>();
+						for (String image : fileSystemImageList) {
+								if (!usedImageList.contains(image)) {
+										unusedImageList.add(image);
+								}
+						}
+		
+						// 파일 시스템에서 해당 이미지 삭제
+						int deleteCount = 0;
+						for (String image : unusedImageList) {
+								File file = new File(uploadPath, image);
+								if (file.exists()) {
+										file.delete();
+										deleteCount++;
+								}
+						}
+		
+						return deleteCount;
+	}
+
 }

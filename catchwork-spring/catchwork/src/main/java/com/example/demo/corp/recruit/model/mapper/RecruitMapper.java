@@ -89,5 +89,10 @@ public interface RecruitMapper {
 	 */
 	void autoCloseRecruit();
 
-
+	/** 채용공고 삭제(스케줄러)
+	 * @author JAEHO
+	 * @param deleteTargetPeriod
+	 * @return
+	 */
+	int removeTargetRecruit(int deleteTargetPeriod);
 }

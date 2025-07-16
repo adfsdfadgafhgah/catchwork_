@@ -15,9 +15,6 @@ public interface MemberService {
     // 로그인 회원의 정보 조회
     Member getLoginMember(String memNo);
 
-    // 기업 로그인 회원의 정보 조회
-    Member getCorpLoginMember(String memNo);
-
     // 아이디 찾기
     String findId(String memName, String memEmail, String corpRegNo, int memType);
 
@@ -32,4 +29,10 @@ public interface MemberService {
 
     // 임시 비밀번호 발송
     boolean sendTempPw(String memEmail, String memId, String memName);
+
+    // 탈퇴 회원 처리(스케줄러)
+    int withdrawMember(int deleteTargetPeriod);
+
+    // 이미지 처리(스케줄러)
+    int deleteUnusedImage();
 }

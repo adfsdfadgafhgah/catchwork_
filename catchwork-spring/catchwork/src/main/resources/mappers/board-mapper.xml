@@ -195,4 +195,42 @@
     SET BOARD_READ_COUNT = BOARD_READ_COUNT + 1
     WHERE BOARD_NO = #{boardNo}
   </update>
+
+	<!-- 사용중인 이미지 조회(스케줄러) -->
+	<select id="selectUsedImage">
+		SELECT BOARD_THUMBNAIL_URL
+		FROM BOARD
+		WHERE BOARD_THUMBNAIL_URL IS NOT NULL
+	</select>
+
+	<!-- 삭제 대상 게시글 조회(스케줄러) -->
+	<select id="selectTargetBoardNo">
+		SELECT BOARD_NO
+		FROM BOARD
+		WHERE BOARD_STATUS = 1
+		AND BOARD_STATUS_DATE &lt; SYSDATE - #{deleteTargetPeriod} DAY
+	</select>
+
+	<!-- 삭제 대상 댓글 조회(스케줄러) -->
+	<select id="selectTargetCommentNo">
+		SELECT COMMENT_NO
+		FROM "COMMENT"
+		WHERE BOARD_NO IN
+		<foreach collection="targetBoardNoList" item="boardNo" open="(" separator="," close=")">
+			#{boardNo}
+		</foreach>
+	</select>
+
+	<!-- 댓글 삭제(스케줄러) -->
+	<delete id="deleteComment">
+		DELETE FROM "COMMENT"
+		WHERE COMMENT_NO = #{commentNo}
+	</delete>
+
+	<!-- 게시글 삭제(스케줄러) -->
+	<delete id="removeTargetBoard">
+		DELETE FROM BOARD
+		WHERE BOARD_NO = #{boardNo}
+	</delete>
+	
 </mapper>
