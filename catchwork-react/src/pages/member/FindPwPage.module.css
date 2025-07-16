@@ -10,7 +10,7 @@
 .findWrapper {
   background: white;
   border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--box-shadow);
   padding: 40px;
   width: 100%;
   max-width: 600px;
@@ -57,7 +57,7 @@
 .input:focus {
   border-color: var(--main-color);
   background: white;
-  box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.1);
+  box-shadow: var(--box-shadow);
 }
 
 .input:disabled {
@@ -66,7 +66,7 @@
 }
 
 .input::placeholder {
-  color: #999;
+  color: var(--gray01);
 }
 
 .authContainer {
@@ -87,7 +87,7 @@
 }
 
 .infoMessage {
-  color: #666;
+  color: var(--deep-gray);
 }
 
 .successMessage {
@@ -106,7 +106,7 @@
 .authButton {
   padding: 8px 16px;
   background: var(--main-color);
-  color: white;
+  color: var(--white);
   border: none;
   border-radius: 6px;
   font-size: 12px;
@@ -123,7 +123,7 @@
 }
 
 .authButton.disabled {
-  background: #ccc;
+  background: var(--img-color);
   cursor: not-allowed;
   transform: none;
 }
@@ -131,7 +131,7 @@
 .submitButton {
   padding: 18px;
   background: var(--main-color);
-  color: white;
+  color: var(--white);
   border: none;
   border-radius: 8px;
   font-size: 16px;
@@ -144,11 +144,11 @@
 .submitButton:hover:not(.disabled) {
   background: var(--main-color-dark);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(70, 181, 171, 0.3);
+  box-shadow: var(--box-shadow);
 }
 
 .submitButton.disabled {
-  background: #ccc;
+  background: var(--img-color);
   cursor: not-allowed;
   transform: none;
   box-shadow: none;

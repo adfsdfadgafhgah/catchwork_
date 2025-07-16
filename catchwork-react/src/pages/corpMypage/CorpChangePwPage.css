@@ -10,7 +10,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
-  background-color: white;
+  background-color: var(--white);
 }
 
 /* 메인 내용 컨테이너 */
@@ -46,7 +46,7 @@
 .form-label {
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: var(--deep-gray);
   margin-bottom: 8px;
   display: block;
 }
@@ -56,7 +56,7 @@
   padding: 8px 0;
   font-size: 14px;
   border: none;
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--img-color);
   outline: none;
 }
 
@@ -94,7 +94,7 @@
   padding: 8px 20px;
   font-size: 14px;
   color: #374151;
-  border: 1px solid #ccc;
+  border: 1px solid var(--img-color);
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.3s ease;

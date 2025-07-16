@@ -88,7 +88,7 @@
 
 .edit-change-pw-form button:hover:not(:disabled) {
   background: #f8f9fa;
-  border-color: #999;
+  border-color: var(--gray01);
   transform: none;
   box-shadow: none;
 }
@@ -101,7 +101,7 @@
 
 .edit-change-pw-form button:disabled {
   background: #f8f9fa;
-  color: #ccc;
+  color: var(--img-color);
   border-color: #eee;
   cursor: not-allowed;
   box-shadow: none;

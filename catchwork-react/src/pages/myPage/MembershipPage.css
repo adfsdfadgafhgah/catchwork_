@@ -70,14 +70,14 @@
 .membership-item .price-unit {
   font-size: 14px;
   font-weight: 400;
-  color: #666;
+  color: var(--deep-gray);
   margin-left: 4px;
 }
 
 /* 플랜 설명 */
 .membership-item .description {
   font-size: 14px;
-  color: #666;
+  color: var(--deep-gray);
   margin: 0 0 20px 0;
   font-weight: 500;
 }
@@ -122,7 +122,7 @@
 /* Free 플랜 버튼 */
 .membership-item:nth-child(1) button {
   background-color: var(--main-color);
-  color: white;
+  color: var(--white);
 }
 
 .membership-item:nth-child(1) button:hover {
@@ -134,7 +134,7 @@
   /* background-color: #e91e63;
   color: white; */
   background-color: var(--main-color);
-  color: white;
+  color: var(--white);
 }
 
 .membership-item:nth-child(2) button:hover {
@@ -147,7 +147,7 @@
   /* background-color: #ff9800;
   color: white; */
   background-color: var(--main-color);
-  color: white;
+  color: var(--white);
 }
 
 .membership-item:nth-child(3) button:hover {
@@ -174,9 +174,9 @@
   margin: 20px auto 0;
   padding: 10px 24px;
   background-color: transparent;
-  border: 2px solid #ccc;
+  border: 2px solid var(--white);
   border-radius: 6px;
-  color: #666;
+  color: var(--deep-gray);
   font-size: 14px;
   font-weight: 500;
   cursor: pointer;
@@ -184,8 +184,8 @@
 }
 
 .membership-container > button:hover {
-  border-color: #999;
-  color: #333;
+  border-color: var(--gray01);
+  color: var(--deep-gray);
   background-color: #f5f5f5;
 }
 
@@ -213,7 +213,7 @@ input:disabled,
   opacity: 0.8;
   cursor: not-allowed;
   background-color: #e0e0e0; /* 회색 배경 */
-  color: #999; /* 비활성 텍스트 색상 */
+  color: var(--gray01); /* 비활성 텍스트 색상 */
   border: none;
 }
 
@@ -221,7 +221,7 @@ input:disabled,
 button:disabled:hover,
 .membership-item button:disabled:hover {
   background-color: #e0e0e0; /* 그대로 유지 */
-  color: #999;
+  color: var(--gray01);
   box-shadow: none;
   transform: none;
 }

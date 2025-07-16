@@ -23,7 +23,7 @@
 }
 
 .commentWrapper:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--box-shadow);
   border-color: var(--main-color);
 }
 

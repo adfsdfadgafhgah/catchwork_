@@ -7,7 +7,7 @@
 .corp-edit-content {
   flex: 1;
   padding: 80px;
-  background-color: #fff;
+  background-color: var(--white);
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -23,7 +23,7 @@
 .page-title {
   font-size: 22px;
   margin-bottom: 30px;
-  color: #333;
+  color: var(--deep-gray);
   font-weight: 600;
   border-bottom: 1px solid var(--img-color);
   padding-bottom: 16px;
@@ -88,7 +88,7 @@
   width: 100%;
   padding: 10px;
   border: none;
-  border-bottom: 2px solid #ccc;
+  border-bottom: 2px solid var(--img-color);
   font-size: 16px;
   outline: none;
 }
@@ -98,7 +98,7 @@
 }
 
 .error-message {
-  color: red;
+  color: var(--red);
   font-size: 14px;
   margin-top: 6px;
 }
@@ -106,8 +106,8 @@
 .submit-btn {
   padding: 12px 24px;
   font-size: 16px;
-  background-color: white;
-  border: 1px solid #999;
+  background-color: var(--white);
+  border: 1px solid var(--gray01);
   border-radius: 4px;
   cursor: pointer;
   margin-top: 20px;

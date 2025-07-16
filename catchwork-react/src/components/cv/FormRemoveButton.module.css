@@ -15,5 +15,5 @@
 }
 
 .removeIcon {
-    color: white;
+    color: var(--white);
 }

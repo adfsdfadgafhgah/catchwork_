@@ -1,7 +1,7 @@
 /* 사이드바 */
 .corpsidebar {
   width: 16rem;
-  background-color: white;
+  background-color: var(--white);
   border-right: 1px solid #e5e7eb;
   min-height: 100%;
 
@@ -45,7 +45,7 @@
 
 .nav-item.active {
   background-color: var(--main-color);
-  color: white;
+  color: var(--white);
   border: none;
   border-radius: 4px;
 }
@@ -90,5 +90,5 @@
 
 .sub-nav-item.active {
   background-color: var(--main-color);
-  color: white;
+  color: var(--white);
 }

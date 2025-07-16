@@ -26,7 +26,7 @@
   margin-top: 20px;
   padding: 8px 20px;
   background-color: var(--main-color);
-  color: white;
+  color: var(--white);
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -51,7 +51,7 @@
 
 .tab-buttons .active {
   background-color: var(--main-color);
-  color: white;
+  color: var(--white);
   font-weight: bold;
 }
 
@@ -80,7 +80,7 @@
 }
 
 .input-group input::placeholder {
-  color: #999;
+  color: var(--gray01);
 }
 
 .remember-me {
@@ -94,7 +94,7 @@
   width: 100%;
   padding: 12px;
   background-color: var(--main-color);
-  color: white;
+  color: var(--white);
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -219,12 +219,12 @@
   cursor: pointer;
   transition: all 0.3s ease;
   background: transparent;
-  color: #666;
+  color: var(--deep-gray);
 }
 
 .tabButton.active {
   background: var(--main-color);
-  color: white;
+  color: var(--white);
   box-shadow: 0 2px 4px rgba(70, 181, 171, 0.3);
 }
 
@@ -268,13 +268,13 @@
 }
 
 .inputField::placeholder {
-  color: #999;
+  color: var(--gray01);
 }
 
 .signinButton {
   padding: 16px 24px;
   background: var(--main-color);
-  color: white;
+  color: var(--white);
   border: none;
   border-radius: 12px;
   font-size: 16px;

@@ -5,7 +5,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color:var(--box-shadow);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -17,7 +17,7 @@
 .modal-content {
   background: white;
   border-radius: 12px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--box-shadow);
   max-width: 420px;
   width: 90%;
   max-height: 90vh;
@@ -132,7 +132,7 @@
 
 .modal-btn-confirm {
   background: #3b82f6;
-  color: white;
+  color: var(--white);
   border-color: #3b82f6;
 }
 

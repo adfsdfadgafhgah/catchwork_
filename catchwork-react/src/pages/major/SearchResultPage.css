@@ -11,7 +11,7 @@
   width: 1000px;
   max-width: 1200px;
   margin: 0 auto;
-  border: 1px solid #ccc;
+  border: 1px solid var(--img-color);
   margin-top: 20px;
   margin-bottom: 20px;
 }
@@ -21,7 +21,7 @@
   flex: 1;
   padding: 10px 0;
   text-decoration: none;
-  color: #333;
+  color: var(--deep-gray);
   background-color: #f3f3f3;
   font-weight: bold;
   transition: all 0.3s;
@@ -29,7 +29,7 @@
 
 .search-tabs a.active {
   background-color: #32b9b0;
-  color: white;
+  color: var(--white);
   flex: 7;
 }
 
@@ -64,9 +64,9 @@ h2 {
 .select-controls {
   padding: 8px 12px;
   font-size: 14px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--img-color);
   border-radius: 6px;
-  background-color: #fff;
+  background-color: var(--white);
   min-width: 120px;
   height: 38px;
 }
