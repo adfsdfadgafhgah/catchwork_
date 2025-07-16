@@ -118,7 +118,7 @@ const CompanyListPage = () => {
             hasMore={hasMore}
             loader={<h4 style={{ textAlign: "center" }}>로딩 중...</h4>}
             endMessage={
-              <p style={{ textAlign: "center" }}>
+              <p className="company-end-message">
                 {companyList.length === 0
                   ? "기업 정보가 없습니다."
                   : "더 이상 기업 정보가 없습니다."}
