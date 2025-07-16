@@ -16,7 +16,7 @@
 }
 
 .logoArea {
-  background-color: var(--sub-color);
+  background-color: var(--white); /*기업 로고 배경*/
   display: flex;
   justify-content: center;
   align-items: center;
@@ -25,11 +25,13 @@
   text-align: center;
   width: 300px;
   height: 100px;
+  margin-top: 8px;
+  /*border-bottom: 1px solid #ddd;*/ /*구분선*/
 }
 
 .corpLogo {
-  width: 100%;
-  height: 100%;
+  width: 100px;
+  height: 100px;
   object-fit: cover;
 }
 

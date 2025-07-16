@@ -27,10 +27,11 @@
   font-size: 14px;
   box-shadow: var(--box-shadow);
 }
+
 .company-logo {
   width: 200px;
   height: 200px;
   object-fit: contain;
-  border: 1px solid #ddd;
-  background-color: #f9f9f9;
+  /*border-bottom: 1px solid #ddd; 구분선*/
+  background-color: var(--white); /*기업 로고 배경*/
 }
