@@ -22,15 +22,12 @@ import com.example.demo.auth.model.service.TransactionService;
 import com.example.demo.auth.token.entity.RefreshTokenEntity;
 import com.example.demo.auth.token.repository.RefreshTokenRepository;
 import com.example.demo.common.util.JWTUtil;
-import com.example.demo.member.board.controller.BoardController;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @RestController
 public class MemberController {
-
-    private final BoardController boardController;
 
     private final JWTUtil jwtUtil;
     private final RefreshTokenRepository refreshTokenRepository;
@@ -41,12 +38,11 @@ public class MemberController {
 			MemberService service, 
 			JWTUtil jwtUtil, 
 			RefreshTokenRepository refreshTokenRepository,
-			TransactionService transactionService, BoardController boardController) {	
+			TransactionService transactionService) {	
 		this.service = service;	
 		this.jwtUtil = jwtUtil;
 		this.refreshTokenRepository = refreshTokenRepository;
 		this.transactionService = transactionService;
-		this.boardController = boardController;
 	}
 	
 	/**
@@ -62,7 +58,7 @@ public class MemberController {
 		System.out.println("signup controller");
 	    try {
 	        Object result = service.signup(inputMember);
-	        System.out.println(result);
+//	        System.out.println(result);
 	        // String 반환 시 에러 처리
 	        if (result instanceof String) {
 	            String errorCode = (String) result;

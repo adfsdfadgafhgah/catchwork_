@@ -4,14 +4,19 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.admin.model.dto.Admin;
 import com.example.demo.admin.model.dto.ReportList;
 import com.example.demo.admin.model.dto.SupportList;
+import com.example.demo.admin.model.entity.AdminEntity;
 import com.example.demo.admin.model.mapper.AdminMapper;
+import com.example.demo.admin.model.repository.AdminRepository;
 import com.example.demo.support.model.dto.Support;
 
 @Service
@@ -20,8 +25,56 @@ public class AdminServiceImpl implements AdminService {
 
 	@Autowired
 	private AdminMapper adminMapper;
+	
+	@Autowired
+	private AdminRepository adminRepo;
 
-	/** 전체 문의 목록 조회 (관리자용)
+	@Autowired
+	private BCryptPasswordEncoder bcrypt;
+	
+	@Override
+	public AdminEntity auth(Admin inputAdmin) {
+	    String adminID = inputAdmin.getAdminId();
+	    String adminPW = inputAdmin.getAdminPw();
+
+	    AdminEntity admin = adminRepo.findByAdminId(adminID)
+	        .orElseThrow(() -> new IllegalArgumentException("WRONG ID/PW"));
+
+	    if (!bcrypt.matches(adminPW, admin.getAdminPw())) {
+	        throw new IllegalArgumentException("WRONG ID/PW");
+	    }
+
+	    return admin;
+	}
+
+
+	@Override
+	public Object register(Admin inputAdmin) {
+		if(adminRepo.existsByAdminEmail(inputAdmin.getAdminEmail())) {
+			return null;
+		}
+		AdminEntity adminEntity = new AdminEntity();
+		String rawId = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
+		String rawPw = UUID.randomUUID().toString().replaceAll("-", "").substring(0, 10);
+//		adminEntity.setAdminNO();
+		adminEntity.setAdminId(rawId);
+		adminEntity.setAdminPw(bcrypt.encode(rawPw));
+		adminEntity.setAdminNickname(inputAdmin.getAdminNickname());
+		adminEntity.setAdminName(inputAdmin.getAdminName());
+		adminEntity.setAdminEmail(inputAdmin.getAdminEmail());
+		adminEntity.setAdminTel(inputAdmin.getAdminTel());
+		adminRepo.save(adminEntity);
+		
+	    Map<String, String> result = new HashMap<>();
+	    result.put("id", rawId);
+	    result.put("password", rawPw);
+	    
+		return result;
+	}
+
+	/**
+	 * 전체 문의 목록 조회 (관리자용)
+	 * 
 	 * @author BAEBAE
 	 */
 	@Override
@@ -29,7 +82,9 @@ public class AdminServiceImpl implements AdminService {
 		return adminMapper.getAllSupportList(params);
 	}
 
-	/** 특정 문의 상세 조회 (관리자용)
+	/**
+	 * 특정 문의 상세 조회 (관리자용)
+	 * 
 	 * @author BAEBAE
 	 */
 	@Override
@@ -37,7 +92,9 @@ public class AdminServiceImpl implements AdminService {
 		return adminMapper.getSupportDetail(supportNo);
 	}
 
-	/** 문의 답변 등록 (관리자용)
+	/**
+	 * 문의 답변 등록 (관리자용)
+	 * 
 	 * @author BAEBAE
 	 */
 	@Override
@@ -51,8 +108,9 @@ public class AdminServiceImpl implements AdminService {
 
 	}
 
-
-	/** 최근 미처리 신고 목록 조회
+	/**
+	 * 최근 미처리 신고 목록 조회
+	 * 
 	 * @author 민장
 	 */
 	@Override
@@ -63,48 +121,57 @@ public class AdminServiceImpl implements AdminService {
 		return adminMapper.selectRecentReportList(param);
 	}
 
-	/** 최근 미처리 문의 목록 조회
+	/**
+	 * 최근 미처리 문의 목록 조회
+	 * 
 	 * @author 민장
 	 */
-    @Override
-    public List<SupportList> selectRecentSupportList(int startRow, int endRow) {
-        Map<String, Object> param = new HashMap<>();
-        param.put("startRow", startRow);
-        param.put("endRow", endRow);
-        return adminMapper.selectRecentSupportList(param);
-    }
-	
-	/** 최근 미처리 신고 개수 조회
+	@Override
+	public List<SupportList> selectRecentSupportList(int startRow, int endRow) {
+		Map<String, Object> param = new HashMap<>();
+		param.put("startRow", startRow);
+		param.put("endRow", endRow);
+		return adminMapper.selectRecentSupportList(param);
+	}
+
+	/**
+	 * 최근 미처리 신고 개수 조회
+	 * 
 	 * @author 민장
 	 */
 	@Override
 	public Map<String, Object> selectRecentReportCount() {
 		return adminMapper.selectRecentReportCount();
 	}
-  
-	/** 최근 미처리 문의 개수 조회
+
+	/**
+	 * 최근 미처리 문의 개수 조회
+	 * 
 	 * @author 민장
 	 */
 	@Override
-    public Map<String, Object> selectRecentSupportCount() {
-        return adminMapper.selectRecentSupportCount();
-    }
-	
-	/** 최근 7일 신고수 통계
+	public Map<String, Object> selectRecentSupportCount() {
+		return adminMapper.selectRecentSupportCount();
+	}
+
+	/**
+	 * 최근 7일 신고수 통계
+	 * 
 	 * @author 민장
 	 */
 	@Override
 	public List<Map<String, Object>> selectRecentReportChart() {
 		return adminMapper.selectRecentReportChart();
 	}
-	
-    /** 최근 7일 문의수 통계
-     * @author 민장
-     */
-    @Override
-    public List<Map<String, Object>> selectRecentSupportChart() {
-        return adminMapper.selectRecentSupportChart();
-    }
 
-	
+	/**
+	 * 최근 7일 문의수 통계
+	 * 
+	 * @author 민장
+	 */
+	@Override
+	public List<Map<String, Object>> selectRecentSupportChart() {
+		return adminMapper.selectRecentSupportChart();
+	}
+
 }
