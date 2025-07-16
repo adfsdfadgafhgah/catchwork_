@@ -1,6 +1,5 @@
 package com.example.demo.admin.controller;
 
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +8,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.admin.model.dto.AdminReport;
+import com.example.demo.admin.model.dto.ReportDetailResponse;
 import com.example.demo.admin.model.dto.ReportSearchCriteria;
 import com.example.demo.admin.model.dto.ReportSummary;
 import com.example.demo.admin.model.service.AdminReportService;
@@ -73,8 +73,8 @@ public class AdminReportController {
         }
     }
     
-    /**
-     * 그룹화된 신고 목록 조회 API
+    /** 그룹화된 신고 목록 조회
+     * @author BAEBAE
      * @param criteria 검색 조건 (query string으로 받음)
      * @return JSON 형태의 목록 데이터
      */
@@ -84,21 +84,45 @@ public class AdminReportController {
         return ResponseEntity.ok(result);
     }
     
-//    /**
-//     * 신고 상세 정보 조회
-//     * @param targetType 신고 대상 타입
-//     * @param targetId 신고 대상 ID
-//     * @return JSON 형태의 상세 데이터
-//     */
-//    @GetMapping("/report/target/{targetType}/{targetId}")
-//    public ResponseEntity<AdminReportDetail> getReportDetails(
-//            @PathVariable("targetType") String targetType,
-//            @PathVariable("targetId") String targetId) {
-//        AdminReportDetail details = adminReportService.getReportDetailsByTarget(targetType, targetId);
-//        if (details == null) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        return ResponseEntity.ok(details);
-//    }
+    
+    /** 신고 상세 정보 조회
+     * @author BAEBAE
+     * @param targetType
+     * @param targetNo
+     * @return
+     */
+    @GetMapping("/report/target/{targetType}/{targetNo}")
+    public ResponseEntity<ReportDetailResponse> getReportDetails(
+    		@PathVariable("targetType") String targetType,
+            @PathVariable("targetNo") String targetNo) {
+        ReportDetailResponse details = adminReportService.getReportDetailsByTarget(targetType, targetNo);
+        if (details == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(details);
+    }
+    
+    /** 제재 처리
+     * @author BAEBAE
+     * @param payload
+     * @return
+     */
+    @PostMapping("/sanction")
+    public ResponseEntity<String> sanctionTarget(@RequestBody Map<String, Object> payload) {
+        try {
+            adminReportService.processSanction(payload);
+            return ResponseEntity.ok("정상적으로 제재 처리되었습니다.");
+            
+            // IllegalStateException을 별도로 잡아서 처리
+        } catch (IllegalStateException e) {
+            // [요청사항] 서비스에서 발생시킨 "이미 정지된..." 메시지를 클라이언트에게 전달
+            log.warn("이미 처리된 제재 요청: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+            
+        } catch (Exception e) {
+            log.error("제재 처리 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("제재 처리 중 오류가 발생했습니다.");
+        }
+    }
 
 }
