@@ -45,7 +45,7 @@
 .searchBox {
   display: flex;
   align-items: center;
-  border: 1px solid #46b5ab;
+  border: 1px solid var(--main-color);
   border-radius: 999px;
   padding: 4px 10px;
 }
@@ -62,7 +62,7 @@
   border: none;
   font-size: 16px;
   cursor: pointer;
-  color: #46b5ab;
+  color: var(--main-color);
   padding-left: 4px;
 }
 

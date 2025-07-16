@@ -32,6 +32,6 @@
   width: 200px;
   height: 200px;
   object-fit: contain;
-  /*border-bottom: 1px solid #ddd; 구분선*/
+  /*border-bottom: 1px solid var(--img-color); 구분선*/
   background-color: var(--white); /*기업 로고 배경*/
 }
