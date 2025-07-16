@@ -108,7 +108,7 @@ const CVBasic = ({
             <span className={styles.infoText}>
               {memberInfo.memGender === "M"
                 ? "남성"
-                : memberInfo.memGender === "W"
+                : memberInfo.memGender === "F"
                 ? "여성"
                 : ""}
             </span>

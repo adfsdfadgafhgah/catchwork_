@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { axiosApi } from './../../api/axiosAPI';
+import { axiosApi } from "../../api/axiosAPI";
 
 /**
  * 미처리 신고 내역 무한스크롤 Hook

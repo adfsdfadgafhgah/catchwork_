@@ -164,23 +164,22 @@
 		░██       ░██ ░██   ░██  ░██░██    ░██ 
 		░██       ░██  ░████████ ░██░██    ░██
 	-->
-	<!-- 미처리 문의 신고 조회 (무한스크롤) -->
+	<!-- 미처리 신고 목록 조회 (무한스크롤) -->
     <select id="selectRecentReportList">
 		SELECT *
 		FROM (
-		SELECT
-		REPORT_TARGET_NO,
-		REPORT_TARGET_TYPE,
-		MAX(REPORT_CONTENT) AS REPORT_CONTENT,
-		COUNT(*) AS REPORT_COUNT,
-		ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS RNUM
-		FROM
-		REPORT
-		WHERE
-		REPORT_STATUS = 'N'
-		GROUP BY
-		REPORT_TARGET_NO,
-		REPORT_TARGET_TYPE
+			SELECT
+				REPORT_TARGET_NO,
+				REPORT_TARGET_TYPE,
+				COUNT(*) AS REPORT_COUNT,
+				ROW_NUMBER() OVER (ORDER BY COUNT(*) DESC) AS RNUM
+			FROM
+				REPORT
+			WHERE
+				REPORT_STATUS = 'N'
+			GROUP BY
+				REPORT_TARGET_NO,
+				REPORT_TARGET_TYPE
 		)
 		WHERE RNUM BETWEEN #{startRow} AND #{endRow}
 	</select>

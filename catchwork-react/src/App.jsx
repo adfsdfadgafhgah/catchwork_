@@ -110,6 +110,7 @@ import AdminSupportDetailPage from "./pages/admin/AdminSupportDetailPage"; // �
 import AdminReportPage from "./pages/admin/AdminReportPage"; // 신고 리스트
 import AdminReportDetailPage from "./pages/admin/AdminReportDetailPage"; // 신고 상세
 import AdminBanPage from "./pages/admin/AdminBanPage"; // 정지 리스트
+import AdminBanDetailPage from "./pages/admin/AdminBanDetailPage"; // 정지 상세
 import AdminRestorePage from "./pages/admin/AdminRestorePage"; // 복구 리스트
 import AdminAuthPage from "./pages/admin/AdminAuthPage"; // 복구 리스트
 import AdminRegisterPage from "./pages/admin/AdminRegisterPage"; // 복구 리스트
@@ -365,7 +366,7 @@ const router = createBrowserRouter([
         path: "ban",
         children: [
           { index: true, element: <AdminBanPage /> },
-          // { path: ":id", element: <AdminBanDetailPage /> },
+          { path: ":banNo", element: <AdminBanDetailPage /> },
         ],
       },
       {

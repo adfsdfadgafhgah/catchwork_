@@ -77,12 +77,7 @@ const AdminRecentReport = () => {
                 {item.reportTargetNo}
               </p>
               <p>
-                <span className={styles.itemTitle}>대표 신고 내용 </span>:{" "}
-                {item.reportContent}
-              </p>
-              <p>
-                <span className={styles.itemTitle}>미처리 신고 건수 </span>:{" "}
-                {item.reportCount}
+                <span className={styles.itemTitle}>미처리 신고 건수 </span>: {item.reportCount}
               </p>
             </li>
           );

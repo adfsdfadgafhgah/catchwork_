@@ -57,7 +57,7 @@ public class AdminController {
 	public ResponseEntity<?> registrationAdmin(@RequestBody Admin inputAdmin) {
 		try {
 			Object res = adminService.register(inputAdmin);
-			return ResponseEntity.ok(Map.of("message", "Registraion Complete", res));
+			return ResponseEntity.ok(Map.of("message", "Registraion Complete", "res", res));
 		} catch (Exception e) {
 			e.printStackTrace();
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

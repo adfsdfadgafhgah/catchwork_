@@ -1,0 +1,41 @@
+.detailBox {
+  padding: 20px;
+  border: 1px solid var(--stroke-color1);
+  background-color: var(--white);
+  box-shadow: var(--box-shadow);
+}
+
+.detailBox h3 {
+  margin-bottom: 20px;
+  color: var(--deep-gray);
+}
+
+.detailBox dl {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  row-gap: 10px;
+  margin-bottom: 20px;
+}
+
+.detailBox dt {
+  font-weight: bold;
+  color: var(--text);
+}
+
+.detailBox dd {
+  margin: 0;
+  color: var(--deep-gray);
+}
+
+.detailBox button {
+  background-color: var(--main-color);
+  color: var(--white);
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.detailBox button:hover {
+  background-color: var(--main-color-dark);
+}
