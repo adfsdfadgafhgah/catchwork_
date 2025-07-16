@@ -9,7 +9,7 @@
   background-color: var(--white);
   color: var(--main-color);
   font-size: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--box-shadow);
   cursor: pointer;
   z-index: 999;
   transition: opacity 0.3s ease;

@@ -3,11 +3,12 @@ import { useOutletContext, useNavigate } from "react-router-dom";
 import "./CorpEditMyInfoPage.css";
 import { axiosApi } from "../../api/axiosAPI";
 import ConfirmPwModal from "../../components/myPage/ConfirmPwModal";
+import useLoginMember from "../../stores/loginMember";
 
 const CorpEditMyInfoPage = () => {
   const navigate = useNavigate();
-const { loginMember, corpInfo } = useOutletContext();
-  
+  const { loginMember, corpInfo, setCorpInfo } = useOutletContext();
+  const { setLoginMember } = useLoginMember();
 
   const [modalState, setModalState] = useState({
     isOpen: false,
@@ -22,21 +23,46 @@ const { loginMember, corpInfo } = useOutletContext();
     corpMemDept: "",
   });
 
-  useEffect(() => { 
+  useEffect(() => {
     setFormData({
       memEmail: loginMember?.memEmail || "",
       memTel: loginMember?.memTel || "",
       memName: loginMember?.memName || "",
       corpMemDept: corpInfo?.corpMemDept || "",
     });
-  }, [loginMember, corpInfo ]);
+  }, [loginMember, corpInfo]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+
+    if (name === "memTel") {
+      // 숫자만 남기고 하이픈 자동 추가
+      const onlyNums = value.replace(/\D/g, "");
+      let formattedTel = "";
+
+      if (onlyNums.length < 4) {
+        formattedTel = onlyNums;
+      } else if (onlyNums.length < 8) {
+        formattedTel = onlyNums.slice(0, 3) + "-" + onlyNums.slice(3);
+      } else {
+        formattedTel =
+          onlyNums.slice(0, 3) +
+          "-" +
+          onlyNums.slice(3, 7) +
+          "-" +
+          onlyNums.slice(7, 11);
+      }
+
+      setFormData((prev) => ({
+        ...prev,
+        [name]: formattedTel,
+      }));
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
@@ -92,6 +118,9 @@ const { loginMember, corpInfo } = useOutletContext();
     try {
       const resp = await axiosApi.post("/corp/updateMemberInfo", requestData);
       if (resp.status === 200) {
+        const newInfo = await axiosApi.get("/corp/mypage");
+        setCorpInfo(newInfo.data);
+        await setLoginMember();
         navigate("/corpmypage");
       }
     } catch (error) {
@@ -110,7 +139,7 @@ const { loginMember, corpInfo } = useOutletContext();
         <div className="info-card">
           <div className="info-content">
             <span className="info-label">기업명</span>
-           <span className="info-value">{corpInfo?.corpName || "기업명 없음"}</span>
+            <span className="info-value">{corpInfo?.corpName || "기업명 없음"}</span>
           </div>
 
           <div className="info-content">
@@ -138,6 +167,8 @@ const { loginMember, corpInfo } = useOutletContext();
                 value={formData.memTel}
                 onChange={handleInputChange}
                 required
+                placeholder="010-1234-5678"
+                maxLength={13} // 하이픈 포함 최대 길이
               />
             </div>
           </div>
@@ -168,7 +199,16 @@ const { loginMember, corpInfo } = useOutletContext();
         </div>
 
         <div className="submit-button-container">
-          <button type="submit" className="submit-button" disabled={!formData.memEmail || !formData.memTel || !formData.memName || !formData.corpMemDept}>
+          <button
+            type="submit"
+            className="submit-button"
+            disabled={
+              !formData.memEmail ||
+              !formData.memTel ||
+              !formData.memName ||
+              !formData.corpMemDept
+            }
+          >
             수정하기
           </button>
         </div>

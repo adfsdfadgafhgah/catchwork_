@@ -2,7 +2,8 @@
   padding: 40px 24px;
   max-width: 1080px; /* 너비는 1080px로 유지 */
   margin: 0 auto;
-  font-family: "Noto Sans KR", sans-serif;
+
+
   color: var(--text); /* 변수 사용 유지 */
 }
 
@@ -22,7 +23,9 @@
   font-size: 14px;
   font-weight: 500;
   color: #333;
-  background-color: #fff;
+
+  background-color: var(--input-color);
+
   border: 1.5px solid var(--img-color);
   border-radius: 6px;
   cursor: pointer;
@@ -30,8 +33,8 @@
 }
 
 .button-common:hover {
-  background-color: #f5f5f5;
-  border-color: #bbb;
+  background-color: var(--input-color);
+  border-color: var(--stroke-color2);
 }
 
 .support-table {
@@ -42,18 +45,20 @@
 
 .support-table th,
 .support-table td {
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid var(--stroke-color1s);
   padding: 12px;
   text-align: center;
 }
 
 .support-table th {
-  background-color: #f8f8f8;
+  background-color: var(--input-color);
   font-weight: 600;
 }
 
 .support-table .title {
-  color: var(--text, #333);
+
+  color: var(--text); 
+
   cursor: pointer;
   text-align: center;
   width: 40%; /* "제목" 열의 너비를 40%로 설정 (약 432px) */
@@ -66,12 +71,12 @@
 }
 
 .status-done {
-  color: var(--main-color, #46b5ab);
+  color: var(--main-color);
   font-weight: bold;
 }
 
 .status-pending {
-  color: #999;
+  color: var(--gray01);
 }
 
 .pagination {
@@ -90,12 +95,12 @@
 
 .pagination .page-number:hover,
 .pagination .arrow:hover {
-  color: var(--main-color, #46b5ab);
+  color: var(--main-color);
 }
 
 .title-underline {
   height: 2px;
-  background-color: var(--border, #ccc); /* 색상 변수 사용 */
+  background-color: var(--stroke-color2);
   width: 100%; /* support-header의 100%를 따름 */
   margin-left: auto;
   margin-right: auto;
@@ -103,6 +108,7 @@
 }
 
 .no-answer {
-  color: #999;
-  font-style: italic;
+
+  color: var(--gray01);
 }
+
