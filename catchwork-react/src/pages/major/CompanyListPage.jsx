@@ -96,9 +96,8 @@ const CompanyListPage = () => {
         <div className="section-header-with-search">
           <SectionHeader title="기업정보" noBorder />
           <div className="search-box">
-            <button>
-              <i className="fa-solid fa-magnifying-glass"></i>
-            </button>
+            <i className="fa-solid fa-magnifying-glass"></i>
+
             <input
               type="text"
               placeholder=" 기업명을 검색해보세요"
@@ -110,7 +109,16 @@ const CompanyListPage = () => {
 
         {/* 기업 카드 리스트 */}
         {loading && companyList.length === 0 ? (
-          <p style={{ textAlign: "center" }}>로딩 중...</p>
+          <div
+            className="loadingContainer"
+            style={{
+              display: "flex",
+              gap: "1rem",
+            }}
+          >
+            <i className="fa-solid fa-spinner fa-spin"></i>
+            <p>Loading...</p>
+          </div>
         ) : (
           <InfiniteScroll
             dataLength={companyList.length}

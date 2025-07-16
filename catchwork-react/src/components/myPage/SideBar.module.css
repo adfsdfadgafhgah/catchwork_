@@ -1,0 +1,190 @@
+/* MyPageSidebar.module.css */
+
+.sidebar {
+  width: 280px;
+  background-color: #ffffff;
+  border-right: 1px solid #e0e0e0;
+  height: 100vh;
+  position: fixed;
+  top: 1;
+  left: 0;
+  overflow-y: auto;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.sidebarContent {
+  padding: 20px;
+}
+
+.sidebarTitle {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: var(--main-color);
+  text-align: center;
+  border-bottom: 1px solid var(--main-color);
+  padding-bottom: 15px;
+}
+
+.sidebarNav {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.navItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 20px;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.navItem:hover {
+  background-color: var(--white);
+  color: var(--main-color);
+  transform: translateX(5px);
+}
+
+.navItem.active {
+  background-color: var(--main-color);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(70, 181, 171, 0.3);
+}
+
+.navItemExpandable {
+  position: relative;
+}
+
+.navItemExpandable .material-icons {
+  font-size: 20px;
+  transition: transform 0.3s ease;
+}
+
+.rotate90 {
+  transform: rotate(90deg);
+}
+
+.subNav {
+  margin-left: 20px;
+  margin-top: 5px;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.subNavItem {
+  display: block;
+  padding: 12px 20px;
+  text-decoration: none;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 400;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  margin-bottom: 3px;
+  position: relative;
+}
+
+.subNavItem::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  background-color: var(--main-color);
+  border-radius: 50%;
+  opacity: 0.6;
+}
+
+.subNavItem:hover {
+  background-color: rgba(70, 181, 171, 0.1);
+  color: var(--main-color-dark);
+  transform: translateX(3px);
+}
+
+.subNavItem.active {
+  background-color: var(--main-color);
+  color: white;
+  font-weight: 500;
+}
+
+.subNavItem.active::before {
+  background-color: white;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 100%;
+    position: relative;
+    height: auto;
+    box-shadow: none;
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .sidebarContent {
+    padding: 15px;
+  }
+
+  .sidebarTitle {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .navItem {
+    padding: 12px 15px;
+    font-size: 15px;
+  }
+
+  .subNav {
+    margin-left: 15px;
+  }
+
+  .subNavItem {
+    padding: 10px 15px;
+    font-size: 13px;
+  }
+}
+
+/* 스크롤바 스타일 */
+.sidebar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+  background: var(--main-color);
+  border-radius: 3px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+  background: var(--main-color-dark);
+}

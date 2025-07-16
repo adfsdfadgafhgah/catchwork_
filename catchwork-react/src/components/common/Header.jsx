@@ -4,14 +4,13 @@ import { useAuthStore } from "../../stores/authStore";
 
 import logo from "../../assets/logo.png";
 
-import "./Header.css";
+import styles from "./Header.module.css";
 import HeaderNav from "./HeaderNav";
 import { axiosApi } from "../../api/axiosAPI";
 
 const Header = () => {
   const { memType, memNickname, memNo, signin, signOut } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState(""); // 검색어
-  const [result, setResult] = useState(""); // 상태 메시지
   const [memName, setMemName] = useState("");
 
   const navigate = useNavigate();
@@ -52,13 +51,13 @@ const Header = () => {
         .get("/auth/corpmem/name", { params: { memNo } })
         .then((res) => setMemName(res.data));
     }
-  }, [memNo]);
+  }, [memNo, memName]);
 
   return (
-    <header className="header">
-      <div className="header-top">
+    <header className={styles.header}>
+      <div className={styles.headerTop}>
         {/* 로고 */}
-        <div className="logo">
+        <div className={styles.logo}>
           {memType !== null ? (
             <>
               {memType === 1 ? (
@@ -80,7 +79,7 @@ const Header = () => {
 
         {/* 검색창: 로그인/회원가입/기업회원 페이지에서는 미노출 */}
         {!isAuthPage && !isCorpUser && (
-          <div className="search-box">
+          <div className={styles.searchBox}>
             <i
               className="fa-solid fa-magnifying-glass"
               onClick={handleSearch}
@@ -98,7 +97,7 @@ const Header = () => {
 
         {/* 사용자 정보 영역 */}
         {!isAuthPage && (
-          <div className="user-info">
+          <div className={styles.userInfo}>
             {memType !== null ? (
               <>
                 {memType === 1 ? (
@@ -115,7 +114,6 @@ const Header = () => {
             ) : (
               <>
                 <Link to="/signin">로그인</Link>
-                &nbsp;|&nbsp;
                 <Link to="/signup">회원가입</Link>
               </>
             )}
