@@ -171,5 +171,5 @@ public interface BoardMapper {
 	 * @author JAEHO
 	 * @param boardNo
 	 */
-	void deleteBoard(int boardNo);
+	void removeTargetBoard(int boardNo);
 }

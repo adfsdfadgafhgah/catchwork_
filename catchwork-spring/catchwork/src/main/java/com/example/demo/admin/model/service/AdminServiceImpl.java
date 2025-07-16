@@ -23,7 +23,6 @@ import com.example.demo.admin.model.dto.ReportSummary;
 import com.example.demo.admin.model.dto.SupportList;
 
 @Service
-@RequiredArgsConstructor
 @Transactional(rollbackFor = Exception.class)
 public class AdminServiceImpl implements AdminService {
 

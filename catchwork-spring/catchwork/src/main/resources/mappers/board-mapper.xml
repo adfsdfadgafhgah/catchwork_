@@ -228,7 +228,7 @@
 	</delete>
 
 	<!-- 게시글 삭제(스케줄러) -->
-	<delete id="deleteBoard">
+	<delete id="removeTargetBoard">
 		DELETE FROM BOARD
 		WHERE BOARD_NO = #{boardNo}
 	</delete>

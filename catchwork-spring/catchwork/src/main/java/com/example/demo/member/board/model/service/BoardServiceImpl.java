@@ -234,7 +234,7 @@ public class BoardServiceImpl implements BoardService {
 		// 게시글 삭제
 		int deleteBoardCount = 0;	
 		for (Integer boardNo : targetBoardNoList) {
-			boardMapper.deleteBoard(boardNo);
+			boardMapper.removeTargetBoard(boardNo);
 			deleteBoardCount++;
 		}
 
