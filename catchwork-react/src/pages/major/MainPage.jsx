@@ -6,6 +6,7 @@ import { axiosApi } from "../../api/axiosAPI";
 import { useAuthStore } from "../../stores/authStore";
 import "./MainPage.css";
 import MainBoardItem from "../../components/board/MainBoardItem";
+import CorpRecruitListPage from "../corpMajor/CorpRecruitListPage";
 
 const MainPage = () => {
   const { memType, memNo } = useAuthStore(); // memType: 0(개인), 1(기업)
@@ -34,14 +35,13 @@ const MainPage = () => {
     // 인기 기업
     axiosApi
       .get("/company", { params: { sort: "main", limit: 6 } })
-      .then((res) => setPopularCompanies(res.data));
-    // 인기 게시글
-    axiosApi
-      .get("/board/boardList", { params: { sort: "main", limit: 6 } })
       .then((res) => {
         const companies = Array.isArray(res.data) ? res.data : [];
         setPopularCompanies(companies);
-      });
+      }); // 인기 게시글
+    axiosApi
+      .get("/board/boardList", { params: { sort: "main", limit: 6 } })
+      .then((res) => setPopularBoards(res.data));
   }, []);
 
   return (
@@ -50,7 +50,7 @@ const MainPage = () => {
       {!isCorp && (
         <>
           {/* 공고 */}
-          {memType === 0 && (
+          {/* {memType === 0 && (
             <>
               <section>
                 <h2>맞춤형 채용공고</h2>
@@ -63,7 +63,7 @@ const MainPage = () => {
               <br></br>
               <hr></hr>
             </>
-          )}
+          )} */}
           <section>
             <h2>인기 채용공고</h2>
             <div className="card-grid two-cols">
@@ -111,7 +111,7 @@ const MainPage = () => {
       {/* 기업 */}
       {isCorp && (
         <>
-          <div></div>
+          <div>기업 메인</div>
         </>
       )}
     </div>

@@ -52,16 +52,30 @@ const Header = () => {
         .get("/auth/corpmem/name", { params: { memNo } })
         .then((res) => setMemName(res.data));
     }
-  }, []);
+  }, [memNo]);
 
   return (
     <header className="header">
       <div className="header-top">
         {/* 로고 */}
         <div className="logo">
-          <Link to="/">
-            <img src={logo} height="50px" alt="logo" />
-          </Link>
+          {memType !== null ? (
+            <>
+              {memType === 1 ? (
+                <Link to="/corprecruit">
+                  <img src={logo} height="50px" alt="logo" />
+                </Link>
+              ) : (
+                <Link to="/">
+                  <img src={logo} height="50px" alt="logo" />
+                </Link>
+              )}
+            </>
+          ) : (
+            <Link to="/">
+              <img src={logo} height="50px" alt="logo" />
+            </Link>
+          )}
         </div>
 
         {/* 검색창: 로그인/회원가입/기업회원 페이지에서는 미노출 */}
