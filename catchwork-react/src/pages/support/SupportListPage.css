@@ -2,7 +2,7 @@
   padding: 40px 24px;
   max-width: 1080px; /* 너비는 1080px로 유지 */
   margin: 0 auto;
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: "Noto Sans KR", sans-serif;
   color: var(--text); /* 변수 사용 유지 */
 }
 
@@ -23,7 +23,7 @@
   font-weight: 500;
   color: #333;
   background-color: #fff;
-  border: 1.5px solid #ddd;
+  border: 1.5px solid var(--img-color);
   border-radius: 6px;
   cursor: pointer;
   transition: background-color 0.2s ease, border-color 0.2s ease;
@@ -53,7 +53,7 @@
 }
 
 .support-table .title {
-  color: var(--text, #333); 
+  color: var(--text, #333);
   cursor: pointer;
   text-align: center;
   width: 40%; /* "제목" 열의 너비를 40%로 설정 (약 432px) */

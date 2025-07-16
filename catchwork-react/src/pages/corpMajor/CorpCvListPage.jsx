@@ -42,7 +42,7 @@ const CorpCVListPage = () => {
 
   useEffect(() => {
     if (isLoadingLogin && loginMember?.memNo) {
-      console.log("✅ 유효한 loginMember 확인됨:", loginMember);
+      //console.log("✅ 유효한 loginMember 확인됨:", loginMember);
       getCVListByRole(loginMember.memNo);
     } else if (isLoadingLogin && !loginMember?.memNo) {
       console.warn("❗유효하지 않은 memNo:", loginMember?.memNo);
@@ -254,7 +254,7 @@ const CorpCVListPage = () => {
           </div>
 
           <div className="cv-filter-right">
-            <button className="btn-apply" onClick={handleFilter}>
+            <button className="btn btn-apply" onClick={handleFilter}>
               이력서 목록 분류
             </button>
           </div>
@@ -263,7 +263,7 @@ const CorpCVListPage = () => {
         <div className="cv-filter-bottom">
           <div className="cv-filter-bottom-right">
             <button
-              className="btn-select"
+              className="btn btn-select"
               onClick={() => setShowCheckbox(!showCheckbox)}
             >
               선택하기
@@ -316,7 +316,7 @@ const CorpCVListPage = () => {
                 <td>{cv.date}</td>
                 <td>
                   <button
-                    className="btn-download"
+                    className="btn btn-download"
                     onClick={() =>
                       handleDownload(cv.recruitCVNo, cv.recruitCVPdfTitle)
                     }
@@ -324,7 +324,9 @@ const CorpCVListPage = () => {
                     다운로드
                   </button>
                 </td>
-                <td>{cv.isDownloaded ? "Y" : "N"}</td>
+                <td className={`check-status ${cv.isDownloaded ? "y" : "n"}`}>
+                  {cv.isDownloaded ? "Y" : "N"}
+                </td>
               </tr>
             ))}
           </tbody>
@@ -344,16 +346,19 @@ const CorpCVListPage = () => {
       )}
 
       <div className="cv-bottom-actions">
-        <button className="btn-cancel" onClick={handleCancel}>
+        <button className="btn btn-cancel" onClick={handleCancel}>
           취소하기
         </button>
-        <button className="btn-delete" onClick={handleDelete}>
+        <button className="btn btn-delete" onClick={handleDelete}>
           이력서 삭제하기
         </button>
 
         {showCheckbox && (
-          <button className="btn-download" onClick={handleBulkDownload}>
-            선택한 이력서 일괄 다운로드
+          <button
+            className="btn btn-bulk-download"
+            onClick={handleBulkDownload}
+          >
+            선택 다운로드
           </button>
         )}
       </div>

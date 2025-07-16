@@ -29,17 +29,17 @@ const SearchResultPage = () => {
   useEffect(() => {
     if (!query) return;
 
-    console.log("검색 조건 확인:", {
-      query,
-      type,
-      memNo: loginMember?.memNo,
-      recruitJobName,
-      recruitJobArea,
-      recruitCareer,
-      recruitEdu,
-      corpType,
-      recruitType,
-    });
+    // console.log("검색 조건 확인:", {
+    //   query,
+    //   type,
+    //   memNo: loginMember?.memNo,
+    //   recruitJobName,
+    //   recruitJobArea,
+    //   recruitCareer,
+    //   recruitEdu,
+    //   corpType,
+    //   recruitType,
+    // });
     setLoading(true);
     const SearchData = async () => {
       try {
@@ -56,7 +56,7 @@ const SearchResultPage = () => {
               recruitType,
             },
           });
-          console.log("공고 검색 응답:", res.data);
+          //console.log("공고 검색 응답:", res.data);
           setRecruitResults(res.data || []);
         } else {
           const res = await axiosApi.get("/search/company", {
@@ -65,7 +65,7 @@ const SearchResultPage = () => {
               ...(loginMember?.memNo ? { memNo: loginMember.memNo } : {}),
             },
           });
-          console.log("기업 검색 응답:", res.data);
+          //console.log("기업 검색 응답:", res.data);
           setCompanyResults(res.data || []);
         }
       } catch (err) {

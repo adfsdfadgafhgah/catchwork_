@@ -355,7 +355,10 @@ const router = createBrowserRouter([
         path: "report",
         children: [
           { index: true, element: <AdminReportPage /> },
-          { path: ":reportNo", element: <AdminReportDetailPage /> },
+          {
+            path: "target/:targetType/:targetNo",
+            element: <AdminReportDetailPage />,
+          },
         ],
       },
       {
