@@ -42,7 +42,7 @@ const EditCompanyPage = () => {
         const res = await axiosApi.get("/corpcompany/detail", {
           params: { memNo: loginMember.memNo },
         });
-        console.log("✅ 기업 정보:", res.data);
+        //console.log("✅ 기업 정보:", res.data);
         setCompany(res.data);
       } catch (err) {
         console.error("기업 정보 불러오기 실패", err);
