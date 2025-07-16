@@ -45,7 +45,7 @@
 .searchBox {
   display: flex;
   align-items: center;
-  border: 1px solid #46b5ab;
+  border: 1px solid var(--main-color);
   border-radius: 999px;
   padding: 4px 10px;
 }
@@ -62,13 +62,13 @@
   border: none;
   font-size: 16px;
   cursor: pointer;
-  color: #46b5ab;
+  color: var(--main-color);
   padding-left: 4px;
 }
 
 .noResult {
   text-align: center;
-  font-size: 1.2rem;
-  color: var(--stroke-color1); /* 또는 #888 같이 연한 색 */
-  margin-top: 2rem;
+  font-size: 0.95rem;
+  color: var(--gray01);
+  padding: 40px 0;
 }

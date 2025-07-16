@@ -118,7 +118,7 @@
 .info-value-input {
   flex: 1;
   padding: 12px 16px;
-  border: 1px solid #ddd;
+  border: 1px solid var(--img-color);
   border-radius: 4px;
   font-size: 14px;
   transition: border-color 0.2s;
@@ -191,7 +191,7 @@
   font-size: 16px;
   font-weight: 500;
   margin-top: 20px;
-  align-self: center; 
+  align-self: center;
 }
 
 .button-group {
@@ -277,43 +277,43 @@
   .main-content {
     padding: 40px 20px;
   }
-  
+
   .container {
     max-width: 100%;
     padding: 0;
   }
-  
+
   .form-wrapper {
     max-width: 100%;
   }
-  
+
   /* 모바일에서는 프로필 이미지와 정보를 세로로 배치 */
   .profile-content {
     flex-direction: column;
     align-items: center;
     gap: 20px;
   }
-  
+
   /* 모바일에서는 라벨과 입력 필드를 세로로 배치 */
   .info-item {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
   }
-  
+
   .info-label {
     min-width: auto;
   }
-  
+
   .verification-section {
     flex-direction: column;
     align-items: stretch;
   }
-  
+
   .verification-section .info-value-input {
     margin-bottom: 10px;
   }
-  
+
   .custom-btn {
     width: 100%;
   }

@@ -2,6 +2,8 @@
   padding: 40px 24px;
   max-width: 1080px; /* 너비는 1080px로 유지 */
   margin: 0 auto;
+
+
   color: var(--text); /* 변수 사용 유지 */
 }
 
@@ -21,7 +23,9 @@
   font-size: 14px;
   font-weight: 500;
   color: #333;
+
   background-color: var(--input-color);
+
   border: 1.5px solid var(--img-color);
   border-radius: 6px;
   cursor: pointer;
@@ -52,7 +56,9 @@
 }
 
 .support-table .title {
+
   color: var(--text); 
+
   cursor: pointer;
   text-align: center;
   width: 40%; /* "제목" 열의 너비를 40%로 설정 (약 432px) */
@@ -102,5 +108,7 @@
 }
 
 .no-answer {
+
   color: var(--gray01);
 }
+
