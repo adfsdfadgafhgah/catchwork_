@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,23 +30,12 @@ public class AdminReportController {
 	@Autowired
 	private AdminReportService adminReportService;
 	
-	/** 신고 목록 조회
-     * @author BAEBAE
-     * @param criteria 검색 및 필터 조건
-     * @return 신고 목록
-     */
-    @GetMapping("report/list")
-    public ResponseEntity<List<AdminReport>> getReportList(@ModelAttribute ReportSearchCriteria criteria) {
-        List<AdminReport> reportList = adminReportService.getReportList(criteria);
-        return ResponseEntity.ok(reportList);
-    }
-
     /** 신고 요약 정보 조회
      * @author BAEBAE
      * @param criteria 검색 및 필터 조건
      * @return 신고 요약 정보
      */
-    @GetMapping("reports/summary")
+    @GetMapping("report/summary")
     public ResponseEntity<ReportSummary> getReportSummary(@ModelAttribute ReportSearchCriteria criteria) {
         ReportSummary summary = adminReportService.getReportSummary(criteria);
         return ResponseEntity.ok(summary);
@@ -82,5 +72,33 @@ public class AdminReportController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류로 인해 신고 처리에 실패했습니다.");
         }
     }
+    
+    /**
+     * 그룹화된 신고 목록 조회 API
+     * @param criteria 검색 조건 (query string으로 받음)
+     * @return JSON 형태의 목록 데이터
+     */
+    @GetMapping("/report/group")
+    public ResponseEntity<Map<String, Object>> getGroupedReportList(ReportSearchCriteria criteria) {
+        Map<String, Object> result = adminReportService.getGroupedReports(criteria);
+        return ResponseEntity.ok(result);
+    }
+    
+//    /**
+//     * 신고 상세 정보 조회
+//     * @param targetType 신고 대상 타입
+//     * @param targetId 신고 대상 ID
+//     * @return JSON 형태의 상세 데이터
+//     */
+//    @GetMapping("/report/target/{targetType}/{targetId}")
+//    public ResponseEntity<AdminReportDetail> getReportDetails(
+//            @PathVariable("targetType") String targetType,
+//            @PathVariable("targetId") String targetId) {
+//        AdminReportDetail details = adminReportService.getReportDetailsByTarget(targetType, targetId);
+//        if (details == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        return ResponseEntity.ok(details);
+//    }
 
 }
