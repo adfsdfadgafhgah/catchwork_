@@ -1,0 +1,24 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th {
+  background-color: var(--sub-color);
+  color: var(--deep-gray);
+  border-bottom: 1px solid var(--stroke-color1);
+  padding: 12px;
+  text-align: center;
+}
+
+.table td {
+  border-bottom: 1px solid var(--stroke-color1);
+  padding: 12px;
+  text-align: center;
+  color: var(--text);
+}
+
+.table tr:hover {
+  background-color: var(--input-color);
+  cursor: pointer;
+}

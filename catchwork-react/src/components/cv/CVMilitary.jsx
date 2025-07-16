@@ -6,14 +6,15 @@ const CVMilitary = ({ formData, onChange, isSubmitted }) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (
-      !formData.cvMiliClass ||
-      !formData.cvMiliBranch ||
-      !formData.cvMiliStartDate ||
-      !formData.cvMiliEndDate
-    ) {
+    if (!formData.cvMiliClass || !formData.cvMiliBranch) {
       setError("모든 병역 정보를 입력해주세요.");
     } else {
+      if (formData.cvMiliClass === "군필") {
+        if (!formData.cvMiliStartDate || !formData.cvMiliEndDate) {
+          setError("병역 기간을 입력해주세요.");
+          return;
+        }
+      }
       setError("");
     }
   }, [formData]);
