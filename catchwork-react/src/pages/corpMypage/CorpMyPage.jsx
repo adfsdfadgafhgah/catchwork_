@@ -12,7 +12,7 @@ const CorpMyPage = () => {
   useEffect(() => {
     setLoginMember();
 
-    // 이거 해야 기업명 보임
+    // 기업 정보 불러오기
     axiosApi.get("/corp/mypage", { withCredentials: true })
       .then((res) => {
         setCorpInfo(res.data);
@@ -26,7 +26,7 @@ const CorpMyPage = () => {
     <div className="corpmypage-container">
       <CorpSideBar />
       <div className="corpmypage-content">
-        <Outlet context={{ loginMember, setLoginMember, corpInfo }} />
+        <Outlet context={{ loginMember, setLoginMember, corpInfo, setCorpInfo }} />
       </div>
     </div>
   );

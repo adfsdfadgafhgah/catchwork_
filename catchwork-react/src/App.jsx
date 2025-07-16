@@ -112,6 +112,8 @@ import AdminReportDetailPage from "./pages/admin/AdminReportDetailPage"; // 신�
 import AdminBanPage from "./pages/admin/AdminBanPage"; // 정지 리스트
 import AdminBanDetailPage from "./pages/admin/AdminBanDetailPage"; // 정지 상세
 import AdminRestorePage from "./pages/admin/AdminRestorePage"; // 복구 리스트
+import AdminAuthPage from "./pages/admin/AdminAuthPage"; // 복구 리스트
+import AdminRegisterPage from "./pages/admin/AdminRegisterPage"; // 복구 리스트
 
 //test
 import AuthTest from "./pages/member/AuthTest";
@@ -334,6 +336,8 @@ const router = createBrowserRouter([
     ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
     ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
   */
+  { path: "/admin-auth", element: <AdminAuthPage /> },
+  { path: "/admin-register", element: <AdminRegisterPage /> },
   {
     // 상세 페이지 경로 미리 추가(주석)
     path: "/admin",
@@ -352,7 +356,10 @@ const router = createBrowserRouter([
         path: "report",
         children: [
           { index: true, element: <AdminReportPage /> },
-          { path: ":reportNo", element: <AdminReportDetailPage /> },
+          {
+            path: "target/:targetType/:targetNo",
+            element: <AdminReportDetailPage />,
+          },
         ],
       },
       {

@@ -1,0 +1,194 @@
+/* 전체 페이지 컨테이너 */
+.container {
+  width: 100%;
+  max-width: 1000px; /* 페이지 최대 너비 */
+  margin: 2rem auto; /* 위아래 여백 및 중앙 정렬 */
+  padding: 2rem;
+  background-color: var(--white);
+  border-radius: 8px;
+  box-shadow: var(--box-shadow);
+}
+
+/* 페이지 제목 */
+.pageTitle {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--deep-gray);
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--stroke-color1);
+}
+
+/* '목록으로' 버튼 */
+.backButton {
+  background-color: var(--white);
+  color: var(--gray01);
+  border: 1px solid var(--stroke-color2);
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease-in-out;
+  margin-bottom: 1.5rem;
+}
+
+.backButton:hover {
+  background-color: var(--input-color);
+  border-color: var(--gray01);
+}
+
+/* 각 섹션 (정보, 메모, 신고내용 등) */
+.section {
+  margin-bottom: 2.5rem;
+}
+
+.section h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--deep-gray);
+}
+
+/* 신고 대상 정보 박스 */
+.infoBox {
+  background-color: var(--input-color);
+  border: 1px solid var(--stroke-color1);
+  border-radius: 8px;
+  padding: 1.5rem;
+}
+
+.infoBox p {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.infoBox p strong {
+  display: inline-block;
+  width: 80px; /* 라벨 너비 고정 */
+  font-weight: 600;
+  color: var(--gray01);
+}
+
+/* 처리메모 (제재사유) 텍스트 영역 */
+.section textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 1rem;
+  border: 1px solid var(--stroke-color2);
+  border-radius: 5px;
+  resize: vertical; /* 세로 크기만 조절 가능 */
+  font-size: 1rem;
+  background-color: var(--white);
+}
+
+.section textarea:focus {
+  outline: none;
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 2px var(--sub-color);
+}
+
+/* 제재 버튼들을 감싸는 컨테이너 */
+.buttonContainer {
+  display: flex;
+  gap: 1rem; /* 버튼 사이 간격 */
+  margin-top: -1.5rem; /* 처리메모 섹션과의 간격 조절 */
+  margin-bottom: 2.5rem;
+}
+
+/* 제재 버튼 (공통 스타일) */
+.sanctionButton {
+  flex-grow: 1; /* 버튼이 컨테이너 너비를 채우도록 함 */
+  padding: 0.8rem 1rem;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--white);
+  background-color: var(--main-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.sanctionButton:hover {
+  background-color: var(--main-color-dark);
+}
+
+/* 비활성화된 제재 버튼 스타일 */
+.sanctionButton:disabled {
+  background-color: var(--stroke-color2);
+  cursor: not-allowed;
+}
+
+/* 개별 신고 내역 목록 */
+.reportList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* 개별 신고 아이템 카드 */
+.reportItem {
+  border: 1px solid var(--stroke-color1);
+  border-radius: 8px;
+  padding: 1.5rem;
+  background-color: var(--white);
+}
+
+/* 신고 아이템 헤더 (신고자, 신고날짜) */
+.reportHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  color: var(--gray01);
+  font-size: 0.9rem;
+}
+
+.reportHeader strong {
+  color: var(--deep-gray);
+  font-weight: 600;
+}
+
+/* 신고 내용 텍스트 */
+.reportContent {
+  margin-bottom: 1.5rem;
+  line-height: 1.5;
+}
+
+/* 신고 아이템 푸터 (상태, 처리 버튼) */
+.reportFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 처리 상태 텍스트 (공통) */
+.reportFooter > span {
+  font-weight: 700;
+}
+
+/* 처리 상태: 미처리 */
+.statusPending {
+  color: var(--red);
+}
+
+/* 처리 상태: 처리완료 */
+.statusDone {
+  color: var(--gray01);
+}
+
+/* '이 신고 건 처리하기' 버튼 */
+.reportFooter button {
+  background-color: var(--deep-gray);
+  color: var(--white);
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: opacity 0.2s;
+}
+
+.reportFooter button:hover {
+  opacity: 0.8;
+}

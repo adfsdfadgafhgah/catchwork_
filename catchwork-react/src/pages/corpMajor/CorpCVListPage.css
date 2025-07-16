@@ -60,27 +60,11 @@
   border-bottom: 1px solid var(--stroke-color1);
   text-align: center;
   font-size: 14px;
-  color: var(--text);
 }
 
 .cv-table th {
   background-color: var(--input-color);
   color: var(--deep-gray);
-}
-
-.btn-download {
-  border: none;
-  border-radius: 6px;
-  padding: 6px 12px;
-  background-color: var(--white);
-  box-shadow: var(--box-shadow);
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.2s ease;
-}
-
-.btn-download:hover {
-  color: var(--main-color-dark);
 }
 
 .pagination {
@@ -105,28 +89,42 @@
   justify-content: flex-end;
   gap: 12px;
 }
+.btn {
+  display: inline-block;
+  border-radius: 8px;
+  padding: 6px 16px;
+  background-color: var(--white);
+  box-shadow: var(--box-shadow);
+  cursor: pointer;
+  font-size: 14px;
+  height: 32px;
+  border: 1px solid var(--stroke-color2);
+  background-color: var(--white);
+}
+
+/* 버튼 hover 스타일 */
+.btn:hover {
+  color: var(--main-color-dark);
+}
+
+/* 줄바꿈 방지 + 다운로드용 스타일 확장 */
+.btn-bulk-download,
+.btn-download {
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* 작은 버튼만 따로 height 줄이려면 여기에 */
+.btn-download {
+  transition: background-color 0.2s ease;
+}
+
+/* margin 따로 필요한 버튼만 분리 */
 .btn-cancel,
 .btn-delete {
   margin-bottom: 24px;
 }
 
-.btn-apply,
-.btn-select,
-.btn-cancel,
-.btn-delete {
-  border: none;
-  border-radius: 6px;
-  padding: 8px 16px;
-  background-color: var(--white);
-  box-shadow: var(--box-shadow);
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.btn-cancel:hover,
-.btn-delete:hover {
-  color: var(--main-color-dark);
-}
 .cv-radio {
   transform: scale(1.2);
   accent-color: var(--main-color);
@@ -150,4 +148,13 @@
   background-color: white;
   padding: 12px 0;
   z-index: 10;
+}
+
+/* JS로 조건부 class 넣고 싶다면 아래 방식도 가능 */
+.check-status.y {
+  color: var(--main-color);
+  font-weight: bold;
+}
+.check-status.n {
+  color: gray; /* 기본색 */
 }

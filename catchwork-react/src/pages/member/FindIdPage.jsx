@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 import useConfirmEmail from "../../hooks/useConfirmEmail";
 import ResultModal from "../../components/common/ResultModal";
-import styles from "./FindPage.module.css";
+import styles from "./FindIdPage.module.css";
 
 const FindIdPage = () => {
   const navigate = useNavigate(); // 페이지 이동
@@ -22,6 +22,7 @@ const FindIdPage = () => {
   const { sendEmail, checkAuthKey, startTimer, stopTimer, timeLeft } =
     useConfirmEmail(); // 인증번호 관련 함수
   const [isClicked, setIsClicked] = useState(false); // 인증번호 발송 클릭 여부
+  const isSending = useRef(false); // 인증번호 발송 중 여부
 
   // 아이디 찾기 제출 함수
   const handleSubmit = async (e) => {
@@ -75,10 +76,12 @@ const FindIdPage = () => {
       return;
     }
     setIsClicked(true);
+    isSending.current = true;
     const isSent = await sendEmail(memEmail); // 인증번호 발송
     if (isSent) {
       startTimer(); // 인증번호 유효 타이머 시작
       setIsIssued(true);
+      isSending.current = false;
     }
   };
 
@@ -170,7 +173,9 @@ const FindIdPage = () => {
               </div>
               <button
                 type="button"
-                className={styles.authButton}
+                className={`${styles.authButton} ${
+                  isSending.current ? styles.loading : ""
+                }`}
                 onClick={handleSendEmail}
                 disabled={isVerified}
               >
@@ -225,14 +230,6 @@ const FindIdPage = () => {
             아이디 찾기
           </button>
         </form>
-
-        <div className={styles.linkSection}>
-          <a href="/login">로그인</a>
-          <span>|</span>
-          <a href="/find-password">비밀번호 찾기</a>
-          <span>|</span>
-          <a href="/signup">회원가입</a>
-        </div>
       </div>
 
       <ResultModal

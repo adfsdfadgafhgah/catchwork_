@@ -13,33 +13,33 @@ const CorpCompanyDetailPage = () => {
   const { loginMember, setLoginMember } = useLoginMember(); // 로그인한 회원 정보 가져오기
 
   useEffect(() => {
-    console.log("[1] setLoginMember() 호출 전");
+    //console.log("[1] setLoginMember() 호출 전");
     setLoginMember();
-    console.log("[2] setLoginMember() 호출 후, loginMember:", loginMember);
+    //console.log("[2] setLoginMember() 호출 후, loginMember:", loginMember);
   }, []);
 
-  console.log("[3] 렌더링 시점 loginMember:", loginMember);
+  //console.log("[3] 렌더링 시점 loginMember:", loginMember);
 
   const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    console.log("[4] loginMember useEffect 진입, loginMember:", loginMember);
+    //console.log("[4] loginMember useEffect 진입, loginMember:", loginMember);
     if (!loginMember?.memNo) {
-      console.log("[5] memNo 없음, loginMember:", loginMember);
+      //console.log("[5] memNo 없음, loginMember:", loginMember);
       return;
     }
-    console.log("[6] API 요청 시작, memNo:", loginMember.memNo);
+    //console.log("[6] API 요청 시작, memNo:", loginMember.memNo);
 
     const CompanyDetail = async () => {
       try {
         const res = await axiosApi.get(`/corpcompany/detail`, {
           params: { memNo: loginMember.memNo },
         });
-        console.log("[7] 기업 정보 응답:", res.data);
+        //console.log("[7] 기업 정보 응답:", res.data);
         setCompany(res.data);
       } catch (err) {
-        console.error("[8] 기업 정보 불러오기 실패", err);
+        //console.error("[8] 기업 정보 불러오기 실패", err);
       } finally {
         setLoading(false);
       }
@@ -48,7 +48,7 @@ const CorpCompanyDetailPage = () => {
   }, [loginMember]);
 
   useEffect(() => {
-    console.log("[9] company 상태 변경:", company);
+    //console.log("[9] company 상태 변경:", company);
   }, [company]);
 
   const handleEdit = () => {

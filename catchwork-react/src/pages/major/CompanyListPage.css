@@ -20,3 +20,9 @@
   box-sizing: border-box;
   padding: 0 12px;
 }
+.company-end-message {
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--gray01);
+  padding: 40px 0;
+}

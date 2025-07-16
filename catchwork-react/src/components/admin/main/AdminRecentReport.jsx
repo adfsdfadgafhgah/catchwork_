@@ -1,5 +1,8 @@
 import { useRef, useCallback } from "react";
-import { useRecentReport, useRecentReportCount } from "../../../hooks/admin/mainUtils";
+import {
+  useRecentReport,
+  useRecentReportCount,
+} from "../../../hooks/admin/mainUtils";
 import { useNavigate } from "react-router-dom";
 import styles from "./AdminRecentReport.module.css";
 
@@ -61,15 +64,17 @@ const AdminRecentReport = () => {
               className={styles.item}
               onClick={() =>
                 navigate(
-                  `/admin/report/detail?type=${item.reportTargetType}&no=${item.reportTargetNo}`
+                  `/admin/report/target/${item.reportTargetType}/${item.reportTargetNo}`
                 )
               }
             >
               <p>
-                <span className={styles.itemTitle}>대상 타입 </span>: {item.reportTargetType}
+                <span className={styles.itemTitle}>대상 타입 </span>:{" "}
+                {item.reportTargetType}
               </p>
               <p>
-                <span className={styles.itemTitle}>대상 번호 </span>: {item.reportTargetNo}
+                <span className={styles.itemTitle}>대상 번호 </span>:{" "}
+                {item.reportTargetNo}
               </p>
               <p>
                 <span className={styles.itemTitle}>미처리 신고 건수 </span>: {item.reportCount}

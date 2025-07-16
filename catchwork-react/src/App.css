@@ -52,3 +52,46 @@ body,
 main {
   flex: 1;
 }
+
+/* 모듈화 제외 코드 */
+.search-box {
+  display: flex;
+  align-items: center;
+  background-color: var(--white);
+  border-radius: 25px;
+  padding: 0px 20px;
+  max-width: 300px;
+  flex: 1;
+  margin: 0 40px;
+  border: 1px solid var(--main-color);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-box:focus-within {
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 2px rgba(70, 181, 171, 0.2);
+}
+
+.search-box i {
+  color: var(--main-color);
+  margin-right: 10px;
+  font-size: 16px;
+  transition: color 0.3s ease;
+}
+
+.search-box i:hover {
+  color: var(--main-color-dark);
+}
+
+.search-box input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 14px;
+  color: var(--text);
+}
+
+.search-box input::placeholder {
+  color: #888;
+}
