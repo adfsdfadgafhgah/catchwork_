@@ -98,21 +98,5 @@ public class AdminServiceImpl implements AdminService {
         return adminMapper.selectRecentSupportCount();
     }
 	
-	// 신고 목록 조회 (배령)
-	@Override
-	public List<AdminReport> getReportList(ReportSearchCriteria criteria) {
-		return adminMapper.getReportList(criteria);
-	}
 	
-	// 신고 요약 정보 조회 (배령)
-	@Override
-	public ReportSummary getReportSummary(ReportSearchCriteria criteria) {
-		return adminMapper.getReportSummary(criteria);
-	}
-	
-	// 신고 처리 상태 변경 (배령)
-	@Override
-	public int processReport(Report report) {
-		return adminMapper.updateReportStatusToComplete(report);
-	}
 }

@@ -165,59 +165,7 @@ public class AdminController {
 		}
 	}
 	
-	/** 신고 목록 조회
-     * @author BAEBAE
-     * @param criteria 검색 및 필터 조건
-     * @return 신고 목록
-     */
-    @GetMapping("report/list")
-    public ResponseEntity<List<AdminReport>> getReportList(@ModelAttribute ReportSearchCriteria criteria) {
-        List<AdminReport> reportList = adminService.getReportList(criteria);
-        return ResponseEntity.ok(reportList);
-    }
-
-    /** 신고 요약 정보 조회
-     * @author BAEBAE
-     * @param criteria 검색 및 필터 조건
-     * @return 신고 요약 정보
-     */
-    @GetMapping("reports/summary")
-    public ResponseEntity<ReportSummary> getReportSummary(@ModelAttribute ReportSearchCriteria criteria) {
-        ReportSummary summary = adminService.getReportSummary(criteria);
-        return ResponseEntity.ok(summary);
-    }
-    
-    /** 신고 처리 상태 변경
-     * @author BAEBAE
-     * @param payload
-     * @return
-     */
-    @PutMapping("report/process")
-    public ResponseEntity<String> processReport(@RequestBody Map<String, Integer> payload) {
-        try {
-            Integer reportNo = payload.get("reportNo");
-            if (reportNo == null) {
-                return ResponseEntity.badRequest().body("신고 번호가 필요합니다.");
-            }
-
-            Report reportToProcess = new Report();
-            reportToProcess.setReportNo(reportNo);
-            reportToProcess.setAdminNo(1); // 중요: 관리자 번호 1로 하드코딩
-
-            int result = adminService.processReport(reportToProcess);
-
-            if (result > 0) {
-                log.info("신고 처리 성공. 신고 번호: {}", reportNo);
-                return ResponseEntity.ok("신고가 성공적으로 처리되었습니다.");
-            } else {
-                log.warn("신고 처리 실패 또는 이미 처리된 신고. 신고 번호: {}", reportNo);
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("신고를 처리할 수 없거나 이미 처리된 항목입니다.");
-            }
-        } catch (Exception e) {
-            log.error("신고 처리 중 오류 발생: {}", e.getMessage(), e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("서버 오류로 인해 신고 처리에 실패했습니다.");
-        }
-    }
+	
 	
 	
 	
