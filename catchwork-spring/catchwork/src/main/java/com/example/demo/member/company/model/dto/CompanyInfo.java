@@ -29,7 +29,7 @@ public class CompanyInfo {
     private String corpBenefit;         // 기업_복리후생_카테고리
     private String corpBenefitDetail;   // 기업_복리후생_내용
     private String corpStatus;           // 기업_정지_플래그
-    private String corpStatusDate;       // 기업_정지일(Date말고 String으로 한다?)
+    private Date corpStatusDate;       // 기업_정지일(Date?? String??)
 
     // MEMBER 테이블 조인
  	private String memNo;
