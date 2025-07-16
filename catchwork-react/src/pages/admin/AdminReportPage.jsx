@@ -9,7 +9,8 @@ export default function AdminReportPage() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   // 목록 및 상태 관리
-  const [reports, setReports] = useState([]);
+  const [groupedReports, setGroupedReports] = useState([]);
+  const [totalGroupedCount, setTotalGroupedCount] = useState(0);
   const [summary, setSummary] = useState({
     totalReports: 0,
     unprocessedCount: 0,
@@ -44,7 +45,7 @@ export default function AdminReportPage() {
     setCurrentPage(page);
     setFilters({ targetType, status, startDate, endDate, query });
 
-    fetchReportsAndSummary({
+    fetchGroupedReportsAndSummary({
       page,
       targetType,
       status,
@@ -55,19 +56,20 @@ export default function AdminReportPage() {
   }, [searchParams]);
 
   // 데이터 로딩 함수
-  const fetchReportsAndSummary = async (currentFilters) => {
+  const fetchGroupedReportsAndSummary = async (currentFilters) => {
     setLoading(true);
     setError(null);
     try {
       // API 호출 시 필터 객체를 params로 전달
-      const listResponse = await axiosApi.get("/admin/report/list", {
+      const listResponse = await axiosApi.get("/admin/report/group", {
         params: currentFilters,
       });
-      const summaryResponse = await axiosApi.get("/admin/reports/summary", {
+      const summaryResponse = await axiosApi.get("/admin/report/summary", {
         params: currentFilters,
       });
 
-      setReports(listResponse.data);
+      setGroupedReports(listResponse.data.list);
+      setTotalGroupedCount(listResponse.data.totalCount);
       setSummary(summaryResponse.data);
     } catch (err) {
       console.error("신고 내역 또는 요약 정보 불러오기 실패:", err);
@@ -77,27 +79,27 @@ export default function AdminReportPage() {
     }
   };
 
-  // 신고 처리 API를 호출하는 핸들러 함수
-  const handleProcessReport = async (reportNo, e) => {
-    e.stopPropagation(); // 행 클릭 이벤트(상세 페이지 이동)가 함께 실행되는 것을 방지
+  // // 신고 처리 API를 호출하는 핸들러 함수
+  // const handleProcessReport = async (reportNo, e) => {
+  //   e.stopPropagation(); // 행 클릭 이벤트(상세 페이지 이동)가 함께 실행되는 것을 방지
 
-    if (!window.confirm(`신고 번호 ${reportNo}번을 처리하시겠습니까?`)) {
-      return;
-    }
+  //   if (!window.confirm(`신고 번호 ${reportNo}번을 처리하시겠습니까?`)) {
+  //     return;
+  //   }
 
-    try {
-      const response = await axiosApi.put("/admin/report/process", {
-        reportNo,
-      });
-      alert(response.data); // 성공 메시지 출력
+  //   try {
+  //     const response = await axiosApi.put("/admin/report/process", {
+  //       reportNo,
+  //     });
+  //     alert(response.data); // 성공 메시지 출력
 
-      // 중요: 처리 후 목록을 새로고침하여 변경된 상태를 즉시 반영
-      fetchReportsAndSummary(filters);
-    } catch (err) {
-      console.error("신고 처리 실패:", err);
-      alert(err.response?.data || "신고 처리 중 오류가 발생했습니다.");
-    }
-  };
+  //     // 중요: 처리 후 목록을 새로고침하여 변경된 상태를 즉시 반영
+  //     fetchReportsAndSummary(filters);
+  //   } catch (err) {
+  //     console.error("신고 처리 실패:", err);
+  //     alert(err.response?.data || "신고 처리 중 오류가 발생했습니다.");
+  //   }
+  // };
 
   // 필터 값 변경 핸들러
   const handleFilterChange = (e) => {
@@ -129,14 +131,12 @@ export default function AdminReportPage() {
     setSearchParams(newSearchParams);
   };
 
-  // 상세 페이지 이동 (추후 구현)
-  const goToDetail = (reportNo) => {
-    // navigate(`/admin/report/${reportNo}`);
-    alert(`신고 번호 ${reportNo} 상세 페이지로 이동합니다.`);
+  // 상세 페이지 이동
+  const goToDetail = (reportTargetNo, reportTargetType) => {
+    navigate(`/admin/report/target/${reportTargetType}/${reportTargetNo}`);
   };
 
-  const currentItems = reports; // 서버에서 페이지네이션된 데이터를 받는다고 가정
-  const totalPages = Math.ceil(summary.totalReports / itemsPerPage);
+  const totalPages = Math.ceil(totalGroupedCount / itemsPerPage);
 
   return (
     <div className={styles.container}>
@@ -155,9 +155,8 @@ export default function AdminReportPage() {
               <option value="">전체</option>
               <option value="BOARD">게시글</option>
               <option value="COMMENT">댓글</option>
-              <option value="CORPORATE">기업</option>
+              <option value="COMPANY">기업</option>
               <option value="RECRUIT">공고</option>
-              {/* 필요한 다른 타입 추가 */}
             </select>
           </div>
           <div className={styles.filterGroup}>
@@ -237,62 +236,46 @@ export default function AdminReportPage() {
           <table className={styles.reportTable}>
             <thead>
               <tr>
-                <th>번호</th>
                 <th>신고 대상 유형</th>
                 <th>신고 대상 (내용)</th>
-                <th>신고자</th>
-                <th>신고일</th>
+                <th>신고 건수</th>
+                <th>최신 신고일</th>
                 <th>처리 상태</th>
-                <th>관리</th> {/* 추가: 처리 버튼을 위한 컬럼 헤더 */}
               </tr>
             </thead>
             <tbody>
-              {reports.length > 0 ? (
-                reports.map((report) => (
+              {groupedReports.length > 0 ? (
+                groupedReports.map((group) => (
                   <tr
-                    key={
-                      report.reportNo
-                    } /* 상세 페이지 이동이 필요하다면 onClick 추가 */
+                    key={`${group.reportTargetType}-${group.reportTargetNo}`}
+                    // ⬇️ 상세 페이지 이동 onClick 이벤트 추가
+                    onClick={() =>
+                      goToDetail(group.reportTargetNo, group.reportTargetType)
+                    }
+                    style={{ cursor: "pointer" }} // 클릭 가능함을 시각적으로 표시
                   >
-                    <td>{report.reportNo}</td>
-                    <td>{report.reportTargetType}</td>
-                    <td className={styles.contentCell}>
-                      {report.targetContentPreview}
+                    <td>{group.reportTargetType}</td>
+                    <td>{group.reportContent}</td>
+                    <td>{group.reportCount}건</td>
+                    <td>
+                      {new Date(group.latestReportDate).toLocaleDateString()}
                     </td>
-                    <td>{report.reporterNickname}</td>
-                    <td>{new Date(report.reportDate).toLocaleDateString()}</td>
                     <td>
                       <span
                         className={
-                          report.reportStatus === "N"
+                          group.overallStatus === "N"
                             ? styles.statusPending
                             : styles.statusDone
                         }
                       >
-                        {report.reportStatus === "N" ? "미처리" : "처리 완료"}
+                        {group.overallStatus === "N" ? "미처리" : "처리 완료"}
                       </span>
-                    </td>
-                    {/* 추가: 처리 버튼이 있는 테이블 셀 */}
-                    <td>
-                      {report.reportStatus === "N" ? (
-                        <button
-                          className={styles.processButton}
-                          onClick={(e) =>
-                            handleProcessReport(report.reportNo, e)
-                          }
-                        >
-                          처리하기
-                        </button>
-                      ) : (
-                        <span>-</span>
-                      )}
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  {/* 수정: colSpan을 7로 변경 */}
-                  <td colSpan="7">해당하는 신고 내역이 없습니다.</td>
+                  <td colSpan="6">해당하는 신고 내역이 없습니다.</td>
                 </tr>
               )}
             </tbody>

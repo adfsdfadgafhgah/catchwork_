@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import useConfirmEmail from "../../hooks/useConfirmEmail";
 import ResultModal from "../../components/common/ResultModal";
-import "./FindPage.css";
+import styles from "./FindPage.module.css";
 import { axiosApi } from "../../api/axiosAPI";
 
 const FindPwPage = () => {

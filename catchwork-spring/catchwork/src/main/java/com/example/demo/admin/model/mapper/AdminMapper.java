@@ -65,26 +65,6 @@ public interface AdminMapper {
 	Map<String, Object> selectRecentReportCount();
 	
 
-	/** 신고 목록 조회
-	 * @author BAEBAE
-	 * @param criteria
-	 * @return
-	 */
-	List<AdminReport> getReportList(ReportSearchCriteria criteria);
-
-	/** 신고 요약 정보 조회
-	 * @author BAEBAE
-	 * @param criteria
-	 * @return
-	 */
-	ReportSummary getReportSummary(ReportSearchCriteria criteria);
-
-	/** 신고 처리 상태 변경
-	 * @author BAEBAE
-	 * @param report
-	 * @return
-	 */
-	int updateReportStatusToComplete(Report report);
 
     /**
      * 최근 미처리 문의 개수 조회

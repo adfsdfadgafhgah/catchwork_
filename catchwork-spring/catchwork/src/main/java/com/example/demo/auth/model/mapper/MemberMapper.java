@@ -1,5 +1,7 @@
 package com.example.demo.auth.model.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.example.demo.auth.model.dto.Member;
@@ -13,13 +15,17 @@ public interface MemberMapper {
 	String selectMemberNameByNo(int memNo);
 
 	String selectCorporateNameByNo(int corpNo);
-	
-	
-//	// ----------------------- 배령 추가
-//	// 기업회원 로그인 조회
-//	Member getCorpLoginMember(String memNo);
-//
-//	// corpNo 조회
-//	Integer getCorpNoByMemNo(String memNo);
 
+	/** 탈퇴 회원 처리(스케줄러)
+	 * @author JAEHO
+	 * @param deleteTargetPeriod
+	 * @return
+	 */
+	int withdrawMember(int deleteTargetPeriod);
+
+	/** 사용중인 이미지 조회(스케줄러)
+	 * @author JAEHO
+	 * @return
+	 */
+	List<String> selectUsedImage();
 }

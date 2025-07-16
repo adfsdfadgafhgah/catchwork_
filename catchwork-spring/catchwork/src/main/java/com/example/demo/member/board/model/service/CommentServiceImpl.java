@@ -3,6 +3,7 @@ package com.example.demo.member.board.model.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.member.board.model.dto.Comment;
 import com.example.demo.member.board.model.mapper.CommentMapper;
@@ -11,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(value = "myBatisTransactionManager", rollbackFor = Exception.class)
 public class CommentServiceImpl implements CommentService{
 	
 	private final CommentMapper commentMapper;
@@ -49,5 +51,13 @@ public class CommentServiceImpl implements CommentService{
 	public void deleteComment(int commentNo) {
 		commentMapper.deleteComment(commentNo);
 	}
+
+	/** 댓글 삭제(스케줄러)
+	 * @author JAEHO
+	 */
+	@Override
+	public int removeTargetComment(int deleteTargetPeriod) {
+		return commentMapper.removeTargetComment(deleteTargetPeriod);
+	}	
 
 }
