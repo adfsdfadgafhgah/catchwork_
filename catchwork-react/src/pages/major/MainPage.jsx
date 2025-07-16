@@ -45,6 +45,7 @@ const MainPage = () => {
       .then((res) => {
         const companies = Array.isArray(res.data) ? res.data : [];
         setPopularCompanies(companies);
+      });
     // 인기 게시글
     axiosApi
       .get("/board/boardList", {
