@@ -115,6 +115,10 @@ import AdminRestorePage from "./pages/admin/AdminRestorePage"; // 복구 리스�
 import AdminAuthPage from "./pages/admin/AdminAuthPage"; // 복구 리스트
 import AdminRegisterPage from "./pages/admin/AdminRegisterPage"; // 복구 리스트
 
+//푸터
+import PolicyPrivacy from "./pages/footer/PolicyPrivacy"; //개인정보처리방침
+import TermsOfService from "./pages/footer/TermsOfService"; //이용약관
+
 //test
 import AuthTest from "./pages/member/AuthTest";
 
@@ -158,6 +162,10 @@ const router = createBrowserRouter([
       // Id,PW 찾기
       { path: "findid", element: <FindIdPage /> },
       { path: "findpw", element: <FindPwPage /> },
+
+      //푸터
+      { path: "policyprivacy", element: <PolicyPrivacy /> },
+      { path: "termsofservice", element: <TermsOfService /> },
 
       // 로그인 필요, 개인회원 전용 예시
       {
