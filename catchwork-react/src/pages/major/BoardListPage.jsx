@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
 import BoardList from "../../components/board/BoardList";
-import BoardCss from "./BoardListPage.module.css";
+import styles from "./BoardListPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import ScrollToTopButton from "../../components/common/ScrollToTopButton";
-// import useLoginMember from "../../stores/loginMember";
 
 import InfiniteScroll from "react-infinite-scroll-component";
 
@@ -56,8 +55,6 @@ export default function BoardListPage() {
 
   // memNo가 변경될 때마다 API 호출
   useEffect(() => {
-    // memNo가 초기 로딩될 때 (null 또는 값) API 호출이 한 번만 일어나도록 함
-    // 이렇게 하면 로그인 상태가 변경될 때마다 정확히 새로고침됩니다.
     setBoards([]);
     setPage(1);
     setHasMore(true);
@@ -83,7 +80,6 @@ export default function BoardListPage() {
 
   // 글 작성하기 버튼
   const handleWrite = () => {
-    console.log("memNo : ", memNo);
     if (!memNo) {
       alert("로그인 후 이용해주세요");
       navigate("/signin");
@@ -101,14 +97,14 @@ export default function BoardListPage() {
   }
 
   return (
-    <div className={BoardCss.boardListPage}>
+    <div className={styles.boardListPage}>
       {/* 섹션 헤더 */}
       <SectionHeader title="취준진담" />
 
       {/* 정렬 및 검색창 컨테이너 */}
-      <div className={BoardCss.controls}>
+      <div className={styles.controls}>
         <select
-          className={BoardCss.sortSelect}
+          className={styles.sortSelect}
           value={sortOrder}
           onChange={handleSortChange}
         >
@@ -137,7 +133,7 @@ export default function BoardListPage() {
         hasMore={hasMore}
         loader={<h4>Loading...</h4>}
         endMessage={
-          <p className={BoardCss.noResult}>더 이상 게시글이 없습니다.</p>
+          <p className={styles.noResult}>더 이상 게시글이 없습니다.</p>
         }
       >
         <BoardList boards={boards} memNo={memNo} />
