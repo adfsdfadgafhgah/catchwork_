@@ -16,7 +16,7 @@ function CorpMyInfo() {
         setCompany(res.data);
       })
       .catch((err) => {
-        console.error("기업 정보 조회 실패", err);
+        // console.error("기업 정보 조회 실패", err);
       });
   }, []);
 
@@ -31,7 +31,7 @@ function CorpMyInfo() {
         });
         setDetailLogo(res.data.corpLogo);
       } catch (err) {
-        console.error("상세 기업 로고 조회 실패", err);
+        // console.error("상세 기업 로고 조회 실패", err);
       }
     }
     fetchDetailLogo();

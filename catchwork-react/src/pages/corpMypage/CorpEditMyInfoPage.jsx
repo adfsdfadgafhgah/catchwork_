@@ -89,7 +89,7 @@ const CorpEditMyInfoPage = () => {
       });
       return response.status === 200 ? response.data : false;
     } catch (error) {
-      console.error("비밀번호 확인 실패", error);
+      // console.error("비밀번호 확인 실패", error);
       return false;
     } finally {
       setModalState((prev) => ({ ...prev, loading: false }));
@@ -124,7 +124,7 @@ const CorpEditMyInfoPage = () => {
         navigate("/corpmypage");
       }
     } catch (error) {
-      console.error("회원 정보 수정 실패", error);
+      // console.error("회원 정보 수정 실패", error);
       alert("회원 정보 수정 중 오류 발생");
     }
   };

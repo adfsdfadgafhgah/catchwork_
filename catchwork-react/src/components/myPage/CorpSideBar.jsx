@@ -1,19 +1,14 @@
 import React, { useState } from "react";
-import "./CorpSideBar.css";
+import styles from "./CorpSideBar.module.css"; // 모듈 CSS
 import { NavLink, useLocation } from "react-router-dom";
 
 const CorpSideBar = () => {
-  // 주소값
   const location = useLocation();
 
-  // 열린 메뉴
   const [expandedMenu, setExpandedMenu] = useState({
-    fav: false,
-    myContents: false,
     account: false,
   });
 
-  // 사이드바 세부 목록 토글
   const toggleMenu = (menu) => {
     setExpandedMenu((prev) => ({
       ...prev,
@@ -22,17 +17,17 @@ const CorpSideBar = () => {
   };
 
   return (
-    <div className="corpsidebar">
-      <div className="corpsidebar-content">
-        <h2 className="corpsidebar-title">마이 페이지</h2>
+    <div className={styles.sidebar}>
+      <div className={styles.sidebarContent}>
+        <h2 className={styles.sidebarTitle}>마이 페이지</h2>
 
-        <nav className="corpsidebar-nav">
+        <nav className={styles.sidebarNav}>
           <NavLink
             to="/corpmypage/home"
-            className={`nav-item ${
+            className={`${styles.navItem} ${
               location.pathname === "/corpmypage/home" ||
               location.pathname === "/corpmypage"
-                ? "active"
+                ? styles.active
                 : ""
             }`}
           >
@@ -43,40 +38,46 @@ const CorpSideBar = () => {
           <div>
             <button
               onClick={() => toggleMenu("account")}
-              className="nav-item nav-item-expandable"
+              className={`${styles.navItem} ${styles.navItemExpandable}`}
             >
               <span>계정관리</span>
               <i
                 className={`material-icons ${
-                  expandedMenu.account ? "rotate-90" : ""
+                  expandedMenu.account ? styles.rotate90 : ""
                 }`}
               >
                 chevron_right
               </i>
             </button>
             {expandedMenu.account && (
-              <div className="sub-nav">
+              <div className={styles.subNav}>
                 <NavLink
-                  className={`sub-nav-item ${
-                    location.pathname === "/corpmypage/eitmyinfo" ? "active" : ""
-                  }`}
                   to="/corpmypage/editmyinfo"
+                  className={`${styles.subNavItem} ${
+                    location.pathname === "/corpmypage/editmyinfo"
+                      ? styles.active
+                      : ""
+                  }`}
                 >
                   내 정보 변경
                 </NavLink>
                 <NavLink
-                  className={`sub-nav-item ${
-                    location.pathname === "/corpmypage/changepw" ? "active" : ""
-                  }`}
                   to="/corpmypage/changepw"
+                  className={`${styles.subNavItem} ${
+                    location.pathname === "/corpmypage/changepw"
+                      ? styles.active
+                      : ""
+                  }`}
                 >
                   비밀번호 변경
                 </NavLink>
                 <NavLink
-                  className={`sub-nav-item ${
-                    location.pathname === "/corpmypage/withdraw" ? "active" : ""
-                  }`}
                   to="/corpmypage/withdraw"
+                  className={`${styles.subNavItem} ${
+                    location.pathname === "/corpmypage/withdraw"
+                      ? styles.active
+                      : ""
+                  }`}
                 >
                   회원 탈퇴
                 </NavLink>
