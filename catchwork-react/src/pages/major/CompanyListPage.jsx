@@ -4,7 +4,6 @@ import SectionHeader from "../../components/common/SectionHeader";
 import CompanyItem from "../../components/company/CompanyItem";
 import "./CompanyListPage.css";
 import { axiosApi } from "../../api/axiosAPI";
-import useLoginMember from "../../stores/loginMember";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { useAuthStore } from "../../stores/authStore";
 

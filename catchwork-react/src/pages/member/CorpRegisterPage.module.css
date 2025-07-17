@@ -1,0 +1,257 @@
+.corpRegisterContainer {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.1);
+}
+
+.corpRegisterForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.corpRegisterForm h2 {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: var(--text);
+  font-size: 1.8rem;
+  font-weight: 600;
+}
+
+/* 필드 그룹 */
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.corpRegisterForm label {
+  font-weight: 500;
+  color: var(--text);
+  font-size: 0.95rem;
+  margin-bottom: 0.5rem;
+}
+
+/* 입력 필드 */
+.corpRegisterForm input {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #fff;
+  color: var(--text);
+  width: 100%;
+}
+
+.corpRegisterForm input:focus {
+  outline: none;
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.1);
+}
+
+.corpRegisterForm input:hover:not(:disabled) {
+  border-color: var(--main-color);
+}
+
+.corpRegisterForm input:disabled {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.corpRegisterForm input[readonly] {
+  background-color: #f8f9fa;
+  cursor: default;
+}
+
+.corpRegisterForm input::placeholder {
+  color: #8e9297;
+}
+
+.corpRegisterInputWithButton {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.corpRegisterInputWithButton input {
+  flex: 1;
+}
+
+/* 버튼 스타일 */
+.corpRegisterActionButton {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--main-color);
+  color: white;
+  min-width: 120px;
+}
+
+.corpRegisterActionButton:hover:not(:disabled) {
+  background-color: var(--main-color-dark);
+  transform: translateY(-1px);
+}
+
+.corpRegisterActionButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.corpRegisterFormInput {
+  padding: 0.75rem 1rem;
+  border: 2px solid #e1e5e9;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background-color: #fff;
+  color: var(--text);
+  width: 100%;
+}
+
+.corpRegisterDateInput {
+  color-scheme: light;
+}
+
+.corpRegisterDateInput::-webkit-calendar-picker-indicator {
+  color-scheme: light;
+  cursor: pointer;
+}
+
+.submitButton {
+  background-color: var(--main-color);
+  color: white;
+  font-size: 1.1rem;
+  padding: 1rem 2rem;
+  margin-top: 1rem;
+  width: 100%;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: var(--main-color-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(70, 181, 171, 0.3);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 메시지 스타일 */
+.corpRegisterForm small {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  display: block;
+}
+
+.statusMessage {
+  min-height: 1.2rem;
+  display: flex;
+  align-items: center;
+  padding-left: 0.5rem;
+}
+
+.errorMessage {
+  color: #dc3545;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.successMessage {
+  color: #28a745;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.infoMessage {
+  color: #6c757d;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .corpRegisterContainer {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .corpRegisterForm h2 {
+    font-size: 1.5rem;
+  }
+
+  .corpRegisterInputWithButton {
+    flex-direction: column;
+  }
+
+  .corpRegisterInputWithButton input {
+    margin-bottom: 0.5rem;
+  }
+
+  .corpRegisterActionButton {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .corpRegisterContainer {
+    margin: 0.5rem;
+    padding: 1rem;
+  }
+
+  .corpRegisterForm h2 {
+    font-size: 1.3rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .corpRegisterForm {
+    gap: 1rem;
+  }
+}
+
+/* 로딩 상태 */
+.corpRegisterActionButton.loading::after {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 6px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,7 +1,12 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import styles from "./ConfirmPwModal.module.css";
 
 const ConfirmPwModal = ({ isOpen, onClose, onConfirm, loading = false }) => {
   const [pw, setPw] = useState("");
+
+  useEffect(() => {
+    if (!isOpen) setPw("");
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -26,12 +31,12 @@ const ConfirmPwModal = ({ isOpen, onClose, onConfirm, loading = false }) => {
   };
 
   return (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
-      <div className="modal-content">
-        <div className="modal-header">
+    <div className={styles.modalOverlay} onClick={handleOverlayClick}>
+      <div className={styles.modalContent}>
+        <div className={styles.modalHeader}>
           <h3>비밀번호 확인</h3>
         </div>
-        <div className="modal-body">
+        <div className={styles.modalBody}>
           <input
             type="password"
             placeholder="비밀번호를 입력해주세요."
@@ -42,13 +47,22 @@ const ConfirmPwModal = ({ isOpen, onClose, onConfirm, loading = false }) => {
                 handleConfirm();
               }
             }}
+            className={styles.passwordInput}
           />
         </div>
-        <div className="modal-footer">
-          <button onClick={handleClose} disabled={loading}>
+        <div className={styles.modalFooter}>
+          <button
+            onClick={handleClose}
+            disabled={loading}
+            className={styles.cancelButton}
+          >
             취소
           </button>
-          <button onClick={handleConfirm} disabled={loading || !pw.trim()}>
+          <button
+            onClick={handleConfirm}
+            disabled={loading || !pw.trim()}
+            className={styles.confirmButton}
+          >
             {loading ? "확인 중..." : "확인"}
           </button>
         </div>

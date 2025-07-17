@@ -1,0 +1,188 @@
+/* 에러 페이지 컨테이너 */
+.errorContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 2rem 1rem;
+}
+
+.errorBox {
+  width: 100%;
+  max-width: 720px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  text-align: center;
+}
+
+/* 에러 헤더 */
+.errorHeader {
+  margin-bottom: 3rem;
+}
+
+.errorImage {
+  width: 100px;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.errorTitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0;
+}
+
+/* 에러 정보 */
+.errorInfo {
+  margin-bottom: 2rem;
+}
+
+.errorDetail {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.errorDetail:last-child {
+  border-bottom: none;
+}
+
+.errorLabel {
+  flex: 0 0 120px;
+  text-align: left;
+  color: var(--text);
+  font-size: 0.95rem;
+}
+
+.errorValue {
+  flex: 1;
+  text-align: right;
+  color: var(--text);
+  font-size: 0.95rem;
+  word-break: break-word;
+  line-height: 1.4;
+}
+
+/* 버튼 그룹 */
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.button {
+  flex: 1;
+  max-width: 150px;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button {
+  background-color: var(--main-color);
+  color: white;
+}
+
+.button:hover {
+  background-color: var(--main-color-dark);
+  transform: translateY(-1px);
+}
+
+/* Link 스타일 초기화 */
+.buttonGroup a {
+  text-decoration: none;
+  flex: 1;
+  max-width: 150px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .errorContainer {
+    min-height: 50vh;
+    padding: 1rem;
+  }
+
+  .errorBox {
+    padding: 1.5rem;
+  }
+
+  .errorHeader {
+    margin-bottom: 2rem;
+  }
+
+  .errorImage {
+    width: 80px;
+  }
+
+  .errorTitle {
+    font-size: 1.3rem;
+  }
+
+  .errorDetail {
+    flex-direction: column;
+    text-align: left;
+    padding: 0.8rem 0;
+  }
+
+  .errorLabel {
+    flex: none;
+    margin-bottom: 0.5rem;
+  }
+
+  .errorValue {
+    text-align: left;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  .buttonGroup a {
+    max-width: none;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    max-width: none;
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .errorBox {
+    padding: 1rem;
+  }
+
+  .errorImage {
+    width: 60px;
+  }
+
+  .errorTitle {
+    font-size: 1.2rem;
+  }
+
+  .errorDetail {
+    padding: 0.6rem 0;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem;
+  }
+}
