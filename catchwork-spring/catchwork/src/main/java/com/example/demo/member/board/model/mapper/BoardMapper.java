@@ -140,36 +140,10 @@ public interface BoardMapper {
 	List<String> selectUsedImage();
 
 	/**
-	 * 삭제 대상 게시글 조회(스케줄러)
-	 * 
-	 * @author JAEHO
-	 * @param deleteTargetPeriod
-	 * @return
-	 */
-	List<Integer> selectTargetBoardNo(int deleteTargetPeriod);
-
-	/**
-	 * 삭제 대상 댓글 조회(스케줄러)
-	 * 
-	 * @author JAEHO
-	 * @param targetBoardNoList
-	 * @return
-	 */
-	List<Integer> selectTargetCommentNo(List<Integer> targetBoardNoList);
-
-	/**
-	 * 댓글 삭제(스케줄러)
-	 * 
-	 * @author JAEHO
-	 * @param commentNo
-	 */
-	void deleteComment(int commentNo);
-
-	/**
 	 * 게시글 삭제(스케줄러)
 	 * 
 	 * @author JAEHO
-	 * @param boardNo
+	 * @param deleteTargetPeriod
 	 */
-	void removeTargetBoard(int boardNo);
+	int removeTargetBoard(int deleteTargetPeriod);
 }

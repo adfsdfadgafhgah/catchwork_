@@ -91,4 +91,25 @@
 		WHERE CORP_LOGO IS NOT NULL
 	</select>
 
+	<!-- 탈퇴 기업 처리(스케줄러) - 기업 탈퇴 대상 조회 -->
+	<select id="selectTargetCorp">
+		SELECT CORP_NO
+		FROM CORP_INFO
+		WHERE CORP_STATUS = 1
+		AND CORP_STATUS_DATE &lt; SYSDATE - #{deleteTargetPeriod} DAY
+	</select>
+
+	<!-- 탈퇴 기업 처리(스케줄러) - 기업 인사 탈퇴 -->
+	<select id="withdrawCorpMember">
+		DELETE FROM CORP_MEM
+		WHERE CORP_NO = #{corpNo}
+	</select>
+
+	<!-- 탈퇴 기업 처리(스케줄러) - 기업 탈퇴 -->
+	<select id="removeTargetCorp">
+		SELECT CORP_NO
+		FROM CORP_INFO
+		WHERE CORP_STATUS = 1
+		AND CORP_STATUS_DATE &lt; SYSDATE - #{deleteTargetPeriod} DAY
+	</select>
 </mapper>

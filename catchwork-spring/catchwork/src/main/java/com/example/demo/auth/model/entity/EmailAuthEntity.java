@@ -1,6 +1,6 @@
 package com.example.demo.auth.model.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,5 +33,5 @@ public class EmailAuthEntity {
   private String authKey;
 
   @Column(name = "AUTH_TIME")
-  private LocalDate authTime;
+  private LocalDateTime authTime;
 }

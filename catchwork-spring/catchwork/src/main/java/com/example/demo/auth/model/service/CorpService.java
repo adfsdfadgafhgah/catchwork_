@@ -13,4 +13,10 @@ public interface CorpService {
 	 * @return
 	 */
 	int deleteUnusedImage();
+
+	/** 탈퇴 기업 처리(스케줄러)
+	 * @author JAEHO
+	 * @return
+	 */
+	int withdrawCompany(int deleteTargetPeriod);
 }

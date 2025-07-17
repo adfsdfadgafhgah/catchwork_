@@ -35,4 +35,7 @@ public interface MemberService {
 
     // 이미지 처리(스케줄러)
     int deleteUnusedImage();
+
+    // 이메일 인증번호 삭제(스케줄러)
+    int removeTargetEmailAuth(int deleteTargetPeriod);
 }

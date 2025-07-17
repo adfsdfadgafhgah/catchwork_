@@ -82,6 +82,7 @@ const useCorpFormHandler = (initialValues) => {
       delete dataToSend.detailAddress;
     }
 
+    window.scrollTo(0, 0);
     navigate("/ceosignup", { state: { corpInfo: formData } });
   };
 
