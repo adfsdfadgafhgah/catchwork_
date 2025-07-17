@@ -5,7 +5,7 @@
   width: 1000px;
   margin: 20px auto;
   padding: 0 16px;
-  background-color: white;
+  background-color: var(--white);
   min-height: 100vh;
 }
 
@@ -19,7 +19,7 @@
 
 .sectionHeader h2 {
   font-size: 24px;
-  color: #333;
+  color: var(--deep-gray);
   font-weight: 600;
   margin-bottom: 12px;
 }
@@ -37,9 +37,9 @@
 .sortSelect {
   padding: 6px 10px;
   font-size: 14px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--img-color);
   border-radius: 6px;
-  background-color: #fff;
+  background-color: var(--white);
 }
 
 .searchBox {

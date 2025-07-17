@@ -93,10 +93,10 @@ export default function WriteSupportPage() {
               onChange={(e) => setContent(e.target.value)}
             />
             <div className="write-btn-area">
-              <button className="write-btn-cancel" onClick={() => window.history.back()}>
+              <button className="button-common" onClick={() => window.history.back()}>
                 <i className="fa-solid fa-xmark"></i> 취소하기
               </button>
-              <button className="write-btn-submit" onClick={handleSubmit}>
+              <button className="button-common" onClick={handleSubmit}>
                 <i className="fa-regular fa-pen-to-square"></i> 작성하기
               </button>
             </div>

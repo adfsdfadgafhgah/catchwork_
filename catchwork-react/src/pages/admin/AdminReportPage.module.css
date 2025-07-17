@@ -76,12 +76,12 @@
 
 .searchButton {
   background-color: var(--main-color, #46b5ab);
-  color: white;
+  color: var(--white);
 }
 
 .resetButton {
   background-color: #6c757d;
-  color: white;
+  color: var(--white);
 }
 
 .summarySection {
@@ -92,12 +92,12 @@
 
 .summaryCard {
   flex: 1;
-  background-color: #fff;
+  background-color: var(--white);
   padding: 24px;
   border-radius: 8px;
   border: 1px solid #e9ecef;
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--box-shadow);
 }
 
 .summaryCard p {
@@ -165,7 +165,7 @@
 
 .processButton {
   background-color: var(--main-color);
-  color: white;
+  color: var(--white);
   border: none;
   padding: 4px 10px;
   font-size: 13px;

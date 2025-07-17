@@ -1,9 +1,9 @@
 /* Header.module.css */
 
 .header {
-  background-color: white;
+  background-color: var(--white);
   border-bottom: 1px solid #e0e0e0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--box-shadow);
   position: sticky;
   top: 0;
   z-index: 1000;
@@ -52,7 +52,7 @@
 
 .searchBox:focus-within {
   border-color: var(--main-color);
-  box-shadow: 0 0 0 2px rgba(70, 181, 171, 0.2);
+  box-shadow: var(--box-shadow);
 }
 
 .searchBox i {
@@ -76,7 +76,7 @@
 }
 
 .searchBox input::placeholder {
-  color: #888;
+  color: var(--stroke-color1);
 }
 
 .userInfo {
@@ -162,7 +162,7 @@
 .headerNav {
   background-color: #ffffff;
   border-bottom: 1px solid #e5e7eb;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  box-shadow: var(--box-shadow);
 }
 
 .nav {

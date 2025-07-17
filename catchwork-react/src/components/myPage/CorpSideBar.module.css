@@ -1,5 +1,3 @@
-/* MyPageSidebar.module.css */
-
 .sidebar {
   width: 280px;
   background-color: #ffffff;
@@ -57,15 +55,11 @@
   transform: translateX(5px);
 }
 
-.navItem.active {
+.active {
   background-color: var(--main-color);
   color: var(--white);
   font-weight: 600;
   box-shadow: 0 2px 8px rgba(70, 181, 171, 0.3);
-}
-
-.navItemExpandable {
-  position: relative;
 }
 
 .navItemExpandable .material-icons {

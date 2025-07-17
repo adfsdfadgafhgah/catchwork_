@@ -1,7 +1,7 @@
 /* ✅ BoardItem.module.css */
 
 .boardItem {
-  background-color: white;
+  background-color: var(--white);
   border-bottom: 1px solid #f0f0f0;
   display: flex;
   justify-content: space-between;
@@ -35,26 +35,26 @@
 }
 
 .author {
-  color: #000;
+  color: var(--black);
   font-size: 14px;
   font-weight: 500;
   margin-right: 8px;
 }
 
 .date {
-  color: #999;
+  color: var(--gray01); /* 999 */
   font-size: 12px;
 }
 
 .title {
-  color: #333;
+  color: var(--text); /* 333 */
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 8px;
 }
 
 .content {
-  color: #666;
+  color: var(--deep-gray); /* 666 */
   font-size: 14px;
   margin-bottom: 16px;
   display: -webkit-box;
@@ -65,7 +65,7 @@
 
 .meta {
   font-size: 12px;
-  color: #999;
+  color: var(--gray01); /* 999 */
   display: flex;
   gap: 12px;
 }
@@ -96,7 +96,7 @@
 }
 
 .liked-heart {
-  color: red !important;
+  color: var(--red) !important;
 }
 
 .far {

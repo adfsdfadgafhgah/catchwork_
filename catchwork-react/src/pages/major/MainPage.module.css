@@ -57,7 +57,7 @@
   grid-column: 1 / -1;
   text-align: center;
   padding: 3rem 1rem;
-  color: #888;
+  color: var(--stroke-color1);
   background: #f8f9fa;
   border-radius: 12px;
   border: 2px dashed #ddd;
@@ -92,7 +92,7 @@
 
 .welcomeSection p {
   font-size: 1.2rem;
-  color: #666;
+  color: var(--deep-gray);
   margin: 0;
 }
 
@@ -106,7 +106,7 @@
 
 .actionButton {
   background: var(--main-color);
-  color: white;
+  color: var(--white);
   border: none;
   padding: 1rem 2rem;
   border-radius: 12px;
@@ -116,13 +116,13 @@
   align-items: center;
   gap: 0.5rem;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--box-shadow);
 }
 
 .actionButton:hover {
   background: var(--main-color-dark);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--box-shadow);
 }
 
 .actionButton i {
