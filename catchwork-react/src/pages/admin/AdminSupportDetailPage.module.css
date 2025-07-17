@@ -110,7 +110,7 @@
 .answerTextarea:focus {
   outline: none;
   border-color: var(--main-color);
-  box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.2);
+  box-shadow: var(--box-shadow);
 }
 
 /* 답변 완료 시 읽기 전용 스타일 */

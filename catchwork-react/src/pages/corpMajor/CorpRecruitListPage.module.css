@@ -17,9 +17,9 @@
 .sortSelect {
   padding: 6px 10px;
   font-size: 14px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--img-color);
   border-radius: 6px;
-  background-color: #fff;
+  background-color: var(--white);
 }
 
 .searchBox {

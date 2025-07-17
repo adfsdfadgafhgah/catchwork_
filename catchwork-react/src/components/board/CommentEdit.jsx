@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CommentCss from "./CommentEdit.module.css";
+import styles from "./CommentEdit.module.css";
 import { formatTimeAgo } from "../common/formatTimeAgo";
 import { axiosApi } from "../../api/axiosAPI";
 import defaultImg from "../../assets/icon.png";
@@ -11,7 +11,7 @@ export default function CommentEdit({ comment, onCancel, onSuccess, memNo }) {
   const handleSubmit = async () => {
     if (!memNo || memNo !== comment.memNo) {
       alert("수정 권한이 없습니다.");
-      onCancel(); // 권한이 없으면 수정 모드를 취소합니다.
+      onCancel(); // 권한이 없으면 수정 모드를 취소s
       return;
     }
 
@@ -34,10 +34,10 @@ export default function CommentEdit({ comment, onCancel, onSuccess, memNo }) {
   };
 
   return (
-    <div className={CommentCss.writeWrapper}>
+    <div className={styles.writeWrapper}>
       {/* 프로필, 닉네임, 날짜는 그대로 유지 */}
-      <div className={CommentCss.header}>
-        <div className={CommentCss.writerInfo}>
+      <div className={styles.header}>
+        <div className={styles.writerInfo}>
           <img
             src={
               comment.memProfilePath
@@ -45,19 +45,19 @@ export default function CommentEdit({ comment, onCancel, onSuccess, memNo }) {
                 : defaultImg
             }
             alt="프로필"
-            className={CommentCss.profileImg}
+            className={styles.profileImg}
           />
-          <span className={CommentCss.nickname}>{comment.memNickname}</span>
+          <span className={styles.nickname}>{comment.memNickname}</span>
         </div>
-        <span className={CommentCss.date}>
+        <span className={styles.date}>
           {formatTimeAgo(comment.commentWriteDate)}
         </span>
       </div>
 
       {/* 수정 input */}
-      <div className={CommentCss.contentWrapper}>
+      <div className={styles.contentWrapper}>
         <textarea
-          className={CommentCss.textarea}
+          className={styles.textarea}
           placeholder="댓글을 작성하세요"
           value={content}
           onChange={(e) => setContent(e.target.value)}
@@ -66,11 +66,11 @@ export default function CommentEdit({ comment, onCancel, onSuccess, memNo }) {
       </div>
 
       {/* 버튼 */}
-      <div className={CommentCss.buttonGroup}>
-        <button className={CommentCss.cancelBtn} onClick={onCancel}>
+      <div className={styles.buttonGroup}>
+        <button className={styles.cancelBtn} onClick={onCancel}>
           <i className="fa-solid fa-xmark"></i> 취소하기
         </button>
-        <button className={CommentCss.submitBtn} onClick={handleSubmit}>
+        <button className={styles.submitBtn} onClick={handleSubmit}>
           <i className="fa-regular fa-pen-to-square"></i> 수정하기
         </button>
       </div>

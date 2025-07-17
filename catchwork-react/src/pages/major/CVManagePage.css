@@ -103,7 +103,7 @@ select {
 }
 
 .writeCVStickyBtn {
-  background-color: white;
+  background-color: var(--white);
   color: var(--deep-gray);
   box-shadow: var(--box-shadow);
   border: none;
@@ -116,7 +116,7 @@ select {
 
 .writeCVStickyBtn:active {
   background-color: var(--main-color);
-  color: white;
+  color: var(--white);
 }
 
 .writeCVUpBtn {

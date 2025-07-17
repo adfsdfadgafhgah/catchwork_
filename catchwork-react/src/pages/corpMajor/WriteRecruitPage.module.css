@@ -5,7 +5,7 @@
   margin: 20px auto;
   padding: 0 16px;
   border-radius: 12px;
-  background-color: #fff;
+  background-color: var(--white);
   margin-bottom: 20px;
 }
 
@@ -36,7 +36,7 @@
 
 .corpType {
   font-size: 14px;
-  color: #888;
+  color: var(--stroke-color1);
   margin-top: 4px;
 }
 

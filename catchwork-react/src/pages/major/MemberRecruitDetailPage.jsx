@@ -79,9 +79,7 @@ export default function MemberRecruitDetailPage() {
         if (!lastViewed || new Date(lastViewed).toDateString() !== today) {
           setCookie(key, now.toISOString(), 1); // setCookie 사용 (1일 유효)
           await axiosApi.get(`/memberRecruit/recruitReadCount/${recruitNo}`);
-          console.log("조회수 증가 후 상세 다시 조회");
         } else {
-          console.log("오늘 이미 조회함");
         }
 
         // 항상 상세 재조회

@@ -91,7 +91,7 @@ const CompanyListPage = () => {
 
   return (
     <>
-      <main className="company-container">
+      <main className="companylist-container">
         <div className="section-header-with-search">
           <SectionHeader title="기업정보" noBorder />
           <div className="search-box">

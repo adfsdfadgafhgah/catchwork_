@@ -3,13 +3,11 @@ import { useParams, useNavigate, useOutletContext } from "react-router-dom";
 import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import SectionHeader from "../../components/common/SectionHeader";
-import "./WriteBoardPage.css"; // 재사용 가능
+import styles from "./WriteBoardPage.module.css"; // 재사용 가능
 import ThumbnailUploader from "../../components/common/ThumbnailUploader";
 import { axiosApi } from "../../api/axiosAPI";
-import { useAuthStore } from "../../stores/authStore";
 
 export default function EditBoardPage() {
-  // const { memNo } = useAuthStore();
   const { boardNo } = useParams();
   const navigate = useNavigate();
   const editorRef = useRef();
@@ -18,6 +16,7 @@ export default function EditBoardPage() {
   const [thumbnailUrl, setThumbnailUrl] = useState(null);
   const thumbnailUploaderRef = useRef();
   const { memNo } = useOutletContext();
+  const [isFormValid, setIsFormValid] = useState(false);
 
   // 기존 게시글 불러오기
   useEffect(() => {
@@ -132,16 +131,16 @@ export default function EditBoardPage() {
   };
 
   return (
-    <div className="write-wrap">
+    <div className={styles.writeWrap}>
       <SectionHeader title="게시글 수정" />
       <input
         type="text"
-        className="write-input-title"
+        className={styles.writeInputTitle}
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
 
-      <div className="write-editor">
+      <div className={styles.writeEditor}>
         <Editor
           ref={editorRef}
           height="500px"
@@ -197,11 +196,15 @@ export default function EditBoardPage() {
         ref={thumbnailUploaderRef}
       />
 
-      <div className="write-btn-area">
-        <button className="write-btn-cancel" onClick={handleCancel}>
+      <div className={styles.writeBtnArea}>
+        <button className={styles.writeBtnCancel} onClick={handleCancel}>
           취소하기
         </button>
-        <button className="write-btn-submit" onClick={handleUpdate}>
+        <button
+          className={styles.writeBtnSubmit}
+          onClick={handleUpdate}
+          disabled={!isFormValid}
+        >
           수정하기
         </button>
       </div>
