@@ -81,7 +81,7 @@ const CorpCompanyDetailPage = () => {
 
   return (
     <>
-      <main className="container">
+      <main className="corp-container">
         <SectionHeader title="기업정보" />
 
         <div className="company-detail-header">

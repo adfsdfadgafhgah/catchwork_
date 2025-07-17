@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import "./WithdrawPage.css";
+import styles from "./WithdrawPage.module.css";
 import { axiosApi } from "../../api/axiosAPI";
 import { useAuthStore } from "../../stores/authStore";
 
@@ -122,24 +122,24 @@ const WithdrawPage = () => {
   ];
 
   return (
-    <div className="withdraw-container">
-      <div className="withdraw-content">
-        <div className="form-container">
-          <p className="content-warning">
+    <div className={styles.withdrawContainer}>
+      <div className={styles.withdrawContent}>
+        <div className={styles.formContainer}>
+          <p className={styles.contentWarning}>
             계정을 탈퇴하면 모든 데이터가 삭제되며 복구할 수 없습니다. 신중히
             결정해 주세요.
           </p>
-          <div className="withdraw-terms-box" onScroll={handleScroll}>
+          <div className={styles.withdrawTermsBox} onScroll={handleScroll}>
             {terms.map((item, index) => (
-              <div key={index} className="terms-text">
+              <div key={index} className={styles.termsText}>
                 <p>{item.title}</p>
                 <p>{item.content}</p>
               </div>
             ))}
           </div>
 
-          <div className="form-group">
-            <div className="checkbox-container">
+          <div className={styles.formGroup}>
+            <div className={styles.checkboxContainer}>
               <input
                 type="checkbox"
                 id="agree"
@@ -151,8 +151,8 @@ const WithdrawPage = () => {
             </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="memberPw" className="form-label">
+          <div className={styles.formGroup}>
+            <label htmlFor="memberPw" className={styles.formLabel}>
               비밀번호
             </label>
             <input
@@ -161,7 +161,7 @@ const WithdrawPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="비밀번호를 입력해주세요"
-              className="form-input"
+              className={styles.formInput}
               required
             />
           </div>
@@ -169,7 +169,7 @@ const WithdrawPage = () => {
           <button
             type="submit"
             onClick={handleSubmit}
-            className="submit-btn"
+            className={styles.submitBtn}
             disabled={isDisabled}
           >
             탈퇴하기

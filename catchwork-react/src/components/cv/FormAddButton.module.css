@@ -9,5 +9,5 @@
 
 .addIcon {
     font-size: 30px;
-    color: white;
+    color: var(--white);
 }

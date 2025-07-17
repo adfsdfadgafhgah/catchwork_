@@ -3,7 +3,7 @@
   max-width: 1000px;
   margin: 0 auto;
   padding: 20px 20px;
-  background-color: white;
+  background-color: var(--white);
   font-family: sans-serif;
   position: relative;
 }
@@ -39,12 +39,12 @@
   align-items: center;
   justify-content: center;
   gap: 6px; /* 아이콘-글자 간격 */
-  border: 1px solid #ccc;
+  border: 1px solid var(--img-color);
   border-radius: 6px;
   padding: 6px 12px;
   min-width: 100px; /* 버튼 너비 일정하게 */
   height: 36px; /* 버튼 높이 일정하게 */
-  background-color: #fff;
+  background-color: var(--white);
   cursor: pointer;
   font-size: 14px;
   line-height: 1;
@@ -91,11 +91,11 @@
   align-items: center;
   gap: 4px;
   font-size: 14px;
-  color: #666;
+  color: var(--deep-gray);
 }
 
 .fas.red {
-  color: red;
+  color: var(--red);
   cursor: pointer;
 }
 
@@ -111,7 +111,7 @@
   padding: 20px;
   background-color: #f9f9f9;
   font-size: 15px;
-  color: #333;
+  color: var(--deep-gray);
   min-height: 180px;
 }
 

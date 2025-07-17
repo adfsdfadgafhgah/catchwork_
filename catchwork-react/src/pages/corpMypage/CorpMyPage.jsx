@@ -18,7 +18,7 @@ const CorpMyPage = () => {
         setCorpInfo(res.data);
       })
       .catch((err) => {
-        console.error("기업 정보 조회 실패", err);
+        // console.error("기업 정보 조회 실패", err);
       });
   }, []);
 

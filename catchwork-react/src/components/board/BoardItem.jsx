@@ -1,32 +1,28 @@
 import { Link, useNavigate } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 import iconImg from "../../assets/icon.png";
-import BoardCss from "./BoardItem.module.css";
+import styles from "./BoardItem.module.css";
 import { formatTimeAgo } from "./../common/formatTimeAgo";
 import { useState } from "react";
 import defaultImg from "../../assets/icon.png";
-// import useLoginMember from "../../stores/loginMember";
 
-// 💡 props로 board와 memNo를 직접 받습니다.
+// props로 board와 memNo 받기
 export default function BoardItem({ board, memNo }) {
   const profileImgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
   const boardImgUrl = import.meta.env.VITE_FILE_BOARD_IMG_URL;
   const navigate = useNavigate();
 
-  // 💡 likeCount와 liked 상태를 props에서 직접 초기화합니다.
+  // likeCount와 liked 상태를 props에서 직접 초기화
   const [likeCount, setLikeCount] = useState(board.likeCount);
   const [liked, setLiked] = useState(
     board.likedByCurrentUser === true || board.likedByCurrentUser === 1
   );
 
-  // 💡 기존의 모든 useEffect 로직은 필요 없습니다.
-  //    부모 컴포넌트(BoardListPage)가 이미 완벽한 데이터를 넘겨주고 있기 때문입니다.
-
   const toggleLike = async (e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    // 💡 memNo prop을 사용하여 로그인 여부를 확인합니다.
+    // memNo prop을 사용하여 로그인 여부를 확인
     if (!memNo) {
       alert("로그인 후 이용해 주세요.");
       navigate(`/signin`);
@@ -36,7 +32,7 @@ export default function BoardItem({ board, memNo }) {
     try {
       const resp = await axiosApi.post("/board/like", {
         boardNo: board.boardNo,
-        memNo: memNo, // 💡 memNo prop 사용
+        memNo: memNo, // memNo prop 사용
       });
 
       if (resp.data.result === "liked") {
@@ -53,9 +49,9 @@ export default function BoardItem({ board, memNo }) {
   };
 
   return (
-    <Link to={`/board/${board.boardNo}`} className={BoardCss.linkWrapper}>
-      <div className={BoardCss.boardItem}>
-        <div className={BoardCss.boardItemLeft}>
+    <Link to={`/board/${board.boardNo}`} className={styles.linkWrapper}>
+      <div className={styles.boardItem}>
+        <div className={styles.boardItemLeft}>
           <img
             src={
               board.memProfilePath
@@ -63,25 +59,25 @@ export default function BoardItem({ board, memNo }) {
                 : defaultImg
             }
             alt="프로필 이미지"
-            className={BoardCss.profileImg}
+            className={styles.profileImg}
           />
 
-          <div className={BoardCss.boardItemContent}>
-            <div className={BoardCss.authorDate}>
-              <span className={BoardCss.author}>{board.memNickname}</span>
-              <span className={BoardCss.date}>
+          <div className={styles.boardItemContent}>
+            <div className={styles.authorDate}>
+              <span className={styles.author}>{board.memNickname}</span>
+              <span className={styles.date}>
                 {formatTimeAgo(board.boardWriteDate)}
               </span>
             </div>
-            <h3 className={BoardCss.title}>
+            <h3 className={styles.title}>
               {board.boardTitle.length > 40
                 ? board.boardTitle.slice(0, 40) + "..."
                 : board.boardTitle}
             </h3>
-            <p className={BoardCss.content}>
+            <p className={styles.content}>
               {board?.boardContent?.replace(/!\[.*?\]\(.*?\)/g, "") || ""}
             </p>
-            <div className={BoardCss.meta}>
+            <div className={styles.meta}>
               <i className="fa-regular fa-eye"></i>
               {board.boardReadCount} &nbsp;&nbsp;{" "}
               <i className="fa-regular fa-comment"></i>
@@ -100,12 +96,12 @@ export default function BoardItem({ board, memNo }) {
             </div>
           </div>
         </div>
-        <div className={BoardCss.logo}>
+        <div className={styles.logo}>
           {board.boardThumbnailUrl ? (
             <img
               src={`${boardImgUrl}/${board.boardThumbnailUrl}`}
               alt="썸네일"
-              className={BoardCss.thumbnailImg}
+              className={styles.thumbnailImg}
             />
           ) : (
             <img src={iconImg} alt="catchWork로고" />

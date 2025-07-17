@@ -1,27 +1,30 @@
-import React from "react";
-import "./Footer.css";
 import icon from "../../assets/icon.png";
+import styles from "./Footer.module.css";
 
 import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="footer">
-      <div className="footer-links">
-        <a href="#">개인정보처리방침</a>
-        <a href="#">이용약관</a>
+    <footer className={styles.footer}>
+      <div className={styles.footerLinks}>
+        <Link to="/policyprivacy">개인정보처리방침</Link>
+        <Link to="/termsofservice">이용약관</Link>
         <span>Copyright © CATCH. All rights reserved.</span>
-        <Link to="/supportlist" className="highlight">
+        <Link to="/supportlist" className={styles.highlight}>
           문의하기
         </Link>
         <Link to="/corpregister">기업제휴</Link>
       </div>
-      <div className="footer-bottom">
-        <div className="footer-logo">
-          <img src={icon} height="150px" />
-          <p className="footer-text">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
+      <div className={styles.footerBottom}>
+        <div className={styles.footerLogo}>
+          <img src={icon} height="150px" alt="CATCH Logo" />
+          <p className={styles.footerText}>
+            당신의 커리어를 연결합니다, <b>Catch Work.</b>
+            <br /> 채용공고, 기업정보, 이력서 관리까지 한 번에 해결하세요.{" "}
+            <br /> <b>Catch Work</b>는 이력서 작성부터 채용공고 지원, 기업정보
+            탐색까지 지원하는 취업 통합 플랫폼입니다. <br />
+            누구나 쉽게 시작하고, 끝까지 함께하는 취업 여정을 <b>Catch Work</b>
+            와 함께하세요.
           </p>
         </div>
       </div>

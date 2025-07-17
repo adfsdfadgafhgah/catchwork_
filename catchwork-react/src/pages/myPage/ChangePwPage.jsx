@@ -2,7 +2,7 @@ import { useState } from "react";
 import useSignUpFormHandler from "../../hooks/useSignUpFormHandler";
 import { useOutletContext, useNavigate } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
-import "./ChangePwPage.css";
+import styles from "./ChangePwPage.module.css";
 
 const ChangePwPage = () => {
   const { memNo } = useOutletContext();
@@ -67,70 +67,87 @@ const ChangePwPage = () => {
     currentPw === "" || formData.memPw === "" || formData.memPwConfirm === "";
 
   return (
-    <div className="edit-change-pw-container">
-      <form onSubmit={handleSubmit} className="edit-change-pw-form">
-        <div className="edit-change-pw-form-item">
-          <label htmlFor="currentPw">
-            현재 비밀번호
-            <input
-              type="password"
-              id="currentPw"
-              name="currentPw"
-              onChange={confirmPw}
-              style={{
-                borderColor: validity.currentPw === false ? "red" : undefined,
-              }}
-            />
-          </label>
+    <div className={styles.editContainer}>
+      <div className={styles.editForm}>
+        <div className={styles.editHeader}>
+          <h1>비밀번호 변경</h1>
+          <p>
+            보안을 위해 현재 비밀번호를 입력한 후 <br /> 새 비밀번호를
+            설정해주세요.
+          </p>
         </div>
-        <div className="edit-change-pw-form-item">
-          <label htmlFor="memPw">
-            새 비밀번호
-            <input
-              name="memPw"
-              type="password"
-              value={formData.memPw}
-              onChange={handleInputChange}
-              style={{
-                borderColor: validity.memPw === false ? "red" : undefined,
-              }}
-            />
-            {validity.memPw === false && (
-              <small style={{ color: "red" }}>
-                새 비밀번호를 입력해주세요.
-              </small>
-            )}
-          </label>
-        </div>
-        <div className="edit-change-pw-form-item">
-          <label htmlFor="memPwConfirm">
-            새 비밀번호 확인
-            <input
-              name="memPwConfirm"
-              type="password"
-              value={formData.memPwConfirm}
-              onChange={handleInputChange}
-              style={{
-                borderColor:
-                  formData.memPwConfirm.trim().length !== 0 &&
-                  validity.memPwConfirm === false
-                    ? "red"
-                    : undefined,
-              }}
-            />
-            {formData.memPwConfirm.trim().length !== 0 &&
-              validity.memPwConfirm === false && (
-                <small style={{ color: "red" }}>
-                  비밀번호가 일치하지 않습니다.
-                </small>
-              )}
-          </label>
+        <div className={styles.formContent}>
+          <form onSubmit={handleSubmit} className={styles.infoCard}>
+            <div className={styles.infoContent}>
+              <div className={styles.infoLabel}>현재 비밀번호</div>
+              <div className={styles.inputWrapper}>
+                <input
+                  type="password"
+                  id="currentPw"
+                  name="currentPw"
+                  onChange={confirmPw}
+                  className={
+                    validity.currentPw === false ? styles.inputError : ""
+                  }
+                />
+              </div>
+            </div>
+
+            <div className={styles.infoContent}>
+              <div className={styles.infoLabel}>새 비밀번호</div>
+              <div className={styles.inputWrapper}>
+                <input
+                  name="memPw"
+                  type="password"
+                  value={formData.memPw}
+                  onChange={handleInputChange}
+                  className={validity.memPw === false ? styles.inputError : ""}
+                />
+                {validity.memPw === false && (
+                  <div className={styles.errorMessage}>
+                    비밀번호는 영문, 숫자, 특수문자 포함 8~20자여야 합니다.
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className={styles.infoContent}>
+              <div className={styles.infoLabel}>새 비밀번호 확인</div>
+              <div className={styles.inputWrapper}>
+                <input
+                  name="memPwConfirm"
+                  type="password"
+                  value={formData.memPwConfirm}
+                  onChange={handleInputChange}
+                  className={
+                    formData.memPwConfirm.trim().length !== 0 &&
+                    validity.memPwConfirm === false
+                      ? styles.inputError
+                      : ""
+                  }
+                />
+                {formData.memPwConfirm.trim().length !== 0 &&
+                  validity.memPwConfirm === false && (
+                    <div className={styles.errorMessage}>
+                      비밀번호가 일치하지 않습니다.
+                    </div>
+                  )}
+              </div>
+            </div>
+          </form>
         </div>
 
-        <button type="submit" onClick={handleSubmit} disabled={isDisabled}>
-          비밀번호 변경
-        </button>
-      </form>
+        <div className={styles.submitContainer}>
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            disabled={isDisabled}
+            className={styles.submitButton}
+          >
+            비밀번호 변경
+          </button>
+        </div>
+      </div>
     </div>
   );
 };

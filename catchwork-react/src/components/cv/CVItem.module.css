@@ -4,8 +4,8 @@
   padding: 20px 24px;
   margin: 16px auto;
   max-width: 1000px;
-  background: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background: var(--white);
+  box-shadow: var(--box-shadow);
 
   display: flex;
   flex-direction: column;
@@ -16,7 +16,7 @@
   font-size: 18px;
   font-weight: 600;
   margin-top: 16px;
-  color: #333;
+  color: var(--deep-gray);
 }
 
 .cvActions {

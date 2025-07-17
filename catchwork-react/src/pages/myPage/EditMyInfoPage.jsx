@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
 import useSignUpFormHandler from "../../hooks/useSignUpFormHandler";
-import "./EditMyInfoPage.css";
+import styles from "./EditMyInfoPage.module.css";
 import { axiosApi } from "../../api/axiosAPI";
 import ConfirmPwModal from "../../components/myPage/ConfirmPwModal";
 import defaultImg from "../../assets/icon.png";
@@ -247,7 +247,7 @@ const EditMyInfoPage = () => {
       }
     } catch (error) {
       console.error("비밀번호 확인 실패", error);
-      alert("비밀번호 확인 중 오류가 발생했습니다.");
+      alert("비밀번호가 일치하지 않습니다.");
       // 에러 발생 시 모달 상태 초기화
       closeModal();
     }
@@ -289,6 +289,8 @@ const EditMyInfoPage = () => {
 
         // 3. 모든 처리가 성공하면 홈으로 이동
         if (imageProcessSuccess) {
+          // 스크롤 위치를 초기화
+          window.scrollTo(0, 0);
           navigate("/myPage/home");
         }
       }
@@ -306,172 +308,183 @@ const EditMyInfoPage = () => {
   };
 
   if (!loginMember || !loginMember.memId) {
-    return <div>로딩 중...</div>;
+    return (
+      <div className={styles.loading}>
+        <i className="fa-solid fa-spinner fa-spin"></i> 로딩 중...
+      </div>
+    );
   }
 
   return (
-    <div className="edit-myinfo-container">
-      <form onSubmit={handleSubmit} className="edit-myinfo-form">
-        <div className="edit-myinfo-container">
-          {/* 프로필 이미지 */}
-          <div className="profile-section">
-            <div className="edit-profile-img" onClick={handleClick}>
-              {previewSrc || loginMember?.memProfilePath ? (
-                <img
-                  src={(() => {
-                    // 새로 선택한 이미지가 있으면 미리보기 표시
-                    if (previewSrc) {
-                      return previewSrc;
-                    }
-
-                    // 기존 프로필 이미지가 있고 삭제되지 않았다면 기존 이미지 표시
-                    if (loginMember?.memProfilePath && !isDeleted.current) {
-                      return `${imgUrl}/${loginMember.memProfilePath}`;
-                    }
-
-                    // 그 외의 경우 기본 이미지 표시
-                    return defaultImg;
-                  })()}
-                  alt="프로필"
+    <main className={styles.editContainer}>
+      <form onSubmit={handleSubmit} className={styles.editForm}>
+        <div className={styles.editHeader}>
+          <h1>회원정보 수정</h1>
+          <p>개인정보를 안전하게 관리하세요</p>
+        </div>
+        <div className={styles.formContent}>
+          {/* 프로필 이미지 섹션 */}
+          <div className={styles.profileSection}>
+            <div className={styles.profileImageWrapper}>
+              <div className={styles.profileImage} onClick={handleClick}>
+                {previewSrc || loginMember?.memProfilePath ? (
+                  <img
+                    src={(() => {
+                      if (previewSrc) {
+                        return previewSrc;
+                      }
+                      if (loginMember?.memProfilePath && !isDeleted.current) {
+                        return `${imgUrl}/${loginMember.memProfilePath}`;
+                      }
+                      return defaultImg;
+                    })()}
+                    alt="프로필"
+                  />
+                ) : (
+                  <i className="fas fa-user"></i>
+                )}
+                <div className={styles.imageOverlay}>
+                  <i className="fas fa-camera"></i>
+                </div>
+                <input
+                  type="file"
+                  name="profileImg"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  style={{ display: "none" }}
                 />
-              ) : (
-                <i className="fas fa-user"></i>
-              )}
-              <input
-                type="file"
-                name="profileImg"
-                accept="image/*"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                style={{ display: "none" }}
-              />
+              </div>
+              <button
+                type="button"
+                onClick={handleDelete}
+                className={styles.resetButton}
+              >
+                기본 이미지로 변경
+              </button>
             </div>
-            <button
-              type="button"
-              onClick={handleDelete}
-              className="check-button"
-            >
-              기본 이미지로 변경
-            </button>
           </div>
 
-          {/* 기본 정보 */}
-          <div className="info-card">
-            <div className="info-content">
-              <span className="info-label">아이디</span>
-              <span className="info-value font-medium">
+          {/* 기본 정보 카드 */}
+          <div className={styles.infoCard}>
+            <div className={styles.infoContent}>
+              <span className={styles.infoLabel}>아이디</span>
+              <span className={`${styles.infoValue} ${styles.readonly}`}>
                 {loginMember.memId}
               </span>
             </div>
 
-            <div className="info-content">
-              <span className="info-label">이메일</span>
-              <div className="input-wrapper">
+            <div className={styles.infoContent}>
+              <span className={styles.infoLabel}>이메일</span>
+              <div className={styles.inputWrapper}>
                 <input
                   name="memEmail"
                   value={formData.memEmail}
                   onChange={handleInputChange}
                   required
-                  style={{
-                    borderColor:
-                      validity.memEmail === false ? "red" : undefined,
-                  }}
+                  className={
+                    validity.memEmail === false ? styles.inputError : ""
+                  }
+                  placeholder="이메일을 입력해주세요"
                 />
                 {validity.memEmail === false && (
-                  <small style={{ color: "red" }}>
+                  <small className={styles.errorMessage}>
                     이메일 형식이 올바르지 않습니다.
                   </small>
                 )}
               </div>
             </div>
 
-            <label className="info-content">
-              <span className="info-label">전화번호</span>
-              <div className="input-wrapper">
+            <div className={styles.infoContent}>
+              <span className={styles.infoLabel}>전화번호</span>
+              <div className={styles.inputWrapper}>
                 <input
                   name="memTel"
                   value={formData.memTel}
                   onChange={handleInputChange}
                   required
-                  style={{
-                    borderColor: validity.memTel === false ? "red" : undefined,
-                  }}
+                  className={validity.memTel === false ? styles.inputError : ""}
+                  placeholder="전화번호를 입력해주세요"
                 />
                 {validity.memTel === false && (
-                  <small style={{ color: "red" }}>
+                  <small className={styles.errorMessage}>
                     전화번호 형식이 올바르지 않습니다.
                   </small>
                 )}
               </div>
-            </label>
+            </div>
 
-            <div className="info-content">
-              <span className="info-label">SMS 수신</span>
-              <div className="checkbox-wrapper">
-                <label>
+            <div className={styles.infoContent}>
+              <span className={styles.infoLabel}>SMS 수신</span>
+              <div className={styles.checkboxWrapper}>
+                <label className={styles.checkboxLabel}>
                   <input
                     type="checkbox"
                     name="memSmsFl"
                     checked={formData.memSmsFl}
                     onChange={(e) => setField("memSmsFl", e.target.checked)}
                   />
+                  <span className={styles.checkmark}></span>
                   SMS 수신 동의
                 </label>
               </div>
             </div>
 
-            <div className="info-content">
-              <span className="info-label">이름</span>
-              <div className="input-wrapper">
+            <div className={styles.infoContent}>
+              <span className={styles.infoLabel}>이름</span>
+              <div className={styles.inputWrapper}>
                 <input
                   name="memName"
                   value={formData.memName}
                   onChange={handleInputChange}
                   required
-                  style={{
-                    borderColor: validity.memName === false ? "red" : undefined,
-                  }}
+                  className={
+                    validity.memName === false ? styles.inputError : ""
+                  }
+                  placeholder="이름을 입력해주세요"
                 />
                 {validity.memName === false && (
-                  <small style={{ color: "red" }}>
+                  <small className={styles.errorMessage}>
                     이름을 올바르게 입력해주세요.
                   </small>
                 )}
               </div>
             </div>
 
-            <label className="info-content">
-              <span className="info-label">닉네임</span>
-              <div className="input-wrapper">
-                <input
-                  name="memNickname"
-                  value={formData.memNickname}
-                  onChange={handleInputChange}
-                  required
-                  style={{
-                    borderColor:
-                      validity.memNickname === false ? "red" : undefined,
-                  }}
-                />
-                {validity.memNickname === false && (
-                  <small style={{ color: "red" }}>
-                    닉네임을 올바르게 입력해주세요.
-                  </small>
-                )}
+            <div className={styles.infoContent}>
+              <span className={styles.infoLabel}>닉네임</span>
+              <div className={styles.inputWithButton}>
+                <div className={styles.inputWrapper}>
+                  <input
+                    name="memNickname"
+                    value={formData.memNickname}
+                    onChange={handleInputChange}
+                    required
+                    className={
+                      validity.memNickname === false ? styles.inputError : ""
+                    }
+                    placeholder="닉네임을 입력해주세요"
+                  />
+                  {validity.memNickname === false && (
+                    <small className={styles.errorMessage}>
+                      닉네임을 올바르게 입력해주세요.
+                    </small>
+                  )}
+                </div>
+                <button
+                  type="button"
+                  onClick={handleCheckNickname}
+                  disabled={!formData.memNickname}
+                  className={styles.checkButton}
+                >
+                  중복 확인
+                </button>
               </div>
-              <button
-                type="button"
-                onClick={handleCheckNickname}
-                disabled={!formData.memNickname}
-                className="check-button"
-              >
-                중복 확인
-              </button>
-            </label>
+            </div>
 
-            <div className="info-content">
-              <span className="info-label">생년월일</span>
-              <div className="input-wrapper">
+            <div className={styles.infoContent}>
+              <span className={styles.infoLabel}>생년월일</span>
+              <div className={styles.inputWrapper}>
                 <input
                   name="memBirthday"
                   type="date"
@@ -482,10 +495,10 @@ const EditMyInfoPage = () => {
               </div>
             </div>
 
-            <div className="info-content">
-              <span className="info-label">성별</span>
-              <div className="radio-wrapper">
-                <label>
+            <div className={styles.infoContent}>
+              <span className={styles.infoLabel}>성별</span>
+              <div className={styles.radioWrapper}>
+                <label className={styles.radioLabel}>
                   <input
                     type="radio"
                     name="memGender"
@@ -494,9 +507,10 @@ const EditMyInfoPage = () => {
                     onChange={handleInputChange}
                     required
                   />
-                  남
+                  <span className={styles.radioButton}></span>
+                  남성
                 </label>
-                <label>
+                <label className={styles.radioLabel}>
                   <input
                     type="radio"
                     name="memGender"
@@ -505,15 +519,16 @@ const EditMyInfoPage = () => {
                     onChange={handleInputChange}
                     required
                   />
-                  여
+                  <span className={styles.radioButton}></span>
+                  여성
                 </label>
               </div>
             </div>
 
-            <div className="info-content address-content">
-              <span className="info-label">주소</span>
-              <div className="address-wrapper">
-                <div className="address-input-group">
+            <div className={styles.infoContent}>
+              <span className={styles.infoLabel}>주소</span>
+              <div className={styles.addressWrapper}>
+                <div className={styles.addressInputGroup}>
                   <input
                     name="memAddr"
                     value={formData.memAddr}
@@ -525,7 +540,7 @@ const EditMyInfoPage = () => {
                   <button
                     type="button"
                     onClick={triggerAddressSearch}
-                    className="address-button"
+                    className={styles.addressButton}
                   >
                     주소 찾기
                   </button>
@@ -534,33 +549,33 @@ const EditMyInfoPage = () => {
                   name="detailAddress"
                   value={formData.detailAddress}
                   onChange={handleInputChange}
-                  placeholder="상세주소"
+                  placeholder="상세주소를 입력해주세요"
                   required
+                  className={styles.detailAddress}
                 />
               </div>
             </div>
           </div>
         </div>
 
-        <div className="submit-button-container">
+        <div className={styles.submitContainer}>
           <button
             type="submit"
             disabled={!isValid}
-            className="submit-button"
-            onClick={handleSubmit}
+            className={styles.submitButton}
           >
             수정하기
           </button>
         </div>
-
-        <ConfirmPwModal
-          isOpen={modalState.isOpen}
-          onClose={closeModal}
-          onConfirm={handlePasswordConfirm}
-          loading={modalState.loading}
-        />
       </form>
-    </div>
+
+      <ConfirmPwModal
+        isOpen={modalState.isOpen}
+        onClose={closeModal}
+        onConfirm={handlePasswordConfirm}
+        loading={modalState.loading}
+      />
+    </main>
   );
 };
 

@@ -25,7 +25,7 @@
 
 .title-underline {
   height: 2px;
-  background-color: #ccc;
+  background-color: var(--img-color);
   width: 100%;
   max-width: 800px;
   margin: 0 auto 24px auto;
@@ -65,7 +65,7 @@
 }
 
 .form-group input[type="text"]::placeholder {
-  color: #999;
+  color: var(--gray01);
 }
 
 .form-group select {
@@ -105,7 +105,7 @@
 }
 
 .form-group textarea::placeholder {
-  color: #999;
+  color: var(--gray01);
 }
 
 /* 버튼 영역 */

@@ -27,7 +27,7 @@
 
 .submitBtn,
 .cancelBtn {
-  background-color: white;
+  background-color: var(--white);
   border: 1px solid var(--stroke-color1);
   padding: 6px 12px;
   font-size: 14px;

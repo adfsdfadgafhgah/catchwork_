@@ -76,7 +76,7 @@ const SupportListPage = () => {
     <div className="support-list-container">
       <div className="support-header">
         <h2>문의 목록</h2>
-        <button className="write-btn-submit" onClick={goToWrite}>
+        <button className="button-common" onClick={goToWrite}>
           <i className="fa-regular fa-pen-to-square"></i> 작성하기
         </button>
       </div>

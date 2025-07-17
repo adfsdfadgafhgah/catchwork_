@@ -19,7 +19,7 @@
   display: flex;
   flex-direction: column;
   font-size: 14px;
-  color: #333;
+  color: var(--deep-gray);
 }
 
 .corpRegister-form input {
@@ -35,7 +35,7 @@
   width: fit-content;
   padding: 6px 12px;
   background-color: var(--main-color);
-  color: white;
+  color: var(--white);
   border: none;
   border-radius: 4px;
   cursor: pointer;
@@ -56,7 +56,7 @@
 }
 
 .error-text {
-  color: red;
+  color: var(--red);
   font-size: 12px;
   margin-top: 2px;
 }
@@ -72,6 +72,6 @@
 
 .corpRegister-timer {
   font-size: 12px;
-  color: red;
+  color: var(--red);
   margin-top: 2px;
 }

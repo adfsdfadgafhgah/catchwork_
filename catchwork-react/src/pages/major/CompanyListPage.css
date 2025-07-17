@@ -1,5 +1,5 @@
-.company-container {
-  max-width: 1200px;
+.companylist-container {
+  width: 1080px;
   margin: 0 auto;
   padding: 0px 20px;
 }
@@ -15,10 +15,10 @@
 .company-grid {
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-start;
   gap: 24px;
-  justify-content: center; /* ← 또는 flex-start, 안전하게 정렬 */
-  box-sizing: border-box;
-  padding: 0 12px;
+  max-width: 936px; /* 300*3 + 24*2 */
+  margin: 0 auto;
 }
 .company-end-message {
   text-align: center;

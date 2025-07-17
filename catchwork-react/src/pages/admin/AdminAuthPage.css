@@ -5,7 +5,7 @@
   height: 100vh;
 }
 
-.container {
+.admin-container {
   padding: 20px 40px;
   border-radius: 5px;
   min-width: 350px;
@@ -37,7 +37,8 @@
 }
 
 .btn:hover {
-  background-color: var(--gray01);
+  /* background-color: var(--gray01); */
+  /*윤진 코드에도 먹어서 주석처리 해놈*/
 }
 
 .btn:active {

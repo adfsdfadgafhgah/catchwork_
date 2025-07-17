@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CommentCss from "./CommentWrite.module.css";
+import styles from "./CommentWrite.module.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 
@@ -46,19 +46,19 @@ export default function CommentWrite({
   };
 
   return (
-    <div className={CommentCss.writeWrapper}>
+    <div className={styles.writeWrapper}>
       <textarea
-        className={CommentCss.textarea}
+        className={styles.textarea}
         placeholder="댓글을 작성하세요"
         value={content}
         onChange={(e) => setContent(e.target.value)}
         rows={2}
       />
-      <div className={CommentCss.buttonGroup}>
-        <button className={CommentCss.cancelBtn} onClick={() => setContent("")}>
+      <div className={styles.buttonGroup}>
+        <button className={styles.cancelBtn} onClick={() => setContent("")}>
           <i className="fa-solid fa-xmark"></i> 취소하기
         </button>
-        <button className={CommentCss.submitBtn} onClick={handleSubmit}>
+        <button className={styles.submitBtn} onClick={handleSubmit}>
           <i className="fa-regular fa-pen-to-square"></i> 작성하기
         </button>
       </div>

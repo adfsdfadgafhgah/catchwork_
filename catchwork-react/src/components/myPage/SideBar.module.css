@@ -9,7 +9,7 @@
   top: 1;
   left: 0;
   overflow-y: auto;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--box-shadow);
   z-index: 10;
 }
 
@@ -59,7 +59,7 @@
 
 .navItem.active {
   background-color: var(--main-color);
-  color: white;
+  color: var(--white);
   font-weight: 600;
   box-shadow: 0 2px 8px rgba(70, 181, 171, 0.3);
 }
@@ -128,12 +128,12 @@
 
 .subNavItem.active {
   background-color: var(--main-color);
-  color: white;
+  color: var(--white);
   font-weight: 500;
 }
 
 .subNavItem.active::before {
-  background-color: white;
+  background-color: var(--white);
 }
 
 /* 반응형 스타일 */

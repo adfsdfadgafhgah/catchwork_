@@ -38,7 +38,7 @@
 
 .date {
   font-size: 13px;
-  color: #999;
+  color: var(--gray01);
 }
 
 .textarea {
@@ -62,7 +62,7 @@
 }
 
 .cancelBtn {
-  background-color: white;
+  background-color: var(--white);
   border: 1px solid var(--stroke-color1);
   padding: 6px 12px;
   font-size: 14px;
@@ -80,7 +80,7 @@
 }
 
 .submitBtn {
-  background-color: white;
+  background-color: var(--white);
   border: 1px solid var(--stroke-color1);
   padding: 6px 12px;
   font-size: 14px;

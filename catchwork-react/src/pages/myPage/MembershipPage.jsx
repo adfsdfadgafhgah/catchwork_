@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { loadTossPayments } from "@tosspayments/tosspayments-sdk";
 import { useNavigate, useOutletContext } from "react-router-dom";
 
-import "./MembershipPage.css";
+import styles from "./MembershipPage.module.css";
 import { axiosApi } from "../../api/axiosAPI";
 import MembershipList from "../../components/myPage/MembershipList";
 import PaymentModal from "../../components/myPage/PaymentModal";
@@ -46,11 +46,12 @@ function MembershipPage() {
   // TossPayments 위젯 초기화
   useEffect(() => {
     async function fetchPayment() {
-      if (!loginMember.memNo) return;
+      if (!loginMember?.memNo) return;
+
       try {
         const tossPayments = await loadTossPayments(clientKey);
         const paymentInstance = tossPayments.payment({
-          customerKey: loginMember.memNo,
+          customerKey: loginMember?.memNo,
         });
         setPayment(paymentInstance);
       } catch (error) {
@@ -81,8 +82,8 @@ function MembershipPage() {
       method: "CARD",
       successUrl: `${window.location.origin}/mypage/payment/billing?productId=${productId}`,
       failUrl: `${window.location.origin}/mypage/payment/fail`,
-      customerEmail: loginMember.memEmail,
-      customerName: loginMember.memName,
+      customerEmail: loginMember?.memEmail,
+      customerName: loginMember?.memName,
     });
   }
 
@@ -92,7 +93,7 @@ function MembershipPage() {
     try {
       // 로그인 유저의 유효한 빌링키 조회
       const response = await axiosApi.post("/tosspayment/getBillingKey", {
-        memNo: loginMember.memNo,
+        memNo: loginMember?.memNo,
       });
       if (response.status === 200) {
         // 유효한 빌링키가 없으면, 빌링키 발급
@@ -100,7 +101,7 @@ function MembershipPage() {
           requestBillingAuth(memGrade);
         } else {
           // 현재 등급
-          const current = loginMember.memGrade;
+          const current = loginMember?.memGrade;
           // 변경 대상 등급
           const target = memGrade;
           // 현재 무료 → 결제
@@ -117,14 +118,14 @@ function MembershipPage() {
           }
           // 복구하기 (예: 해지된 상태에서 다시 동일 등급 or 낮은 등급 선택 시)
           else if (
-            subscription.subStatus === 1 &&
+            subscription?.subStatus === 1 &&
             target === current &&
-            subscription.memGrade !== current
+            subscription?.memGrade !== current
           ) {
             openModal("restore");
           }
           // 해지 후, 다른 등급 결제
-          else if (subscription.memGrade === 0 && target !== current) {
+          else if (subscription?.memGrade === 0 && target !== current) {
             // 로직 구현 필요
           }
         }
@@ -141,16 +142,18 @@ function MembershipPage() {
   }
 
   return (
-    <div className="membership-container">
-      {loginMember.memGrade !== 0 && subscription.subEndAt && (
-        <p>
-          {membershipList[loginMember.memGrade].memGradeName} 플랜 결제 중.{" "}
-          {`${subscription.subEndAt.substring(5, 7)}월 
+    <div className={styles.membershipContainer}>
+      <p>
+        {loginMember?.memGrade !== 0 && subscription?.subEndAt && (
+          <>
+            {membershipList[loginMember?.memGrade].memGradeName} 플랜 결제 중.{" "}
+            {`${subscription.subEndAt.substring(5, 7)}월 
           ${subscription.subEndAt.substring(8, 10)}일`}
-          까지 사용 가능
-        </p>
-      )}
-      <div className="membership-list">
+            까지 사용 가능
+          </>
+        )}
+      </p>
+      <div className={styles.membershipList}>
         <MembershipList
           membershipList={membershipList}
           subscription={subscription}
@@ -168,7 +171,7 @@ function MembershipPage() {
         />
       </div>
 
-      {subscription.memGrade !== 0 && subscription.memGrade !== undefined && (
+      {subscription?.memGrade !== 0 && subscription?.memGrade !== undefined && (
         <button onClick={() => openModal("cancel")}>해지하기</button>
       )}
     </div>

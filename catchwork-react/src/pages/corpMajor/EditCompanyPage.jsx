@@ -183,7 +183,7 @@ const EditCompanyPage = () => {
   };
 
   return (
-    <main className="container">
+    <main className="corp-container">
       <SectionHeader title="기업 정보 수정" />
 
       <div className="company-detail-header">

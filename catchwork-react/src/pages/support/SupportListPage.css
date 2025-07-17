@@ -22,7 +22,7 @@
   padding: 10px 16px;
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: var(--deep-gray);
 
   background-color: var(--input-color);
 

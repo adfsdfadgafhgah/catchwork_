@@ -1,4 +1,4 @@
-import "./MembershipItem.css";
+import styles from "./MembershipItem.module.css";
 
 function getMembershipButtonLabel({ loginMember, membership, subscription }) {
   // subscription이 없으면 무료 플랜과 동일하게 처리
@@ -72,12 +72,12 @@ function MembershipItem({
   }
 
   return (
-    <div className="membership-item">
+    <div className={styles.membershipItem}>
       <h1>{membership.memGradeName}</h1>
       <h1>{membership.memGradePrice}</h1>
       <p>{membership.membershipBenefit}</p>
       <button
-        className="membership-button"
+        className={styles.membershipButton}
         disabled={disabled}
         onClick={() => handleCheckout(membership.memGrade)}
       >

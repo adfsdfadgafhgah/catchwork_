@@ -1,0 +1,162 @@
+/* 메인 컨테이너 */
+.editContainer {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.editHeader {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.editHeader h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 0.5rem 0;
+}
+
+.editHeader p {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+  white-space: pre-line;
+}
+
+/* 폼 스타일 */
+.editForm {
+  min-width: 560px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.formContent {
+  padding: 2rem;
+}
+
+/* 정보 카드 */
+.infoCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.infoContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.infoLabel {
+  min-width: 120px;
+  font-weight: 500;
+  color: var(--main-color);
+  padding-top: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* 입력 필드 스타일 */
+.inputWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputWrapper input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.inputWrapper input:focus {
+  outline: none;
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.1);
+}
+
+.inputError {
+  border-color: #dc3545 !important;
+}
+
+.errorMessage {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* 제출 버튼 */
+.submitContainer {
+  padding: 1.5rem 2rem;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+.submitButton {
+  width: 100%;
+  background: var(--main-color);
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: var(--main-color-dark);
+  transform: translateY(-1px);
+}
+
+.submitButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .editContainer {
+    padding: 1rem;
+  }
+
+  .editHeader h1 {
+    font-size: 1.5rem;
+  }
+
+  .formContent {
+    padding: 1.5rem;
+  }
+
+  .infoContent {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .infoLabel {
+    min-width: auto;
+    padding-top: 0;
+  }
+
+  .submitContainer {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .editHeader h1 {
+    font-size: 1.3rem;
+  }
+
+  .formContent {
+    padding: 1rem;
+  }
+}

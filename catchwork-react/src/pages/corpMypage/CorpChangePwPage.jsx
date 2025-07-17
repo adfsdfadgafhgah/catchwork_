@@ -52,7 +52,7 @@ const CorpChangePwPage = () => {
       console.log(response);
       if (response.status === 200) {
         alert(response.data);
-        navigate("/mypage/home");
+        navigate("/corpmypage"); //corp/mypage
         return;
       }
       alert(response.data);

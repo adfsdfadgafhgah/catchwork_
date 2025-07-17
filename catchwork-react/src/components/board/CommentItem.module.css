@@ -42,7 +42,7 @@
 
 .date {
   font-size: 13px;
-  color: #999;
+  color: var(--gray01);
   flex-shrink: 0; /* ✅ 날짜가 줄어들지 않게 */
 }
 

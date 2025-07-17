@@ -1,0 +1,483 @@
+/* 로딩 스타일 */
+.loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+.loading i {
+  margin-right: 0.5rem;
+  color: var(--main-color);
+}
+
+/* 메인 컨테이너 */
+.editContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.editHeader {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.editHeader h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text);
+  margin: 0 0 0.5rem 0;
+}
+
+.editHeader p {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* 폼 스타일 */
+.editForm {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.formContent {
+  padding: 2rem;
+}
+
+/* 프로필 이미지 섹션 */
+.profileSection {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.profileImageWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.profileImage {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid var(--sub-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profileImage:hover {
+  transform: scale(1.05);
+  border-color: var(--main-color);
+}
+
+.profileImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profileImage i {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 2rem;
+  color: #ccc;
+  background: #f8f9fa;
+}
+
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.profileImage:hover .imageOverlay {
+  opacity: 1;
+}
+
+.imageOverlay i {
+  color: white;
+  font-size: 1.5rem;
+}
+
+.resetButton {
+  background: #f8f9fa;
+  border: 1px solid #e9ecef;
+  color: #6c757d;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.resetButton:hover {
+  background: #e9ecef;
+  color: #495057;
+}
+
+/* 정보 카드 */
+.infoCard {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.infoContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.infoLabel {
+  min-width: 100px;
+  font-weight: 500;
+  color: var(--main-color);
+  padding-top: 0.75rem;
+  flex-shrink: 0;
+}
+
+.infoValue {
+  flex: 1;
+  color: var(--text);
+  padding: 0.75rem;
+  background: #f8f9fa;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+.readonly {
+  background: #f8f9fa;
+  color: #6c757d;
+}
+
+/* 입력 필드 스타일 */
+.inputWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.inputWrapper input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.inputWrapper input:focus {
+  outline: none;
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.1);
+}
+
+.inputError {
+  border-color: #dc3545 !important;
+}
+
+.errorMessage {
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* 닉네임 중복확인 */
+.inputWithButton {
+  flex: 1;
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.inputWithButton .inputWrapper {
+  flex: 1;
+}
+
+.checkButton {
+  background: var(--main-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+.checkButton:hover:not(:disabled) {
+  background: var(--main-color-dark);
+}
+
+.checkButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+/* 체크박스 스타일 */
+.checkboxWrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  padding-top: 0.75rem;
+}
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.5rem;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  display: none;
+}
+
+.checkmark {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #e9ecef;
+  border-radius: 3px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.checkboxLabel input[type="checkbox"]:checked + .checkmark {
+  background: var(--main-color);
+  border-color: var(--main-color);
+}
+
+.checkboxLabel input[type="checkbox"]:checked + .checkmark::after {
+  content: "✓";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* 라디오 버튼 스타일 */
+.radioWrapper {
+  flex: 1;
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+  padding-top: 0.75rem;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  gap: 0.5rem;
+}
+
+.radioLabel input[type="radio"] {
+  display: none;
+}
+
+.radioButton {
+  width: 18px;
+  height: 18px;
+  border: 2px solid #e9ecef;
+  border-radius: 50%;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.radioLabel input[type="radio"]:checked + .radioButton {
+  border-color: var(--main-color);
+}
+
+.radioLabel input[type="radio"]:checked + .radioButton::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background: var(--main-color);
+  border-radius: 50%;
+}
+
+/* 주소 입력 */
+.addressWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.addressInputGroup {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.addressInputGroup input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: #f8f9fa;
+}
+
+.addressButton {
+  background: var(--main-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 0.2s ease;
+}
+
+.addressButton:hover {
+  background: var(--main-color-dark);
+}
+
+.detailAddress {
+  padding: 0.75rem;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.detailAddress:focus {
+  outline: none;
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.1);
+}
+
+/* 제출 버튼 */
+.submitContainer {
+  padding: 1.5rem 2rem;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+.submitButton {
+  width: 100%;
+  background: var(--main-color);
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: var(--main-color-dark);
+  transform: translateY(-1px);
+}
+
+.submitButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .editContainer {
+    padding: 1rem;
+  }
+
+  .editHeader h1 {
+    font-size: 1.5rem;
+  }
+
+  .formContent {
+    padding: 1.5rem;
+  }
+
+  .profileImage {
+    width: 100px;
+    height: 100px;
+  }
+
+  .infoContent {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .infoLabel {
+    min-width: auto;
+    padding-top: 0;
+  }
+
+  .inputWithButton {
+    flex-direction: column;
+  }
+
+  .checkButton {
+    align-self: flex-start;
+  }
+
+  .radioWrapper {
+    padding-top: 0.5rem;
+  }
+
+  .addressInputGroup {
+    flex-direction: column;
+  }
+
+  .submitContainer {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .editHeader h1 {
+    font-size: 1.3rem;
+  }
+
+  .formContent {
+    padding: 1rem;
+  }
+
+  .profileImage {
+    width: 80px;
+    height: 80px;
+  }
+
+  .radioWrapper {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
