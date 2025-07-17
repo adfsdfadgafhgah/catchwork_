@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
-import "./CorpEditMyInfoPage.css";
+import styles from "./CorpEditMyInfoPage.module.css"; // ✅ 모듈 CSS로 변경
 import { axiosApi } from "../../api/axiosAPI";
 import ConfirmPwModal from "../../components/myPage/ConfirmPwModal";
 import useLoginMember from "../../stores/loginMember";
@@ -36,7 +36,6 @@ const CorpEditMyInfoPage = () => {
     const { name, value } = e.target;
 
     if (name === "memTel") {
-      // 숫자만 남기고 하이픈 자동 추가
       const onlyNums = value.replace(/\D/g, "");
       let formattedTel = "";
 
@@ -88,8 +87,7 @@ const CorpEditMyInfoPage = () => {
         memPw: password,
       });
       return response.status === 200 ? response.data : false;
-    } catch (error) {
-      // console.error("비밀번호 확인 실패", error);
+    } catch {
       return false;
     } finally {
       setModalState((prev) => ({ ...prev, loading: false }));
@@ -123,8 +121,7 @@ const CorpEditMyInfoPage = () => {
         await setLoginMember();
         navigate("/corpmypage");
       }
-    } catch (error) {
-      // console.error("회원 정보 수정 실패", error);
+    } catch {
       alert("회원 정보 수정 중 오류 발생");
     }
   };
@@ -134,22 +131,22 @@ const CorpEditMyInfoPage = () => {
   }
 
   return (
-    <div className="edit-myinfo-container">
-      <form onSubmit={handleSubmit} className="edit-myinfo-form">
-        <div className="info-card">
-          <div className="info-content">
-            <span className="info-label">기업명</span>
-            <span className="info-value">{corpInfo?.corpName || "기업명 없음"}</span>
+    <div className={styles.editMyInfoContainer}>
+      <form onSubmit={handleSubmit} className={styles.editMyInfoForm}>
+        <div className={styles.infoCard}>
+          <div className={styles.infoContent}>
+            <span className={styles.infoLabel}>기업명</span>
+            <span className={styles.infoValue}>{corpInfo?.corpName || "기업명 없음"}</span>
           </div>
 
-          <div className="info-content">
-            <span className="info-label">아이디</span>
-            <span className="info-value">{loginMember.memId}</span>
+          <div className={styles.infoContent}>
+            <span className={styles.infoLabel}>아이디</span>
+            <span className={styles.infoValue}>{loginMember.memId}</span>
           </div>
 
-          <div className="info-content">
-            <span className="info-label">이메일</span>
-            <div className="input-wrapper">
+          <div className={styles.infoContent}>
+            <span className={styles.infoLabel}>이메일</span>
+            <div className={styles.inputWrapper}>
               <input
                 name="memEmail"
                 value={formData.memEmail}
@@ -159,23 +156,23 @@ const CorpEditMyInfoPage = () => {
             </div>
           </div>
 
-          <div className="info-content">
-            <span className="info-label">전화번호</span>
-            <div className="input-wrapper">
+          <div className={styles.infoContent}>
+            <span className={styles.infoLabel}>전화번호</span>
+            <div className={styles.inputWrapper}>
               <input
                 name="memTel"
                 value={formData.memTel}
                 onChange={handleInputChange}
                 required
                 placeholder="010-1234-5678"
-                maxLength={13} // 하이픈 포함 최대 길이
+                maxLength={13}
               />
             </div>
           </div>
 
-          <div className="info-content">
-            <span className="info-label">이름</span>
-            <div className="input-wrapper">
+          <div className={styles.infoContent}>
+            <span className={styles.infoLabel}>이름</span>
+            <div className={styles.inputWrapper}>
               <input
                 name="memName"
                 value={formData.memName}
@@ -185,9 +182,9 @@ const CorpEditMyInfoPage = () => {
             </div>
           </div>
 
-          <div className="info-content">
-            <span className="info-label">부서명</span>
-            <div className="input-wrapper">
+          <div className={styles.infoContent}>
+            <span className={styles.infoLabel}>부서명</span>
+            <div className={styles.inputWrapper}>
               <input
                 name="corpMemDept"
                 value={formData.corpMemDept}
@@ -198,10 +195,10 @@ const CorpEditMyInfoPage = () => {
           </div>
         </div>
 
-        <div className="submit-button-container">
+        <div className={styles.submitButtonContainer}>
           <button
             type="submit"
-            className="submit-button"
+            className={styles.submitButton}
             disabled={
               !formData.memEmail ||
               !formData.memTel ||
