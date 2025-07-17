@@ -51,7 +51,7 @@
  <!-- 이메일 인증번호 삭제(스케줄러) -->
  <delete id="removeTargetEmailAuth">
   DELETE FROM EMAIL_AUTH
-  WHERE AUTH_TIME <![CDATA[ < ]]> SYSDATE - INTERVAL #{deleteTargetPeriod} DAY
+  WHERE AUTH_TIME <![CDATA[ < ]]> SYSDATE - INTERVAL '${deleteTargetPeriod}' DAY
  </delete>
 
 </mapper>

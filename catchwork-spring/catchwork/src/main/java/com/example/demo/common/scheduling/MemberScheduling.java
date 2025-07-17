@@ -44,8 +44,8 @@ public class MemberScheduling {
 
   // 이메일 인증번호 삭제
   // 매일 자정 00:00:00에 실행
-  //@Scheduled(cron = "0 0 0 * * *")
-  @Scheduled(cron = "*/10 * * * * *") // 테스트용
+  @Scheduled(cron = "0 0 0 * * *")
+  // @Scheduled(cron = "*/10 * * * * *") // 테스트용
   public void emailAuth() {
     log.info("이메일 인증번호 처리 시작");
     int result = memberService.removeTargetEmailAuth(deleteTargetPeriod);
