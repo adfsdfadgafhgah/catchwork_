@@ -18,11 +18,8 @@ export const useAdminTitle = () => {
 
 export const handleAdminLogout = () => {
   const navigate = useNavigate();
-
-  return () => {
-    // TODO: 로그아웃 로직 추가 (토큰 삭제 등)
-    navigate("/");
-  };
+  document.cookie = "adminId=; path=/; max-age=0"; // 쿠키 즉시 만료
+  navigate("/admin-auth");
 };
 
 // 공통 상수

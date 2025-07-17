@@ -14,6 +14,6 @@ public interface AdminBanService {
 
     AdminBan selectBanDetail(int banNo);
 
-    int releaseBan(int banNo);
+    int releaseBan(int banNo, String targetNo, String targetType);
 
 }

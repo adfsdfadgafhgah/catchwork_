@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +24,8 @@ import com.example.demo.admin.model.entity.AdminEntity;
 import com.example.demo.admin.model.service.AdminService;
 import com.example.demo.support.model.dto.Support;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -34,9 +37,17 @@ public class AdminController {
 	private AdminService adminService;
 
 	@PostMapping("auth")
-	public ResponseEntity<?> authenticationAdmin(@RequestBody Admin inputAdmin) {
+	public ResponseEntity<?> authenticationAdmin(@RequestBody Admin inputAdmin, HttpServletResponse response) {
 	    try {
 	        AdminEntity admin = adminService.auth(inputAdmin);
+	        
+	        // 쿠키에 adminId 저장
+	        Cookie cookie = new Cookie("adminId", admin.getAdminId());
+	        cookie.setPath("/");              // 모든 경로에서 접근 가능
+	        cookie.setHttpOnly(true);         // JS에서 접근 못하게 (보안)
+	        cookie.setMaxAge(60 * 60);        // 유효시간 1시간
+	        response.addCookie(cookie);       // 응답에 쿠키 추가
+	        
 	        return ResponseEntity.ok(Map.of(
 	            "message", "Authentication Complete",
 	            "adminId", admin.getAdminId(),
@@ -65,6 +76,14 @@ public class AdminController {
 		}
 	}
 
+	@GetMapping("/admin/check")
+	public ResponseEntity<?> checkAdmin(@CookieValue(value = "adminId", required = false) String adminId) {
+	    if (adminId == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Not logged in"));
+	    }
+	    return ResponseEntity.ok(Map.of("adminId", adminId));
+	}
+	
 	/**
 	 * 최근 미처리 신고 목록 조회
 	 * 

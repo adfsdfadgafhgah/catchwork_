@@ -2,26 +2,20 @@ import React from "react";
 import styles from "./BanDetailBox.module.css";
 
 const BanDetailBox = ({ banDetail, onRelease }) => {
-  if (!banDetail) return <p>Loading...</p>;
+  if (!banDetail) return <p className={styles.loadingMessage}>로딩 중...</p>;
 
   return (
-    <div className={styles.detailBox}>
-      <h3>정지 상세 정보</h3>
-      <dl>
-        <dt>BAN_NO</dt>
-        <dd>{banDetail.banNo}</dd>
+    <div className={styles.detailContainer}>
+      <div className={styles.infoSection}>
+        <div className={styles.infoRow}><span className={styles.label}>정지 번호:</span><span className={styles.value}>{banDetail.banNo}</span></div>
+        <div className={styles.infoRow}><span className={styles.label}>정지 대상 타입:</span><span className={styles.value}>{banDetail.banTargetType}</span></div>
+        <div className={styles.infoRow}><span className={styles.label}>정지 대상 번호:</span><span className={styles.value}>{banDetail.banTargetNo}</span></div>
+        <div className={styles.infoRow}><span className={styles.label}>정지 사유:</span><span className={styles.value}>{banDetail.banContent}</span></div>
+      </div>
 
-        <dt>정지 대상 타입</dt>
-        <dd>{banDetail.banTargetType}</dd>
-
-        <dt>정지 대상 번호</dt>
-        <dd>{banDetail.banTargetNo}</dd>
-
-        <dt>정지 사유</dt>
-        <dd>{banDetail.banContent}</dd>
-      </dl>
-
-      <button onClick={() => onRelease(banDetail.banNo)}>정지 해제</button>
+      <div className={styles.buttonGroup}>
+        <button className={styles.submitButton} onClick={onRelease}>정지 해제</button>
+      </div>
     </div>
   );
 };

@@ -17,7 +17,11 @@ const useBanUtils = () => {
     const getBanList = async (params) => {
         try {
             const res = await axiosApi.get("/admin/ban/list", { params });
-            setBanList(res.data.list);
+
+            //list가 배열이면 그대로, 아니면 빈 배열로 처리
+            const list = Array.isArray(res.data.list) ? res.data.list : [];
+            setBanList(list);
+
             return res.data;
         } catch (err) {
             console.error(err);
@@ -42,9 +46,16 @@ const useBanUtils = () => {
      * @param {number} banNo
      * @param {Function} callback
      */
-    const releaseBan = async (banNo, callback) => {
+    const releaseBan = async (banNo, targetNo, targetType, callback) => {
         try {
-            await axiosApi.delete(`/admin/ban/release/${banNo}`);
+            await axiosApi.delete(`/admin/ban/release/${banNo}`,
+                {
+                    params: {
+                        targetNo,
+                        targetType
+                    }
+                }
+            );
             alert("정지 해제 완료!");
             if (callback) callback();
         } catch (err) {
