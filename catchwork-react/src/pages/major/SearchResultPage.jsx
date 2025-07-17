@@ -12,13 +12,22 @@ const SearchResultPage = () => {
   const { loginMember } = useLoginMember();
   const [params] = useSearchParams();
   const query = params.get("query")?.trim() || "";
-  const type = params.get("type") || "recruit"; // 기본값은 채용공고
+  const type = params.get("type") || "recruit";
 
   const [companyResults, setCompanyResults] = useState([]);
   const [recruitResults, setRecruitResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // 기존 useState에 추가
+  const [expandedFilters, setExpandedFilters] = useState({
+    recruitJobName: false,
+    recruitJobArea: false,
+    recruitCareer: false,
+    recruitEdu: false,
+    corpType: false,
+    recruitType: false,
+  });
+  const [isFiltersExpanded, setIsFiltersExpanded] = useState(false);
+
   const [recruitJobName, setRecruitJobName] = useState("all");
   const [recruitCareer, setRecruitCareer] = useState("all");
   const [recruitEdu, setRecruitEdu] = useState("all");
@@ -26,20 +35,115 @@ const SearchResultPage = () => {
   const [recruitType, setRecruitType] = useState("all");
   const [recruitJobArea, setRecruitJobArea] = useState("all");
 
+  const filterOptions = {
+    recruitJobName: [
+      { label: "전체", value: "all" },
+      { label: "기획·전략", value: "기획·전략" },
+      { label: "AI·개발·데이터", value: "AI·개발·데이터" },
+      { label: "디자인", value: "디자인" },
+      { label: "기타", value: "기타" },
+    ],
+    recruitJobArea: [
+      { label: "전체", value: "all" },
+      { label: "서울", value: "서울" },
+      { label: "경기", value: "경기" },
+      { label: "기타", value: "기타" },
+    ],
+    recruitCareer: [
+      { label: "전체", value: "all" },
+      { label: "신입", value: "신입" },
+      { label: "경력무관", value: "경력무관" },
+    ],
+    recruitEdu: [
+      { label: "전체", value: "all" },
+      { label: "고졸", value: "고졸" },
+      { label: "학사", value: "학사" },
+    ],
+    corpType: [
+      { label: "전체", value: "all" },
+      { label: "대기업", value: "대기업" },
+      { label: "스타트업", value: "스타트업" },
+    ],
+    recruitType: [
+      { label: "전체", value: "all" },
+      { label: "정규직", value: "정규직" },
+      { label: "인턴", value: "인턴" },
+    ],
+  };
+
+  const getFilterButtonText = (filterName, currentValue) => {
+    const filterLabels = {
+      recruitJobName: "직무",
+      recruitJobArea: "근무지역",
+      recruitCareer: "경력",
+      recruitEdu: "학력",
+      corpType: "기업형태",
+      recruitType: "고용형태",
+    };
+    if (currentValue === "all") return filterLabels[filterName];
+    const option = filterOptions[filterName].find(
+      (opt) => opt.value === currentValue
+    );
+    return option ? option.label : filterLabels[filterName];
+  };
+
+  const getActiveFilterCount = () => {
+    let count = 0;
+    if (recruitJobName !== "all") count++;
+    if (recruitJobArea !== "all") count++;
+    if (recruitCareer !== "all") count++;
+    if (recruitEdu !== "all") count++;
+    if (corpType !== "all") count++;
+    if (recruitType !== "all") count++;
+    return count;
+  };
+
+  const renderFilterSection = (filterName, options, currentValue, onChange) => (
+    <div className="filterSection">
+      <button
+        className={`filterToggle ${currentValue !== "all" ? "active" : ""}`}
+        onClick={() =>
+          setExpandedFilters((prev) => ({
+            ...prev,
+            [filterName]: !prev[filterName],
+          }))
+        }
+      >
+        <span className="filterLabel">
+          {getFilterButtonText(filterName, currentValue)}
+        </span>
+        <i
+          className={`fa-solid fa-chevron-down chevron ${
+            expandedFilters[filterName] ? "expanded" : ""
+          }`}
+        />
+      </button>
+      {expandedFilters[filterName] && (
+        <div className="filterOptions">
+          {options.map((option) => (
+            <button
+              key={option.value}
+              className={`filterOption ${
+                currentValue === option.value ? "active" : ""
+              }`}
+              onClick={() => {
+                onChange(option.value);
+                setExpandedFilters((prev) => ({
+                  ...prev,
+                  [filterName]: false,
+                }));
+              }}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+
   useEffect(() => {
     if (!query) return;
-
-    // console.log("검색 조건 확인:", {
-    //   query,
-    //   type,
-    //   memNo: loginMember?.memNo,
-    //   recruitJobName,
-    //   recruitJobArea,
-    //   recruitCareer,
-    //   recruitEdu,
-    //   corpType,
-    //   recruitType,
-    // });
     setLoading(true);
     const SearchData = async () => {
       try {
@@ -56,7 +160,6 @@ const SearchResultPage = () => {
               recruitType,
             },
           });
-          //console.log("공고 검색 응답:", res.data);
           setRecruitResults(res.data || []);
         } else {
           const res = await axiosApi.get("/search/company", {
@@ -65,7 +168,6 @@ const SearchResultPage = () => {
               ...(loginMember?.memNo ? { memNo: loginMember.memNo } : {}),
             },
           });
-          //console.log("기업 검색 응답:", res.data);
           setCompanyResults(res.data || []);
         }
       } catch (err) {
@@ -89,7 +191,6 @@ const SearchResultPage = () => {
 
   return (
     <main className="search-container">
-      {/* 탭 버튼 */}
       <div className="search-tabs">
         <Link
           className={type === "recruit" ? "active" : ""}
@@ -105,135 +206,144 @@ const SearchResultPage = () => {
         </Link>
       </div>
 
-      {/* 정렬 드롭다운 (채용공고일 때만) */}
       {type === "recruit" && (
-        <div className="search-controls">
-          {/* 직무 */}
-          <select
-            className="select-controls"
-            value={recruitJobName}
-            onChange={(e) => setRecruitJobName(e.target.value)}
+        <div className="filterControls">
+          <button
+            className={`filterToggleAll ${isFiltersExpanded ? "active" : ""}`}
+            onClick={() => setIsFiltersExpanded(!isFiltersExpanded)}
           >
-            <option value="all">직무</option>
-            <option value="기획·전략">기획·전략</option>
-            <option value="법무·사무·총무">법무·사무·총무</option>
-            <option value="인사·HR">인사·HR</option>
-            <option value="회계·세무">회계·세무</option>
-            <option value="마케팅·광고·MD">마케팅·광고·MD</option>
-            <option value="AI·개발·데이터">AI·개발·데이터</option>
-            <option value="디자인">디자인</option>
-            <option value="물류·무역">물류·무역</option>
-            <option value="운전·배송·배송">운전·배송·배송</option>
-            <option value="영업">영업</option>
-            <option value="고객상담·TM">고객상담·TM</option>
-            <option value="금융·보험">금융·보험</option>
-            <option value="식·음료">식·음료</option>
-            <option value="건축·시설">건축·시설</option>
-            <option value="고객서비스·리테일">고객서비스·리테일</option>
-            <option value="엔지니어링·설계">엔지니어링·설계</option>
-            <option value="제조·생산">제조·생산</option>
-            <option value="교육">교육</option>
-            <option value="의료·바이오">의료·바이오</option>
-            <option value="미디어·문화·스포츠">미디어·문화·스포츠</option>
-            <option value="공공·복지">공공·복지</option>
-            <option value="기타">기타</option>
-          </select>
-
-          <select
-            className="select-controls"
-            value={recruitJobArea}
-            onChange={(e) => setRecruitJobArea(e.target.value)}
+            <i className="fa-solid fa-filter"></i>
+            상세 필터
+            {getActiveFilterCount() > 0 && (
+              <span className="filterCount">{getActiveFilterCount()}</span>
+            )}
+            <i
+              className={`fa-solid fa-chevron-down chevron ${
+                isFiltersExpanded ? "expanded" : ""
+              }`}
+            />
+          </button>
+          {/* ✅ 초기화 버튼 추가 */}
+          <button
+            className="resetButton"
+            onClick={() => {
+              setRecruitJobName("all");
+              setRecruitJobArea("all");
+              setRecruitCareer("all");
+              setRecruitEdu("all");
+              setCorpType("all");
+              setRecruitType("all");
+            }}
           >
-            <option value="all">근무지역</option>
-            <option value="서울">서울</option>
-            <option value="부산">부산</option>
-            <option value="대구">대구</option>
-            <option value="인천">인천</option>
-            <option value="광주">광주</option>
-            <option value="대전">대전</option>
-            <option value="울산">울산</option>
-            <option value="세종">세종</option>
-            <option value="경기">경기</option>
-            <option value="강원">강원</option>
-            <option value="충북">충북</option>
-            <option value="충남">충남</option>
-            <option value="전북">전북</option>
-            <option value="전남">전남</option>
-            <option value="경북">경북</option>
-            <option value="경남">경남</option>
-            <option value="제주">제주</option>
-            <option value="기타">기타</option>
-          </select>
-
-          {/* 경력 */}
-          <select
-            className="select-controls"
-            value={recruitCareer}
-            onChange={(e) => setRecruitCareer(e.target.value)}
-          >
-            <option value="all">경력</option>
-            <option value="신입">신입</option>
-            <option value="1~3년">경력(1~3년)</option>
-            <option value="4~6년">경력(4~6년)</option>
-            <option value="7~9년">경력(7~9년)</option>
-            <option value="10~15년">경력(10~15년)</option>
-            <option value="16~20년">경력(16~20년)</option>
-            <option value="21년 이상">경력(21년 이상)</option>
-            <option value="경력무관">경력무관</option>
-          </select>
-
-          {/* 학력 */}
-          <select
-            className="select-controls"
-            value={recruitEdu}
-            onChange={(e) => setRecruitEdu(e.target.value)}
-          >
-            <option value="all">학력</option>
-            <option value="고졸">고졸</option>
-            <option value="전문학사">전문학사</option>
-            <option value="학사">학사</option>
-            <option value="석사">석사</option>
-            <option value="박사">박사</option>
-            <option value="학력무관">학력무관</option>
-          </select>
-
-          {/* 기업형태 */}
-          <select
-            className="select-controls"
-            value={corpType}
-            onChange={(e) => setCorpType(e.target.value)}
-          >
-            <option value="all">기업형태</option>
-            <option value="대기업">대기업</option>
-            <option value="중견기업">중견기업</option>
-            <option value="중소기업">중소기업</option>
-            <option value="공기업">공기업</option>
-            <option value="스타트업">스타트업</option>
-            <option value="외국계기업">외국계기업</option>
-            <option value="기타">기타</option>
-          </select>
-
-          {/* 고용형태 */}
-          <select
-            className="select-controls"
-            value={recruitType}
-            onChange={(e) => setRecruitType(e.target.value)}
-          >
-            <option value="all">고용형태</option>
-            <option value="정규직">정규직</option>
-            <option value="계약직">계약직</option>
-            <option value="인턴">인턴</option>
-            <option value="일용직">일용직</option>
-            <option value="프리랜서">프리랜서</option>
-            <option value="파견직">파견직</option>
-            <option value="기타">기타</option>
-          </select>
+            <i className="fa-solid fa-rotate-right" />
+            초기화
+          </button>
         </div>
       )}
 
-      <h2> "{query}" 검색 결과</h2>
+      {type === "recruit" && isFiltersExpanded && (
+        <div className="filterContainer">
+          <div className="filterGrid">
+            {renderFilterSection(
+              "recruitJobName",
+              filterOptions.recruitJobName,
+              recruitJobName,
+              setRecruitJobName
+            )}
+            {renderFilterSection(
+              "recruitJobArea",
+              filterOptions.recruitJobArea,
+              recruitJobArea,
+              setRecruitJobArea
+            )}
+            {renderFilterSection(
+              "recruitCareer",
+              filterOptions.recruitCareer,
+              recruitCareer,
+              setRecruitCareer
+            )}
+            {renderFilterSection(
+              "recruitEdu",
+              filterOptions.recruitEdu,
+              recruitEdu,
+              setRecruitEdu
+            )}
+            {renderFilterSection(
+              "corpType",
+              filterOptions.corpType,
+              corpType,
+              setCorpType
+            )}
+            {renderFilterSection(
+              "recruitType",
+              filterOptions.recruitType,
+              recruitType,
+              setRecruitType
+            )}
+          </div>
+        </div>
+      )}
+      {type === "recruit" && getActiveFilterCount() > 0 && (
+        <div className="activeFilters">
+          <div className="activeFiltersContent">
+            <span className="activeFiltersLabel">적용된 필터:</span>
+            <div className="activeFilterTags">
+              {recruitJobName !== "all" && (
+                <span className="activeFilterTag">
+                  직무: {getFilterButtonText("recruitJobName", recruitJobName)}
+                  <button onClick={() => setRecruitJobName("all")}>
+                    <i className="fa-solid fa-times"></i>
+                  </button>
+                </span>
+              )}
+              {recruitJobArea !== "all" && (
+                <span className="activeFilterTag">
+                  근무지역:{" "}
+                  {getFilterButtonText("recruitJobArea", recruitJobArea)}
+                  <button onClick={() => setRecruitJobArea("all")}>
+                    <i className="fa-solid fa-times"></i>
+                  </button>
+                </span>
+              )}
+              {recruitCareer !== "all" && (
+                <span className="activeFilterTag">
+                  경력: {getFilterButtonText("recruitCareer", recruitCareer)}
+                  <button onClick={() => setRecruitCareer("all")}>
+                    <i className="fa-solid fa-times"></i>
+                  </button>
+                </span>
+              )}
+              {recruitEdu !== "all" && (
+                <span className="activeFilterTag">
+                  학력: {getFilterButtonText("recruitEdu", recruitEdu)}
+                  <button onClick={() => setRecruitEdu("all")}>
+                    <i className="fa-solid fa-times"></i>
+                  </button>
+                </span>
+              )}
+              {corpType !== "all" && (
+                <span className="activeFilterTag">
+                  기업형태: {getFilterButtonText("corpType", corpType)}
+                  <button onClick={() => setCorpType("all")}>
+                    <i className="fa-solid fa-times"></i>
+                  </button>
+                </span>
+              )}
+              {recruitType !== "all" && (
+                <span className="activeFilterTag">
+                  고용형태: {getFilterButtonText("recruitType", recruitType)}
+                  <button onClick={() => setRecruitType("all")}>
+                    <i className="fa-solid fa-times"></i>
+                  </button>
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
-      {/* 로딩 중 */}
+      <h2>"{query}" 검색 결과</h2>
+
       {loading ? (
         <p>로딩 중...</p>
       ) : type === "company" ? (
@@ -255,6 +365,7 @@ const SearchResultPage = () => {
       ) : (
         <p>해당하는 공고가 없습니다.</p>
       )}
+
       <ScrollToTopButton />
     </main>
   );
