@@ -81,8 +81,8 @@ const AdminBanPage = () => {
     setSearchParams(newParams);
   };
 
-  const onRelease = (banNo) => {
-    releaseBan(banNo, () => {
+  const onRelease = (banNo, targetNo, targetType) => {
+    releaseBan(banNo, targetNo, targetType, () => {
       fetchBanList({
         page: currentPage,
         amount: 10,
@@ -98,26 +98,32 @@ const AdminBanPage = () => {
     <div className={styles.container}>
       <h2 className={styles.pageTitle}>정지 관리</h2>
 
-      <BanSearchBox
-        searchParams={searchFilters}
-        onChange={onChangeSearch}
-        onSearch={onSearch}
-        onReset={onReset}
-      />
-
-      <BanTable
-        banList={banList}
-        onRelease={onRelease}
-        onRowClick={goToDetail}
-      />
-
-      {totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
+      <div className={styles.card}>
+        <BanSearchBox
+          searchParams={searchFilters}
+          onChange={onChangeSearch}
+          onSearch={onSearch}
+          onReset={onReset}
         />
-      )}
+
+        <BanTable
+          banList={banList}
+          onRelease={onRelease}
+          onRowClick={goToDetail}
+        />
+
+        {totalPages > 1 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={handlePageChange}
+          />
+        )}
+
+        {banList.length === 0 && (
+          <p className={styles.noData}>정지된 항목이 없습니다.</p>
+        )}
+      </div>
     </div>
   );
 };

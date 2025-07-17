@@ -81,7 +81,8 @@
 	    R.RECRUIT_STATUS,
 	    TO_CHAR(R.RECRUIT_WRITE_DATE, 'YYYY-MM-DD') AS RECRUIT_WRITE_DATE,
 	    R.MEM_NO,
-	
+		
+		CI.CORP_NO AS corpNo,
 	    CI.CORP_LOGO AS corpLogo,
 	    CI.CORP_NAME AS corpName,
 	    CI.CORP_TYPE AS corpType,
@@ -90,6 +91,8 @@
 		
 		M.MEM_NICKNAME AS memNickname,
 		M.MEM_NAME AS memName,
+		CM.CORP_MEM_DEPT AS corpMemDept,
+		
 
 	
 	    NVL(LC.LIKE_COUNT, 0) AS likeCount,

@@ -2,6 +2,16 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.demo.admin.model.mapper.AdminBanMapper">
+	
+	<!-- 이거 안해주니까 대상 내용을 매핑 못함 망할 -->
+	<resultMap id="adminBanResultMap" type="com.example.demo.admin.model.dto.AdminBan">
+	    <result property="banNo" column="BAN_NO"/>
+	    <result property="banContent" column="BAN_CONTENT"/>
+	    <result property="banTargetNo" column="BAN_TARGET_NO"/>
+	    <result property="banTargetType" column="BAN_TARGET_TYPE"/>
+	    <result property="adminNo" column="ADMIN_NO"/>
+	    <result property="target" column="TARGET"/>  <!-- ✅ 명시적 매핑 -->
+	</resultMap>
 
     <!-- Ban 레코드 개수 조회 -->
 	<select id="selectBanCount" resultType="int">
@@ -21,7 +31,7 @@
 	</select>
 
     <!-- 정지 목록 조회 -->
-	<select id="selectBanList" resultType="com.example.demo.admin.model.dto.AdminBan">
+	<select id="selectBanList" resultMap="adminBanResultMap">
 	    SELECT 
 	        B.BAN_NO,
 	        B.BAN_CONTENT,
@@ -29,26 +39,25 @@
 	        B.BAN_TARGET_TYPE,
 	        B.ADMIN_NO,
 	
-	        -- 각 JOIN된 테이블에서 대상명 추출
 	        COALESCE(
 	            M1.MEM_NICKNAME,
 	            M2.MEM_NAME,
 	            C.CORP_NAME,
 	            R.RECRUIT_TITLE,
 	            BO.BOARD_TITLE,
-	            CO.COMMENT_CONTENT
-	        ) AS TARGET
+	            COMT.COMMENT_CONTENT
+	        ) AS "TARGET"
 	
 	    FROM BAN B
 	
 	    -- 대상별 LEFT JOIN
-	    LEFT JOIN MEMBER M1 ON B.BAN_TARGET_TYPE = '개인회원' AND B.BAN_TARGET_NO = M1.MEM_NO
-	    LEFT JOIN MEMBER M2 ON B.BAN_TARGET_TYPE = '기업회원' AND B.BAN_TARGET_NO = M2.MEM_NO
-	    LEFT JOIN CORPORATION C ON B.BAN_TARGET_TYPE = '기업' AND B.BAN_TARGET_NO = C.CORP_NO
-	    LEFT JOIN RECRUIT R ON B.BAN_TARGET_TYPE = '공고' AND B.BAN_TARGET_NO = R.RECRUIT_NO
-	    LEFT JOIN BOARD BO ON B.BAN_TARGET_TYPE = '게시글' AND B.BAN_TARGET_NO = BO.BOARD_NO
-	    LEFT JOIN COMMENT CO ON B.BAN_TARGET_TYPE = '댓글' AND B.BAN_TARGET_NO = CO.COMMENT_NO
-	
+		LEFT JOIN MEMBER M1 ON B.BAN_TARGET_TYPE = 'MEMBER' AND B.BAN_TARGET_NO = TO_CHAR(M1.MEM_NO)
+		LEFT JOIN MEMBER M2 ON B.BAN_TARGET_TYPE = 'CORP_MEMBER' AND B.BAN_TARGET_NO = TO_CHAR(M2.MEM_NO)
+		LEFT JOIN CORP_INFO C ON B.BAN_TARGET_TYPE = 'COMPANY' AND B.BAN_TARGET_NO = TO_CHAR(C.CORP_NO)
+		LEFT JOIN RECRUIT R ON B.BAN_TARGET_TYPE = 'RECRUIT' AND B.BAN_TARGET_NO = TO_CHAR(R.RECRUIT_NO)
+		LEFT JOIN BOARD BO ON B.BAN_TARGET_TYPE = 'BOARD' AND B.BAN_TARGET_NO = TO_CHAR(BO.BOARD_NO)
+		LEFT JOIN "COMMENT" COMT ON B.BAN_TARGET_TYPE = 'COMMENT' AND B.BAN_TARGET_NO = TO_CHAR(COMT.COMMENT_NO)
+
 	    <where>
 	        <if test="banTargetType != null and banTargetType != ''">
 	            AND B.BAN_TARGET_TYPE = #{banTargetType}
@@ -62,7 +71,7 @@
 	                    C.CORP_NAME,
 	                    R.RECRUIT_TITLE,
 	                    BO.BOARD_TITLE,
-	                    CO.COMMENT_CONTENT
+	                    COMT.COMMENT_CONTENT
 	                ) LIKE '%' || #{keyword} || '%'
 	            )
 	        </if>
@@ -70,6 +79,36 @@
 	
 	    ORDER BY B.BAN_NO DESC
 	    OFFSET #{offset} ROWS FETCH NEXT #{amount} ROWS ONLY
+	</select>
+
+	<!-- 디테일 -->
+	<select id="selectBanDetail" resultMap="adminBanResultMap">
+	    SELECT 
+	        B.BAN_NO,
+	        B.BAN_CONTENT,
+	        B.BAN_TARGET_NO,
+	        B.BAN_TARGET_TYPE,
+	        B.ADMIN_NO,
+	
+	        COALESCE(
+	            M1.MEM_NICKNAME,
+	            M2.MEM_NAME,
+	            C.CORP_NAME,
+	            R.RECRUIT_TITLE,
+	            BO.BOARD_TITLE,
+	            COMT.COMMENT_CONTENT
+	        ) AS TARGET
+	
+	    FROM BAN B
+	
+	    LEFT JOIN MEMBER M1 ON B.BAN_TARGET_TYPE = '개인회원' AND B.BAN_TARGET_NO = TO_CHAR(M1.MEM_NO)
+	    LEFT JOIN MEMBER M2 ON B.BAN_TARGET_TYPE = '기업회원' AND B.BAN_TARGET_NO = TO_CHAR(M2.MEM_NO)
+	    LEFT JOIN CORP_INFO C ON B.BAN_TARGET_TYPE = '기업' AND B.BAN_TARGET_NO = TO_CHAR(C.CORP_NO)
+	    LEFT JOIN RECRUIT R ON B.BAN_TARGET_TYPE = '공고' AND B.BAN_TARGET_NO = TO_CHAR(R.RECRUIT_NO)
+	    LEFT JOIN BOARD BO ON B.BAN_TARGET_TYPE = '게시글' AND B.BAN_TARGET_NO = TO_CHAR(BO.BOARD_NO)
+	    LEFT JOIN "COMMENT" COMT ON B.BAN_TARGET_TYPE = '댓글' AND B.BAN_TARGET_NO = TO_CHAR(COMT.COMMENT_NO)
+	
+	    WHERE B.BAN_NO = #{banNo}
 	</select>
 
     <!-- 정지 해제 (BAN 테이블에서 삭제) -->
@@ -95,7 +134,7 @@
 
     <!-- 기업 상태 해제 -->
     <update id="updateCorpStatusToNormal">
-        UPDATE CORPORATION
+        UPDATE CORP_INFO
         SET CORP_STATUS = 0
         WHERE CORP_NO = #{targetNo}
     </update>

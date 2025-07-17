@@ -1,0 +1,190 @@
+.registerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  background-color: #f5f5f5;
+  margin: 0 auto;
+}
+
+.registerForm {
+  background-color: white;
+  padding: 40px 80px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  width: 640px;
+}
+
+.registerForm h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: var(--text);
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.registerForm label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.registerForm input {
+  width: 100%;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.registerForm input:focus {
+  outline: none;
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 2px rgba(70, 181, 171, 0.2);
+}
+
+.registerForm input:disabled {
+  background-color: #f5f5f5;
+  cursor: not-allowed;
+}
+
+.inputWithButton {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.inputWithButton input {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.actionButton {
+  padding: 12px 16px;
+  background-color: var(--main-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  white-space: nowrap;
+}
+
+.actionButton:hover:not(:disabled) {
+  background-color: var(--main-color-dark);
+}
+
+.actionButton:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 16px;
+  background-color: var(--main-color);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-top: 20px;
+}
+
+.submitButton:hover {
+  background-color: var(--main-color-dark);
+}
+
+.error {
+  border-color: #e74c3c !important;
+  box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2) !important;
+}
+
+.success {
+  border-color: var(--main-color) !important;
+  box-shadow: 0 0 0 2px rgba(70, 181, 171, 0.2) !important;
+}
+
+.errorText {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.statusMessage {
+  margin-bottom: 16px;
+  min-height: 16px;
+}
+
+.successText {
+  color: var(--main-color);
+  font-size: 12px;
+}
+
+.timerText {
+  color: #f39c12;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.infoText {
+  color: #666;
+  font-size: 12px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .registerContainer {
+    padding: 10px;
+  }
+
+  .registerForm {
+    padding: 20px;
+  }
+
+  .registerForm h2 {
+    font-size: 20px;
+  }
+
+  .inputWithButton {
+    flex-direction: column;
+  }
+
+  .inputWithButton input {
+    margin-bottom: 8px;
+  }
+
+  .actionButton {
+    width: 100%;
+  }
+}
+
+/* 로딩 상태 */
+.authButton.loading::after {
+  content: "";
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-left: 6px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,42 @@
+/* TermsOfService.css */
+
+.terms-container {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.terms-container h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+}
+
+.terms-container h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.terms-container p {
+  line-height: 1.7;
+  font-size: 1rem;
+}
+
+.terms-container ul {
+  padding-left: 1.5rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.terms-container li {
+  list-style-type: disc;
+  margin-bottom: 0.3rem;
+}
+
+.terms-footer {
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: #666;
+}

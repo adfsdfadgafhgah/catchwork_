@@ -20,10 +20,17 @@ const AdminBanDetailPage = () => {
     }
   }, [banNo]);
 
-  const onRelease = (banNo) => {
-    releaseBan(banNo, () => {
-      navigate("/admin/ban");
-    });
+  const onRelease = () => {
+    if (!banDetail) return;
+
+    releaseBan(
+      banDetail.banNo,
+      banDetail.banTargetNo,
+      banDetail.banTargetType,
+      () => {
+        navigate("/admin/ban");
+      }
+    );
   };
 
   return (

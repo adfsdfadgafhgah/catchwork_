@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styles from "./SignUpPage.module.css";
 import // sendVerificationCode, // 나중에에 주석 해제
@@ -11,6 +11,9 @@ import useConfirmEmail from "../../hooks/useConfirmEmail";
 const SignUpPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const [isCorp, setIsCorp] = useState(
+    searchParams.get("type") === "corporate" ? true : false
+  );
   const isSending = useRef(false);
 
   const {
@@ -246,6 +249,29 @@ const SignUpPage = () => {
 
   return (
     <div className={styles.signupContainer}>
+      <div className={styles.tabButtons}>
+        <button
+          type="button"
+          className={`${styles.tabButton} ${!isCorp ? styles.active : ""}`}
+          onClick={() => {
+            setIsCorp(false);
+            navigate("/signup?type=personal");
+          }}
+        >
+          개인 회원
+        </button>
+        <button
+          type="button"
+          className={`${styles.tabButton} ${isCorp ? styles.active : ""}`}
+          onClick={() => {
+            setIsCorp(true);
+            navigate("/signup?type=corporate");
+          }}
+        >
+          기업 회원
+        </button>
+      </div>
+
       <h2 className={styles.title}>
         {userType === "personal" ? "개인 회원가입" : "기업 회원가입"}
       </h2>

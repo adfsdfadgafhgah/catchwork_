@@ -14,5 +14,4 @@ public interface CorpInfoRepository extends JpaRepository<CorpInfoEntity, Long> 
     boolean existsByCorpOpenDate(LocalDate corpOpenDate);
     
     CorpInfoEntity findByCorpRegNo(String corpRegNo);
-
 }

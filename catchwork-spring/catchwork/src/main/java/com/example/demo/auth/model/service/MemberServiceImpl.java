@@ -1,7 +1,7 @@
 package com.example.demo.auth.model.service;
 
 import java.io.File;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -327,14 +327,22 @@ public class MemberServiceImpl implements MemberService {
 	 * @author JAEHO
 	 * @param memEmail
 	 * @param authKey
+	 * @return
 	 */
 	@Override
 	public boolean checkAuthKey(String memEmail, String authKey) {
-		EmailAuthEntity emailAuthEntity = emailAuthRepository.findByAuthEmailAndAuthKey(memEmail, authKey);
-		if(emailAuthEntity == null) {
-			return false;
-		}
-		return true;
+		System.out.println("memEmail: " + memEmail);
+		System.out.println("authKey: " + authKey);
+
+		Map<String, String> paramMap = new HashMap<>();
+		paramMap.put("memEmail", memEmail);
+		paramMap.put("authKey", authKey);
+
+		System.out.println("paramMap: " + paramMap);
+
+		int result = mapper.checkAuthKey(paramMap);
+		if(result > 0) return true;
+		return false;
 	}
 
 	/** 이메일, 인증번호 저장
@@ -347,7 +355,7 @@ public class MemberServiceImpl implements MemberService {
         EmailAuthEntity emailAuthEntity = new EmailAuthEntity();
         emailAuthEntity.setAuthEmail(paramMap.get("memEmail"));
         emailAuthEntity.setAuthKey(paramMap.get("authKey"));
-        emailAuthEntity.setAuthTime(LocalDate.now());
+        emailAuthEntity.setAuthTime(LocalDateTime.now());
         emailAuthRepository.save(emailAuthEntity);
         return true;
     } catch (Exception e) {
@@ -585,39 +593,45 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	@Transactional(value = "myBatisTransactionManager", rollbackFor = Exception.class)
 	public int deleteUnusedImage() {
-						// 파일시스템의 이미지 목록 조회
-						File dir = new File(uploadPath);
-						File[] files = dir.listFiles((d, name) -> name.endsWith(".jpg") || name.endsWith(".png"));
-		
-						if (files == null) return 0;
-		
-						List<String> fileSystemImageList = Arrays.stream(files)
-								.map(File::getName)
-								.collect(Collectors.toList());
-		
-		
-						// DB에서 사용 중인 이미지 목록 조회
-						List<String> usedImageList = mapper.selectUsedImage();
-		
-						// 비교하여 사용되지 않는 이미지 식별
-						List<String> unusedImageList = new ArrayList<>();
-						for (String image : fileSystemImageList) {
-								if (!usedImageList.contains(image)) {
-										unusedImageList.add(image);
-								}
-						}
-		
-						// 파일 시스템에서 해당 이미지 삭제
-						int deleteCount = 0;
-						for (String image : unusedImageList) {
-								File file = new File(uploadPath, image);
-								if (file.exists()) {
-										file.delete();
-										deleteCount++;
-								}
-						}
-		
-						return deleteCount;
+		// 파일시스템의 이미지 목록 조회
+		File dir = new File(uploadPath);
+		File[] files = dir.listFiles((d, name) -> name.endsWith(".jpg") || name.endsWith(".png"));
+
+		if (files == null) return 0;
+
+		List<String> fileSystemImageList = Arrays.stream(files)
+				.map(File::getName)
+				.collect(Collectors.toList());
+
+
+		// DB에서 사용 중인 이미지 목록 조회
+		List<String> usedImageList = mapper.selectUsedImage();
+
+		// 비교하여 사용되지 않는 이미지 식별
+		List<String> unusedImageList = new ArrayList<>();
+		for (String image : fileSystemImageList) {
+				if (!usedImageList.contains(image)) {
+						unusedImageList.add(image);
+				}
+		}
+
+		// 파일 시스템에서 해당 이미지 삭제
+		int deleteCount = 0;
+		for (String image : unusedImageList) {
+				File file = new File(uploadPath, image);
+				if (file.exists()) {
+						file.delete();
+						deleteCount++;
+				}
+		}
+
+		return deleteCount;
 	}
 
+	// 이메일 인증번호 삭제(스케줄러)
+	@Override
+	@Transactional(value = "myBatisTransactionManager", rollbackFor = Exception.class)
+	public int removeTargetEmailAuth(int deleteTargetPeriod) {
+		return mapper.removeTargetEmailAuth(deleteTargetPeriod);
+	}
 }

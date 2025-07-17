@@ -27,7 +27,8 @@ public class ContentScheduling {
   private int deleteTargetPeriod = 30;
 
   // 게시글 삭제
-  @Scheduled(cron = "0 0 0 1 * *")
+  // 매일 자정 00:00:00에 실행
+  @Scheduled(cron = "0 0 0 * * *")
   // @Scheduled(cron = "*/10 * * * * *") // 테스트용
   public void board() {
     log.info("게시글 처리 시작");
@@ -36,7 +37,8 @@ public class ContentScheduling {
   }
 
   // 댓글 삭제
-  @Scheduled(cron = "0 0 0 1 * *")
+  // 매일 자정 00:00:00에 실행
+  @Scheduled(cron = "0 0 0 * * *")
   // @Scheduled(cron = "*/10 * * * * *") // 테스트용
   public void comment() {
     log.info("댓글 처리 시작");
@@ -45,7 +47,8 @@ public class ContentScheduling {
   }
 
   // 공고 삭제
-  @Scheduled(cron = "0 0 0 1 * *")
+  // 매일 자정 00:00:00에 실행
+  @Scheduled(cron = "0 0 0 * * *")
   // @Scheduled(cron = "*/10 * * * * *") // 테스트용
   public void content() {
     log.info("콘텐츠 처리 시작");

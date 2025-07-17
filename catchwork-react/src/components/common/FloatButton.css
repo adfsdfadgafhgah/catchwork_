@@ -39,24 +39,14 @@
   color: var(--main-color);
 }
 
-/* .float-button-container .float-btn-cancel,
-.float-button-container .float-btn-edit {
-  border: none;
-  background: none;
-  cursor: pointer;
-  font-size: 16px;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  color: var(--text-color);
+/* 비활성화된 버튼 스타일 */
+.float-btn:disabled {
+  opacity: 0.5; /* 버튼을 전체적으로 반투명하게 만들어 아이콘과 글씨가 연해 보이게 합니다. */
+  cursor: not-allowed; /* 커서 모양은 그대로 유지합니다. */
+  transform: none;
+  background-color: transparent;
 }
 
-.float-button-container .float-btn-cancel {
-  border-right: 1px solid var(--stroke-color1);
+.float-btn:disabled:hover {
+  background-color: transparent;
 }
-
-.float-btn-cancel:hover,
-.float-btn-edit:hover {
-  color: var(--main-color-dark);
-} */

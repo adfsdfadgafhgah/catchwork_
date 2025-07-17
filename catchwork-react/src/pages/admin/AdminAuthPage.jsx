@@ -21,7 +21,7 @@ const AdminAuthPage = () => {
       const response = await axiosApi.post("/admin/auth", {
         adminId: adminID,
         adminPw: adminPW,
-      });
+      }, { withCredentials: true });
       if (response.status === 200) {
         // 로그인 성공 시 관리자 메인으로 이동
         navigate("/admin");

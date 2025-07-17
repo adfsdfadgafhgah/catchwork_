@@ -1,6 +1,7 @@
 package com.example.demo.auth.model.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -28,4 +29,19 @@ public interface MemberMapper {
 	 * @return
 	 */
 	List<String> selectUsedImage();
+
+	/** 이메일 인증번호 확인
+	 * @author JAEHO
+	 * @param memEmail
+	 * @param authKey
+	 * @return
+	 */
+	int checkAuthKey(Map<String, String> paramMap);
+
+	/** 이메일 인증번호 삭제(스케줄러)
+	 * @author JAEHO
+	 * @param deleteTargetPeriod
+	 * @return
+	 */
+	int removeTargetEmailAuth(int deleteTargetPeriod);
 }
