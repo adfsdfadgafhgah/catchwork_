@@ -88,7 +88,7 @@ const SearchResultPage = () => {
   ]);
 
   return (
-    <main className="container">
+    <main className="search-container">
       {/* 탭 버튼 */}
       <div className="search-tabs">
         <Link

@@ -1,13 +1,18 @@
-.container {
+.corp-container {
   max-width: 1000px;
   margin: 0 auto;
+  padding: 0 16px; /* 좌우 여백 추가 */
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .company-detail-header {
   display: flex;
   align-items: flex-start;
-  gap: 24px;
+  /* align-items: stretch; */
+  gap: 100px;
   margin-bottom: 30px;
+  padding-top: 16px;
   /* border-top: 1px solid var(--stroke-color2); */
 }
 
@@ -21,6 +26,7 @@
 
 .company-header-right {
   flex: 1;
+  min-width: 0;
 }
 
 .company-title-line {
@@ -90,6 +96,7 @@
   margin-bottom: 16px;
   padding-top: 16px;
   border-top: 1px solid var(--stroke-color1);
+  width: 1080px;
 }
 
 .company-section h3 {
@@ -112,12 +119,13 @@
   gap: 8px;
   margin-bottom: 24px;
   margin-top: 24px;
+  margin: 0;
 }
 
 .btn-edit,
 .btn-withdraw {
   display: inline-block;
-  margin-top: 30px;
+  margin-top: 16px;
   padding: 6px 16px;
   border: 1px solid var(--stroke-color2);
   background-color: var(--white);
@@ -125,6 +133,7 @@
   cursor: pointer;
   font-size: 14px;
   box-shadow: var(--box-shadow);
+  margin-bottom: 16px;
 }
 
 .btn-edit:hover,

@@ -196,7 +196,7 @@ const CorpCVListPage = () => {
 
     try {
       await axiosApi.delete("/corpcv/delete", {
-        data: { cvNos: selectedCVNos }, // 💡 axios에서 DELETE + body 보낼 땐 data로!
+        data: { cvNos: selectedCVNos }, // axios에서 DELETE + body 보낼 땐 data로!
       });
 
       // 삭제 성공 시 프론트 목록에서도 제거
