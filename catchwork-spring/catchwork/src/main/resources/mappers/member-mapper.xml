@@ -29,7 +29,7 @@
  <delete id="withdrawMember">
   DELETE FROM MEMBER
   WHERE MEM_STATUS = 1
-	AND MEM_STATUS_DATE <![CDATA[ < ]]> SYSDATE - INTERVAL #{deleteTargetPeriod} DAY
+	AND MEM_STATUS_DATE <![CDATA[ < ]]> SYSDATE - INTERVAL '${deleteTargetPeriod}' DAY
  </delete>
 
  <!-- 사용중인 이미지 조회(스케줄러) -->
