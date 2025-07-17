@@ -1,49 +1,693 @@
 .recruitListPage {
-  max-width: 1000px;
-  margin: 20px auto;
-  padding: 0 16px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
-.controls {
+/* 컨트롤 섹션 (검색 + 필터 컨트롤) */
+.controlSection {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  gap: 12px;
-  border-bottom: 1px solid #f0f0f0;
-  padding-bottom: 20px;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
 }
 
-.sortSelect {
-  padding: 6px 10px;
-  font-size: 14px;
-  border: 1px solid var(--img-color);
-  border-radius: 6px;
-  background-color: var(--white);
+/* 검색 영역 */
+.searchSection {
+  display: flex;
+  justify-content: center;
+  width: 100%;
 }
 
 .searchBox {
   display: flex;
   align-items: center;
-  border: 1px solid var(--main-color);
-  border-radius: 999px;
-  padding: 4px 10px;
+  background: var(--white);
+  border: 2px solid var(--stroke-color1);
+  border-radius: 50px;
+  padding: 4px 4px 4px 20px;
+  max-width: 500px;
+  width: 100%;
+  position: relative;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.searchBox:focus-within {
+  border-color: var(--main-color);
+  box-shadow: 0 4px 20px rgba(70, 181, 171, 0.15);
 }
 
 .searchBox i {
-  margin-right: 8px;
+  color: var(--gray01);
+  font-size: 16px;
+  margin-right: 12px;
+  transition: color 0.3s ease;
+}
+
+.searchBox:focus-within i {
   color: var(--main-color);
 }
 
 .searchBox input {
+  flex: 1;
   border: none;
   outline: none;
-  width: 200px;
+  font-size: 16px;
+  background: transparent;
+  color: var(--text);
+  padding: 14px 0;
+}
+
+.searchBox input::placeholder {
+  color: var(--gray01);
+}
+
+.searchButton {
+  background: var(--main-color);
+  color: var(--white);
+  border: none;
+  border-radius: 50px;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.searchButton:hover {
+  background: var(--main-color-dark);
+  transform: translateY(-1px);
+}
+
+.searchButton:active {
+  transform: translateY(0);
+}
+
+/* 필터 컨트롤 영역 */
+.filterControls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filterToggleAll {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--white);
+  border: 2px solid var(--stroke-color1);
+  border-radius: 50px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.filterToggleAll:hover {
+  border-color: var(--main-color);
+  background: var(--sub-color);
+  transform: translateY(-1px);
+}
+
+.filterToggleAll.active {
+  background: var(--main-color);
+  border-color: var(--main-color);
+  color: var(--white);
+}
+
+.filterToggleAll .chevron {
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+.filterToggleAll .chevron.expanded {
+  transform: rotate(180deg);
+}
+
+.filterCount {
+  background: var(--white);
+  color: var(--main-color);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+.filterToggleAll.active .filterCount {
+  background: var(--main-color-dark);
+  color: var(--white);
+}
+
+.resetButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: var(--white);
+  border: 2px solid var(--stroke-color1);
+  border-radius: 50px;
+  color: var(--gray01);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.resetButton:hover {
+  background: var(--input-color);
+  border-color: var(--stroke-color2);
+  transform: translateY(-1px);
+}
+
+.resetButton i {
+  font-size: 12px;
+}
+
+/* 필터 컨테이너 */
+.filterContainer {
+  background: var(--white);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--stroke-color1);
+  animation: slideDown 0.3s ease;
+  max-width: 900px; /* 최대 너비 제한 */
+  margin-left: auto;
+  margin-right: auto;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filterGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  max-width: 100%;
+}
+
+.filterSection {
+  position: relative;
+}
+
+.filterToggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--input-color);
+  border: 1px solid var(--stroke-color1);
+  border-radius: 12px;
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-height: 48px; /* 일정한 높이 유지 */
+}
+
+.filterToggle:hover {
+  border-color: var(--main-color);
+  background: var(--sub-color);
+  transform: translateY(-1px);
+}
+
+.filterToggle.active {
+  background: var(--main-color);
+  border-color: var(--main-color);
+  color: var(--white);
+  box-shadow: 0 2px 8px rgba(70, 181, 171, 0.3);
+}
+
+.filterToggle .chevron {
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+.filterToggle .chevron.expanded {
+  transform: rotate(180deg);
+}
+
+.filterLabel {
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.filterOptions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--white);
+  border: 2px solid var(--stroke-color1);
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+  animation: slideDown 0.2s ease;
+}
+
+.filterOption {
+  width: 100%;
+  padding: 10px 16px;
+  background: var(--white);
+  border: none;
+  color: var(--text);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+}
+
+.filterOption:hover {
+  background: var(--sub-color);
+}
+
+.filterOption.active {
+  background: var(--main-color);
+  color: var(--white);
+  font-weight: 600;
+}
+
+.filterOption:first-child {
+  border-top: 1px solid var(--stroke-color1);
+}
+
+/* 활성 필터 표시 */
+.activeFilters {
+  background: var(--sub-color);
+  border: 1px solid var(--main-color);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 24px;
+  animation: slideDown 0.3s ease;
+}
+
+.activeFiltersContent {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.activeFiltersLabel {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--deep-gray);
+  white-space: nowrap;
+}
+
+.activeFilterTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.activeFilterTag {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--white);
+  border: 1px solid var(--main-color);
+  border-radius: 20px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  animation: fadeIn 0.3s ease;
+}
+
+.activeFilterTag button {
+  background: none;
+  border: none;
+  color: var(--main-color);
+  font-size: 12px;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.activeFilterTag button:hover {
+  background: var(--main-color);
+  color: var(--white);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* 로딩 상태 */
+.loading {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+  gap: 16px;
+  color: var(--gray01);
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid var(--stroke-color1);
+  border-top: 4px solid var(--main-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.loadingMore {
+  text-align: center;
+  padding: 24px;
+  color: var(--gray01);
+  font-size: 14px;
+  font-weight: 500;
 }
 
 .noResult {
-  font-size: 0.95rem;
-  color: var(--gray01);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
   text-align: center;
-  padding: 40px 0;
+  padding: 48px;
+  color: var(--gray01);
+  border-radius: 16px;
+  margin: 20px 0;
+}
+
+.noResult i {
+  font-size: 48px;
+  color: var(--stroke-color2);
+  margin-bottom: 8px;
+}
+
+.noResult p {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* 반응형 디자인 */
+@media screen and (max-width: 1023px) {
+  .recruitListPage {
+    padding: 16px;
+  }
+
+  .searchBox {
+    max-width: 400px;
+  }
+
+  .filterGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .filterContainer {
+    padding: 18px;
+    margin-bottom: 18px;
+    max-width: 700px;
+  }
+
+  .filterToggle {
+    padding: 12px 14px;
+    font-size: 13px;
+    min-height: 44px;
+  }
+
+  .activeFiltersContent {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .activeFiltersLabel {
+    margin-bottom: 4px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .recruitListPage {
+    padding: 12px;
+  }
+
+  .controlSection {
+    gap: 12px;
+  }
+
+  .searchBox {
+    max-width: none;
+    padding: 3px 3px 3px 16px;
+  }
+
+  .searchBox input {
+    padding: 12px 0;
+    font-size: 14px;
+  }
+
+  .searchButton {
+    padding: 10px 20px;
+    font-size: 13px;
+  }
+
+  .filterControls {
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .filterToggleAll,
+  .resetButton {
+    padding: 10px 16px;
+    font-size: 13px;
+  }
+
+  .filterGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .filterContainer {
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 14px;
+    max-width: none;
+  }
+
+  .filterToggle {
+    padding: 11px 12px;
+    font-size: 13px;
+    min-height: 42px;
+  }
+
+  .filterOption {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
+
+  .activeFilters {
+    padding: 12px;
+  }
+
+  .activeFiltersLabel {
+    font-size: 13px;
+  }
+
+  .activeFilterTag {
+    padding: 4px 8px;
+    font-size: 12px;
+  }
+
+  .activeFilterTag button {
+    width: 14px;
+    height: 14px;
+    font-size: 10px;
+  }
+
+  .noResult {
+    padding: 32px 16px;
+  }
+
+  .noResult i {
+    font-size: 32px;
+  }
+
+  .noResult p {
+    font-size: 14px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .recruitListPage {
+    padding: 8px;
+  }
+
+  .searchBox {
+    padding: 2px 2px 2px 12px;
+  }
+
+  .searchBox input {
+    padding: 10px 0;
+    font-size: 13px;
+  }
+
+  .searchButton {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+
+  .filterToggleAll,
+  .resetButton {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+
+  .filterCount {
+    font-size: 10px;
+    padding: 1px 4px;
+    min-width: 16px;
+  }
+
+  .filterContainer {
+    padding: 14px;
+    margin-bottom: 14px;
+    border-radius: 12px;
+  }
+
+  .activeFilters {
+    padding: 8px;
+  }
+
+  .activeFilterTags {
+    gap: 4px;
+  }
+
+  .activeFilterTag {
+    padding: 3px 6px;
+    font-size: 11px;
+  }
+
+  .filterGrid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .filterToggle {
+    padding: 10px 12px;
+    font-size: 12px;
+    min-height: 40px;
+  }
+}
+
+/* 접근성 개선 */
+.filterToggle:focus,
+.filterOption:focus,
+.searchButton:focus,
+.filterToggleAll:focus,
+.resetButton:focus {
+  outline: 2px solid var(--main-color);
+  outline-offset: 2px;
+}
+
+/* 스크롤바 스타일링 */
+.filterOptions::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filterOptions::-webkit-scrollbar-track {
+  background: var(--input-color);
+}
+
+.filterOptions::-webkit-scrollbar-thumb {
+  background: var(--stroke-color2);
+  border-radius: 3px;
+}
+
+.filterOptions::-webkit-scrollbar-thumb:hover {
+  background: var(--main-color);
+}
+
+/* 호버 효과 개선 */
+.filterToggle:hover .chevron,
+.filterToggleAll:hover .chevron {
+  transform: scale(1.1);
+}
+
+.filterToggle.active:hover .chevron.expanded,
+.filterToggleAll.active:hover .chevron.expanded {
+  transform: rotate(180deg) scale(1.1);
+}
+
+/* 마이크로 인터랙션 */
+.searchButton:active,
+.filterToggleAll:active,
+.resetButton:active,
+.filterToggle:active {
+  transform: translateY(1px);
+}
+
+.filterOption:active {
+  transform: scale(0.98);
+}
+
+/* 로딩 애니메이션 개선 */
+.loading span {
+  font-size: 16px;
+  font-weight: 500;
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
 }

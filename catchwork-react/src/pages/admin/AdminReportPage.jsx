@@ -233,14 +233,17 @@ export default function AdminReportPage() {
                 groupedReports.map((group) => (
                   <tr
                     key={`${group.reportTargetType}-${group.reportTargetNo}`}
-                    // ⬇️ 상세 페이지 이동 onClick 이벤트 추가
-                    onClick={() =>
-                      goToDetail(group.reportTargetNo, group.reportTargetType)
-                    }
-                    style={{ cursor: "pointer" }} // 클릭 가능함을 시각적으로 표시
+                    // 상세 페이지 이동 onClick 이벤트 추가
                   >
                     <td>{group.reportTargetType}</td>
-                    <td>{group.reportContent}</td>
+                    <td
+                      onClick={() =>
+                        goToDetail(group.reportTargetNo, group.reportTargetType)
+                      }
+                      style={{ cursor: "pointer" }}
+                    >
+                      {group.reportContent}
+                    </td>
                     <td>{group.reportCount}건</td>
                     <td>
                       {new Date(group.latestReportDate).toLocaleDateString()}

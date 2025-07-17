@@ -1,82 +1,161 @@
-/* RecruitWriteForm.module.css */
+/* WriteRecruitPage.module.css (아래 전체 코드로 교체) */
 
-.detailPageWrap {
-  max-width: 1000px;
-  margin: 20px auto;
-  padding: 0 16px;
-  border-radius: 12px;
-  background-color: var(--white);
-  margin-bottom: 20px;
+.writePageWrap {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px 80px; /* 플로팅 버튼에 가려지지 않도록 하단 패딩 추가 */
 }
 
-.corpArea {
-  display: flex;
-  align-items: center;
-  margin-bottom: 16px;
-}
-
-.corpLogo {
-  width: 120px;
-  height: 120px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid var(--img-color);
-}
-
-.corpText {
+.formContainer {
   display: flex;
   flex-direction: column;
+  gap: 24px;
 }
 
+/* 카드 스타일 공통 */
+.corpInfoCard,
+.formCard {
+  background-color: var(--white);
+  border-radius: 16px;
+  padding: 32px;
+  border: 1px solid var(--stroke-color1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+/* 기업 정보 */
+.corpInfoCard {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.corpLogo {
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  object-fit: contain;
+  border: 1px solid var(--stroke-color1);
+}
+.corpInfoText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
 .corpName {
   font-size: 20px;
-  font-weight: bold;
-  color: var(--main-color);
+  font-weight: 700;
+  color: var(--deep-gray);
 }
-
 .corpType {
   font-size: 14px;
-  color: var(--stroke-color1);
-  margin-top: 4px;
+  color: var(--gray01);
+}
+
+/* 폼 카드 내부 */
+.formCard {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
 }
 
 .inputGroup {
-  padding-top: 32px;
-  border-bottom: 1px solid var(--main-color);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .label {
-  display: block;
+  font-size: 16px;
   font-weight: 600;
-  margin-bottom: 6px;
+  color: var(--deep-gray);
 }
 
-.input {
+/* 입력 필드 공통 스타일 */
+.input,
+.textarea,
+.select {
+  /* select도 포함 */
   width: 100%;
-  padding: 10px;
-  border: none;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1px solid var(--stroke-color1);
   border-radius: 8px;
-  font-size: 14px;
-  box-sizing: border-box;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  background-color: var(--white);
+  color: var(--text);
+  -webkit-appearance: none; /* iOS 기본 스타일 제거 */
+  -moz-appearance: none;
+  appearance: none;
+}
+.select {
+  /* select 태그에만 화살표 추가 */
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.7rem center;
+  background-repeat: no-repeat;
+  background-size: 1.25em 1.25em;
+  padding-right: 2.5rem;
+}
+
+.input:focus,
+.textarea:focus,
+.select:focus {
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 3px var(--sub-color);
 }
 
 .textarea {
-  width: 100%;
-  min-height: 100px;
-  padding: 10px;
-  border: 1px solid var(--main-color);
-  border-radius: 8px;
-  font-size: 14px;
+  min-height: 150px;
   resize: vertical;
-  box-sizing: border-box;
 }
 
-.dateRange {
-  margin-bottom: 16px;
+/* 그리드 레이아웃 */
+.gridContainer {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
 }
 
-.dateInputs {
+/* 주소 검색 */
+.addressContainer {
   display: flex;
-  align-items: center;
   gap: 12px;
+}
+.addressContainer .input {
+  flex-grow: 1;
+}
+.addressSearchBtn {
+  flex-shrink: 0;
+  padding: 0 20px;
+  border-radius: 8px;
+  border: 1px solid var(--main-color);
+  background-color: var(--main-color);
+  color: var(--white);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.addressSearchBtn:hover {
+  background-color: var(--main-color-dark);
+}
+
+.mapPreview {
+  margin-top: 12px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* 반응형 */
+@media screen and (max-width: 767px) {
+  .writePageWrap {
+    padding: 0 16px 80px;
+    margin-top: 20px;
+  }
+  .corpInfoCard,
+  .formCard {
+    padding: 24px;
+  }
+  .gridContainer {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
 }
