@@ -1,7 +1,7 @@
 .corp-container {
   max-width: 1000px;
   margin: 0 auto;
-  padding: 0 20px; /* ✅ 여백 확보 */
+  padding: 0 20px;
 }
 
 .company-section textarea {
