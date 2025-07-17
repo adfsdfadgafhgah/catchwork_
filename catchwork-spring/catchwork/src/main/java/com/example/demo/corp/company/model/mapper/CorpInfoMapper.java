@@ -43,4 +43,32 @@ public interface CorpInfoMapper {
 	 * @return
 	 */
 	List<String> selectUsedImage();
+
+	/**
+	 * 탈퇴 기업 처리(스케줄러)
+	 * 탈퇴 기업 대상 조회
+	 * 
+	 * @author JAEHO
+	 * @param deleteTargetPeriod
+	 * @return
+	 */
+	List<Integer> selectTargetCorp(int deleteTargetPeriod);
+
+	/**
+	 * 탈퇴 기업 처리(스케줄러)
+	 * 기업 인사 탈퇴
+	 * 
+	 * @author JAEHO
+	 * @param corpNo
+	 */
+	void withdrawCorpMember(int corpNo);
+
+	/**
+	 * 탈퇴 기업 처리(스케줄러)
+	 * 
+	 * @author JAEHO
+	 * @param deleteTargetPeriod
+	 * @return
+	 */
+	int removeTargetCorp(int deleteTargetPeriod);
 }

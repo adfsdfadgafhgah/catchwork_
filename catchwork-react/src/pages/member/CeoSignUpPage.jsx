@@ -1,15 +1,26 @@
-import React, { useEffect } from "react";
-import "./CeoSignUpPage.css";
+import React, { useEffect, useRef } from "react";
+import styles from "./CeoSignUpPage.module.css";
 import useSignUpFormHandler from "../../hooks/useSignUpFormHandler";
 import { useLocation, useNavigate } from "react-router-dom";
 import { postCEOSignUp } from "../../api/signupAPI";
 import { useAuthStore } from "../../stores/authStore";
+import useConfirmEmail from "../../hooks/useConfirmEmail";
 
 const CeoSignUpPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const isSending = useRef(false);
   // 이전 기업 정보 저장
   const corpInfo = location.state?.corpInfo || {};
+
+  // 이메일 인증 관련 상태 및 훅
+  const [isIssued, setIsIssued] = React.useState(false);
+  const [isVerified, setIsVerified] = React.useState(false);
+  const [errorMsg, setErrorMsg] = React.useState("");
+  const [successMsg, setSuccessMsg] = React.useState("");
+  const [isClicked, setIsClicked] = React.useState(false);
+  const { sendEmail, checkAuthKey, startTimer, stopTimer, timeLeft } =
+    useConfirmEmail();
 
   // corpRegNo 없으면 기업 등록 페이지로 리다이렉트
   useEffect(() => {
@@ -85,8 +96,60 @@ const CeoSignUpPage = () => {
       config
     );
 
+  // 이메일 인증번호 발송
+  const handleSendEmail = async () => {
+    if (!formData.ceoEmail || formData.ceoEmail.includes("@") === false) {
+      alert("이메일을 입력해주세요");
+      return;
+    }
+    setIsClicked(true);
+    isSending.current = true;
+    const isSent = await sendEmail(formData.ceoEmail);
+    if (isSent) {
+      startTimer();
+      setIsIssued(true);
+      isSending.current = false;
+    }
+  };
+
+  // 이메일 인증번호 확인
+  const handleCheckAuthKey = async () => {
+    const isValid = await checkAuthKey(
+      formData.ceoEmail,
+      formData.verificationCode
+    );
+    if (isValid) {
+      stopTimer();
+      setIsVerified(true);
+      setSuccessMsg("인증되었습니다");
+      setErrorMsg("");
+    } else {
+      stopTimer();
+      setErrorMsg("인증번호가 올바르지 않습니다");
+      setIsVerified(false);
+      setSuccessMsg("");
+      setTimeout(() => {
+        setErrorMsg("");
+        startTimer();
+      }, 3000);
+    }
+  };
+
+  // 타이머 포맷
+  const timeFormat = () => {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // 이메일 인증 성공 여부 체크
+    if (!isVerified) {
+      alert("이메일 인증을 완료해주세요.");
+      return;
+    }
 
     const isValid = validateForm();
     if (!isValid) {
@@ -152,14 +215,14 @@ const CeoSignUpPage = () => {
   };
 
   return (
-    <div className="register-container">
-      <div className="register-form">
-        <h2>기업 대표 (최고 인사 담당자) 회원 가입</h2>
+    <div className={styles.registerContainer}>
+      <div className={styles.registerForm}>
+        <h2>기업 대표 회원 가입</h2>
 
         <form onSubmit={handleSubmit}>
           {/* 아이디 */}
           <label>아이디</label>
-          <div className="input-with-button">
+          <div className={styles.inputWithButton}>
             <input
               type="text"
               name="ceoId"
@@ -168,22 +231,22 @@ const CeoSignUpPage = () => {
               placeholder="아이디를 입력해주세요"
               className={
                 validity.ceoId === false
-                  ? "error"
+                  ? styles.error
                   : validity.ceoId === true
-                  ? "success"
+                  ? styles.success
                   : ""
               }
             />
             <button
               type="button"
               onClick={handleCheckId}
-              className="action-button"
+              className={styles.actionButton}
             >
               중복확인
             </button>
           </div>
           {validity.ceoId === false && (
-            <div className="error-text">
+            <div className={styles.errorText}>
               5~20자의 영문, 숫자만 사용 가능합니다.
             </div>
           )}
@@ -198,14 +261,14 @@ const CeoSignUpPage = () => {
             placeholder="비밀번호를 입력해주세요"
             className={
               validity.ceoPw === false
-                ? "error"
+                ? styles.error
                 : validity.ceoPw === true
-                ? "success"
+                ? styles.success
                 : ""
             }
           />
           {validity.ceoPw === false && (
-            <div className="error-text">
+            <div className={styles.errorText}>
               8~20자의 영문, 숫자, 특수문자를 포함해야 합니다.
             </div>
           )}
@@ -220,14 +283,16 @@ const CeoSignUpPage = () => {
             placeholder="비밀번호를 다시 입력해주세요"
             className={
               validity.ceoPwConfirm === false
-                ? "error"
+                ? styles.error
                 : validity.ceoPwConfirm === true
-                ? "success"
+                ? styles.success
                 : ""
             }
           />
           {validity.ceoPwConfirm === false && (
-            <div className="error-text">비밀번호가 일치하지 않습니다.</div>
+            <div className={styles.errorText}>
+              비밀번호가 일치하지 않습니다.
+            </div>
           )}
 
           {/* 이름 */}
@@ -240,21 +305,21 @@ const CeoSignUpPage = () => {
             placeholder="이름을 입력해주세요"
             className={
               validity.ceoName === false
-                ? "error"
+                ? styles.error
                 : validity.ceoName === true
-                ? "success"
+                ? styles.success
                 : ""
             }
           />
           {validity.ceoName === false && (
-            <div className="error-text">
+            <div className={styles.errorText}>
               2~30자의 한글, 영문만 사용 가능합니다.
             </div>
           )}
 
           {/* 전화번호 */}
           <label>전화번호</label>
-          <div className="input-with-button">
+          <div className={styles.inputWithButton}>
             <input
               type="text"
               name="ceoTel"
@@ -263,74 +328,105 @@ const CeoSignUpPage = () => {
               placeholder="전화번호를 입력해주세요"
               className={
                 validity.ceoTel === false
-                  ? "error"
+                  ? styles.error
                   : validity.ceoTel === true
-                  ? "success"
+                  ? styles.success
                   : ""
               }
             />
-            <button
-              type="button"
-              onClick={/* handleSendVerificationCode 추가 */ undefined}
-              className="action-button"
-            >
-              인증번호 발송
-            </button>
           </div>
           {validity.ceoTel === false && (
-            <div className="error-text">
+            <div className={styles.errorText}>
               올바른 전화번호 형식을 입력해주세요.
             </div>
           )}
 
-          {/* 인증번호 */}
-          <label>인증번호</label>
-          <div className="input-with-button">
-            <input
-              type="text"
-              name="verificationCode"
-              value={formData.verificationCode}
-              onChange={handleInputChange}
-              placeholder="인증번호를 입력해주세요"
-              className={
-                validity.verificationCode === false
-                  ? "error"
-                  : validity.verificationCode === true
-                  ? "success"
-                  : ""
-              }
-            />
-            <button
-              type="button"
-              onClick={/* handleVerifyCode 추가 */ undefined}
-              className="action-button"
-            >
-              인증번호 확인
-            </button>
-          </div>
-          <div className="timer"></div>
-
           {/* 이메일 */}
           <label>이메일</label>
-          <div className="input-with-button">
+          <div className={styles.inputWithButton}>
             <input
               type="email"
               name="ceoEmail"
               value={formData.ceoEmail}
               onChange={handleInputChange}
               placeholder="이메일을 입력해주세요"
+              disabled={isVerified}
               className={
                 validity.ceoEmail === false
-                  ? "error"
+                  ? styles.error
                   : validity.ceoEmail === true
-                  ? "success"
+                  ? styles.success
                   : ""
               }
             />
+            <button
+              type="button"
+              className={`${styles.actionButton} ${styles.authButton} ${
+                isSending.current ? styles.loading : ""
+              }`}
+              onClick={handleSendEmail}
+              disabled={isVerified}
+            >
+              인증번호 발송
+            </button>
+          </div>
+          <div className={styles.statusMessage}>
+            {isIssued ? (
+              <small className={styles.infoText}>
+                이메일이 발송되었습니다.
+              </small>
+            ) : isClicked ? (
+              <small className={styles.infoText}>이메일 발송 중입니다.</small>
+            ) : (
+              <small className={styles.infoText}>이메일을 입력해주세요</small>
+            )}
           </div>
           {validity.ceoEmail === false && (
-            <div className="error-text">올바른 이메일 형식을 입력해주세요.</div>
+            <div className={styles.errorText}>
+              올바른 이메일 형식을 입력해주세요.
+            </div>
           )}
+
+          {/* 인증번호 */}
+          <label>인증번호</label>
+          <div className={styles.inputWithButton}>
+            <input
+              type="text"
+              name="verificationCode"
+              value={formData.verificationCode}
+              onChange={handleInputChange}
+              placeholder="인증번호를 입력해주세요"
+              disabled={isVerified}
+              className={
+                isVerified ? styles.success : errorMsg ? styles.error : ""
+              }
+            />
+            <button
+              type="button"
+              onClick={handleCheckAuthKey}
+              className={styles.actionButton}
+              disabled={!isIssued || isVerified}
+            >
+              인증번호 확인
+            </button>
+          </div>
+          <div className={styles.statusMessage}>
+            {isVerified && successMsg ? (
+              <small className={styles.successText}>{successMsg}</small>
+            ) : errorMsg ? (
+              <small className={styles.errorText}>{errorMsg}</small>
+            ) : timeLeft > 0 ? (
+              <small className={styles.timerText}>
+                남은 시간: {timeFormat()}
+              </small>
+            ) : isIssued ? (
+              <small className={styles.errorText}>인증번호 만료</small>
+            ) : (
+              <small className={styles.infoText}>
+                인증번호 발송을 클릭해주세요
+              </small>
+            )}
+          </div>
 
           {/* 기업 정보 hidden input */}
           <input
@@ -348,7 +444,6 @@ const CeoSignUpPage = () => {
             name="corpOpenDate"
             value={formData.corpOpenDate || ""}
           />
-
           <input
             type="hidden"
             name="corpName"
@@ -397,7 +492,7 @@ const CeoSignUpPage = () => {
           />
 
           {/* 회원 가입 버튼 */}
-          <button type="submit" className="submit-button">
+          <button type="submit" className={styles.submitButton}>
             회원 가입
           </button>
         </form>

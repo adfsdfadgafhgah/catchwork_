@@ -25,11 +25,11 @@
 	WHERE MEM_NO = #{memNo}
 </select>
  
- <!-- 탈퇴 회원 처리 -->
+ <!-- 탈퇴 회원 처리(스케줄러) -->
  <delete id="withdrawMember">
   DELETE FROM MEMBER
   WHERE MEM_STATUS = 1
-	AND MEM_STATUS_DATE <![CDATA[ < ]]> DATE_ADD(NOW(), INTERVAL -#{deleteTargetPeriod} DAY)
+	AND MEM_STATUS_DATE <![CDATA[ < ]]> SYSDATE - INTERVAL '${deleteTargetPeriod}' DAY
  </delete>
 
  <!-- 사용중인 이미지 조회(스케줄러) -->
@@ -38,5 +38,20 @@
   FROM MEMBER
   WHERE MEM_PROFILE_PATH IS NOT NULL
  </select>
+
+ <!-- 이메일 인증번호 확인 -->
+ <select id="checkAuthKey">
+  SELECT COUNT(*)
+  FROM EMAIL_AUTH
+  WHERE AUTH_EMAIL = #{memEmail}
+  AND AUTH_KEY = #{authKey}
+	AND AUTH_TIME <![CDATA[ > ]]> SYSDATE - INTERVAL '5' MINUTE
+ </select>
+
+ <!-- 이메일 인증번호 삭제(스케줄러) -->
+ <delete id="removeTargetEmailAuth">
+  DELETE FROM EMAIL_AUTH
+  WHERE AUTH_TIME <![CDATA[ < ]]> SYSDATE - INTERVAL '${deleteTargetPeriod}' DAY
+ </delete>
 
 </mapper>

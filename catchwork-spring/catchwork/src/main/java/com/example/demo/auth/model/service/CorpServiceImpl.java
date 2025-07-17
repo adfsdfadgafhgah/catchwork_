@@ -155,4 +155,23 @@ public class CorpServiceImpl implements CorpService {
         
                 return deleteCount;
 	}
+
+    // 탈퇴 기업 처리(스케줄러)
+    @Override
+    @Transactional(value = "myBatisTransactionManager", rollbackFor = Exception.class)
+    public int withdrawCompany(int deleteTargetPeriod) {
+
+        // 기업 탈퇴 대상 조회
+        List<Integer> targetCorpNoList = mapper.selectTargetCorp(deleteTargetPeriod);
+
+        // 기업 인사 탈퇴
+        for (Integer corpNo : targetCorpNoList) {
+            mapper.withdrawCorpMember(corpNo);
+        }
+
+        // 기업 탈퇴
+        int result = mapper.removeTargetCorp(deleteTargetPeriod);
+
+        return result;
+    }
 }

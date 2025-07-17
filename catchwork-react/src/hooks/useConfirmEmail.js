@@ -17,12 +17,16 @@ const useConfirmEmail = () => {
 
   // 인증번호 확인
   const checkAuthKey = async (memEmail, authKey) => {
-    const resp = await axiosApi.post("/member/checkAuthKey", { memEmail, authKey });
-    if (resp.status === 200) {
+    try {
+      const resp = await axiosApi.post("/member/checkAuthKey", { memEmail, authKey });
       alert("인증번호가 확인되었습니다.");
       return true;
-    } else {
-      alert("인증번호가 확인되지 않았습니다.");
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        alert("유효하지 않은 인증번호입니다.");
+      } else {
+        alert("인증번호 확인 중 오류가 발생했습니다.");
+      }
       return false;
     }
   };

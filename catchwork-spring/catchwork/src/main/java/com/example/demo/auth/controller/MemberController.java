@@ -337,7 +337,7 @@ public class MemberController {
 		if(result) {
 			return ResponseEntity.ok(Map.of("message", "인증번호가 확인되었습니다."));
 		} else {
-			return ResponseEntity.status(500).body(Map.of("message", "인증번호가 확인되지 않았습니다."));
+			return ResponseEntity.status(404).body(Map.of("message", "인증번호가 확인되지 않았습니다."));
 		}
 	}
 
