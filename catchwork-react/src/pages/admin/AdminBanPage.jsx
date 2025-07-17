@@ -36,6 +36,7 @@ const AdminBanPage = () => {
 
     fetchBanList({
       page,
+      amount: 10,
       banTargetType,
       keyword,
     });
@@ -84,6 +85,7 @@ const AdminBanPage = () => {
     releaseBan(banNo, () => {
       fetchBanList({
         page: currentPage,
+        amount: 10,
         banTargetType: searchFilters.banTargetType,
         keyword: searchFilters.keyword,
       });
