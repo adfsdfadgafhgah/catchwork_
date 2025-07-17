@@ -1,0 +1,119 @@
+.editContainer {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.editForm {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.editHeader {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.editHeader h1 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 0.5rem;
+}
+
+.editHeader p {
+  color: #666;
+  font-size: 1rem;
+  margin: 0;
+  white-space: pre-line;
+}
+
+.formContent {
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.formItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.formItem label {
+  font-weight: 500;
+  color: var(--main-color);
+}
+
+.formItem input {
+  padding: 0.75rem;
+  border: 1px solid #e9ecef;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.formItem input:focus {
+  outline: none;
+  border-color: var(--main-color);
+  box-shadow: 0 0 0 3px rgba(70, 181, 171, 0.1);
+}
+
+.inputError {
+  border-color: #dc3545 !important;
+}
+
+.errorMessage {
+  color: #dc3545;
+  font-size: 0.875rem;
+}
+
+.submitContainer {
+  padding: 1.5rem 2rem;
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+}
+
+.submitButton {
+  width: 100%;
+  background: var(--main-color);
+  color: white;
+  border: none;
+  padding: 1rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: var(--main-color-dark);
+  transform: translateY(-1px);
+}
+
+.submitButton:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .formContent {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .editHeader h1 {
+    font-size: 1.3rem;
+  }
+
+  .formContent {
+    padding: 1rem;
+  }
+}

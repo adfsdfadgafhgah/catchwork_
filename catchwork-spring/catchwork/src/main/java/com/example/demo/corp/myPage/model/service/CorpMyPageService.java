@@ -12,6 +12,7 @@ public interface CorpMyPageService {
     // 멤버 비밀번호 조회 - 파라미터 타입 String
     String selectMemberPassword(String memNo);
 
+    // 비밀번호 확인
 	boolean verifyPassword(String memNo, String inputPassword);
 
 }	

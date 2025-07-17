@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
-import "./CorpWithdrawPage.css";
+import styles from "./CorpWithdrawPage.module.css";
 import { axiosApi } from "../../api/axiosAPI";
 import { useAuthStore } from "../../stores/authStore";
 
@@ -16,13 +16,14 @@ const CorpWithdrawPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (
       confirm(
         "정말 탈퇴하시겠습니까? \n탈퇴 후 데이터에 대한 손실을 책임지지 않습니다."
       )
     ) {
       try {
-        const resp = await axiosApi.put("/corpMyPage/withdraw", {
+        const resp = await axiosApi.put("/myPage/withdraw", {
           memPw: password,
           memNo: loginMember.memNo,
         });
@@ -73,10 +74,17 @@ const CorpWithdrawPage = () => {
       title: "제3조 (회원 탈퇴 시 처리되는 정보)",
       content: [
         "1. 회원 탈퇴 시, 아래의 개인정보는 지체 없이 파기됩니다.",
-        "- (이름, 닉네임, 생년월일 ,전화번호, 이메일, 프로필 사진)",
+        "- 이름",
+        "- 닉네임",
+        "- 생년월일",
+        "- 전화번호",
+        "- 이메일",
+        "- 프로필 사진",
+        "",
         "2. 아래의 정보는 관련 법령에 따라 일정 기간 보관 후 파기됩니다.",
         "- 서비스 이용 기록 (로그 기록, 접속기록 등)",
         "- 결제 및 거래 관련 정보 (전자상거래법 등 관련 법률에 따라 최소 보관 기간 준수)",
+        "",
         "3. 아래의 콘텐츠는 탈퇴 후에도 사이트 내에 남을 수 있습니다.",
         "- 작성한 게시글 및 댓글 (단, 작성자명은 비식별화 처리)",
         "- 제출한 이력서 또는 지원 이력(기업에 이미 전달된 경우 회수 불가)",
@@ -114,28 +122,25 @@ const CorpWithdrawPage = () => {
   ];
 
   return (
-    <div className="withdraw-container">
-      <div className="withdraw-content">
-        <div className="form-container">
-          <p className="content-warning">
+    <div className={styles.withdrawContainer}>
+      <div className={styles.withdrawContent}>
+        <div className={styles.formContainer}>
+          <p className={styles.contentWarning}>
             계정을 탈퇴하면 모든 데이터가 삭제되며 복구할 수 없습니다. 신중히 결정해 주세요.
           </p>
-
-          <div className="withdraw-terms-box" onScroll={handleScroll}>
+          <div className={styles.withdrawTermsBox} onScroll={handleScroll}>
             {terms.map((item, index) => (
-              <div key={index} className="terms-text">
-                <p className="terms-title">{item.title}</p>
-                <ul className="terms-list">
-                  {item.content.map((line, idx) => (
-                    <li key={idx}>{line}</li>
-                  ))}
-                </ul>
+              <div key={index} className={styles.termsText}>
+                <p>{item.title}</p>
+                {item.content.map((line, i) => (
+                  <p key={i}>{line}</p>
+                ))}
               </div>
             ))}
           </div>
 
-          <div className="form-group">
-            <div className="checkbox-container">
+          <div className={styles.formGroup}>
+            <div className={styles.checkboxContainer}>
               <input
                 type="checkbox"
                 id="agree"
@@ -147,8 +152,8 @@ const CorpWithdrawPage = () => {
             </div>
           </div>
 
-          <div className="form-group">
-            <label htmlFor="memberPw" className="form-label">
+          <div className={styles.formGroup}>
+            <label htmlFor="memberPw" className={styles.formLabel}>
               비밀번호
             </label>
             <input
@@ -157,7 +162,7 @@ const CorpWithdrawPage = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               placeholder="비밀번호를 입력해주세요"
-              className="form-input"
+              className={styles.formInput}
               required
             />
           </div>
@@ -165,7 +170,7 @@ const CorpWithdrawPage = () => {
           <button
             type="submit"
             onClick={handleSubmit}
-            className="submit-btn"
+            className={styles.submitBtn}
             disabled={isDisabled}
           >
             탈퇴하기
