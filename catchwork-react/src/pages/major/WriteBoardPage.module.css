@@ -1,10 +1,10 @@
-.write-wrap {
+.writeWrap {
   max-width: 1000px;
   margin: 20px auto;
   padding: 0 16px;
 }
 
-.write-input-title {
+.writeInputTitle {
   width: 100%;
   font-size: 15px;
   padding: 12px;
@@ -14,13 +14,13 @@
   outline: none;
 }
 
-.write-editor .toastui-editor-defaultUI {
+.writeEditor :global(.toastui-editor-defaultUI) {
   border: 1px solid var(--main-color);
   border-radius: 4px;
   margin-top: 16px;
 }
 
-.write-btn-area {
+.writeBtnArea {
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -28,8 +28,8 @@
   gap: 12px;
 }
 
-.write-btn-cancel,
-.write-btn-submit {
+.writeBtnCancel,
+.writeBtnSubmit {
   border: none;
   border-radius: 6px;
   padding: 6px 12px;
@@ -40,13 +40,13 @@
   transition: background-color 0.2s ease;
 }
 
-.write-btn-cancel:hover,
-.write-btn-submit:hover {
+.writeBtnCancel:hover,
+.writeBtnSubmit:hover {
   color: var(--main-color-dark);
 }
 
 /* Toast UI Editor 툴팁 스타일 커스터마이징 */
-.toastui-editor-tooltip {
+:global(.toastui-editor-tooltip) {
   background-color: var(--stroke-color1) !important; /* 밝은 회색 */
   color: var(--text) !important; /* 글자색 어둡게 */
   border-radius: 4px !important;
@@ -55,50 +55,50 @@
 }
 
 /* 툴팁 꼭짓점 제거 (실제 요소 제거) */
-.toastui-editor-tooltip > div {
+:global(.toastui-editor-tooltip > div) {
   display: none !important;
 }
 
 /* 반응형 스타일 */
 
 @media screen and (max-width: 1023px) {
-  .write-wrap {
+  .writeWrap {
     padding: 0 12px;
   }
 
-  .write-input-title {
+  .writeInputTitle {
     font-size: 14px;
   }
 
-  .write-btn-area {
+  .writeBtnArea {
     justify-content: center;
     gap: 8px;
   }
 
-  .write-btn-cancel,
-  .write-btn-submit {
+  .writeBtnCancel,
+  .writeBtnSubmit {
     font-size: 13px;
     padding: 5px 10px;
   }
 }
 
 @media screen and (max-width: 767px) {
-  .write-wrap {
+  .writeWrap {
     max-width: 100%;
     padding: 0 10px;
   }
 
-  .write-editor .toastui-editor-defaultUI {
+  .writeEditor :global(.toastui-editor-defaultUI) {
     font-size: 14px;
   }
 
-  .write-btn-area {
+  .writeBtnArea {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .write-btn-cancel,
-  .write-btn-submit {
+  .writeBtnCancel,
+  .writeBtnSubmit {
     width: 100%;
     text-align: center;
   }

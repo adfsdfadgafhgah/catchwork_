@@ -19,7 +19,7 @@ const AdminAuthPage = () => {
 
   return (
     <div className="authPage">
-      <div className="container">
+      <div className="admin-container">
         <form onSubmit={handleAdminAuth}>
           <div className="form-control">
             <input

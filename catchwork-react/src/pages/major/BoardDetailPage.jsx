@@ -1,7 +1,7 @@
 import { useOutletContext, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
-import BoardCss from "./BoardDetailPage.module.css";
+import styles from "./BoardDetailPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
 import { useNavigate } from "react-router-dom"; // 페이지 이동용
 import CommentList from "../../components/board/CommentList";
@@ -91,7 +91,6 @@ export default function BoardDetailPage() {
         })
         .catch((err) => console.error("조회수 증가 실패:", err));
     } else {
-      console.log("오늘 이미 조회함 (쿠키 확인)");
     }
   }, [boardNo]);
 
@@ -188,20 +187,20 @@ export default function BoardDetailPage() {
 
   return (
     <>
-      <div className={BoardCss.detailWrapper}>
+      <div className={styles.detailWrapper}>
         {/* 섹션 헤더 */}
         <SectionHeader title="취준진담" />
 
         {/* 제목 + 수정/삭제 */}
-        <div className={BoardCss.headerRow}>
-          <h1 className={BoardCss.title}>{board.boardTitle}</h1>
+        <div className={styles.headerRow}>
+          <h1 className={styles.title}>{board.boardTitle}</h1>
 
           {isWriter && (
-            <div className={BoardCss.actionButtons}>
-              <button className={BoardCss.actionBtn} onClick={handleEdit}>
+            <div className={styles.actionButtons}>
+              <button className={styles.actionBtn} onClick={handleEdit}>
                 <i className="fa-regular fa-pen-to-square"></i> 수정하기
               </button>
-              <button className={BoardCss.actionBtn} onClick={handleDelete}>
+              <button className={styles.actionBtn} onClick={handleDelete}>
                 <i className="fa-regular fa-trash-can"></i> 삭제하기
               </button>
             </div>
@@ -209,8 +208,8 @@ export default function BoardDetailPage() {
         </div>
 
         {/* 작성자 정보 + 메타 정보 */}
-        <div className={BoardCss.metaRow}>
-          <div className={BoardCss.writerInfo}>
+        <div className={styles.metaRow}>
+          <div className={styles.writerInfo}>
             <img
               src={
                 board?.memProfilePath
@@ -222,7 +221,7 @@ export default function BoardDetailPage() {
             <span>{board?.memNickname}</span>
             <span>{formatTimeAgo(board.boardWriteDate)}</span>
           </div>
-          <div className={BoardCss.metaInfo}>
+          <div className={styles.metaInfo}>
             <i className="fa-regular fa-eye"></i> {board.boardReadCount}{" "}
             &nbsp;&nbsp;
             <i
@@ -239,7 +238,7 @@ export default function BoardDetailPage() {
             {/* 신고하기 버튼 조건 렌더링 */}
             {!isWriter && (
               <button
-                className={BoardCss.actionBtn}
+                className={styles.actionBtn}
                 onClick={() =>
                   handleReportClick(
                     board.boardNo,
@@ -249,7 +248,7 @@ export default function BoardDetailPage() {
                 }
               >
                 <span
-                  className={`material-symbols-outlined ${BoardCss.iconSmall}`}
+                  className={`material-symbols-outlined ${styles.iconSmall}`}
                 >
                   siren
                 </span>
@@ -260,7 +259,7 @@ export default function BoardDetailPage() {
         </div>
 
         {/* 본문 */}
-        <div className={BoardCss.contentBox}>
+        <div className={styles.contentBox}>
           {/* markdown을 HTML로 렌더링 */}
           <Viewer initialValue={board.boardContent} />
         </div>

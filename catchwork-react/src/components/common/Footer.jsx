@@ -8,8 +8,9 @@ const Footer = () => {
   return (
     <footer className="footer">
       <div className="footer-links">
-        <a href="#">개인정보처리방침</a>
-        <a href="#">이용약관</a>
+        <Link to="/policyprivacy">개인정보처리방침</Link>
+
+        <Link to="/termsofservice">이용약관</Link>
         <span>Copyright © CATCH. All rights reserved.</span>
         <Link to="/supportlist" className="highlight">
           문의하기

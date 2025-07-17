@@ -1,7 +1,7 @@
 import { useState } from "react";
 import CommentWrite from "./CommentWrite";
 import CommentEdit from "./CommentEdit";
-import CommentCss from "./CommentItem.module.css";
+import styles from "./CommentItem.module.css";
 import { formatTimeAgo } from "./../common/formatTimeAgo";
 import ReportModalPage from "../../pages/support/ReportModalPage";
 import { axiosApi } from "../../api/axiosAPI";
@@ -57,7 +57,7 @@ export default function CommentItem({
   };
 
   return (
-    <div className={CommentCss.commentWrapper}>
+    <div className={styles.commentWrapper}>
       {/* 댓글 또는 수정 모드 */}
       {isEditing ? (
         <CommentEdit
@@ -70,12 +70,12 @@ export default function CommentItem({
           }}
         />
       ) : (
-        <div className={CommentCss.commentBox}>
-          <div className={CommentCss.header}>
-            <div className={CommentCss.writerInfo}>
+        <div className={styles.commentBox}>
+          <div className={styles.header}>
+            <div className={styles.writerInfo}>
               {/* 대댓글이면 ㄴ자 선 보이게 */}
               {comment.parentCommentNo > 0 && (
-                <div className={CommentCss.replyLine}></div>
+                <div className={styles.replyLine}></div>
               )}
               <img
                 src={
@@ -84,34 +84,34 @@ export default function CommentItem({
                     : defaultImg
                 }
                 alt="기업로고"
-                className={CommentCss.profileImg}
+                className={styles.profileImg}
               />
-              <span className={CommentCss.nickname}>{comment.memNickname}</span>
+              <span className={styles.nickname}>{comment.memNickname}</span>
             </div>
-            <span className={CommentCss.date}>
+            <span className={styles.date}>
               {formatTimeAgo(comment.commentWriteDate)}
             </span>
           </div>
 
           {/*  댓글 내용 or 삭제된 댓글 표시 */}
           {comment.commentStatus === 1 ? (
-            <div className={CommentCss.deleted}>삭제된 댓글입니다.</div>
+            <div className={styles.deleted}>삭제된 댓글입니다.</div>
           ) : (
             <div
-              className={CommentCss.content}
+              className={styles.content}
               dangerouslySetInnerHTML={{
                 __html: comment.commentContent.replace(/\n/g, "<br/>"),
               }}
             ></div>
           )}
 
-          <div className={CommentCss.actions}>
+          <div className={styles.actions}>
             {/* 말풍선: 부모 댓글에만 노출 */}
             {comment.commentStatus === 0 &&
               (comment.parentCommentNo === null ||
                 comment.parentCommentNo === 0) && (
                 <button
-                  className={CommentCss.actionBtn}
+                  className={styles.actionBtn}
                   onClick={() => setIsReplyOpen((prev) => !prev)}
                 >
                   <i className="fa-regular fa-comment-dots" />
@@ -123,22 +123,19 @@ export default function CommentItem({
               (isWriter ? (
                 <>
                   <button
-                    className={CommentCss.actionBtn}
+                    className={styles.actionBtn}
                     onClick={() => setIsEditing(true)}
                   >
                     수정
                   </button>
-                  <button
-                    className={CommentCss.actionBtn}
-                    onClick={handleDelete}
-                  >
+                  <button className={styles.actionBtn} onClick={handleDelete}>
                     삭제
                   </button>
                 </>
               ) : (
-                <button className={CommentCss.actionBtn} onClick={handleReport}>
+                <button className={styles.actionBtn} onClick={handleReport}>
                   <span
-                    className={`material-symbols-outlined ${CommentCss.iconSmall}`}
+                    className={`material-symbols-outlined ${styles.iconSmall}`}
                   >
                     siren
                   </span>
@@ -151,7 +148,7 @@ export default function CommentItem({
 
       {/* 대댓글 작성창 */}
       {isReplyOpen && (
-        <div className={CommentCss.replyInputBox}>
+        <div className={styles.replyInputBox}>
           <CommentWrite
             boardNo={comment.boardNo}
             memNo={memNo}
@@ -165,7 +162,7 @@ export default function CommentItem({
       )}
 
       {/* 대댓글 리스트 */}
-      <div className={CommentCss.childList}>
+      <div className={styles.childList}>
         {childComments.map((child) => (
           <CommentItem
             key={child.commentNo}

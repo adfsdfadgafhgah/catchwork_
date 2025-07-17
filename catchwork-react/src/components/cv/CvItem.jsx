@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import styles from "./CvItem.module.css";
+import styles from "./CVItem.module.css";
 
 const CvItem = ({ cv, recruitNo, mode, onEdit, onDelete, onSubmit }) => {
   const navigate = useNavigate();
