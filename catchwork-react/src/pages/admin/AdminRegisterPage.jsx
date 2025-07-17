@@ -94,8 +94,8 @@ const AdminRegisterPage = () => {
       console.log(response);
       if (response.status === 200 && response.data) {
         setModalInfo({
-          id: response.data.id,
-          password: response.data.password,
+          id: response.data.res.id,
+          password: response.data.res.password,
         });
         setModalOpen(true);
       } else {
@@ -111,6 +111,7 @@ const AdminRegisterPage = () => {
         <div className="modal-backdrop">
           <div className="modal">
             <h2>회원가입 완료</h2>
+            <p>다시 확인 할 수 없습니다.</p>
             <p>
               <b>임시 아이디:</b> {modalInfo.id}
               <br />
@@ -248,7 +249,7 @@ const AdminRegisterPage = () => {
               textAlign: "center",
             }}
           >
-            비밀번호는 가입 후 별도 안내됩니다.
+            ID/PW 는 가입 후 별도 안내됩니다.
           </div>
           <button className="send-btn" type="submit">
             Register
