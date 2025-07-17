@@ -1,6 +1,6 @@
 import React from "react";
-import "./CorpRegisterPage.css";
 import useCorpFormHandler from "../../hooks/corpFormHandler";
+import styles from "./CorpRegisterPage.module.css";
 
 const CorpRegisterPage = () => {
   const {
@@ -29,14 +29,14 @@ const CorpRegisterPage = () => {
   });
 
   return (
-    <div className="corpRegister-container">
-      <div className="corpRegister-form">
+    <div className={styles.corpRegisterContainer}>
+      <div className={styles.corpRegisterForm}>
         <h2>기업 등록</h2>
 
         <form onSubmit={handleSubmit}>
           {/* 사업자 등록번호 */}
           <label>사업자 등록번호 *</label>
-          <div className="corpRegister-input-with-button">
+          <div className={styles.corpRegisterInputWithButton}>
             <input
               type="text"
               name="corpRegNo"
@@ -51,47 +51,48 @@ const CorpRegisterPage = () => {
             {validity.corpRegNo === false && (
               <small style={{ color: "red" }}>10자리 숫자</small>
             )}
-            {/* 대표자 성명 */}
-            <label>대표자 성명 *</label>
-            <input
-              type="text"
-              name="corpCEOName"
-              value={formData.corpCEOName}
-              onChange={handleInputChange}
-              placeholder="대표자 성명을 입력하세요"
-              style={{
-                borderColor: validity.corpCEOName === false ? "red" : undefined,
-              }}
-            />
-            {validity.corpCEOName === false && (
-              <small style={{ color: "red" }}>2~30자 한글/영문</small>
-            )}
-            {/* 기업 개설일자 */}
-            <label>기업 개설일자 *</label>
-            <input
-              type="date"
-              name="corpOpenDate"
-              value={formData.corpOpenDate}
-              onChange={handleInputChange}
-              className="corpRegister-form-input corpRegister-date-input"
-              style={{
-                borderColor:
-                  validity.corpOpenDate === false ? "red" : undefined,
-              }}
-            />
-            {validity.corpOpenDate === false && (
-              <small style={{ color: "red" }}>필수 입력</small>
-            )}
 
             <button
               type="button"
               onClick={handleCorpRegisterAuth}
               disabled={isCorpVerified}
-              className="corpRegister-action-button"
+              className={styles.corpRegisterActionButton}
             >
               인증하기
             </button>
           </div>
+
+          {/* 대표자 성명 */}
+          <label>대표자 성명 *</label>
+          <input
+            type="text"
+            name="corpCEOName"
+            value={formData.corpCEOName}
+            onChange={handleInputChange}
+            placeholder="대표자 성명을 입력하세요"
+            style={{
+              borderColor: validity.corpCEOName === false ? "red" : undefined,
+            }}
+          />
+          {validity.corpCEOName === false && (
+            <small style={{ color: "red" }}>2~30자 한글/영문</small>
+          )}
+
+          {/* 기업 개설일자 */}
+          <label>기업 개설일자 *</label>
+          <input
+            type="date"
+            name="corpOpenDate"
+            value={formData.corpOpenDate}
+            onChange={handleInputChange}
+            className={`${styles.corpRegisterFormInput} ${styles.corpRegisterDateInput}`}
+            style={{
+              borderColor: validity.corpOpenDate === false ? "red" : undefined,
+            }}
+          />
+          {validity.corpOpenDate === false && (
+            <small style={{ color: "red" }}>필수 입력</small>
+          )}
 
           {/* 기업 형태 */}
           <label>기업 형태</label>
@@ -119,19 +120,9 @@ const CorpRegisterPage = () => {
             <small style={{ color: "red" }}>2~50자 한글/영문/숫자</small>
           )}
 
-          {/* 기업 로고 */}
-          {/* <label>기업 로고</label>
-          <input
-            type="file"
-            name="corpLogo"
-            value={formData.corpLogo}
-            onChange={handleInputChange}
-            placeholder="기업 로고이미지를 입력하세요"
-          /> */}
-
           {/* 기업 주소 */}
           <label>기업 주소 *</label>
-          <div className="corpRegister-input-with-button">
+          <div className={styles.corpRegisterInputWithButton}>
             <input
               type="text"
               name="corpAddr"
@@ -146,7 +137,7 @@ const CorpRegisterPage = () => {
             <button
               type="button"
               onClick={triggerAddressSearch}
-              className="corpRegister-action-button"
+              className={styles.corpRegisterActionButton}
             >
               주소 찾기
             </button>
@@ -230,7 +221,7 @@ const CorpRegisterPage = () => {
           {/* 등록 버튼 */}
           <button
             type="submit"
-            className="submit-button"
+            className={styles.submitButton}
             disabled={!isCorpVerified}
           >
             기업 등록

@@ -1,0 +1,63 @@
+/* 멤버십 컨테이너 전체 */
+.membershipContainer {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 멤버십 카드 리스트 영역 */
+.membershipList {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  align-items: stretch;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+}
+
+/* 현재 구독 정보 텍스트 */
+.membershipContainer > p {
+  text-align: center;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  background-color: #f8f9fa;
+  padding: 16px 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  border-left: 4px solid var(--main-color);
+  height: 52px;
+}
+
+/* 해지하기 버튼 */
+.membershipContainer > button {
+  display: block;
+  margin: 20px auto 0;
+  padding: 10px 24px;
+  background-color: transparent;
+  border: 2px solid #ccc;
+  border-radius: 6px;
+  color: #666;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.membershipContainer > button:hover {
+  border-color: #999;
+  color: #333;
+  background-color: #f5f5f5;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .membershipList {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .membershipContainer {
+    padding: 15px;
+  }
+}

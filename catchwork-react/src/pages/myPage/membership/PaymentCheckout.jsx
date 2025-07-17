@@ -1,4 +1,4 @@
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, useState } from "react";
 import {
   useNavigate,
   useSearchParams,
@@ -7,11 +7,23 @@ import {
 import useMembershipData from "../../../hooks/useMembershipData";
 import { axiosApi } from "../../../api/axiosAPI";
 
-const url = import.meta.env.VITE_BASE_URL;
-
 function PaymentCheckout() {
   // outlet context에서 loginMember 받아오기
-  const { loginMember } = useOutletContext();
+  const { memNo } = useOutletContext();
+  const [loginMember, setLoginMember] = useState(null);
+
+  // 로그인 유저 정보 조회
+  const getLoginMember = async () => {
+    const resp = await axiosApi.post("/member/getLoginMember", { memNo });
+    if (resp.status === 200) {
+      setLoginMember(resp.data);
+    }
+  };
+
+  // 로그인 유저 정보 갱신
+  useEffect(() => {
+    getLoginMember();
+  }, [memNo]);
 
   // 페이지 이동용
   const navigate = useNavigate();
