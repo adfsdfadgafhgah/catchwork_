@@ -96,8 +96,11 @@ const PolicyPrivacy = () => {
           있도록 필요한 사항을 규정하고 있습니다. 변동사항 발생 시 공지사항 또는
           개인정보 처리방침을 통해 고지하도록 하겠습니다.
           <br />
+          <br />
         </p>
         <b>국내위탁 현황</b>
+        <br />
+        <br />
         <table className="privacy-table">
           <thead>
             <tr>
@@ -233,8 +236,10 @@ const PolicyPrivacy = () => {
             </tr>
           </tbody>
         </table>
-
+        <br />
         <b>국외위탁 현황</b>
+        <br />
+        <br />
         <table className="privacy-table">
           <thead>
             <tr>
@@ -370,8 +375,10 @@ const PolicyPrivacy = () => {
             </tr>
           </tbody>
         </table>
-
+        <br />
         <b>재위탁 현황</b>
+        <br />
+        <br />
         <table className="privacy-table">
           <thead>
             <tr>
