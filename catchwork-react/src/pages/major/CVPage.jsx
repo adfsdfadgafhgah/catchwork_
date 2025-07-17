@@ -2,7 +2,7 @@ import { Outlet } from "react-router-dom";
 
 const CVPage = () => {
   return (
-    <main className="container">
+    <main className="CVPage-container">
       <Outlet />
     </main>
   );

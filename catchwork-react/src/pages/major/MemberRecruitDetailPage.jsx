@@ -1,5 +1,10 @@
-import { useEffect, useState } from "react";
-import { useParams, useNavigate, useOutletContext } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
+import {
+  useParams,
+  useNavigate,
+  useOutletContext,
+  Link,
+} from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 import styles from "../corpMajor/CorpRecruitDetailPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
@@ -25,6 +30,9 @@ export default function MemberRecruitDetailPage() {
   const [reportTargetNo, setReportTargetNo] = useState(null);
   const [reportTargetType, setReportTargetType] = useState(null);
   const [reportTargetNickname, setReportTargetNickname] = useState(null);
+
+  // 지도 컨테이너를 참조하기 위한 ref 생성
+  const mapRef = useRef(null);
 
   // 쿠키 헬퍼 함수 정의
   const setCookie = (name, value, days) => {
@@ -127,6 +135,7 @@ export default function MemberRecruitDetailPage() {
   const handleSubmit = async () => {
     if (!memNo) {
       alert("로그인 후 이용 가능합니다.");
+      navigate(`/signin`);
       return;
     }
 
@@ -170,7 +179,6 @@ export default function MemberRecruitDetailPage() {
   };
 
   // 카카오맵 마커 클릭 핸들러
-  // 이 함수가 정의되지 않았을 가능성을 낮추기 위해 컴포넌트 최상단에 정의합니다.
   const handleMapClick = (address) => {
     const kakaoMapUrl = `https://map.kakao.com/link/search/${encodeURIComponent(
       address
@@ -178,108 +186,209 @@ export default function MemberRecruitDetailPage() {
     window.open(kakaoMapUrl, "_blank");
   };
 
+  const handleScrollToMap = (e) => {
+    e.preventDefault(); // a 태그의 기본 동작 방지
+    if (mapRef.current) {
+      mapRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
   if (!recruit) return <div>로딩 중...</div>;
+
+  // 지원 자격 및 근무 조건 데이터를 배열로 만듭니다.
+  const conditions = [
+    {
+      icon: "fa-solid fa-briefcase",
+      label: "경력",
+      value: recruit.recruitCareer,
+    },
+    {
+      icon: "fa-solid fa-file-contract",
+      label: "고용형태",
+      value: recruit.recruitType,
+    },
+    {
+      icon: "fa-solid fa-user-graduate",
+      label: "학력",
+      value: recruit.recruitEdu,
+    },
+    {
+      icon: "fa-solid fa-map-marker-alt",
+      label: "근무지",
+      value: recruit.recruitJobArea,
+    },
+    {
+      icon: "fa-solid fa-users",
+      label: "모집인원",
+      value: recruit.recruitHeadcount,
+    },
+    { icon: "fa-solid fa-coins", label: "연봉", value: recruit.recruitSalary },
+  ];
 
   return (
     <div className={styles.detailPageWrap}>
-      {/* 섹션 헤더 */}
       <SectionHeader title="채용공고 상세정보" />
-      {/* 기업 정보 */}
-      <div className={styles.corpHeader}>
-        <img
-          src={
-            recruit?.corpLogo ? `${logoImgUrl}/${recruit.corpLogo}` : defaultImg
-          }
-          alt="기업로고"
-          className={styles.corpLogo}
-        />
-        <div className={styles.corpInfoText}>
-          <span className={styles.corpName}>{recruit.corpName}</span>
-          <span className={styles.corpType}>{recruit.corpType}</span>
-          {/* 채용 제목 */}
-          <h2 className={styles.recruitTitle}>
-            [{recruit.memName}] {recruit.recruitTitle}
-          </h2>
-          <p className={styles.recruitDates}>
-            {recruit.recruitStartDate} ~ {recruit.recruitEndDate}
-          </p>
 
-          {/* 조회수/좋아요 표시 라인 추가 */}
-          <div className={styles.engagementInfo}>
-            <span>
-              <i className="fa-regular fa-eye" /> {recruit.recruitReadCount}{" "}
-              &nbsp;&nbsp;
-            </span>
+      <div className={styles.card}>
+        <div className={styles.corpHeader}>
+          <Link to={`/company/${recruit.corpNo}`}>
+            <img
+              src={
+                recruit?.corpLogo
+                  ? `${logoImgUrl}/${recruit.corpLogo}`
+                  : defaultImg
+              }
+              alt="기업로고"
+              className={styles.corpLogo}
+            />
+          </Link>
+          <div className={styles.corpInfoText}>
+            <Link
+              to={`/company/${recruit.corpNo}`}
+              className={styles.corpNameLink}
+            >
+              <span className={styles.corpName}>{recruit.corpName}</span>{" "}
+              <span className={styles.corpType}>{recruit.corpType}</span>
+            </Link>
 
-            <span onClick={toggleLike} style={{ cursor: "pointer" }}>
-              <i
-                className={`fa-heart ${liked ? "fa-solid" : "fa-regular"}`}
-                style={{ color: liked ? "var(--main-color)" : "gray" }}
-              />{" "}
-              {likeCount}
-            </span>
+            <h2 className={styles.recruitTitle}>
+              [{recruit.corpMemDept}] {recruit.recruitTitle}
+            </h2>
+            <p className={styles.recruitDates}>
+              {recruit.recruitStartDate} ~ {recruit.recruitEndDate}
+            </p>
+            <div className={styles.engagementInfo}>
+              <span>
+                <i className="fa-regular fa-eye" /> {recruit.recruitReadCount}
+              </span>
+              <span>
+                <i
+                  className={`fa-heart ${liked ? "fa-solid" : "fa-regular"}`}
+                  style={{
+                    color: liked ? "var(--main-color)" : "var(--gray01)",
+                  }}
+                />{" "}
+                {likeCount}
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* 직무명 + 상세 */}
-      <section className={styles.jobSection}>
-        <h3 className={styles.jobName}>{recruit.recruitJobName}</h3>
-        <p className={styles.jobDetail}>{recruit.recruitJobDetail}</p>
-      </section>
+      {/* 직무 상세 정보 섹션 */}
+      <div className={styles.card}>
+        <section className={styles.jobSection}>
+          <h3 className={styles.jobName}>{recruit.recruitJobName}</h3>
+          <p className={styles.jobDetail}>{recruit.recruitJobDetail}</p>
+        </section>
+      </div>
 
-      {/* 지원 자격 및 근무 조건 */}
-      <section className={styles.recruitConditions}>
-        <table>
-          <tbody>
-            <tr>
-              <th>경력</th>
-              <td>{recruit.recruitCareer}</td>
-              <th>고용형태</th>
-              <td>{recruit.recruitType}</td>
-            </tr>
-            <tr>
-              <th>학력</th>
-              <td>{recruit.recruitEdu}</td>
-              <th>근무지</th>
-              <td>{recruit.recruitJobArea}</td>
-            </tr>
-            <tr>
-              <th>모집인원</th>
-              <td>{recruit.recruitHeadcount}</td>
-              <th>연봉</th>
-              <td>{recruit.recruitSalary}</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
+      {/* 자격 및 조건 섹션을 새로운 그리드 UI로 변경 */}
+      <div className={styles.card}>
+        <h4 className={styles.cardTitle}>지원자격 및 근무조건</h4>
+        <section className={styles.recruitConditions}>
+          <div className={styles.infoGrid}>
+            {conditions.map((item, index) => (
+              <div key={index} className={styles.infoBlock}>
+                <div className={styles.infoIcon}>
+                  <i className={item.icon}></i>
+                </div>
+                <div className={styles.infoText}>
+                  <span className={styles.infoLabel}>{item.label}</span>
+                  {/* 근무지 항목에만 지도보기 링크를 추가하기 위한 구조 변경 */}
+                  <div className={styles.infoValueContainer}>
+                    <span className={styles.infoValue}>{item.value}</span>
+                    {item.label === "근무지" && (
+                      <a
+                        href="#map"
+                        onClick={handleScrollToMap}
+                        className={styles.mapLink}
+                      >
+                        {" "}
+                        지도 <i className="fa-solid fa-chevron-right"></i>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
 
-      <KakaoMapPreview
-        address={recruit.recruitJobArea}
-        onClick={handleMapClick}
-      />
+      {/* 상세 정보 섹션의 구조를 개선 */}
+      <div className={styles.card}>
+        <section className={styles.detailSections}>
+          <div className={styles.detailItem}>
+            <h4 className={styles.sectionTitle}>
+              <i className="fa-solid fa-file-alt"></i> 제출 서류
+            </h4>
+            <p>{recruit.recruitDocx}</p>
+          </div>
 
-      {/* 상세 정보 섹션 */}
-      <section className={styles.detailSections}>
-        <h4 className={styles.sectionTitle}>제출 서류</h4>
-        <p>{recruit.recruitDocx}</p>
+          <div className={styles.detailItem}>
+            <h4 className={styles.sectionTitle}>
+              <i className="fa-solid fa-pen-to-square"></i> 접수 방법
+            </h4>
+            <p>{recruit.recruitApply}</p>
+          </div>
 
-        <h4 className={styles.sectionTitle}>접수 방법</h4>
-        <p>{recruit.recruitApply}</p>
+          <div className={styles.detailItem}>
+            <h4 className={styles.sectionTitle}>
+              <i className="fa-solid fa-link"></i> 채용 사이트
+            </h4>
+            {/* URL은 클릭 가능한 링크로 변경 */}
+            <a
+              href={recruit.recruitCorpUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={styles.corpUrlLink}
+            >
+              {recruit.recruitCorpUrl}
+            </a>
+          </div>
 
-        <h4 className={styles.sectionTitle}>채용 사이트</h4>
-        <p>{recruit.recruitCorpUrl}</p>
+          <div className={styles.detailItem}>
+            <h4 className={styles.sectionTitle}>
+              <i className="fa-solid fa-people-arrows"></i> 채용 단계
+            </h4>
+            <p>{recruit.recruitHireDetail}</p>
+          </div>
 
-        <h4 className={styles.sectionTitle}>채용 단계</h4>
-        <p>{recruit.recruitHireDetail}</p>
+          <div className={styles.detailItem}>
+            <h4 className={styles.sectionTitle}>
+              <i className="fa-solid fa-gift"></i> 복리후생
+            </h4>
+            <p>{recruit.corpBenefit}</p>
+            <p>{recruit.corpBenefitDetail}</p>
+          </div>
 
-        <h4 className={styles.sectionTitle}>복리후생</h4>
-        <p>{recruit.corpBenefit}</p>
-        <p>{recruit.corpBenefitDetail}</p>
+          <div className={styles.detailItem}>
+            <h4 className={styles.sectionTitle}>
+              <i className="fa-solid fa-circle-info"></i> 기타 사항
+            </h4>
+            <p>{recruit.recruitEtc}</p>
+          </div>
+        </section>
+      </div>
 
-        <h4 className={styles.sectionTitle}>기타 사항</h4>
-        <p>{recruit.recruitEtc}</p>
-      </section>
+      {/* 카카오맵 미리보기 */}
+      <div className={styles.mapContainer} ref={mapRef}>
+        <KakaoMapPreview
+          address={recruit.recruitJobArea}
+          onClick={handleMapClick}
+        />
+      </div>
+
+      {/* 마감 타이머 */}
+      <div className={styles.deadlineTimerCard}>
+        {" "}
+        <DeadlineTimer
+          startDate={recruit.recruitStartDate}
+          endDate={recruit.recruitEndDate}
+          status={recruit.recruitStatus}
+        />
+      </div>
 
       {/* 모달 조건부 렌더링 */}
       {/* 채용공고 신고하기 */}
@@ -292,10 +401,6 @@ export default function MemberRecruitDetailPage() {
           onClose={handleCloseReport}
         />
       )}
-
-      <div className={styles.deadlineTimer}>
-        <DeadlineTimer recruitEndDate={recruit.recruitEndDate} />
-      </div>
 
       <FloatButton
         buttons={FLOAT_BUTTON_PRESETS.submitAndReport(

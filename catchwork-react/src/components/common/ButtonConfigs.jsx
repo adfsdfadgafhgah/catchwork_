@@ -1,30 +1,37 @@
 export const FLOAT_BUTTON_PRESETS = {
-  writeAndCancel: (onWrite, onCancel) => [
+  // [수정] writeAndCancel 프리셋
+  writeAndCancel: (onWrite, onCancel, isDisabled) => [
     {
       label: "취소하기",
       icon: "fa-solid fa-xmark",
       onClick: onCancel,
       className: "float-btn-cancel",
+      type: "button", // [추가] 폼 제출을 방지하기 위해 타입을 'button'으로 명시
     },
     {
       label: "작성하기",
       icon: "fa-regular fa-pen-to-square",
-      onClick: onWrite,
+      onClick: onWrite, // form의 onSubmit으로 처리되지만, 만약을 위해 유지
       className: "float-btn-write",
+      disabled: !isDisabled,
+      type: "submit", // [추가] 이 버튼이 폼을 제출하도록 타입을 'submit'으로 명시
     },
   ],
-  editAndCancel: (onEdit, onCancel) => [
+  editAndCancel: (onEdit, onCancel, isDisabled) => [
     {
       label: "취소하기",
       icon: "fa-solid fa-xmark",
       onClick: onCancel,
       className: "float-btn-cancel",
+      type: "button",
     },
     {
       label: "수정하기",
       icon: "fa-regular fa-pen-to-square",
       onClick: onEdit,
       className: "float-btn-edit",
+      disabled: !isDisabled, // isFormValid가 false일 때 disabled=true
+      type: "submit",
     },
   ],
   deleteOnly: (onDelete) => [

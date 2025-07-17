@@ -61,7 +61,6 @@ export default function BoardItem({ board, memNo }) {
             alt="프로필 이미지"
             className={styles.profileImg}
           />
-
           <div className={styles.boardItemContent}>
             <div className={styles.authorDate}>
               <span className={styles.author}>{board.memNickname}</span>
@@ -69,30 +68,33 @@ export default function BoardItem({ board, memNo }) {
                 {formatTimeAgo(board.boardWriteDate)}
               </span>
             </div>
-            <h3 className={styles.title}>
-              {board.boardTitle.length > 40
-                ? board.boardTitle.slice(0, 40) + "..."
-                : board.boardTitle}
-            </h3>
+            {/* --- 변경된 부분 --- */}
+            {/* 제목에서 글자 수 제한 로직 제거 (CSS에서 ellipsis로 처리) */}
+            <h3 className={styles.title}>{board.boardTitle}</h3>
             <p className={styles.content}>
+              {/* 이미지 태그 제거 로직은 유지 */}
               {board?.boardContent?.replace(/!\[.*?\]\(.*?\)/g, "") || ""}
             </p>
+
+            {/* --- 변경된 부분 --- */}
+            {/* 메타 정보 영역의 구조를 개선하여 가독성과 유지보수성 향상 */}
             <div className={styles.meta}>
-              <i className="fa-regular fa-eye"></i>
-              {board.boardReadCount} &nbsp;&nbsp;{" "}
-              <i className="fa-regular fa-comment"></i>
-              {board.commentCount} &nbsp;&nbsp;{" "}
-              <i
-                className={`fa-heart ${
-                  liked ? "fa-solid liked-heart" : "fa-regular"
-                }`}
-                onClick={toggleLike}
-                style={{
-                  cursor: "pointer",
-                  color: liked ? "var(--main-color)" : "gray",
-                }}
-              />
-              {likeCount}
+              <span className={styles.metaItem}>
+                <i className="fa-regular fa-eye"></i>
+                <span>{board.boardReadCount}</span>
+              </span>
+              <span className={styles.metaItem}>
+                <i className="fa-regular fa-comment"></i>
+                <span>{board.commentCount}</span>
+              </span>
+              <span className={styles.metaItem} onClick={toggleLike}>
+                <i
+                  className={`fa-solid fa-heart ${styles.likeIcon} ${
+                    liked ? styles.liked : styles.unliked
+                  }`}
+                />
+                <span>{likeCount}</span>
+              </span>
             </div>
           </div>
         </div>
@@ -101,7 +103,6 @@ export default function BoardItem({ board, memNo }) {
             <img
               src={`${boardImgUrl}/${board.boardThumbnailUrl}`}
               alt="썸네일"
-              className={styles.thumbnailImg}
             />
           ) : (
             <img src={iconImg} alt="catchWork로고" />

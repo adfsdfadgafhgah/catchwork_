@@ -7,6 +7,7 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import ScrollToTopButton from "../../components/common/ScrollToTopButton";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 export default function CorpRecruitListPage() {
   const [recruits, setRecruits] = useState([]);
@@ -18,9 +19,46 @@ export default function CorpRecruitListPage() {
   const [statusFilter, setStatusFilter] = useState("all"); // 전체, 모집중, 마감됨
   const [sortOrder, setSortOrder] = useState("latest"); // 최신순, 오래된순, 조회수순, 좋아요순
   const [writerFilter, setWriterFilter] = useState("all"); // 전체, 내가쓴공고
+
   const [corpNo, setCorpNo] = useState();
   const [confirmedSearchTerm, setConfirmedSearchTerm] = useState(""); // 실제 검색에 쓸 값
   const [corpMemRoleCheck, setCorpMemRoleCheck] = useState("N"); // 'Y'면 대표이사
+
+  const [hasMore, setHasMore] = useState(true); // 더 불러올 데이터가 있는지 여부 확인
+  const [page, setPage] = useState(1); // 페이지 번호
+
+  // 필터 펼침/접힘 상태 관리
+  const [expandedFilters, setExpandedFilters] = useState({
+    recruitJobName: false,
+    recruitJobArea: false,
+    recruitCareer: false,
+    recruitEdu: false,
+    corpType: false,
+    recruitType: false,
+  });
+
+  // 전체 필터 펼침/접힘 상태
+  const [isFiltersExpanded, setIsFiltersExpanded] = useState(false);
+
+  // #region ===== 필터 옵션 데이터 정의 (새로 추가) =====
+  const filterOptions = {
+    statusFilter: [
+      { value: "all", label: "전체 상태" },
+      { value: "open", label: "채용중" },
+      { value: "closed", label: "마감됨" },
+    ],
+    sortOrder: [
+      { value: "latest", label: "최신순" },
+      { value: "oldest", label: "오래된순" },
+      { value: "views", label: "조회수순" },
+      { value: "likes", label: "좋아요순" },
+    ],
+    writerFilter: [
+      { value: "all", label: "전체 공고" },
+      { value: "me", label: "내가 쓴 공고" },
+    ],
+  };
+  // #endregion
 
   // 로그인 정보 세팅
   useEffect(() => {
@@ -60,29 +98,9 @@ export default function CorpRecruitListPage() {
     fetchCorpNo();
   }, [memNo, memType]);
 
-  // 공고 목록 불러오기 (필터링, 정렬)
-  useEffect(() => {
-    if (
-      memNo === undefined ||
-      memType === undefined ||
-      (memType === 1 && corpNo === null)
-    ) {
-      return;
-    }
-    fetchRecruitList();
-  }, [
-    sortOrder,
-    statusFilter,
-    writerFilter,
-    corpNo,
-    confirmedSearchTerm,
-    memNo,
-    memType,
-  ]);
-
   // 공고 목록 불러오기 (정렬 + 검색)
-  const fetchRecruitList = async () => {
-    if (!memNo || memType !== 1) {
+  const fetchRecruitList = async (pageNum = 1, isNewSearch = false) => {
+    if (!memNo || memType !== 1 || !corpNo) {
       setIsLoading(false);
       setRecruits([]);
       return;
@@ -96,6 +114,7 @@ export default function CorpRecruitListPage() {
     }
 
     try {
+      const pageSize = 9; // 한 페이지에 불러올 공고 수
       setIsLoading(true);
       const resp = await axiosApi.get("/corpRecruit/list", {
         params: {
@@ -105,41 +124,116 @@ export default function CorpRecruitListPage() {
           query: confirmedSearchTerm,
           memNo: memNo,
           corpNo: corpNo,
+          page: pageNum, // [추가] 페이지 번호 파라미터
+          size: pageSize, // [추가] 페이지 크기 파라미터
         },
       });
 
       if (resp.status === 200) {
-        const list = resp.data;
+        let list = resp.data;
 
+        // "마감됨" 필터 클라이언트 측 필터링 (기존 로직 유지)
         if (statusFilter === "closed") {
           const now = new Date();
-          const filtered = list.filter((recruit) => {
+          list = list.filter((recruit) => {
             const endDate = new Date(`${recruit.recruitEndDate}T23:59:59`);
             return (
               recruit.recruitStatus === 3 ||
               (recruit.recruitStatus === 0 && endDate < now)
             );
           });
-          setRecruits(filtered);
-        } else {
-          setRecruits(list);
         }
+
+        // [수정] 데이터를 덮어쓰거나 추가하도록 변경
+        setRecruits(isNewSearch ? list : (prev) => [...prev, ...list]);
+        // [수정] 불러온 데이터가 페이지 크기보다 작으면 더 이상 데이터가 없는 것으로 간주
+        setHasMore(list.length === pageSize);
       }
     } catch (err) {
       console.error("채용공고 목록 조회 실패:", err);
     } finally {
-      setIsLoading(false);
+      if (isNewSearch) {
+        setIsLoading(false);
+      }
     }
   };
 
-  // 정렬 선택
-  const handleSortChange = (e) => {
-    setSortOrder(e.target.value);
+  const fetchMoreData = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchRecruitList(nextPage, false);
   };
 
-  const handleSearch = () => {
-    setConfirmedSearchTerm(searchTerm); // 검색어 확정
+  // 공고 목록 불러오기 (필터링, 정렬)
+  useEffect(() => {
+    if (
+      memNo === undefined ||
+      memType === undefined ||
+      (memType === 1 && corpNo === null)
+    ) {
+      return;
+    }
+
+    // 필터 변경 시 상태 초기화
+    setRecruits([]);
+    setPage(1);
+    setHasMore(true);
+    fetchRecruitList(1, true); // isNewSearch를 true로 하여 새롭게 검색
+  }, [
+    sortOrder,
+    statusFilter,
+    writerFilter,
+    corpNo,
+    confirmedSearchTerm,
+    memNo,
+    memType,
+  ]);
+
+  // #region ===== 핸들러 함수 (수정 및 추가) =====
+  const handleSearchKeyDown = (e) => {
+    if (e.key === "Enter") {
+      setConfirmedSearchTerm(searchTerm.trim());
+    }
   };
+
+  const handleSearchClick = () => {
+    setConfirmedSearchTerm(searchTerm.trim());
+  };
+
+  const handleResetFilters = () => {
+    setStatusFilter("all");
+    setSortOrder("latest");
+    setWriterFilter("all");
+    setSearchTerm("");
+    setConfirmedSearchTerm("");
+  };
+
+  const toggleFilter = (filterName) => {
+    setExpandedFilters((prev) => ({
+      ...Object.keys(prev).reduce((acc, key) => ({ ...acc, [key]: false }), {}), // 모든 필터를 닫고
+      [filterName]: !prev[filterName], // 현재 클릭한 것만 토글
+    }));
+  };
+
+  const toggleAllFilters = () => {
+    setIsFiltersExpanded(!isFiltersExpanded);
+  };
+
+  const getActiveFilterCount = () => {
+    let count = 0;
+    if (statusFilter !== "all") count++;
+    if (sortOrder !== "latest") count++;
+    if (writerFilter !== "all") count++;
+    return count;
+  };
+
+  const getFilterButtonText = (filterName, currentValue) => {
+    const option = filterOptions[filterName].find(
+      (opt) => opt.value === currentValue
+    );
+    return option ? option.label : "";
+  };
+  // #endregion
 
   // 공고 작성하기 버튼
   const handleWrite = () => {
@@ -165,85 +259,232 @@ export default function CorpRecruitListPage() {
     navigate("/corpRecruit/write");
   };
 
-  // 로딩 상태를 더 정확하게 판단
-  // memNo 또는 memType이 undefined (아직 useAuthStore 로딩 중)이거나,
-  // 기업회원(memType === 1)인데 corpNo가 아직 null인 경우 로딩 중으로 간주
-  if (
-    memNo === undefined ||
-    memType === undefined ||
-    (memType === 1 && corpNo === null)
-  ) {
-    return <h1>Loading...</h1>;
+  // #region ===== 필터 섹션 렌더링 함수 (새로 추가) =====
+  const renderFilterSection = (filterName, currentValue, onChange) => (
+    <div className={styles.filterSection}>
+      <button
+        className={`${styles.filterToggle} ${
+          (filterName === "sortOrder" && currentValue !== "latest") ||
+          (filterName !== "sortOrder" && currentValue !== "all")
+            ? styles.active
+            : ""
+        }`}
+        onClick={() => toggleFilter(filterName)}
+      >
+        <span className={styles.filterLabel}>
+          {getFilterButtonText(filterName, currentValue)}
+        </span>
+        <i
+          className={`fa-solid fa-chevron-down ${styles.chevron} ${
+            expandedFilters[filterName] ? styles.expanded : ""
+          }`}
+        ></i>
+      </button>
+
+      {expandedFilters[filterName] && (
+        <div className={styles.filterOptions}>
+          {filterOptions[filterName].map((option) => (
+            <button
+              key={option.value}
+              className={`${styles.filterOption} ${
+                currentValue === option.value ? styles.active : ""
+              }`}
+              onClick={() => {
+                onChange(option.value);
+                setExpandedFilters((prev) => ({
+                  ...prev,
+                  [filterName]: false,
+                }));
+              }}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+  // #endregion
+
+  // 로딩 UI
+  if (isLoading) {
+    return (
+      <div className={styles.loading}>
+        <div className={styles.spinner}></div>
+        <span>채용공고를 불러오는 중...</span>
+      </div>
+    );
+  }
+
+  // 기업회원이 아닌 경우의 UI
+  if (memType !== 1) {
+    return (
+      <div className={styles.recruitListPage}>
+        <SectionHeader title="채용공고" />
+        <div className={styles.noResult}>
+          <i className="fa-solid fa-circle-info"></i>
+          <p>기업회원만 이용할 수 있는 페이지입니다.</p>
+        </div>
+      </div>
+    );
+  }
+
+  // 기업회원이지만 회사 정보가 없는 경우
+  if (memType === 1 && !corpNo) {
+    return (
+      <div className={styles.recruitListPage}>
+        <SectionHeader title="채용공고" />
+        <div className={styles.noResult}>
+          <i className="fa-solid fa-building-circle-exclamation"></i>
+          <p>회사 정보 등록 후 채용공고 관리가 가능합니다.</p>
+          <button
+            className={styles.actionButton}
+            onClick={() => navigate("/corp/company/write")}
+          >
+            회사 정보 등록하러 가기
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className={styles.recruitListPage}>
       <SectionHeader title="채용공고" />
 
-      <div className={styles.controls}>
-        <select
-          className={styles.sortSelect}
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-        >
-          <option value="all">전체</option>
-          <option value="open">채용중</option>
-          <option value="closed">마감됨</option>
-        </select>
+      {/* 검색 및 필터 컨트롤 영역 */}
+      <div className={styles.controlSection}>
+        <div className={styles.searchSection}>
+          <div className={styles.searchBox}>
+            <i className="fa-solid fa-magnifying-glass"></i>
+            <input
+              type="text"
+              placeholder="공고 제목, 내용 등으로 검색"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onKeyDown={handleSearchKeyDown}
+            />
+            <button className={styles.searchButton} onClick={handleSearchClick}>
+              검색
+            </button>
+          </div>
+        </div>
 
-        <select
-          className={styles.sortSelect}
-          value={sortOrder}
-          onChange={handleSortChange}
-        >
-          <option value="latest">최신순</option>
-          <option value="oldest">오래된순</option>
-          <option value="views">조회수순</option>
-          <option value="likes">좋아요순</option>
-        </select>
+        <div className={styles.filterControls}>
+          <button
+            className={`${styles.filterToggleAll} ${
+              isFiltersExpanded ? styles.active : ""
+            }`}
+            onClick={toggleAllFilters}
+          >
+            <i className="fa-solid fa-filter"></i>
+            상세 필터
+            {getActiveFilterCount() > 0 && (
+              <span className={styles.filterCount}>
+                {getActiveFilterCount()}
+              </span>
+            )}
+            <i
+              className={`fa-solid fa-chevron-down ${styles.chevron} ${
+                isFiltersExpanded ? styles.expanded : ""
+              }`}
+            ></i>
+          </button>
 
-        <select
-          className={styles.sortSelect}
-          value={writerFilter}
-          onChange={(e) => setWriterFilter(e.target.value)}
-        >
-          <option value="all">전체</option>
-          <option value="me">내 공고</option>
-        </select>
-
-        <div className={styles.searchBox}>
-          <i className="fa-solid fa-magnifying-glass"></i>
-          <input
-            type="text"
-            placeholder="직종명, 취업이야기, 취준진담"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSearch();
-              }
-            }}
-          />
+          <button className={styles.resetButton} onClick={handleResetFilters}>
+            <i className="fa-solid fa-rotate-right"></i>
+            초기화
+          </button>
         </div>
       </div>
 
-      {/* 검색 결과 유무에 따른 조건 렌더링 */}
-      {isLoading ? (
-        <h1>Loading...</h1>
-      ) : recruits.length > 0 ? (
+      {/* 필터 영역 */}
+      {isFiltersExpanded && (
+        <div className={styles.filterContainer}>
+          <div className={styles.filterGrid}>
+            {renderFilterSection("statusFilter", statusFilter, setStatusFilter)}
+            {renderFilterSection("sortOrder", sortOrder, setSortOrder)}
+            {renderFilterSection("writerFilter", writerFilter, setWriterFilter)}
+          </div>
+        </div>
+      )}
+
+      {/* 활성 필터 표시 */}
+      {getActiveFilterCount() > 0 && (
+        <div className={styles.activeFilters}>
+          <div className={styles.activeFiltersContent}>
+            <span className={styles.activeFiltersLabel}>적용된 필터:</span>
+            <div className={styles.activeFilterTags}>
+              {statusFilter !== "all" && (
+                <span className={styles.activeFilterTag}>
+                  {getFilterButtonText("statusFilter", statusFilter)}
+                  <button onClick={() => setStatusFilter("all")}>
+                    <i className="fa-solid fa-times"></i>
+                  </button>
+                </span>
+              )}
+              {sortOrder !== "latest" && (
+                <span className={styles.activeFilterTag}>
+                  {getFilterButtonText("sortOrder", sortOrder)}
+                  <button onClick={() => setSortOrder("latest")}>
+                    <i className="fa-solid fa-times"></i>
+                  </button>
+                </span>
+              )}
+              {writerFilter !== "all" && (
+                <span className={styles.activeFilterTag}>
+                  {getFilterButtonText("writerFilter", writerFilter)}
+                  <button onClick={() => setWriterFilter("all")}>
+                    <i className="fa-solid fa-times"></i>
+                  </button>
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 결과 영역 */}
+      <InfiniteScroll
+        dataLength={recruits.length}
+        next={fetchMoreData}
+        hasMore={hasMore}
+        loader={
+          <div className={styles.loadingMore}>
+            <div className={styles.spinner}></div>
+            <span>더 많은 공고를 불러오는 중...</span>
+          </div>
+        }
+        endMessage={
+          recruits.length > 0 ? (
+            <div className={styles.noResult}>
+              <i className="fa-solid fa-inbox"></i>
+              <p>더 이상 채용공고가 없습니다.</p>
+            </div>
+          ) : null // 처음부터 결과가 없으면 아무것도 표시 안함
+        }
+      >
+        {/* RecruitList를 InfiniteScroll의 자식으로 렌더링 */}
         <RecruitList
           recruits={recruits}
           memNo={memNo}
           corpNo={corpNo}
           memType={memType}
         />
-      ) : (
-        <p className={styles.noResult}>채용 공고가 없습니다.</p>
+      </InfiniteScroll>
+
+      {/* [추가] 처음부터 검색 결과가 없는 경우 메시지 표시 */}
+      {!isLoading && recruits.length === 0 && (
+        <div className={styles.noResult}>
+          <i className="fa-solid fa-inbox"></i>
+          <p>조건에 맞는 채용공고가 없습니다.</p>
+        </div>
       )}
 
-      {memNo && memType === 1 && corpMemRoleCheck !== "Y" ? (
+      {/* 공고 작성 버튼 */}
+      {memNo && memType === 1 && corpMemRoleCheck !== "Y" && (
         <FloatButton buttons={FLOAT_BUTTON_PRESETS.writeOnly(handleWrite)} />
-      ) : null}
+      )}
       <ScrollToTopButton />
     </div>
   );

@@ -1,0 +1,77 @@
+/* DeadlineTimer.module.css (새 파일) */
+
+.timerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gray01, #868686);
+}
+
+.countdown {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  font-family: "Pretendard", sans-serif;
+  color: var(--deep-gray, #4d4d4d);
+}
+
+.countdown .days {
+  font-size: 40px;
+  font-weight: 800;
+  color: var(--main-color, #46b5ab);
+}
+
+.countdown .time {
+  font-size: 36px;
+  font-weight: 700;
+}
+
+.countdown .closed {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--gray01, #868686);
+}
+
+.dateInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.dateRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dateLabel {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 500;
+  border: 1px solid var(--stroke-color1, #d9d9d9);
+  background-color: #f8f9fa;
+  color: var(--deep-gray, #4d4d4d);
+}
+
+.dateLabel.end {
+  border-color: var(--main-color, #46b5ab);
+  color: var(--main-color, #46b5ab);
+  /* background-color: var(--sub-color, #b8f0f1); */
+}
+
+.dateValue {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--deep-gray, #4d4d4d);
+}

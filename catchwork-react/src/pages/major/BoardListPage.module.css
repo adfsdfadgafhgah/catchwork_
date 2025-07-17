@@ -1,10 +1,9 @@
 /* ✅ BoardListPage.module.css */
 
 .boardListPage {
-  /* max-width: 1000px; */
-  width: 1000px;
-  margin: 20px auto;
-  padding: 0 16px;
+  max-width: 1080px;
+  margin: 0px auto;
+  padding: 20px;
   background-color: var(--white);
   min-height: 100vh;
 }
@@ -21,7 +20,7 @@
   font-size: 24px;
   color: var(--deep-gray);
   font-weight: 600;
-  margin-bottom: 12px;
+  margin: 20px 0;
 }
 
 .controls {
