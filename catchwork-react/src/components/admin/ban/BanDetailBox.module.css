@@ -1,41 +1,58 @@
-.detailBox {
-  padding: 20px;
-  border: 1px solid var(--stroke-color1);
+.infoSection {
   background-color: var(--white);
-  box-shadow: var(--box-shadow);
+  border: 1px solid var(--stroke-color2);
+  border-radius: 8px;
+  padding: 24px;
+  margin-bottom: 32px;
 }
 
-.detailBox h3 {
-  margin-bottom: 20px;
+.infoRow {
+  display: flex;
+  padding: 8px 0;
+  font-size: 15px;
+  border-bottom: 1px dashed var(--stroke-color1);
+}
+
+.infoRow:last-child {
+  border-bottom: none;
+}
+
+.label {
+  flex-basis: 120px;
+  flex-shrink: 0;
+  font-weight: 600;
   color: var(--deep-gray);
 }
 
-.detailBox dl {
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  row-gap: 10px;
-  margin-bottom: 20px;
+.value {
+  flex-grow: 1;
+  word-break: break-word;
 }
 
-.detailBox dt {
-  font-weight: bold;
-  color: var(--text);
+.buttonGroup {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 24px;
 }
 
-.detailBox dd {
-  margin: 0;
-  color: var(--deep-gray);
-}
-
-.detailBox button {
+.submitButton {
+  padding: 10px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
   background-color: var(--main-color);
   color: var(--white);
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
-.detailBox button:hover {
+.submitButton:hover {
   background-color: var(--main-color-dark);
+}
+
+.loading {
+  text-align: center;
+  color: var(--gray01);
+  padding: 60px 0;
 }

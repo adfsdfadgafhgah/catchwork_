@@ -104,6 +104,7 @@ import ReportModalPage from "./pages/support/ReportModalPage";
 
 // 관리자
 import AdminPage from "./pages/admin/AdminPage"; // 감싸는 놈
+import AdminRoute from "./AdminRoute"; // 로그인 검사
 import AdminMainPage from "./pages/admin/AdminMainPage"; // 메인 리스트
 import AdminSupportPage from "./pages/admin/AdminSupportPage"; // 문의 리스트
 import AdminSupportDetailPage from "./pages/admin/AdminSupportDetailPage"; // 문의 상세
@@ -349,7 +350,7 @@ const router = createBrowserRouter([
   {
     // 상세 페이지 경로 미리 추가(주석)
     path: "/admin",
-    element: <AdminPage />,
+    element: <AdminRoute />,
     children: [
       { index: true, element: <AdminMainPage /> },
       { path: "*", element: <NotFound /> },
