@@ -2,18 +2,16 @@ import { useRef, useState, useEffect } from "react";
 import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
 import SectionHeader from "../../components/common/SectionHeader";
-import "./WriteBoardPage.css";
+import styles from "./WriteBoardPage.module.css";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import ThumbnailUploader from "../../components/common/ThumbnailUploader";
 import { axiosApi } from "../../api/axiosAPI";
-// import useLoginMember from "../../stores/loginMember";
 
 export default function WriteBoardPage() {
   const baseUrl = import.meta.env.VITE_BASE_URL;
   const editorRef = useRef();
   const [title, setTitle] = useState("");
   const navigate = useNavigate();
-  // const { loginMember, setLoginMember } = useLoginMember();
   const { memNo } = useOutletContext();
   const [isFormValid, setIsFormValid] = useState(false);
   const thumbnailUploaderRef = useRef();
@@ -74,19 +72,19 @@ export default function WriteBoardPage() {
   };
 
   return (
-    <div className="write-wrap">
+    <div className={styles.writeWrap}>
       {/* 섹션 헤더 */}
       <SectionHeader title="취준진담 작성" />
       <input
         type="text"
-        className="write-input-title"
+        className={styles.writeInputTitle}
         placeholder="제목을 입력하세요"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
       />
 
       {/* Toast UI 에디터 */}
-      <div className="write-editor">
+      <div className={styles.writeEditor}>
         <Editor
           ref={editorRef}
           height="500px"
@@ -139,12 +137,12 @@ export default function WriteBoardPage() {
 
       {/* 썸네일 업로더 */}
       <ThumbnailUploader ref={thumbnailUploaderRef} />
-      <div className="write-btn-area">
-        <button className="write-btn-cancel" onClick={handleCancel}>
+      <div className={styles.writeBtnArea}>
+        <button className={styles.writeBtnCancel} onClick={handleCancel}>
           <i className="fa-solid fa-xmark"></i> 취소하기
         </button>
         <button
-          className="write-btn-submit"
+          className={styles.writeBtnSubmit}
           onClick={handleSubmit}
           disabled={!isFormValid}
         >

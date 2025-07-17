@@ -23,7 +23,7 @@ jobs:
           source-directory: "output"
           destination-github-username: heobae // 변경
           destination-repository-name: catchwork // 변경
-          user-email: ${{ secrets.heowling94@gmail.com }} // 변경
+          user-email: ${{ secrets.EMAIL }} // 변경
           commit-message: ${{ github.event.commits[0].message }}
           target-branch: main
       - name: Test get variable exported by push-to-another-repository

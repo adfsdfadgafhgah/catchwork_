@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
 import CommentItem from "./CommentItem";
 import CommentWrite from "./CommentWrite";
-import CommentCss from "./CommentList.module.css";
+import styles from "./CommentList.module.css";
 
 export default function CommentList({ boardNo, memNo }) {
   const [comments, setComments] = useState([]);
@@ -38,12 +38,12 @@ export default function CommentList({ boardNo, memNo }) {
     );
 
   return (
-    <div className={CommentCss.commentSection}>
+    <div className={styles.commentSection}>
       {/* 상단 작성창 */}
-      <div className={CommentCss.writeWrapper}>
-        <span className={CommentCss.commentCount}>
+      <div className={styles.writeWrapper}>
+        <span className={styles.commentCount}>
           댓글{" "}
-          <span className={CommentCss.countNum}>
+          <span className={styles.countNum}>
             {comments.filter((c) => c.commentStatus === 0).length}
           </span>
         </span>
@@ -51,7 +51,7 @@ export default function CommentList({ boardNo, memNo }) {
       </div>
 
       {/* 댓글 리스트 */}
-      <div className={CommentCss.commentList}>
+      <div className={styles.commentList}>
         {parentComments.map((parent) => {
           const childComments = comments
             .filter((c) => c.parentCommentNo === parent.commentNo)
