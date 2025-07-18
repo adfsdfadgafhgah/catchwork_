@@ -1382,7 +1382,7 @@ INSERT INTO MEMBER VALUES ('M015', 'user6', '$2a$12$MKO46WPx0nilbDoIsSZTDOjQuyST
 
 COMMIT;
 
--- 5분
+-- 5분마다 5분이 지난 인증키 "삭제"
 DECLARE
   job_no NUMBER;
 BEGIN
@@ -1394,5 +1394,3 @@ BEGIN
   );
   COMMIT;
 END;
-
-SELECT * FROM EMAIL_AUTH;

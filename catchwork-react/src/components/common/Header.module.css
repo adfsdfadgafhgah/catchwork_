@@ -16,6 +16,7 @@
   height: 70px;
   max-width: 1200px;
   margin: 0 auto;
+  position: relative;
 }
 
 .logo {
@@ -120,23 +121,52 @@
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .headerTop {
-    padding: 0 15px;
+    padding: 0 10px;
     height: 60px;
+    max-width: 100vw;
   }
-
+  .logo {
+    flex-shrink: 0;
+  }
+  .hamburger {
+    display: flex;
+    position: static;
+    margin-left: auto;
+    order: 3;
+  }
   .searchBox {
-    margin: 0 20px;
-    max-width: 300px;
+    margin: 0;
+    max-width: 100vw;
+    width: 100%;
+    order: 2;
+    display: flex;
   }
-
   .userInfo {
     gap: 10px;
+    margin-bottom: 10px;
+    justify-content: flex-end;
   }
-
-  .userInfo button,
-  .userInfo a {
-    font-size: 13px;
-    padding: 6px 10px;
+  .mobileMenuPanel {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #fff;
+    box-shadow: var(--box-shadow);
+    padding: 16px 10px 20px 10px;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+    z-index: 1050;
+    animation: fadeInMenu 0.2s;
+  }
+  @keyframes fadeInMenu {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 }
 
@@ -144,16 +174,10 @@
   .headerTop {
     flex-wrap: wrap;
     height: auto;
-    padding: 10px 15px;
+    padding: 10px 10px;
   }
-
-  .searchBox {
-    order: 3;
-    width: 100%;
-    margin: 10px 0 0 0;
-  }
-
-  .userInfo {
+  .mobileMenuPanel {
+    padding: 12px 4px 16px 4px;
     gap: 8px;
   }
 }
@@ -247,5 +271,76 @@
   .navLink {
     padding: 0.5rem 0.75rem;
     font-size: 0.8rem;
+  }
+}
+
+/* 햄버거 버튼 (모바일에서만 보임) */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1100;
+  margin-left: auto;
+}
+.hamburgerBar {
+  width: 24px;
+  height: 3px;
+  background: var(--main-color);
+  margin: 3px 0;
+  border-radius: 2px;
+  transition: all 0.3s;
+}
+
+@media (max-width: 768px) {
+  .hamburger {
+    display: flex;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+  }
+  /* 모바일 메뉴 패널 내부 nav는 숨기지 않음 */
+  .headerNav {
+    position: static;
+    top: unset;
+    left: unset;
+    width: 100%;
+    background: transparent;
+    box-shadow: none;
+    transition: none;
+    overflow: visible;
+    z-index: auto;
+    max-height: none;
+    opacity: 1;
+    pointer-events: auto;
+    border-bottom: none;
+  }
+  .navOpen,
+  .navClosed {
+    max-height: none;
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .nav {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1rem 0;
+    max-width: 100vw;
+    margin: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .hamburger {
+    right: 10px;
+    top: 10px;
+  }
+  .headerNav {
+    top: 50px;
   }
 }

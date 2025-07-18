@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import SectionHeader from "../../components/common/SectionHeader";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
@@ -28,7 +28,7 @@ const EditCompanyPage = () => {
   const [corpBenefitDetail, setCorpBenefitDetail] = useState("");
   const [corpLogoFile, setCorpLogoFile] = useState(null); // 업로드할 새 파일
   const [corpLogoPreview, setCorpLogoPreview] = useState(company?.corpLogo); // 미리보기 URL
-
+  const fileInputRef = useRef(null);
   useEffect(() => {
     setLoginMember(); // 로그인 정보 설정
   }, []);
@@ -42,7 +42,7 @@ const EditCompanyPage = () => {
         const res = await axiosApi.get("/corpcompany/detail", {
           params: { memNo: loginMember.memNo },
         });
-        //console.log("✅ 기업 정보:", res.data);
+        //console.log("기업 정보:", res.data);
         setCompany(res.data);
       } catch (err) {
         console.error("기업 정보 불러오기 실패", err);
@@ -173,31 +173,45 @@ const EditCompanyPage = () => {
     }).open();
   };
 
-  const handleLogoChange = (e) => {
-    const file = e.target.files[0];
-    setCorpLogoFile(file);
-
-    // 미리보기용 URL 생성
-    const previewUrl = URL.createObjectURL(file);
-    setCorpLogoPreview(previewUrl);
+  const handleLogoClick = () => {
+    fileInputRef.current?.click(); // 이미지 클릭 시 파일 업로드 창 열기
   };
 
+  const handleLogoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setCorpLogoFile(file);
+      const previewUrl = URL.createObjectURL(file);
+      setCorpLogoPreview(previewUrl);
+    }
+  };
   return (
     <main className="corp-container">
       <SectionHeader title="기업 정보 수정" />
 
       <div className="company-detail-header">
         <div className="company-header-left">
-          <img
-            src={
-              corpLogoPreview
-                ? corpLogoPreview
-                : `${corpLogoUrl}/${company.corpLogo}`
-            }
-            alt="기업로고"
-            className="company-logo"
-          />
-          <input type="file" accept="image/*" onChange={handleLogoChange} />
+          <div className="company-logo-wrapper" onClick={handleLogoClick}>
+            <img
+              src={
+                corpLogoPreview
+                  ? corpLogoPreview
+                  : `${corpLogoUrl}/${company.corpLogo}`
+              }
+              alt="기업로고"
+              className="company-logo"
+            />
+            <div className="image-overlay">
+              <i className="fas fa-camera"></i>
+            </div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleLogoChange}
+              ref={fileInputRef}
+              style={{ display: "none" }}
+            />
+          </div>
         </div>
 
         <div className="company-header-right">
@@ -207,6 +221,7 @@ const EditCompanyPage = () => {
               className="company-name-input"
               value={corpName}
               onChange={(e) => setCorpName(e.target.value)}
+              maxLength={50}
             />
           </div>
 
@@ -217,6 +232,7 @@ const EditCompanyPage = () => {
                 type="text"
                 value={corpType}
                 onChange={(e) => setCorpType(e.target.value)}
+                maxLength={10}
               />
             </div>
             <div className="info-row">
@@ -225,6 +241,7 @@ const EditCompanyPage = () => {
                 type="text"
                 value={corpRegNo}
                 onChange={(e) => setCorpRegNo(e.target.value)}
+                maxLength={10}
               />
             </div>
 
@@ -234,24 +251,28 @@ const EditCompanyPage = () => {
                 type="text"
                 value={corpCeoName}
                 onChange={(e) => setCorpCeoName(e.target.value)}
+                maxLength={20}
               />
             </div>
-            <div className="info-row">
+            <div className="address-info-row">
               <div className="info-label">주소</div>
-              <input
-                type="text"
-                value={corpAddr}
-                onChange={(e) => setCorpAddr(e.target.value)}
-              />
-              <button
-                type="button"
-                className="btn-address"
-                onClick={handleAddressSearch}
-                style={{ height: "40px" }}
-              >
-                주소검색
-              </button>
+              <div className="input-button-wrap">
+                <input
+                  type="text"
+                  value={corpAddr}
+                  onChange={(e) => setCorpAddr(e.target.value)}
+                  maxLength={100}
+                />
+                <button
+                  type="button"
+                  className="btn-address"
+                  onClick={handleAddressSearch}
+                >
+                  주소검색
+                </button>
+              </div>
             </div>
+
             <div className="info-row">
               <div className="info-label">개업일자</div>
               <input
@@ -266,6 +287,7 @@ const EditCompanyPage = () => {
                 type="text"
                 value={corpHomeLink}
                 onChange={(e) => setCorpHomeLink(e.target.value)}
+                maxLength={100}
               />
             </div>
           </div>
@@ -277,6 +299,7 @@ const EditCompanyPage = () => {
         <textarea
           value={corpBm}
           onChange={(e) => setCorpBm(e.target.value)}
+          maxLength={100}
         ></textarea>
       </div>
 
@@ -285,6 +308,7 @@ const EditCompanyPage = () => {
         <textarea
           value={corpDetail}
           onChange={(e) => setCorpDetail(e.target.value)}
+          maxLength={1000}
         ></textarea>
       </div>
 
@@ -293,10 +317,12 @@ const EditCompanyPage = () => {
         <textarea
           value={corpBenefit}
           onChange={(e) => setCorpBenefit(e.target.value)}
+          maxLength={100}
         ></textarea>
         <textarea
           value={corpBenefitDetail}
           onChange={(e) => setCorpBenefitDetail(e.target.value)}
+          maxLength={2000}
         ></textarea>
       </div>
       <FloatButton

@@ -13,7 +13,14 @@
   border-radius: 6px;
   resize: vertical; /* 세로 방향 리사이즈만 허용 (optional) */
 }
-.company-basic-info input,
+.company-basic-info input {
+  width: 100%; /* or 500px 처럼 고정값 줘도 되고 */
+  max-width: 600px; /* 최대폭 설정도 가능 */
+  padding: 10px;
+  border: 1px solid var(--stroke-color1);
+  border-radius: 6px;
+  margin-left: 16px;
+}
 .company-title-line input {
   width: 100%; /* or 500px 처럼 고정값 줘도 되고 */
   max-width: 600px; /* 최대폭 설정도 가능 */
@@ -22,6 +29,7 @@
   border-radius: 6px;
 }
 .btn-address {
+  height: 40px;
   display: inline-block;
   padding: 6px 16px;
   margin-left: 16px;
@@ -33,6 +41,11 @@
   font-size: 14px;
   box-shadow: var(--box-shadow);
 }
+.input-button-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
 .company-logo {
   width: 200px;
@@ -41,4 +54,52 @@
   /*border-bottom: 1px solid var(--img-color); 구분선*/
   background-color: var(--white); /*기업 로고 배경*/
   margin-top: 8px;
+}
+.info-row {
+  display: flex;
+  align-items: center; /* ✅ 모든 요소를 수직 가운데 정렬 */
+  margin-bottom: 12px;
+}
+
+.info-row > *:not(.info-label) {
+  margin-left: 16px; /* ✅ label 다음에 오는 모든 요소에 margin-left 통일 적용 */
+}
+/* 주소 전용 스타일 추가 */
+.address-wrap {
+  justify-content: space-between; /* 버튼을 오른쪽으로 밀어냄 */
+  width: 100%;
+  max-width: 600px;
+}
+
+/* input이 공간 최대 사용하도록 */
+.address-wrap input {
+  flex: 1;
+}
+.address-info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.info-label {
+  width: 120px;
+  flex-shrink: 0;
+  text-align: left;
+}
+
+/* 기존 input + 버튼 wrap */
+.address-info-row .input-button-wrap {
+  display: flex;
+  justify-content: space-between; /* input은 왼쪽, 버튼은 오른쪽 */
+  align-items: center;
+  width: 100%;
+  max-width: 600px; /* 또는 다른 적절한 값 */
+  gap: 8px;
+}
+
+/* input은 가용한 공간 전부 차지 */
+.address-info-row .input-button-wrap input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid var(--stroke-color1);
+  border-radius: 6px;
 }
