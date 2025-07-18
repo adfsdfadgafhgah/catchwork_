@@ -153,7 +153,8 @@ const CeoSignUpPage = () => {
 
     const isValid = validateForm();
     if (!isValid) {
-      alert("입력해주세요.");
+      console.log(isValid);
+      alert("모든 필드를 입력해주세요.");
       return;
     }
 
@@ -207,6 +208,7 @@ const CeoSignUpPage = () => {
       await useAuthStore.getState().signOut();
 
       alert("회원가입이 완료되었습니다.");
+      window.scrollTo({ top: 0, behavior: "smooth" });
       navigate("/signin");
     } catch (err) {
       console.error("회원가입 실패:", err.response?.data || err.message);
@@ -492,7 +494,11 @@ const CeoSignUpPage = () => {
           />
 
           {/* 회원 가입 버튼 */}
-          <button type="submit" className={styles.submitButton}>
+          <button
+            type="submit"
+            className={styles.submitButton}
+            disabled={!isVerified}
+          >
             회원 가입
           </button>
         </form>

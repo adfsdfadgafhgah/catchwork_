@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const corpRegex = {
   corpRegNo: /^\d{10}$/, // 사업자등록번호 10자리 숫자
-  corpCEOName: /^[가-힣a-zA-Z]{2,30}$/, // 한글/영문 2~30자
+  corpCEOName: /^[가-힣a-zA-Z]{2,}( [가-힣a-zA-Z]{1,})*$/, // 한글/영문 2~30자
   corpName: /^[가-힣a-zA-Z0-9 ]{2,50}$/, // 한글/영문/숫자 2~50자
   corpAddr: /.+/, // 필수
   corpHomeLink: /^https?:\/\/.+/, // http(s)로 시작

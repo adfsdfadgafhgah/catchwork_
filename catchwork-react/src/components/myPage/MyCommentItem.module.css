@@ -15,11 +15,12 @@
   display: flex;
   gap: 16px;
   padding: 16px;
+  padding-left: 20px;
   border-radius: 8px;
   background-color: var(--white);
-  box-shadow: var(--box-shadow);
+  border: 1px solid var(--stroke-color1);
   transition: all 0.3s ease;
-  margin-bottom: 12px;
+  margin: 0 8px 20px 8px;
 }
 
 .commentWrapper:hover {
@@ -35,11 +36,11 @@
 }
 
 .content {
-  font-size: 14px;
+  font-size: 18px;
   line-height: 1.6;
   color: var(--text);
   word-break: break-word;
-  margin-bottom: 8px;
+  margin-bottom: 4px;
   /* 최대 3줄까지만 보여주고 나머지는 생략 */
   display: -webkit-box;
   -webkit-line-clamp: 3;

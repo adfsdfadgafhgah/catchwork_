@@ -725,6 +725,7 @@ const SignUpPage = () => {
         <button
           type="submit"
           className={`${styles.button} ${styles.submitButton}`}
+          disabled={!isVerified}
         >
           회원 가입
         </button>
