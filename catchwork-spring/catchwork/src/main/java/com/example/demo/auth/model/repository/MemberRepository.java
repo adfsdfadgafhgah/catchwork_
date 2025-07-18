@@ -9,6 +9,7 @@ import com.example.demo.auth.model.entity.MemberEntity;
 public interface MemberRepository extends JpaRepository<MemberEntity, String> {
     boolean existsByMemId(String memId);
     boolean existsByMemNickname(String memNickname);
+    boolean existsByMemEmail(String memEmail);
 
     MemberEntity findByMemId(String memId);
     MemberEntity findByMemNo(String memNo);
