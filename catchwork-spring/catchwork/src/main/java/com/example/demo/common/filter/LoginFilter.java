@@ -113,7 +113,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
         response.setHeader("Set-Cookie", cookieString);
 
         // 응답
-        response.addCookie(refreshCookie);
+//        response.addCookie(refreshCookie);
         response.addHeader("Authorization", "Bearer " + accessToken);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
