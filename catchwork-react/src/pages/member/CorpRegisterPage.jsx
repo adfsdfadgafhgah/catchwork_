@@ -214,11 +214,7 @@ const CorpRegisterPage = () => {
               name="corpDetail"
               value={formData.corpDetail}
               onChange={(e) => {
-                let value = e.target.value.replace(
-                  /[^가-힣a-zA-Z0-9 .,!?()\-]/g,
-                  ""
-                );
-                value = value.slice(0, 100);
+                let value = e.target.value.slice(0, 100);
                 handleInputChange({ target: { name: "corpDetail", value } });
               }}
               placeholder="기업소개를 입력하세요"
