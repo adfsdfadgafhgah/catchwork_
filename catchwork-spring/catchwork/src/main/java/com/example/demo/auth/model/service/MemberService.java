@@ -21,6 +21,9 @@ public interface MemberService {
     // 비밀번호 찾기
     Boolean findPw(String memId, String memName, String memEmail, int memType, String corpRegNo);
 
+    // 이메일 존재 여부 확인
+	boolean existEmail(String memEmail);
+    
     // 이메일 인증번호 발송
     boolean sendEmail(String memEmail);
 

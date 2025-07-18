@@ -287,11 +287,12 @@ public class MemberController {
 	 * @return
 	 */
 	@PostMapping("/member/findPw")
-	public ResponseEntity<?> findPw(@RequestParam("memId") String memId, 
-																	@RequestParam("memName") String memName, 
-																	@RequestParam("memEmail") String memEmail, 
-																	@RequestParam("memType") int memType, 
-																	@RequestParam(value = "corpRegNo", required = false, defaultValue = "") String corpRegNo) {
+	public ResponseEntity<?> findPw(
+						@RequestParam("memId") String memId, 
+						@RequestParam("memName") String memName, 
+						@RequestParam("memEmail") String memEmail, 
+						@RequestParam("memType") int memType, 
+						@RequestParam(value = "corpRegNo", required = false, defaultValue = "") String corpRegNo) {
 
 		try {
 			Boolean isVerified = service.findPw(memId, memName, memEmail, memType, corpRegNo);
@@ -305,6 +306,15 @@ public class MemberController {
 			e.printStackTrace();
 			return ResponseEntity.status(500).body(e.getMessage());
 		}
+	}
+	
+	@PostMapping("member/existEmail")
+	public ResponseEntity<?> existEmail(@RequestParam("memEmail") String memEmail){
+		boolean existEmail = service.existEmail(memEmail);
+		if(existEmail) {			
+			return ResponseEntity.ok(Map.of("message", "true"));
+		}
+		return ResponseEntity.ok(Map.of("message", "false"));
 	}
 
 	/** 이메일 인증번호 발송

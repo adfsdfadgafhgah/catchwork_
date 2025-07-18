@@ -284,6 +284,14 @@ public class MemberServiceImpl implements MemberService {
 		}
 		return false;
 	}
+	
+	public boolean existEmail(String memEmail) {
+		boolean existEmail = memberRepository.existsByMemEmail(memEmail);
+		if (existEmail) {
+			return true;
+		}
+		return false;
+	}
 
 	/** 이메일 인증번호 발송
 	 * @author JAEHO
