@@ -18,4 +18,4 @@ public interface CorpMyPageService {
 	// 탈퇴하기
 	void withdrawCorpMember(String memNo);
 
-}	
+}

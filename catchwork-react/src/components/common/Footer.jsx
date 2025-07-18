@@ -10,7 +10,7 @@ const Footer = () => {
         <Link to="/policyprivacy">개인정보처리방침</Link>
         <Link to="/termsofservice">이용약관</Link>
         <span>Copyright © CATCH. All rights reserved.</span>
-        <Link to="/supportlist" className={styles.highlight}>
+        <Link to="/supportlist" >
           문의하기
         </Link>
         <Link to="/corpregister">기업제휴</Link>
