@@ -89,6 +89,23 @@ export default function AdminSupportPage() {
     setSearchParams(searchParams);
   };
 
+  // 검색 및 필터 적용 핸들러
+  const handleSearch = () => {
+    const newSearchParams = new URLSearchParams();
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) {
+        newSearchParams.set(key, value);
+      }
+    });
+    newSearchParams.set("page", "1");
+    setSearchParams(newSearchParams);
+  };
+
+  // 필터 초기화 핸들러
+  const handleReset = () => {
+    setSearchParams({});
+  };
+
   const goToDetail = (supportNo) => {
     navigate(`/admin/support/${supportNo}`); // 관리자용 상세 페이지 경로로 이동
   };
@@ -154,6 +171,14 @@ export default function AdminSupportPage() {
             }}
           />
         </div>
+        <div className={styles.buttonGroup}>
+          <button className={styles.searchButton} onClick={handleSearch}>
+            검색
+          </button>
+          <button className={styles.resetButton} onClick={handleReset}>
+            <i className="fa-solid fa-rotate-right"></i>
+          </button>
+        </div>
       </div>
 
       {error ? (
@@ -200,7 +225,7 @@ export default function AdminSupportPage() {
                     {/* item.answerAdminNickname 또는 item.answerAdminName은 서버 응답에 포함되어야 함 */}
                     <td>
                       {item.supportStatus === "Y"
-                        ? item.answerAdminNickname || "알 수 없음"
+                        ? item.adminNickname || "알 수 없음"
                         : "-"}
                     </td>
                   </tr>

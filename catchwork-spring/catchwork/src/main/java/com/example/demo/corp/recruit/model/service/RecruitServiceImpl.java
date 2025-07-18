@@ -41,7 +41,7 @@ public class RecruitServiceImpl implements RecruitService {
 	 * @author BAEBAE
 	 */
 	@Override
-	public List<Recruit> getRecruitList(String status, String sort, String writer, String query, String memNo, Integer corpNo, String corpMemRoleCheck) {
+	public List<Recruit> getRecruitList(String status, String sort, String writer, String query, String memNo, Integer corpNo, String corpMemRoleCheck, int page, int size) {
 		
 		// 자동 마감 처리 (endDate < 오늘이면서 아직 status = 0인 공고들 → 3으로 바꾸기)
 	    recruitMapper.autoCloseRecruit();
@@ -54,6 +54,11 @@ public class RecruitServiceImpl implements RecruitService {
 	    paramMap.put("memNo", memNo);
 	    paramMap.put("corpNo", corpNo);
 	    paramMap.put("corpMemRoleCheck", corpMemRoleCheck);
+	    
+	    int offset = (page - 1) * size;
+	    paramMap.put("pageSize", size); // 한 페이지에 보여줄 개수 (LIMIT)
+	    paramMap.put("offset", offset); // 건너뛸 데이터 개수 (OFFSET)
+	    
 	    System.out.println("파라미터 맵: " + paramMap);
 
 	    return recruitMapper.selectRecruitList(paramMap);

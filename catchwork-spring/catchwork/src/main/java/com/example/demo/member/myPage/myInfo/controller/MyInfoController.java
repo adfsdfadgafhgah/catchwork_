@@ -156,8 +156,15 @@ public class MyInfoController {
 			@RequestParam(value = "corpType", required = false, defaultValue = "all") String corpType,
 			@RequestParam(value = "recruitType", required = false, defaultValue = "all") String recruitType,
 			@RequestParam(value = "query", required = false, defaultValue = "") String query,
-			@RequestParam(value = "memNo", required = false) String memNo
+			@RequestParam(value = "memNo", required = false) String memNo,
+			@RequestParam(name = "page", required = false) Integer page,
+            @RequestParam(name = "size", required = false) Integer size
 	) {
+		Integer offset = null;
+		if(page!=null) {
+			offset = (page - 1) * size;
+		}
+		
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("recruitJobName", recruitJobName);
 		paramMap.put("recruitJobArea", recruitJobArea);
@@ -167,6 +174,8 @@ public class MyInfoController {
 		paramMap.put("recruitType", recruitType);
 		paramMap.put("query", query);
 		paramMap.put("memNo", memNo);
+		paramMap.put("offset", offset);
+		paramMap.put("size", size);
 
 		List<Recruit> recruitList = myInfoService.getFavRecruitList(paramMap);
 		return ResponseEntity.ok(recruitList);
@@ -267,8 +276,15 @@ public class MyInfoController {
 		@RequestParam(value = "corpType", required = false, defaultValue = "all") String corpType,
 		@RequestParam(value = "recruitType", required = false, defaultValue = "all") String recruitType,
 		@RequestParam(value = "query", required = false, defaultValue = "") String query,
-		@RequestParam(value = "memNo", required = false) String memNo
+		@RequestParam(value = "memNo", required = false) String memNo,
+		@RequestParam(name = "page", required = false) Integer page,
+        @RequestParam(name = "size", required = false) Integer size
 	) {	
+		Integer offset = null;
+		if(page!=null) {
+			offset = (page - 1) * size;
+		}
+		
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("recruitJobName", recruitJobName);
 		paramMap.put("recruitJobArea", recruitJobArea);
@@ -278,6 +294,8 @@ public class MyInfoController {
 		paramMap.put("recruitType", recruitType);
 		paramMap.put("query", query);
 		paramMap.put("memNo", memNo);
+		paramMap.put("offset", offset);
+		paramMap.put("size", size);
 
 		List<Recruit> recruitList = myInfoService.getMyRecruitList(paramMap);
 		return ResponseEntity.ok(recruitList);

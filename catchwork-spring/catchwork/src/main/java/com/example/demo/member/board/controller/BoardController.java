@@ -55,7 +55,6 @@ public class BoardController {
             @RequestParam(name = "memNo", required = false) String memNo,
             @RequestParam(name = "page", required = false) Integer page,
             @RequestParam(name = "size", required = false) Integer size,
-            
             @RequestParam(name = "limit", required = false) Integer limit
         ) {
     	System.out.println();
