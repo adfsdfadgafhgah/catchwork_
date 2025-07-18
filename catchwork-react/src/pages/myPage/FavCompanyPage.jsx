@@ -4,31 +4,57 @@ import { axiosApi } from "../../api/axiosAPI";
 import CompanyItem from "../../components/company/CompanyItem";
 import SectionHeader from "../../components/common/SectionHeader";
 import ScrollToTopButton from "../../components/common/ScrollToTopButton";
+import InfiniteScroll from "react-infinite-scroll-component";
+import BoardCss from "../major/BoardListPage.module.css";
 
 const FavCompanyPage = () => {
   const { memNo } = useOutletContext();
   const [companyList, setCompanyList] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(true);
+
+  const [page, setPage] = useState(1); // 페이지 번호
+  const [hasMore, setHasMore] = useState(true); // 더 불러올 데이터 존재 여부
 
   useEffect(() => {
     getCorpList();
   }, [memNo]);
 
+  // memNo가 변경될 때마다 API 호출
+  useEffect(() => {
+    setCompanyList([]);
+    setPage(1);
+    setHasMore(true);
+    getCorpList(1, true);
+  }, [searchTerm, memNo]);
+
+  const fetchMoreData = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    getCorpList(nextPage);
+  };
+
   //기업 목록
-  const getCorpList = async () => {
-    setIsLoading(true);
+  const getCorpList = async (pageNum = 1, isNewSearch = false) => {
+    // setIsLoading(true);
 
     try {
       const params = {
         memNo: memNo,
         query: searchTerm.trim(),
+        page: pageNum,
+        size: 12,
       };
 
       const resp = await axiosApi.get("/myPage/favCorpList", { params });
 
       if (resp.status === 200) {
-        setCompanyList(resp.data);
+        if (isNewSearch) {
+          setCompanyList(resp.data);
+        } else {
+          setCompanyList((prev) => [...prev, ...resp.data]);
+        }
+        setHasMore(resp.data.length === 12);
       } else if (resp.status === 204) {
         setCompanyList([]);
       } else {
@@ -37,7 +63,7 @@ const FavCompanyPage = () => {
     } catch (err) {
       alert("기업 정보를 불러오는 데 실패했습니다.");
     } finally {
-      setIsLoading(false);
+      // setIsLoading(false);
     }
   };
 
@@ -49,6 +75,7 @@ const FavCompanyPage = () => {
     }
   };
 
+  /*
   if (isLoading) {
     return (
       <div className="loading">
@@ -56,6 +83,7 @@ const FavCompanyPage = () => {
       </div>
     );
   }
+  */
 
   return (
     <>
@@ -75,9 +103,15 @@ const FavCompanyPage = () => {
         </div>
 
         {/* 기업 카드 리스트 */}
-        {isLoading ? (
-          <p style={{ textAlign: "center" }}>로딩 중...</p>
-        ) : (
+        <InfiniteScroll
+          dataLength={companyList.length}
+          next={fetchMoreData}
+          hasMore={hasMore}
+          loader={<h4>Loading...</h4>}
+          endMessage={
+            <p className={BoardCss.noResult}>더 이상 기업 정보가 없습니다.</p>
+          }
+        >
           <div className="company-grid">
             {companyList.length > 0 ? (
               companyList.map((company) => (
@@ -87,7 +121,7 @@ const FavCompanyPage = () => {
               <p style={{ textAlign: "center" }}>기업 정보가 없습니다.</p>
             )}
           </div>
-        )}
+        </InfiniteScroll>
       </main>
       <ScrollToTopButton />
     </>

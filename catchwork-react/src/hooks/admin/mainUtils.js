@@ -24,7 +24,6 @@ export const useRecentReport = (pageSize = 5) => {
           setHasMore(false);
         }
         if (page === 1) {
-          // 처음 page는 덮어쓰기
           setData(res.data);
         } else {
           setData((prev) => [...prev, ...res.data]);

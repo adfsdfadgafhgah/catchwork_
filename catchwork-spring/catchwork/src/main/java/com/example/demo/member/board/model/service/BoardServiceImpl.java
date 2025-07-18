@@ -3,7 +3,9 @@ package com.example.demo.member.board.model.service;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,11 +37,27 @@ public class BoardServiceImpl implements BoardService {
 	 */
 	@Override
 	public List<Board> selectBoardList(String sort, String query, String memNo,Integer page,Integer size, Integer limit) {
-		Integer offset = null;
-		if(page!=null) {			
-		offset = (page - 1) * size;
+		Map<String, Object> paramMap = new HashMap<>();
+		paramMap.put("sort", sort);
+		paramMap.put("query", query);
+		paramMap.put("memNo", memNo);
+		
+		// [추가] limit 파라미터가 있으면 limit을, 없으면 page/size를 이용한 페이지네이션을 사용합니다.
+		if (limit != null && limit > 0) {
+			// 메인 페이지 등에서 사용: limit으로 상위 N개만 조회
+			paramMap.put("limit", limit);
+		} else {
+			// 게시판 목록 페이지에서 사용: 페이지네이션
+			// page나 size가 null일 경우 기본값을 설정하여 NullPointerException 방지
+			int currentPage = (page == null || page < 1) ? 1 : page;
+			int currentSize = (size == null || size < 1) ? 10 : size;
+			int offset = (currentPage - 1) * currentSize;
+			
+			paramMap.put("offset", offset);
+			paramMap.put("size", currentSize);
 		}
-		return boardMapper.selectBoardList(sort, query, memNo, offset,size, limit);
+		
+		return boardMapper.selectBoardList(paramMap);
 	}
 
 	/**

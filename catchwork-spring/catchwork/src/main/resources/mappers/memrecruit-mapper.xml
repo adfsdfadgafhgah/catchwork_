@@ -89,21 +89,22 @@
 	    TO_CHAR(R.RECRUIT_WRITE_DATE, 'YYYY-MM-DD') AS RECRUIT_WRITE_DATE,
 	    R.MEM_NO,
 	    
-	    -- 기업 정보
+	    <!-- 기업 정보 -->
 	    CI.CORP_NAME,
 	    CI.CORP_TYPE,
 	    CI.CORP_LOGO,
 		CI.CORP_BENEFIT,
 		CI.CORP_BENEFIT_DETAIL,
 			
-		-- 기업회원 정보
+		<!-- 기업회원 정보 -->
 		M.MEM_NICKNAME AS memNickname,
 		M.MEM_NAME AS memName,
+		CM.CORP_MEM_DEPT AS corpMemDept,
 	    
-	    -- 좋아요 수
+	    <!-- 좋아요 수 -->
 	    (SELECT COUNT(*) FROM FAV_RECRUIT F WHERE F.RECRUIT_NO = R.RECRUIT_NO) AS likeCount,
 	    
-	    -- 로그인 유저의 좋아요 여부
+	    <!-- 로그인 유저의 좋아요 여부 -->
 	    <choose>
         <when test="memNo != null and memNo != ''">
             (SELECT COUNT(*)
@@ -123,7 +124,8 @@
 	
 	<where>
 	<!-- 기본적으로 진행중 또는 마감된 공고만 -->
-    R.RECRUIT_STATUS IN (0)
+    R.RECRUIT_STATUS = 0
+    AND M.MEM_STATUS = 0
 
     <!-- 통합 검색 조건 -->
     <if test="query != null and query != ''">
@@ -151,26 +153,33 @@
     </if>
 
     <!-- 필터 조건들 -->
+    
+    <!-- 직무 -->
     <if test="recruitJobName != null and recruitJobName != '' and recruitJobName != 'all'">
       AND R.RECRUIT_JOB_NAME = #{recruitJobName}
     </if>
-
+	
+	<!-- 근무지역 -->
     <if test="recruitJobArea != null and recruitJobArea != '' and recruitJobArea != 'all'">
       AND R.RECRUIT_JOB_AREA LIKE CONCAT(CONCAT('%', #{recruitJobArea}), '%')
     </if>
-
+	
+	<!-- 경력 -->
     <if test="recruitCareer != null and recruitCareer != '' and recruitCareer != 'all'">
       AND R.RECRUIT_CAREER = #{recruitCareer}
     </if>
-
+	
+	<!-- 학력 -->
     <if test="recruitEdu != null and recruitEdu != '' and recruitEdu != 'all'">
       AND R.RECRUIT_EDU = #{recruitEdu}
     </if>
-
+	
+	<!-- 기업형태 -->
     <if test="corpType != null and corpType != '' and corpType != 'all'">
       AND CI.CORP_TYPE = #{corpType}
     </if>
-
+	
+	<!-- 고용형태 -->
     <if test="recruitType != null and recruitType != '' and recruitType != 'all'">
       AND R.RECRUIT_TYPE = #{recruitType}
     </if>

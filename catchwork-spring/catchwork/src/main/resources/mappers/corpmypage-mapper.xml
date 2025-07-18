@@ -50,7 +50,7 @@
   </update>
 
   <!-- 회원 비밀번호 조회 -->
-  <select id="selectMemberPassword">
+  <select id="selectMemberPassword" resultType="string">
     SELECT MEM_PW
     FROM MEMBER 
     WHERE MEM_NO = #{memNo}

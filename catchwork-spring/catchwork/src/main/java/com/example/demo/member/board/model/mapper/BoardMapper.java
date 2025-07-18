@@ -20,13 +20,7 @@ public interface BoardMapper {
 	 * @return
 	 */
 	
-	List<Board> selectBoardList(
-			@Param("sort") String sort, 
-			@Param("query") String query, 
-			@Param("memNo") String memNo,
-		    @Param("offset") Integer offset,
-			@Param("size") Integer size,
-			@Param("limit") Integer limit);
+	List<Board> selectBoardList(Map<String, Object> paramMap);
 
 	// -----------------------------------------------------------------
 

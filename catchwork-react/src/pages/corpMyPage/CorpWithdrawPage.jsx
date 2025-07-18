@@ -6,55 +6,105 @@ import { useAuthStore } from "../../stores/authStore";
 
 const CorpWithdrawPage = () => {
   const navigate = useNavigate();
-  const { loginMember } = useOutletContext();
+  // loginMember는 현재 사용되지 않으므로, 필요하지 않다면 제거할 수 있습니다.
+  const { loginMember } = useOutletContext(); 
   const [agree, setAgree] = useState(false);
   const [password, setPassword] = useState("");
   const [isRead, setIsRead] = useState(false);
   const { signOut } = useAuthStore();
 
+  // 커스텀 모달 상태 관리
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [showAlertModal, setShowAlertModal] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [confirmAction, setConfirmAction] = useState(null); // 확인 모달에서 '확인' 클릭 시 실행할 함수
+
+  // '탈퇴하기' 버튼 활성화 여부
   const isDisabled = !agree || !password;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // 커스텀 확인 모달 열기 함수
+  const openConfirmModal = (message, action) => {
+    setAlertMessage(message);
+    setConfirmAction(() => action); // 실행할 함수를 저장
+    setShowConfirmModal(true);
+  };
 
-    if (
-      confirm(
-        "정말 탈퇴하시겠습니까? \n탈퇴 후 데이터에 대한 손실을 책임지지 않습니다."
-      )
-    ) {
-      try {
-        const resp = await axiosApi.put("/myPage/withdraw", {
-          memPw: password,
-          memNo: loginMember.memNo,
-        });
-        if (resp.status === 200) {
-          alert(resp.data);
-          signOut();
-          navigate("/");
-        }
-      } catch (error) {
-        if (error.response) {
-          if (error.response.status === 401) {
-            alert(error.response.data); // 비밀번호 틀림
-          } else {
-            alert("오류가 발생했습니다: " + error.response.status);
-          }
+  // 커스텀 알림 모달 열기 함수
+  const openAlertModal = (message) => {
+    setAlertMessage(message);
+    setShowAlertModal(true);
+  };
+
+  // 모든 모달 닫기 함수
+  const closeModal = () => {
+    setShowConfirmModal(false);
+    setShowAlertModal(false);
+    setAlertMessage("");
+    setConfirmAction(null);
+  };
+
+  // 실제 회원 탈퇴 처리 로직
+  const executeWithdraw = async () => {
+    try {
+      // 1. 비밀번호 확인 요청 (POST /corp/verifyPassword)
+      const verifyResp = await axiosApi.post("/corp/verifyPassword", {
+        memPw: password,
+      });
+
+      // 비밀번호가 일치하는 경우
+      if (verifyResp.status === 200 && verifyResp.data === true) {
+        // 2. 회원 탈퇴 요청 (DELETE /corp/withdraw)
+        // DELETE 요청은 일반적으로 본문(body)을 포함하지 않습니다.
+        // 회원 정보는 @AuthenticationPrincipal을 통해 백엔드에서 가져옵니다.
+        const withdrawResp = await axiosApi.delete("/corp/withdraw");
+
+        if (withdrawResp.status === 200) {
+          openAlertModal("회원 탈퇴가 완료되었습니다.");
+          signOut(); // 로그아웃 처리
+          navigate("/"); // 메인 페이지로 이동
         } else {
-          alert("네트워크 오류가 발생했습니다.");
+          openAlertModal("탈퇴 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
         }
+      } else {
+        // 비밀번호 불일치
+        openAlertModal("비밀번호가 일치하지 않습니다.");
       }
-    } else {
-      alert("탈퇴를 취소하였습니다.");
+    } catch (error) {
+      // 에러 처리
+      if (error.response) {
+        if (error.response.status === 401) {
+          openAlertModal("비밀번호가 일치하지 않습니다."); // 백엔드에서 401 Unauthorized 반환 시
+        } else {
+          openAlertModal(`오류가 발생했습니다: ${error.response.status} - ${error.response.data || error.response.statusText}`);
+        }
+      } else {
+        openAlertModal("네트워크 오류가 발생했습니다.");
+      }
+    } finally {
+      closeModal(); // 작업 완료 후 모달 닫기
     }
   };
 
+  // '탈퇴하기' 버튼 클릭 시 호출되는 함수
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // 탈퇴 확인 모달을 띄우고, '확인' 시 executeWithdraw 실행
+    openConfirmModal(
+      "정말 탈퇴하시겠습니까? \n탈퇴 후 데이터에 대한 손실을 책임지지 않습니다.",
+      executeWithdraw
+    );
+  };
+
+  // 약관 스크롤 시 '다 읽음' 상태 업데이트
   const handleScroll = (e) => {
     const { scrollTop, scrollHeight, clientHeight } = e.target;
+    // 스크롤이 거의 끝에 도달했을 때 isRead를 true로 설정
     if (scrollTop + clientHeight >= scrollHeight - 5) {
       setIsRead(true);
     }
   };
 
+  // 약관 내용 (이전과 동일)
   const terms = [
     {
       title: "제1조 (목적)",
@@ -172,6 +222,31 @@ const CorpWithdrawPage = () => {
           </button>
         </div>
       </div>
+
+      {/* 커스텀 확인 모달 */}
+      {showConfirmModal && (
+        <div className={styles.modalBackdrop}>
+          <div className={styles.modalContent}>
+            <p>{alertMessage}</p>
+            <div className={styles.modalActions}>
+              <button onClick={() => { confirmAction(); closeModal(); }} className={styles.modalButton}>확인</button>
+              <button onClick={closeModal} className={styles.modalButton}>취소</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 커스텀 알림 모달 */}
+      {showAlertModal && (
+        <div className={styles.modalBackdrop}>
+          <div className={styles.modalContent}>
+            <p>{alertMessage}</p>
+            <div className={styles.modalActions}>
+              <button onClick={closeModal} className={styles.modalButton}>확인</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

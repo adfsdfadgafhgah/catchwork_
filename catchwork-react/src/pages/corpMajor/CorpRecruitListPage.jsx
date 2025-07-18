@@ -113,9 +113,13 @@ export default function CorpRecruitListPage() {
       return;
     }
 
+    // [수정] 새로운 검색일 경우에만 전체 페이지 로딩 상태를 활성화합니다.
+    if (isNewSearch) {
+      setIsLoading(true);
+    }
+
     try {
       const pageSize = 9; // 한 페이지에 불러올 공고 수
-      setIsLoading(true);
       const resp = await axiosApi.get("/corpRecruit/list", {
         params: {
           sort: sortOrder,
@@ -152,6 +156,8 @@ export default function CorpRecruitListPage() {
     } catch (err) {
       console.error("채용공고 목록 조회 실패:", err);
     } finally {
+      // [수정] 새로운 검색일 경우에만 전체 페이지 로딩 상태를 비활성화합니다.
+      // 이 로직은 기존과 동일하지만, 위의 setIsLoading(true)가 조건부로 바뀌면서 함께 올바르게 동작하게 됩니다.
       if (isNewSearch) {
         setIsLoading(false);
       }

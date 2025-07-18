@@ -186,10 +186,10 @@ export default function AdminReportPage() {
           </div>
           <div className={styles.buttonGroup}>
             <button className={styles.searchButton} onClick={handleSearch}>
-              Search
+              검색
             </button>
             <button className={styles.resetButton} onClick={handleReset}>
-              Reset
+              <i className="fa-solid fa-rotate-right"></i>
             </button>
           </div>
         </div>

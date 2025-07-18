@@ -40,6 +40,14 @@ public interface AdminService {
 	 * @return
 	 */
 	int submitSupportAnswer(Support support);
+	
+	/**
+	 * 관리자 정보 조회
+	 * @param adminId
+	 * @return
+	 * @author 민장
+	 */
+	Admin adminInfo(String adminId);
 
 	/**
 	 * 최근 미처리 신고 목록 조회
@@ -92,5 +100,6 @@ public interface AdminService {
 	 * @author 민장
 	 */
 	List<Map<String, Object>> selectRecentSupportChart();
+
 
 }

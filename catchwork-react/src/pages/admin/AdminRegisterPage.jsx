@@ -2,6 +2,7 @@ import { useState } from "react";
 import "./AdminAuthPage.css";
 import { Link, useNavigate } from "react-router-dom";
 import useConfirmEmail from "../../hooks/useConfirmEmail";
+import AdminModal from "./AdminResisterModal";
 
 const waveSpans = (text) =>
   text.split("").map((char, idx) => (
@@ -108,25 +109,11 @@ const AdminRegisterPage = () => {
   return (
     <div className="authPage">
       {modalOpen && (
-        <div className="modal-backdrop">
-          <div className="modal">
-            <h2>회원가입 완료</h2>
-            <p>다시 확인 할 수 없습니다.</p>
-            <p>
-              <b>임시 아이디:</b> {modalInfo.id}
-              <br />
-              <b>임시 비밀번호:</b> {modalInfo.password}
-            </p>
-            <button
-              onClick={() => {
-                setModalOpen(false);
-                navigate("/admin-auth");
-              }}
-            >
-              확인
-            </button>
-          </div>
-        </div>
+        <AdminModal
+          modalInfo={modalInfo}
+          setModalOpen={setModalOpen}
+          navigate={navigate}
+        />
       )}
       <div className="container">
         <form onSubmit={handleAdminAuth}>
@@ -235,7 +222,6 @@ const AdminRegisterPage = () => {
                 onClick={handleCheckAuthKey}
                 className="btn"
                 disabled={!isIssued || isVerified}
-                style={{ marginRight: "8px" }}
               >
                 인증번호 확인
               </button>
