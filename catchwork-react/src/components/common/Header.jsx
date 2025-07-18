@@ -12,6 +12,7 @@ const Header = () => {
   const { memType, memNickname, memNo, signin, signOut } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState(""); // 검색어
   const [memName, setMemName] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // 모바일 메뉴 토글 상태
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -58,6 +59,13 @@ const Header = () => {
     }
   }, [memNo, memName]);
 
+  // 모바일 메뉴 닫기 (네비게이션 이동 시)
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location.pathname]);
+
+  const isMobile = window.innerWidth <= 768;
+
   return (
     <header className={styles.header}>
       <div className={styles.headerTop}>
@@ -81,9 +89,20 @@ const Header = () => {
             </Link>
           )}
         </div>
-
-        {/* 검색창: 로그인/회원가입/기업회원 페이지에서는 미노출 */}
-        {!isAuthPage && !isCorpUser && (
+        {/* 햄버거 버튼: 모바일에서만 보임, 오른쪽 끝 */}
+        <button
+          className={styles.hamburger}
+          aria-label="메뉴 열기"
+          aria-expanded={mobileMenuOpen}
+          onClick={() => setMobileMenuOpen((prev) => !prev)}
+          type="button"
+        >
+          <span className={styles.hamburgerBar}></span>
+          <span className={styles.hamburgerBar}></span>
+          <span className={styles.hamburgerBar}></span>
+        </button>
+        {/* 데스크탑: 검색창, userInfo 보임 */}
+        {!isMobile && !isAuthPage && !isCorpUser && (
           <div className={styles.searchBox}>
             <i
               className="fa-solid fa-magnifying-glass"
@@ -99,9 +118,7 @@ const Header = () => {
             />
           </div>
         )}
-
-        {/* 사용자 정보 영역 */}
-        {!isAuthPage && (
+        {!isMobile && !isAuthPage && (
           <div className={styles.userInfo}>
             {memType !== null ? (
               <>
@@ -125,9 +142,31 @@ const Header = () => {
           </div>
         )}
       </div>
-
-      {/* 네비게이션 메뉴 */}
-      {!isAuthPage && <HeaderNav />}
+      {/* 모바일: HeaderNav가 userInfo, 검색창, nav 모두 포함 */}
+      {isMobile && mobileMenuOpen && !isAuthPage && (
+        <HeaderNav
+          isMobile={true}
+          mobileMenuOpen={true}
+          setMobileMenuOpen={setMobileMenuOpen}
+          memType={memType}
+          memNickname={memNickname}
+          memName={memName}
+          handleSignOut={handleSignOut}
+          navigate={navigate}
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+          handleSearch={handleSearch}
+          isCorpUser={isCorpUser}
+        />
+      )}
+      {/* 데스크탑: nav 항상 보임 */}
+      {!isMobile && !isAuthPage && (
+        <HeaderNav
+          isMobile={false}
+          mobileMenuOpen={false}
+          setMobileMenuOpen={setMobileMenuOpen}
+        />
+      )}
     </header>
   );
 };
