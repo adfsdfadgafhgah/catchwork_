@@ -103,11 +103,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
         
         Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
         refreshCookie.setHttpOnly(true);			// JS에서 접근 불가
-        
-//		나중에 변경할 것 나중에 변경할 것 나중에 변경할 것 나중에 변경할 것 
-        refreshCookie.setSecure(false);				// HTTPS에서만 전송
-//		나중에 변경할 것 나중에 변경할 것 나중에 변경할 것 나중에 변경할 것 
-        
+        refreshCookie.setSecure(true);				// HTTPS에서만 전송
         refreshCookie.setPath("/");					// 전체 경로 유효
         refreshCookie.setMaxAge(7 * 24 * 60 * 60);	// 7일
 
