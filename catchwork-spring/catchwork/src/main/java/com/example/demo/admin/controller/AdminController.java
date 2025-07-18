@@ -36,6 +36,11 @@ public class AdminController {
 	@Autowired
 	private AdminService adminService;
 
+	/** 로그인
+	 * @param inputAdmin
+	 * @param response
+	 * @return
+	 */
 	@PostMapping("auth")
 	public ResponseEntity<?> authenticationAdmin(@RequestBody Admin inputAdmin, HttpServletResponse response) {
 	    try {
@@ -64,6 +69,10 @@ public class AdminController {
 	}
 
 
+	/** 회원가입
+	 * @param inputAdmin
+	 * @return
+	 */
 	@PostMapping("register")
 	public ResponseEntity<?> registrationAdmin(@RequestBody Admin inputAdmin) {
 		try {
@@ -76,12 +85,29 @@ public class AdminController {
 		}
 	}
 
-	@GetMapping("/admin/check")
+	/** 로그인 여부
+	 * @param adminId
+	 * @return
+	 */
+	@GetMapping("check")
 	public ResponseEntity<?> checkAdmin(@CookieValue(value = "adminId", required = false) String adminId) {
 	    if (adminId == null) {
 	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Not logged in"));
 	    }
 	    return ResponseEntity.ok(Map.of("adminId", adminId));
+	}
+	
+	/** 로그아웃
+	 * @param response
+	 * @return
+	 */
+	@GetMapping("/logout")
+	public ResponseEntity<?> logoutAdmin(HttpServletResponse response) {
+	    Cookie cookie = new Cookie("adminId", null);
+	    cookie.setPath("/");
+	    cookie.setMaxAge(0); // 즉시 만료
+	    response.addCookie(cookie);
+	    return ResponseEntity.ok(Map.of("message", "Logout complete"));
 	}
 	
 	/**
