@@ -68,4 +68,31 @@ public class CorpMyPageController {
             return ResponseEntity.status(401).body(false); // 비밀번호 불일치 시 401 Unauthorized와 false 반환
         }
     }
+    
+    // 탈퇴하기
+    @PutMapping("/withdraw")
+    public ResponseEntity<String> withdrawCorpMember(@RequestBody Map<String, String> payload, 
+            @AuthenticationPrincipal CustomUserDetails customUserDetails) {
+
+        if (customUserDetails == null) {
+            return ResponseEntity.status(401).body("인증이 필요합니다.");
+        }
+
+        String memNo = customUserDetails.getUsername();
+        String inputPassword = payload.get("memPw");
+
+        boolean passwordValid = corpMyPageService.verifyPassword(memNo, inputPassword);
+        if (!passwordValid) {
+            return ResponseEntity.status(401).body("비밀번호가 올바르지 않습니다.");
+        }
+
+        try {
+            corpMyPageService.withdrawCorpMember(memNo);
+            return ResponseEntity.ok("탈퇴가 정상 처리되었습니다.");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("탈퇴 처리 중 오류가 발생했습니다.");
+        }
+    }
 }
+

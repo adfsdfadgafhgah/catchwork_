@@ -3,18 +3,14 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import styles from "./WriteRecruitPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
 import { axiosApi } from "../../api/axiosAPI";
-// import useLoginMember from "../../stores/loginMember";
 import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
-// import { useAuthStore } from "../../stores/authStore";
 import KakaoMapPreview from "../../components/common/KakaoMapPreview";
 import defaultImg from "../../assets/icon.png";
 
 export default function WriteRecruitPage() {
   const logoImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
   const navigate = useNavigate();
-  // const { loginMember, setLoginMember } = useLoginMember();
-  // const { memNo, memType, memNickname } = useAuthStore();
   const { memNo, memType } = useOutletContext();
   const [corpInfo, setCorpInfo] = useState(null);
   const [corpMemRoleCheck, setCorpMemRoleCheck] = useState("N"); // 'Y'면 대표이사
@@ -117,10 +113,20 @@ export default function WriteRecruitPage() {
   // 공통 입력 핸들러
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    // 모집인원(recruitHeadcount) 필드에는 숫자만 입력되도록 처리
+    if (name === "recruitHeadcount") {
+      const numericValue = value.replace(/\D/g, ""); // \D는 숫자가 아닌 모든 문자를 의미
+      setFormData((prev) => ({
+        ...prev,
+        [name]: numericValue,
+      }));
+    } else {
+      // 다른 필드는 기존 로직대로 처리
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   // 제출 핸들러
@@ -133,6 +139,16 @@ export default function WriteRecruitPage() {
     if (corpMemRoleCheck === "Y") {
       alert("대표이사 계정은 공고 작성이 불가능합니다.");
       return;
+    }
+
+    // 합격자 발표일이 마감일보다 빠른지 확인
+    if (
+      formData.recruitEndDate &&
+      formData.recruitResultDate &&
+      new Date(formData.recruitResultDate) < new Date(formData.recruitEndDate)
+    ) {
+      alert("합격자 발표일은 채용 마감일보다 빠를 수 없습니다.");
+      return; // 함수 실행 중단
     }
 
     const submitData = {
@@ -337,7 +353,7 @@ export default function WriteRecruitPage() {
               </label>
               <input
                 id="recruitHeadcount"
-                type="text"
+                type="tel"
                 name="recruitHeadcount"
                 value={formData.recruitHeadcount}
                 onChange={handleChange}
@@ -498,7 +514,7 @@ export default function WriteRecruitPage() {
           </div>
         </div>
 
-        {/* [수정] FloatButton에 isFormValid를 전달하여 버튼 활성화/비활성화 제어 */}
+        {/* FloatButton에 isFormValid를 전달하여 버튼 활성화/비활성화 제어 */}
         <FloatButton
           buttons={FLOAT_BUTTON_PRESETS.writeAndCancel(
             handleWrite,

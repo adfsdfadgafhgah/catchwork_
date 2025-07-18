@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useMemo, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styles from "./SignUpPage.module.css";
 import // sendVerificationCode, // 나중에에 주석 해제
@@ -29,8 +29,9 @@ const SignUpPage = () => {
     corpMemDept: "",
   });
 
-  const userType =
-    searchParams.get("type") === "corporate" ? "corporate" : "personal";
+  const userType = useMemo(() => {
+    return searchParams.get("type") === "corporate" ? "corporate" : "personal";
+  }, [searchParams]);
 
   // config 사용해서 useSignUpForm을 Handle하기
   const config = {
@@ -98,6 +99,14 @@ const SignUpPage = () => {
     },
     config
   );
+
+  // userType이 변경될 때마다 memType 업데이트
+  useEffect(() => {
+    const newMemType = userType === "corporate" ? 1 : 0;
+    // 디버깅용
+    // console.log("newMemType", newMemType);
+    setField("memType", newMemType);
+  }, [userType]); // setField 제거
 
   // 이메일 인증 관련 상태 및 훅
   const [isIssued, setIsIssued] = React.useState(false);
@@ -217,8 +226,10 @@ const SignUpPage = () => {
         dataToSend.memBirthday = new Date().toISOString().split("T")[0];
       }
     } else if (formData.memType === 1) {
+      // 기업 회원
       const { memType, memId, memPw, memName, memTel, memEmail, corpMemDept } =
         formData;
+
       const { corpRegNo } = corpFormData;
 
       dataToSend = {
@@ -236,7 +247,8 @@ const SignUpPage = () => {
     }
 
     // 디버깅용
-    console.log(dataToSend);
+    // console.log(formData);
+    // console.log(dataToSend);
     try {
       await axiosApi.post("/signup", dataToSend);
       alert("회원가입이 완료되었습니다.");
@@ -255,6 +267,8 @@ const SignUpPage = () => {
           className={`${styles.tabButton} ${!isCorp ? styles.active : ""}`}
           onClick={() => {
             setIsCorp(false);
+            // 디버깅용
+            // console.log(formData.memType);
             navigate("/signup?type=personal");
           }}
         >
@@ -265,6 +279,8 @@ const SignUpPage = () => {
           className={`${styles.tabButton} ${isCorp ? styles.active : ""}`}
           onClick={() => {
             setIsCorp(true);
+            // 디버깅용
+            // console.log(formData.memType);
             navigate("/signup?type=corporate");
           }}
         >

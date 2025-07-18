@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
+import { axiosApi } from "../../api/axiosAPI";
 
 export const useAdminTitle = () => {
   const location = useLocation();
@@ -18,8 +19,15 @@ export const useAdminTitle = () => {
 
 export const handleAdminLogout = () => {
   const navigate = useNavigate();
-  document.cookie = "adminId=; path=/; max-age=0"; // 쿠키 즉시 만료
-  navigate("/admin-auth");
+
+  return async () => {
+    try {
+      await axiosApi.get("/admin/logout", { withCredentials: true });
+      navigate("/admin-auth");
+    } catch (err) {
+      alert("로그아웃 실패");
+    }
+  };
 };
 
 // 공통 상수
