@@ -1,14 +1,28 @@
 import icon from "../../assets/icon.png";
 import styles from "./Footer.module.css";
 
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const Footer = () => {
   return (
     <footer className={styles.footer}>
       <div className={styles.footerLinks}>
-        <Link to="/policyprivacy">개인정보처리방침</Link>
-        <Link to="/termsofservice">이용약관</Link>
+        <NavLink
+          to="/policyprivacy"
+          className={({ isActive }) =>
+            isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+          }
+        >
+          개인정보처리방침
+        </NavLink>
+        <NavLink
+          to="/termsofservice"
+          className={({ isActive }) =>
+            isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+          }
+        >
+          이용약관
+        </NavLink>
         <span>Copyright © CATCH. All rights reserved.</span>
         <Link to="/supportlist" >
           문의하기
