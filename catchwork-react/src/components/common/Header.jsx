@@ -18,9 +18,9 @@ const Header = () => {
   // const path = location.pathname;
 
   // 최초 마운트 시, 콘솔창 clear
-  useEffect(() => {
-    console.clear();
-  }, []);
+  // useEffect(() => {
+  //   console.clear();
+  // }, []);
 
   const isAuthPage = [
     "/signin",
