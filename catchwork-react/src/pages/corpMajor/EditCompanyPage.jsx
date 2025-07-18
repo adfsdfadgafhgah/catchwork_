@@ -300,7 +300,7 @@ const EditCompanyPage = () => {
         ></textarea>
       </div>
       <FloatButton
-        buttons={FLOAT_BUTTON_PRESETS.editAndCancel(handleEdit, handleCancel)}
+        buttons={FLOAT_BUTTON_PRESETS.editAndCancel2(handleEdit, handleCancel)}
       />
     </main>
   );

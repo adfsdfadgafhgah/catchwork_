@@ -335,15 +335,8 @@ export default function CorpRecruitDetailPage() {
             <h4 className={styles.sectionTitle}>
               <i className="fa-solid fa-link"></i> 채용 사이트
             </h4>
-            {/* URL은 클릭 가능한 링크로 변경 */}
-            <a
-              href={recruit.recruitCorpUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={styles.corpUrlLink}
-            >
-              {recruit.recruitCorpUrl}
-            </a>
+
+            {recruit.recruitCorpUrl}
           </div>
 
           <div className={styles.detailItem}>

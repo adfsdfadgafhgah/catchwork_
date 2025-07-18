@@ -118,12 +118,23 @@ export default function EditRecruitPage() {
     }).open();
   };
 
+  // 공통 입력 핸들러
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    // 모집인원(recruitHeadcount) 필드에는 숫자만 입력되도록 처리
+    if (name === "recruitHeadcount") {
+      const numericValue = value.replace(/\D/g, ""); // \D는 숫자가 아닌 모든 문자를 의미
+      setFormData((prev) => ({
+        ...prev,
+        [name]: numericValue,
+      }));
+    } else {
+      // 다른 필드는 기존 로직대로 처리
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }));
+    }
   };
 
   // 수정 제출 핸들러
@@ -133,6 +144,16 @@ export default function EditRecruitPage() {
       alert("필수 항목(*)을 모두 입력해주세요.");
       return;
     }
+
+    if (
+      formData.recruitEndDate &&
+      formData.recruitResultDate &&
+      new Date(formData.recruitResultDate) < new Date(formData.recruitEndDate)
+    ) {
+      alert("합격자 발표일은 채용 마감일보다 빠를 수 없습니다.");
+      return; // 함수 실행 중단
+    }
+
     const submitData = {
       ...formData,
       recruitHeadcount:
@@ -338,7 +359,7 @@ export default function EditRecruitPage() {
               </label>
               <input
                 id="recruitHeadcount"
-                type="text"
+                type="tel"
                 name="recruitHeadcount"
                 value={formData.recruitHeadcount}
                 onChange={handleChange}

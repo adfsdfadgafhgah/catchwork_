@@ -17,9 +17,9 @@ export const useAdminTitle = () => {
 };
 
 export const handleAdminLogout = () => {
-  const navigate = useNavigate();
-  document.cookie = "adminId=; path=/; max-age=0"; // 쿠키 즉시 만료
-  navigate("/admin-auth");
+  // const navigate = useNavigate();
+  // document.cookie = "adminId=; path=/; max-age=0"; // 쿠키 즉시 만료
+  // navigate("/admin-auth");
 };
 
 // 공통 상수

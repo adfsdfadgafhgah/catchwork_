@@ -123,30 +123,82 @@
 	    ORDER BY R.REPORT_NO DESC
 	</select>
 	
+	<!-- 신고 대상 정보 -->
 	<select id="getTargetInfo" parameterType="map" resultType="com.example.demo.admin.model.dto.TargetInfo">
 	    <choose>
         <when test="targetType == 'COMPANY'">
-            SELECT CORP_NO AS "no", 'COMPANY' AS type, CORP_NAME AS content, NULL AS author, NULL as authorNo, CORP_STATUS as status FROM CORP_INFO WHERE CORP_NO = #{targetNo}
+            SELECT 
+            CORP_NO AS "no", 
+            'COMPANY' AS type, 
+            CORP_NAME AS content, 
+            NULL AS author, 
+            NULL as authorNo, 
+            CORP_STATUS as status 
+            FROM CORP_INFO 
+            WHERE CORP_NO = #{targetNo}
         </when>
+        
         <when test="targetType == 'MEMBER'">
-            SELECT MEM_NO AS "no", 'MEMBER' AS type, MEM_NICKNAME AS content, NULL AS author, NULL as authorNo, MEM_STATUS as status FROM MEMBER WHERE MEM_NO = #{targetNo}
+            SELECT 
+            MEM_NO AS "no", 
+            'MEMBER' AS type, 
+            MEM_NICKNAME AS content, 
+            NULL AS author, 
+            NULL as authorNo, 
+            MEM_STATUS as status 
+            FROM MEMBER 
+            WHERE MEM_NO = #{targetNo}
         </when>
+        
         <when test="targetType == 'RECRUIT'">
-            SELECT R.RECRUIT_NO AS "no", 'RECRUIT' AS type, R.RECRUIT_TITLE AS content, M.MEM_NICKNAME AS author, M.MEM_NO AS authorNo, R.RECRUIT_STATUS as status FROM RECRUIT R JOIN MEMBER M ON R.MEM_NO = M.MEM_NO WHERE R.RECRUIT_NO = #{targetNo}
+            SELECT 
+            R.RECRUIT_NO AS "no", 
+            'RECRUIT' AS type, 
+            R.RECRUIT_TITLE AS content, 
+            CM.CORP_MEM_DEPT AS author, 
+            M.MEM_NO AS authorNo, 
+            R.RECRUIT_STATUS as status 
+            FROM RECRUIT R 
+            JOIN MEMBER M ON R.MEM_NO = M.MEM_NO 
+            LEFT JOIN CORP_MEM CM ON M.MEM_NO = CM.MEM_NO 
+            WHERE R.RECRUIT_NO = #{targetNo}
         </when>
+        
         <when test="targetType == 'BOARD'">
-            SELECT B.BOARD_NO AS "no", 'BOARD' AS type, B.BOARD_TITLE AS content, M.MEM_NICKNAME AS author, M.MEM_NO AS authorNo, B.BOARD_STATUS as status FROM BOARD B JOIN MEMBER M ON B.MEM_NO = M.MEM_NO WHERE B.BOARD_NO = #{targetNo}
+            SELECT 
+            B.BOARD_NO AS "no", 
+            'BOARD' AS type, 
+            B.BOARD_TITLE AS content, 
+            M.MEM_NICKNAME AS author, 
+            M.MEM_NO AS authorNo, 
+            B.BOARD_STATUS as status 
+            FROM BOARD B 
+            JOIN MEMBER M ON B.MEM_NO = M.MEM_NO 
+            WHERE B.BOARD_NO = #{targetNo}
         </when>
+        
         <when test="targetType == 'COMMENT'">
-            SELECT C.COMMENT_NO AS "no", 'COMMENT' AS type, C.COMMENT_CONTENT AS content, M.MEM_NICKNAME AS author, M.MEM_NO AS authorNo, C.COMMENT_STATUS as status FROM "COMMENT" C JOIN MEMBER M ON C.MEM_NO = M.MEM_NO WHERE C.COMMENT_NO = #{targetNo}
+            SELECT 
+            C.COMMENT_NO AS "no", 
+            'COMMENT' AS type, 
+            C.COMMENT_CONTENT AS content, 
+            M.MEM_NICKNAME AS author, 
+            M.MEM_NO AS authorNo, 
+            C.COMMENT_STATUS as status 
+            FROM "COMMENT" C 
+            JOIN MEMBER M ON C.MEM_NO = M.MEM_NO 
+            WHERE C.COMMENT_NO = #{targetNo}
         </when>
+        
     </choose>
 	</select>
 	
+	<!-- 정지 처리 -->
 	<insert id="insertBan" parameterType="map">
 	    INSERT INTO BAN (BAN_NO, BAN_CONTENT, BAN_TARGET_NO, BAN_TARGET_TYPE, ADMIN_NO)
 	    VALUES (SEQ_BAN_NO.NEXTVAL, #{reason}, #{targetNo}, #{targetType}, 1) </insert>
 	
+	<!-- 정지 처리 상태 변경 -->
 	<update id="updateTargetStatus" parameterType="map">
 	    <choose>
 	        <when test="targetType == 'COMPANY'">
