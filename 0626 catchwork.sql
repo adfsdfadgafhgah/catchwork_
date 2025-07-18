@@ -1302,7 +1302,7 @@ INSERT INTO CORP_INFO (
   CORP_CEO_NAME, CORP_ADDR, CORP_OPEN_DATE, CORP_HOME_LINK, CORP_BM, CORP_DETAIL,
   CORP_BENEFIT, CORP_BENEFIT_DETAIL
 ) VALUES (
-  0, TO_DATE('2020-03-01','YYYY-MM-DD'), 10001, '1101010001', 'IT', '오픈소스랩(주)',
+  0, TO_DATE('2020-03-01','YYYY-MM-DD'), SEQ_CORP_NO.nextval, '1101010001', 'IT', '오픈소스랩(주)',
   '홍길동', '서울 강남구 테헤란로 123', TO_DATE('2015-04-15','YYYY-MM-DD'), 'https://opensource-lab.co.kr', 
   '클라우드 플랫폼 개발',
   '클라우드 기반 오픈소스 플랫폼을 개발하는 스타트업입니다.',
@@ -1316,7 +1316,7 @@ INSERT INTO CORP_INFO (
   CORP_CEO_NAME, CORP_ADDR, CORP_OPEN_DATE, CORP_HOME_LINK, CORP_BM, CORP_DETAIL,
   CORP_BENEFIT, CORP_BENEFIT_DETAIL
 ) VALUES (
-  0, TO_DATE('2021-06-01','YYYY-MM-DD'), 10002, '1101010002', '제조업', '에코테크솔루션',
+  0, TO_DATE('2021-06-01','YYYY-MM-DD'), SEQ_CORP_NO.nextval, '1101010002', '제조업', '에코테크솔루션',
   '김유진', '인천 남동구 산업로 456', TO_DATE('2010-01-01','YYYY-MM-DD'), 'https://ecotech.co.kr',
   '친환경 제품 제조',
   '플라스틱 대체 소재를 제조·유통하는 그린테크 기업입니다.',
@@ -1330,7 +1330,7 @@ INSERT INTO CORP_INFO (
   CORP_CEO_NAME, CORP_ADDR, CORP_OPEN_DATE, CORP_HOME_LINK, CORP_BM, CORP_DETAIL,
   CORP_BENEFIT, CORP_BENEFIT_DETAIL
 ) VALUES (
-  0, TO_DATE('2022-09-01','YYYY-MM-DD'), 10003, '1101010003', '교육', '러닝브릿지',
+  0, TO_DATE('2022-09-01','YYYY-MM-DD'), SEQ_CORP_NO.nextval, '1101010003', '교육', '러닝브릿지',
   '이서현', '경기 성남시 분당구 학원로 89', TO_DATE('2018-09-01','YYYY-MM-DD'), 'https://learningbridge.kr',
   '온라인 교육 플랫폼',
   '직무 기반 학습 콘텐츠를 제공하는 에듀테크 기업입니다.',
