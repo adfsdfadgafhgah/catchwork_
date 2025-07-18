@@ -62,8 +62,22 @@
     SET MEM_PW = #{memPw}
     WHERE MEM_NO = #{memNo}
   </update>
+  
+  <!-- memNo로 CORP_NO 조회 -->
+  <select id="getCorpNoByMemNo" resultType="string">
+    SELECT CORP_NO
+    FROM CORP_MEM
+    WHERE MEM_NO = #{memNo}
+  </select>
 
-  <!-- 회원 탈퇴 -->
+  <!-- corpNo로 같은 기업 회원 memNo 리스트 조회 -->
+  <select id="getMemNosByCorpNo" resultType="string">
+    SELECT MEM_NO
+    FROM CORP_MEM
+    WHERE CORP_NO = #{corpNo}
+  </select>
+
+   <!-- 회원 탈퇴 처리: 단일 회원 -->
   <update id="withdraw">
     UPDATE MEMBER
     SET MEM_STATUS = 1,
@@ -71,4 +85,18 @@
     WHERE MEM_NO = #{memNo}
   </update>
 
+  <!-- 기업 상태 업데이트 -->
+   <update id="updateCorpInfoStatus">
+    UPDATE CORP_INFO
+    SET CORP_STATUS = 1
+    WHERE CORP_NO = #{corpNo}
+  </update>
+
+  <!-- 대표 여부 확인 -->
+  <select id="getRoleCheckByMemNo" resultType="string">
+    SELECT CORP_MEM_ROLE_CHECK
+    FROM CORP_MEM
+    WHERE MEM_NO = #{memNo}
+  </select>
+	
 </mapper>
