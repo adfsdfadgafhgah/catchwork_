@@ -1,4 +1,3 @@
-import React from "react";
 import { NavLink } from "react-router-dom";
 import { useAuthStore } from "../../stores/authStore"; // zustand 호출
 import styles from "./Header.module.css";
