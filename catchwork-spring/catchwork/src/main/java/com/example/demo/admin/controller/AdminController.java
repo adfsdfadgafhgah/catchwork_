@@ -88,6 +88,7 @@ public class AdminController {
 	/** 로그인 여부
 	 * @param adminId
 	 * @return
+	 * @author 민장
 	 */
 	@GetMapping("check")
 	public ResponseEntity<?> checkAdmin(@CookieValue(value = "adminId", required = false) String adminId) {
@@ -100,6 +101,7 @@ public class AdminController {
 	/** 로그아웃
 	 * @param response
 	 * @return
+	 * @author 민장
 	 */
 	@GetMapping("/logout")
 	public ResponseEntity<?> logoutAdmin(HttpServletResponse response) {
@@ -108,6 +110,27 @@ public class AdminController {
 	    cookie.setMaxAge(0); // 즉시 만료
 	    response.addCookie(cookie);
 	    return ResponseEntity.ok(Map.of("message", "Logout complete"));
+	}
+	
+	/** 관리자 정보 조회
+	 * @param adminId
+	 * @return
+	 * @author 민장
+	 */
+	@GetMapping("/info")
+	public ResponseEntity<?> adminInfo(@CookieValue(value = "adminId", required = false) String adminId) {
+	    if (adminId == null) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+	                .body(Map.of("error", "로그인 상태 아님"));
+	    }
+
+	    Admin admin = adminService.adminInfo(adminId);
+	    if (admin == null) {
+	        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+	                .body(Map.of("error", "관리자 정보 없음"));
+	    }
+
+	    return ResponseEntity.ok(admin);
 	}
 	
 	/**

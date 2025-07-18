@@ -13,11 +13,15 @@ import com.example.demo.report.model.dto.Report;
 import com.example.demo.admin.model.dto.ReportSearchCriteria;
 import com.example.demo.admin.model.dto.ReportList;
 import com.example.demo.admin.model.dto.SupportList;
+import com.example.demo.admin.model.entity.AdminEntity;
 
 @Mapper
 public interface AdminMapper {
 	Admin findByAdminId(String adminId);
 
+
+	Admin adminInfo(String adminId);
+	
 	/**
 	 * 전체 문의 목록 조회 (관리자용)
 	 * 
@@ -93,5 +97,6 @@ public interface AdminMapper {
 	 * @author 민장
 	 */
 	List<Map<String, Object>> selectRecentSupportChart();
+
 
 }
