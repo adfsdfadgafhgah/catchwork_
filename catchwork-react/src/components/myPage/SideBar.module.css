@@ -6,15 +6,67 @@
   border-right: 1px solid #e0e0e0;
   height: 100vh;
   position: fixed;
-  top: 1;
+  top: 0;
   left: 0;
+  padding-top: 120px;
   overflow-y: auto;
   box-shadow: var(--box-shadow);
-  z-index: 10;
+  z-index: 10000;
 }
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 100vh;
+  background-color: white;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+
+/* 사이드바 닫기 */
+
+.sidebar.isClose {
+  transform: translateX(-220px);
+  min-width: 80px;
+}
+
+.isClose .toggleButton i {
+  transform: rotate(-90deg);
+}
+
+.toggleButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+}
+
+.toggleButton:hover {
+  background-color: #ddd;
+}
+
+.toggleButton i {
+  font-size: 24px;
+  color: var(--text);
+  transition: transform 0.2s ease;
+}
+
+/* 사이드바 속성 */
 
 .sidebarContent {
   padding: 20px;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .sidebarTitle {

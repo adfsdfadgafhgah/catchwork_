@@ -11,7 +11,7 @@ const defaultRegex = {
   memPw: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/,
   memEmail: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   memTel: /^(\d{2,3})-(\d{3,4})-(\d{4})$/,
-  memName: /^[가-힣a-zA-Z]{2,30}$/,
+  memName: /^[가-힣a-zA-Z]{2,}( [가-힣a-zA-Z]{1,})*$/,
   memNickname: /^[a-zA-Z0-9가-힣_]{2,20}$/,
   memBirthday: /.+/,
   memGender: /^(M|F)$/,
@@ -19,12 +19,12 @@ const defaultRegex = {
   // 대표자(ceo) 필드
   ceoId: /^[a-zA-Z0-9]{5,20}$/,
   ceoPw: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,20}$/,
-  ceoName: /^[가-힣a-zA-Z]{2,30}$/,
+  ceoName: /^[가-힣a-zA-Z]{2,}( [가-힣a-zA-Z]{1,})*$/,
   ceoTel: /^\d{2,3}-\d{3,4}-\d{4}$/,
   ceoEmail: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   // 기업 필드
   corpRegNo: /^\d{10}$/,
-  corpCEOName: /^[가-힣a-zA-Z]{2,30}$/,
+  corpCEOName: /^[가-힣a-zA-Z]{2,}( [가-힣a-zA-Z]{1,})*$/,
   corpName: /^[가-힣a-zA-Z0-9 ]{2,50}$/,
   corpAddr: /.+/,
   corpHomeLink: /^https?:\/\/.+/, // http(s)로 시작
@@ -97,6 +97,11 @@ export default function useSignUpFormHandler(initialValues, config) {
   const handleCheckId = async () => {
     if (!formData[config.idField]?.trim())
       return alert("아이디를 입력해주세요.");
+
+    // 아이디 유효성 불만족 시 경고 메시지 출력
+    if (!validateField(config.idField, formData[config.idField]))
+      return alert("올바른 아이디 형식을 입력해주세요.");
+
     const available = await checkDuplicateId(formData[config.idField]);
     alert(
       available ? "사용 가능한 아이디입니다." : "이미 사용 중인 아이디입니다."
@@ -107,6 +112,11 @@ export default function useSignUpFormHandler(initialValues, config) {
   const handleCheckNickname = async () => {
     if (!formData[config.nicknameField]?.trim())
       return alert("닉네임을 입력해주세요.");
+
+    // 닉네임 유효성 불만족 시 경고 메시지 출력
+    if (!validateField(config.nicknameField, formData[config.nicknameField]))
+      return alert("올바른 닉네임 형식을 입력해주세요.");
+
     const available = await checkDuplicateNickname(
       formData[config.nicknameField]
     );

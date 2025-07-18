@@ -19,7 +19,6 @@ import com.example.demo.auth.model.dto.Member;
 import com.example.demo.corp.recruit.model.dto.Recruit;
 import com.example.demo.common.util.Utility;
 import com.example.demo.member.board.model.dto.Board;
-import com.example.demo.member.board.model.dto.Comment;
 import com.example.demo.member.company.model.dto.CompanyInfo;
 import com.example.demo.member.myPage.myInfo.model.mapper.MyInfoMapper;
 
@@ -131,24 +130,52 @@ public class MyInfoServiceImpl implements MyInfoService {
 	// 즐겨찾기 기업 목록 조회
 	@Override
 	public List<CompanyInfo> getFavCorpList(Map<String, Object> paramMap) {
+		Integer page = (Integer) paramMap.get("page");
+		Integer size = (Integer) paramMap.get("size");
+		Integer offset = null;
+		if(page!=null) {			
+		offset = (page - 1) * size;
+		}
+		paramMap.put("offset", offset);
 		return myInfoMapper.getFavCorpList(paramMap);
 	}
 
 	// 즐겨찾기 게시글 목록 조회
 	@Override
 	public List<Board> getFavBoardList(Map<String, Object> paramMap) {
+		Integer page = (Integer) paramMap.get("page");
+		Integer size = (Integer) paramMap.get("size");
+		Integer offset = null;
+		if(page!=null) {			
+		offset = (page - 1) * size;
+		}
+		paramMap.put("offset", offset);
 		return myInfoMapper.getFavBoardList(paramMap);
 	}
 
 	// 내가 쓴 게시글 목록 조회
 	@Override
 	public List<Board> getMyBoardList(Map<String, Object> paramMap) {
+		Integer page = (Integer) paramMap.get("page");
+		Integer size = (Integer) paramMap.get("size");
+		Integer offset = null;
+		if(page!=null) {			
+		offset = (page - 1) * size;
+		}
+		paramMap.put("offset", offset);
 		return myInfoMapper.getMyBoardList(paramMap);
 	}
 
 	// 내가 쓴 댓글 목록 조회
 	@Override
 	public List<Map<String, Object>> getMyCommentList(Map<String, Object> paramMap) {
+		Integer page = (Integer) paramMap.get("page");
+		Integer size = (Integer) paramMap.get("size");
+		Integer offset = null;
+		if(page!=null) {			
+		offset = (page - 1) * size;
+		}
+		paramMap.put("offset", offset);
 		return myInfoMapper.getMyCommentList(paramMap);
 	}	
 
