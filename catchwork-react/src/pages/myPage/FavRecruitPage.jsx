@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
 import SectionHeader from "../../components/common/SectionHeader";
 import ScrollToTopButton from "../../components/common/ScrollToTopButton";
-import styles from "../Major/MemberRecruitListPage.module.css";
+import styles from "../major/MemberRecruitListPage.module.css";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 const FavRecruitPage = () => {
