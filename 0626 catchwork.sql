@@ -1381,3 +1381,18 @@ INSERT INTO MEMBER VALUES ('M014', 'user5', '$2a$12$MKO46WPx0nilbDoIsSZTDOjQuyST
 INSERT INTO MEMBER VALUES ('M015', 'user6', '$2a$12$MKO46WPx0nilbDoIsSZTDOjQuySTeGn.MVW9mSo9/YkqbR23Iw5x2', NULL, '개인6', '010-3333-1006', 'user6@email.com', NULL, NULL, NULL, SYSDATE, 'Y', 1, 0, NULL, NULL, 0, NULL);
 
 COMMIT;
+
+-- 5분
+DECLARE
+  job_no NUMBER;
+BEGIN
+  DBMS_JOB.SUBMIT(
+    job       => job_no,
+    what      => 'BEGIN DELETE FROM EMAIL_AUTH WHERE AUTH_TIME < SYSDATE - (5/1440); COMMIT; END;',
+    next_date => SYSDATE,
+    interval  => 'SYSDATE + 5/1440'
+  );
+  COMMIT;
+END;
+
+SELECT * FROM EMAIL_AUTH;
