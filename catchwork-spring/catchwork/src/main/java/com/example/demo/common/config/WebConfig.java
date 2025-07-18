@@ -22,10 +22,6 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/static/editor/**")
                 .addResourceLocations("file:/upload/editor/")
                 .setCacheControl(CacheControl.noCache());
-        
-        // 기업 로고 변경
-        registry.addResourceHandler("/upload/company/**")
-        .addResourceLocations("file:///C:/upload/company/");
 
     }
     
