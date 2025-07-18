@@ -248,6 +248,20 @@ export default function WriteRecruitPage() {
                 className={styles.input}
               />
             </div>
+
+            <div className={styles.inputGroup}>
+              <label htmlFor="recruitResultDate" className={styles.label}>
+                합격자 발표일 *
+              </label>
+              <input
+                id="recruitResultDate"
+                type="date"
+                name="recruitResultDate"
+                value={formData.recruitResultDate}
+                onChange={handleChange}
+                className={styles.input}
+              />
+            </div>
           </div>
 
           <div className={styles.inputGroup}>
@@ -425,20 +439,6 @@ export default function WriteRecruitPage() {
               onChange={handleChange}
               className={styles.input}
               placeholder="예: 회사 내규에 따름, 4,000만원 이상"
-            />
-          </div>
-
-          <div className={styles.inputGroup}>
-            <label htmlFor="recruitResultDate" className={styles.label}>
-              합격자 발표일 *
-            </label>
-            <input
-              id="recruitResultDate"
-              type="date"
-              name="recruitResultDate"
-              value={formData.recruitResultDate}
-              onChange={handleChange}
-              className={styles.input}
             />
           </div>
 

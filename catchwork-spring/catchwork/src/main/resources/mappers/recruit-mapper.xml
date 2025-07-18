@@ -186,6 +186,7 @@
 	    <!-- 전체: 마감/진행 중인 것들 -->
 	    <otherwise>
 	      R.RECRUIT_STATUS IN (0, 3)
+	      AND M.MEM_STATUS = 0
 	    </otherwise>
 	    
 	  </choose>
@@ -245,6 +246,8 @@
 	        ORDER BY R.RECRUIT_WRITE_DATE DESC
 	    </otherwise>
 	</choose>
+	
+	OFFSET #{offset} ROWS FETCH NEXT #{pageSize} ROWS ONLY
 	</select>
 	
 	<!-- endDate 지나면 자동으로 마감처리 -->

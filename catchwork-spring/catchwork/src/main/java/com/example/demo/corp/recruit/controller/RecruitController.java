@@ -92,10 +92,12 @@ public class RecruitController {
 	    @RequestParam(name = "query", required = false) String query,
 	    @RequestParam(name = "memNo", required = false) String memNo,
 	    @RequestParam(name = "corpNo", required = false) Integer corpNo,
-	    @RequestParam(name = "corpMemRoleCheck", required = false) String corpMemRoleCheck
+	    @RequestParam(name = "corpMemRoleCheck", required = false) String corpMemRoleCheck,
+	    @RequestParam(name = "page", defaultValue = "1") int page,
+	    @RequestParam(name = "size", defaultValue = "9") int size
 	) {
 		try {
-	        List<Recruit> recruitList = recruitService.getRecruitList(status, sort, writer, query, memNo, corpNo, corpMemRoleCheck);
+	        List<Recruit> recruitList = recruitService.getRecruitList(status, sort, writer, query, memNo, corpNo, corpMemRoleCheck, page, size);
 	        System.out.println("corpNo = " + corpNo);
 	        return ResponseEntity.ok(recruitList);
 	    } catch (Exception e) {

@@ -33,9 +33,6 @@ public class MemRecruitServiceImpl implements MemRecruitService {
 	@Override
 	public List<Recruit> getRecruitList(Map<String, Object> paramMap) {
 		
-		// 자동 마감 처리 (endDate < 오늘이면서 아직 status = 0인 공고들 → 3으로 바꾸기)
-	    memRecruitMapper.autoCloseRecruit();
-	    
 	    return memRecruitMapper.selectRecruitList(paramMap);
 	}
 

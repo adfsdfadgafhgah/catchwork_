@@ -74,8 +74,9 @@
 .textarea,
 .select {
   /* select도 포함 */
+  box-sizing: border-box; /* 패딩과 테두리를 포함하여 크기 계산 */
   width: 100%;
-  padding: 12px 14px;
+  padding: 8px;
   font-size: 15px;
   border: 1px solid var(--stroke-color1);
   border-radius: 8px;
