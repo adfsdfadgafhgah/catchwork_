@@ -29,7 +29,6 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  flex-wrap: wrap; /* 기존 코드와 동일하게 유지 */
 }
 
 /* 프로필 이미지 컨테이너 (새로 추가) */
@@ -61,9 +60,15 @@
 /* 프로필 정보 (이름 등) */
 .profileInfo {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   padding: 0; /* padding 제거 */
+}
+
+.profileInfoLabel {
+  /* font-size: 1.5rem;
+  font-weight: 600; */
+  color: var(--text);
 }
 
 .profileInfo h1 {
@@ -71,6 +76,12 @@
   font-weight: 600;
   color: var(--text);
   margin: 0;
+}
+
+.profileName {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
 }
 
 /* 정보 카드 */
