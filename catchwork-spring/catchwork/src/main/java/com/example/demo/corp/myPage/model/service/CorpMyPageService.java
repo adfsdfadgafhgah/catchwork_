@@ -14,5 +14,8 @@ public interface CorpMyPageService {
 
     // 비밀번호 확인
 	boolean verifyPassword(String memNo, String inputPassword);
+	
+	// 탈퇴하기
+	void withdrawCorpMember(String memNo);
 
 }	

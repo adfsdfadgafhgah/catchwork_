@@ -34,7 +34,9 @@
   border: 1px solid #e0e0e0;
   border-radius: 4px;
   padding: 15px;
-  background: #f9f9f9;
+  background: var(--input-color);
+  font-size: 14px; /* 전체 약관 텍스트 기본 크기 */
+  line-height: 1.6;
 }
 
 .termsText {
@@ -45,10 +47,11 @@
   font-weight: 600;
   margin-bottom: 8px;
   color: var(--main-color);
+  font-size: 16px; /* 약관 조항 제목 */
 }
 
-.termsText p:last-child {
-  font-size: 14px;
+.termsText p:not(:first-child) {
+  font-size: 15px;
   line-height: 1.5;
   margin-bottom: 0;
 }
@@ -63,6 +66,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 14px; /* 체크박스 라벨 글씨 크기 */
 }
 
 .checkboxContainer input[type="checkbox"] {
@@ -77,7 +81,6 @@
 }
 
 .checkboxContainer label {
-  font-size: 14px;
   cursor: pointer;
 }
 
@@ -103,7 +106,7 @@
 .formInput:focus {
   outline: none;
   border-color: var(--main-color);
-  box-shadow: 0 0 0 2px rgba(70, 181, 171, 0.2);
+  box-shadow: var(--box-shadow);
 }
 
 .formInput::placeholder {
@@ -112,7 +115,7 @@
 
 .submitBtn {
   background: var(--main-color);
-  color: white;
+  color: var(--white);
   border: none;
   padding: 12px 24px;
   border-radius: 4px;
@@ -144,5 +147,14 @@
 
   .withdrawTermsBox {
     max-height: 150px;
+    font-size: 13px; /* 모바일에서 약간 작게 */
+  }
+
+  .termsText p:first-child {
+    font-size: 15px;
+  }
+
+  .submitBtn {
+    font-size: 14px;
   }
 }

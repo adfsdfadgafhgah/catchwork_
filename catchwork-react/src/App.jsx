@@ -350,7 +350,7 @@ const router = createBrowserRouter([
   {
     // 상세 페이지 경로 미리 추가(주석)
     path: "/admin",
-    element: <AdminRoute />,
+    element: <AdminPage />,
     children: [
       { index: true, element: <AdminMainPage /> },
       { path: "*", element: <NotFound /> },

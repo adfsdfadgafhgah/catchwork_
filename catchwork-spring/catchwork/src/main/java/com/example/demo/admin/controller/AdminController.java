@@ -76,7 +76,7 @@ public class AdminController {
 		}
 	}
 
-	@GetMapping("/admin/check")
+	@GetMapping("check")
 	public ResponseEntity<?> checkAdmin(@CookieValue(value = "adminId", required = false) String adminId) {
 	    if (adminId == null) {
 	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(Map.of("error", "Not logged in"));
