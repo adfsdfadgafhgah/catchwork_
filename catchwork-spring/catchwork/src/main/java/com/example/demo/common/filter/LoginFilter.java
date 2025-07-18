@@ -101,17 +101,17 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
         RefreshTokenEntity tokenEntity = new RefreshTokenEntity(username, refreshToken, expiry);
         refreshTokenRepository.save(tokenEntity);
         
-        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-        refreshCookie.setHttpOnly(true);			// JS에서 접근 불가
-        
-//		나중에 변경할 것 나중에 변경할 것 나중에 변경할 것 나중에 변경할 것 
-        refreshCookie.setSecure(false);				// HTTPS에서만 전송
-//		나중에 변경할 것 나중에 변경할 것 나중에 변경할 것 나중에 변경할 것 
-        
-        refreshCookie.setPath("/");					// 전체 경로 유효
-        refreshCookie.setMaxAge(7 * 24 * 60 * 60);	// 7일
+//        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
+//        refreshCookie.setHttpOnly(true);			// JS에서 접근 불가
+//        refreshCookie.setSecure(true);				// HTTPS에서만 전송
+//        refreshCookie.setPath("/");					// 전체 경로 유효
+//        refreshCookie.setMaxAge(7 * 24 * 60 * 60);	// 7일
 
-        
+        String refreshTokenValue = refreshToken;
+        String cookieString = "refreshToken=" + refreshTokenValue +
+            "; Path=/; HttpOnly; Secure; SameSite=None; Max-Age=" + (7 * 24 * 60 * 60);
+        response.setHeader("Set-Cookie", cookieString);
+
         // 응답
         response.addCookie(refreshCookie);
         response.addHeader("Authorization", "Bearer " + accessToken);
