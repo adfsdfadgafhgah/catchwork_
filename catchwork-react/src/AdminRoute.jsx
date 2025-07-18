@@ -18,7 +18,7 @@ const AdminRoute = () => {
   }
 
   if (!isAuth) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/signin" replace />;
   }
 
   return <AdminPage />;
