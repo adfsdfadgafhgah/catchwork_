@@ -13,6 +13,9 @@ export default function AdminReportDetailPage() {
   const [sanctionMemo, setSanctionMemo] = useState(""); // 처리 메모 (제재 사유)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const hasUnprocessedReports = reports.some(
+    (report) => report.reportStatus === "N"
+  );
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -131,7 +134,6 @@ export default function AdminReportDetailPage() {
           <p>
             <strong>타입:</strong> {targetInfo?.type}
           </p>
-          {/* 수정: targetInfo에서 id 대신 no를 사용합니다. (백엔드 응답에 맞춰야 함) */}
           <p>
             <strong>고유번호:</strong> {targetInfo?.no}
           </p>
@@ -160,7 +162,7 @@ export default function AdminReportDetailPage() {
           onClick={handleContentSanction}
           className={styles.sanctionButton}
           // '회원' 자체를 신고한 경우에는 콘텐츠 정지 버튼이 의미 없으므로 비활성화
-          disabled={targetType === "MEMBER"}
+          disabled={targetType === "MEMBER" || hasUnprocessedReports}
         >
           {targetType === "COMPANY"
             ? "기업 정보 정지"
@@ -173,12 +175,19 @@ export default function AdminReportDetailPage() {
           // '기업' 정보 자체를 신고했거나, 작성자 정보가 없는 경우 비활성화
           disabled={
             targetType === "COMPANY" ||
-            (!targetInfo.authorNo && targetType !== "MEMBER")
+            (!targetInfo.authorNo && targetType !== "MEMBER") ||
+            hasUnprocessedReports
           }
         >
           {targetType === "MEMBER" ? "회원 정지" : "작성자 정지"}
         </button>
       </div>
+
+      {hasUnprocessedReports && (
+        <p className={styles.warningMessage}>
+          ※ 모든 개별 신고를 '처리 완료'해야 대상을 정지할 수 있습니다.
+        </p>
+      )}
 
       <div className={styles.section}>
         <h3>신고 상세 내용 (총 {reports.length}건)</h3>

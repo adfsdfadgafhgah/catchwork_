@@ -13,6 +13,16 @@ export default function AdminSupportDetailPage() {
   const [error, setError] = useState(null);
   const [answerContent, setAnswerContent] = useState(""); // 답변 내용
 
+  /**
+   * 날짜시간 문자열에서 'T'를 공백으로 변환하는 함수
+   * @param {string} dateTimeString - 예: "2025-07-17T16:05:58"
+   * @returns {string} - 예: "2025-07-17 16:05:58"
+   */
+  const formatDateTime = (dateTimeString) => {
+    if (!dateTimeString) return ""; // 날짜가 없으면 빈 문자열 반환
+    return dateTimeString.replace("T", " ");
+  };
+
   // 문의 상세 데이터 로드
   useEffect(() => {
     fetchSupportDetail();
@@ -132,7 +142,9 @@ export default function AdminSupportDetailPage() {
         </div>
         <div className={styles.infoRow}>
           <span className={styles.label}>작성일:</span>
-          <span className={styles.value}>{support.supportDate}</span>
+          <span className={styles.value}>
+            {formatDateTime(support.supportDate)}
+          </span>
         </div>
         <div className={styles.infoRow}>
           <span className={styles.label}>상태:</span>
@@ -156,7 +168,9 @@ export default function AdminSupportDetailPage() {
           support.supportAnswerDate && ( // 답변 완료 상태일 때만 답변 완료일 표시
             <div className={styles.infoRow}>
               <span className={styles.label}>답변 완료일:</span>
-              <span className={styles.value}>{support.supportAnswerDate}</span>
+              <span className={styles.value}>
+                {formatDateTime(support.supportAnswerDate)}
+              </span>
             </div>
           )}
       </div>

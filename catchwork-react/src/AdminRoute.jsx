@@ -7,7 +7,8 @@ const AdminRoute = () => {
   const [isAuth, setIsAuth] = useState(null); // null: 로딩 중, true/false: 로그인 상태
 
   useEffect(() => {
-    axiosApi.get("/admin/check", { withCredentials: true })
+    axiosApi
+      .get("/admin/check", { withCredentials: true })
       .then(() => setIsAuth(true))
       .catch(() => setIsAuth(false));
   }, []);
