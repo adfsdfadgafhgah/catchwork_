@@ -2,10 +2,12 @@ import React from "react";
 
 import { useAdminTitle, handleAdminLogout } from "../../hooks/admin/headerUtils";
 import styles from "./AdminHeader.module.css";
+import useAdminInfo from "../../hooks/admin/useAdminInfo";
 
 const AdminHeader = () => {
   const title = useAdminTitle();
   const handleLogout = handleAdminLogout();
+  const { adminInfo, loading } = useAdminInfo();
 
   return (
     <header className={styles["admin-header"]}>
@@ -16,7 +18,9 @@ const AdminHeader = () => {
           </h1>
         </div>
         <div className={styles["admin-info"]}>
-          <p className={styles["admin-name"]}>관리자</p>
+          <p className={styles["admin-name"]}>
+            {loading ? "(◕ᴗ̵◕)" : adminInfo?.adminNickname || "관리자"}
+          </p>
           <button
             className={styles["admin-logout"]}
             onClick={handleLogout}

@@ -73,6 +73,16 @@ public class AdminServiceImpl implements AdminService {
 	}
 
 	/**
+	 * 관리자 정보 조회
+	 * 
+	 * @author 민장
+	 */
+	@Override
+	public Admin adminInfo(String adminId) {
+		return adminMapper.adminInfo(adminId);
+	}
+
+	/**
 	 * 전체 문의 목록 조회 (관리자용)
 	 * 
 	 * @author BAEBAE

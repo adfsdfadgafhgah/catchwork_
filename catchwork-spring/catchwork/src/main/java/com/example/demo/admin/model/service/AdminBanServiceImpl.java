@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,13 +12,12 @@ import com.example.demo.admin.model.dto.AdminBan;
 import com.example.demo.admin.model.dto.AdminBanSearch;
 import com.example.demo.admin.model.mapper.AdminBanMapper;
 
-import lombok.RequiredArgsConstructor;
 
 @Service
-@RequiredArgsConstructor
 public class AdminBanServiceImpl implements AdminBanService {
 
-    private final AdminBanMapper mapper;
+	@Autowired
+    private AdminBanMapper mapper;
 
     @Override
     public int selectBanCount(Map<String, Object> paramMap) {
