@@ -5,42 +5,67 @@ import MyCommentList from "../../components/myPage/MyCommentList";
 import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 import BoardCss from "../major/BoardListPage.module.css";
 import SectionHeader from "../../components/common/SectionHeader";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const MyCommentListPage = () => {
   const { memNo } = useOutletContext();
-  const [isloading, setIsLoading] = useState(true); // 로딩 상태
+  // const [isloading, setIsLoading] = useState(true); // 로딩 상태
   const [searchTerm, setSearchTerm] = useState(""); // 검색
   const [comments, setComments] = useState([]); // 댓글 목록 조회
+
+  const [page, setPage] = useState(1); // 페이지 번호
+  const [hasMore, setHasMore] = useState(true); // 더 불러올 데이터 존재 여부
 
   useEffect(() => {
     getMyCommentList();
   }, [memNo]);
 
+  // memNo가 변경될 때마다 API 호출
+  useEffect(() => {
+    setComments([]);
+    setPage(1);
+    setHasMore(true);
+    getMyCommentList(1, true);
+  }, [searchTerm, memNo]);
+
+  const fetchMoreData = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    getMyCommentList(nextPage);
+  };
+
   // 댓글 목록 조회
-  const getMyCommentList = async () => {
+  const getMyCommentList = async (pageNum = 1, isNewSearch = false) => {
     const resp = await axiosApi.get("/myPage/myCommentList", {
-      params: { memNo: memNo, query: searchTerm },
+      params: { memNo: memNo, query: searchTerm, page: pageNum, size: 10 },
     });
     if (resp.status === 200) {
-      console.log("resp.data : " + JSON.stringify(resp.data));
-      setComments(resp.data);
+      if (isNewSearch) {
+        setComments(resp.data);
+      } else {
+        setComments((prev) => [...prev, ...resp.data]);
+      }
+      setHasMore(resp.data.length === 10);
     }
-    setIsLoading(false);
+    // setIsLoading(false);
   };
 
   // 검색
   const handleSearch = (e) => {
-    if (e.target.value.trim() !== "" && e.key === "Enter") {
+    if (e.key === "Enter") {
       setSearchTerm(e.target.value.trim());
       getMyCommentList();
     }
   };
 
   return (
-    <div className={BoardCss.boardListPage}>
+    <div
+      className={BoardCss.boardListPage}
+      style={{ margin: 0, width: "100%" }}
+    >
       {/* 섹션 헤더 */}
-      <SectionHeader title="취준진담" />
-      <div className={BoardCss.controls}>
+      <SectionHeader title="내가 작성한 댓글" />
+      <div className={BoardCss.controls} style={{ justifyContent: "flex-end" }}>
         <div className="search-box">
           <i className="fa-solid fa-magnifying-glass"></i>
           <input
@@ -52,19 +77,23 @@ const MyCommentListPage = () => {
           />
         </div>
       </div>
-      {isloading ? (
-        <div className={BoardCss.loading}>
-          <i className="fa-solid fa-spinner fa-spin"></i>
-        </div>
-      ) : comments.length > 0 ? (
+
+      <InfiniteScroll
+        dataLength={comments.length}
+        next={fetchMoreData}
+        hasMore={hasMore}
+        loader={<h4>Loading...</h4>}
+        endMessage={
+          <p className={BoardCss.noResult}>더 이상 댓글이 없습니다.</p>
+        }
+      >
         <MyCommentList
           comments={comments}
           memNo={memNo}
           onRefresh={getMyCommentList}
         />
-      ) : (
-        <p>작성한 댓글이 없습니다</p>
-      )}
+      </InfiniteScroll>
+
       <ScrollToTopButton />
     </div>
   );

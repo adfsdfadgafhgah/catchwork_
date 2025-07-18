@@ -17,7 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.auth.model.dto.Member;
 import com.example.demo.member.board.model.dto.Board;
-import com.example.demo.member.board.model.dto.Comment;
 import com.example.demo.corp.recruit.model.dto.Recruit;
 import com.example.demo.member.company.model.dto.CompanyInfo;
 import com.example.demo.member.myPage.myInfo.model.service.MyInfoService;
@@ -157,8 +156,15 @@ public class MyInfoController {
 			@RequestParam(value = "corpType", required = false, defaultValue = "all") String corpType,
 			@RequestParam(value = "recruitType", required = false, defaultValue = "all") String recruitType,
 			@RequestParam(value = "query", required = false, defaultValue = "") String query,
-			@RequestParam(value = "memNo", required = false) String memNo
+			@RequestParam(value = "memNo", required = false) String memNo,
+			@RequestParam(name = "page", required = false) Integer page,
+            @RequestParam(name = "size", required = false) Integer size
 	) {
+		Integer offset = null;
+		if(page!=null) {
+			offset = (page - 1) * size;
+		}
+		
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("recruitJobName", recruitJobName);
 		paramMap.put("recruitJobArea", recruitJobArea);
@@ -168,6 +174,8 @@ public class MyInfoController {
 		paramMap.put("recruitType", recruitType);
 		paramMap.put("query", query);
 		paramMap.put("memNo", memNo);
+		paramMap.put("offset", offset);
+		paramMap.put("size", size);
 
 		List<Recruit> recruitList = myInfoService.getFavRecruitList(paramMap);
 		return ResponseEntity.ok(recruitList);
@@ -177,11 +185,17 @@ public class MyInfoController {
 	@GetMapping("favCorpList")
 	public ResponseEntity<List<CompanyInfo>> getFavCorpList(
 			@RequestParam(value = "query", required = false, defaultValue = "") String query,
-			@RequestParam(value = "memNo", required = false) String memNo
+			@RequestParam(value = "memNo", required = false) String memNo,
+
+			// 무한 스크롤
+			@RequestParam(name = "page", required = false) Integer page,
+			@RequestParam(name = "size", required = false) Integer size
 	) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("query", query);
 		paramMap.put("memNo", memNo);
+		paramMap.put("page", page);
+		paramMap.put("size", size);
 
 		List<CompanyInfo> corpList = myInfoService.getFavCorpList(paramMap);
 		return ResponseEntity.ok(corpList);
@@ -192,12 +206,18 @@ public class MyInfoController {
 	public ResponseEntity<List<Board>> getFavBoardList(
 			@RequestParam(value = "query", required = false, defaultValue = "") String query,
 			@RequestParam(value = "memNo", required = false) String memNo,
-			@RequestParam(name = "sort") String sort
+			@RequestParam(name = "sort") String sort,
+
+			// 무한 스크롤
+			@RequestParam(name = "page", required = false) Integer page,
+			@RequestParam(name = "size", required = false) Integer size
 	) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("query", query);
 		paramMap.put("memNo", memNo);
 		paramMap.put("sort", sort);
+		paramMap.put("page", page);
+		paramMap.put("size", size);
 
 		List<Board> boardList = myInfoService.getFavBoardList(paramMap);
 		return ResponseEntity.ok(boardList);
@@ -208,12 +228,18 @@ public class MyInfoController {
 	public ResponseEntity<List<Board>> getMyBoardList(
 			@RequestParam(value = "query", required = false, defaultValue = "") String query,
 			@RequestParam(value = "memNo", required = false) String memNo,
-			@RequestParam(name = "sort") String sort
+			@RequestParam(name = "sort") String sort,
+
+			// 무한 스크롤
+			@RequestParam(name = "page", required = false) Integer page,
+			@RequestParam(name = "size", required = false) Integer size
 	) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("query", query);
 		paramMap.put("memNo", memNo);
 		paramMap.put("sort", sort);
+		paramMap.put("page", page);
+		paramMap.put("size", size);
 
 		List<Board> boardList = myInfoService.getMyBoardList(paramMap);
 		return ResponseEntity.ok(boardList);
@@ -223,11 +249,17 @@ public class MyInfoController {
 	@GetMapping("myCommentList")
 	public ResponseEntity<List<Map<String, Object>>> getMyCommentList(
 			@RequestParam(value = "query", required = false, defaultValue = "") String query,
-			@RequestParam(value = "memNo", required = false) String memNo
+			@RequestParam(value = "memNo", required = false) String memNo,
+
+			// 무한 스크롤
+			@RequestParam(name = "page", required = false) Integer page,
+			@RequestParam(name = "size", required = false) Integer size
 	) {
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("query", query);
 		paramMap.put("memNo", memNo);
+		paramMap.put("page", page);
+		paramMap.put("size", size);
 
 		List<Map<String, Object>> commentList = myInfoService.getMyCommentList(paramMap);
 		System.out.println("commentList : " + commentList);
@@ -244,8 +276,15 @@ public class MyInfoController {
 		@RequestParam(value = "corpType", required = false, defaultValue = "all") String corpType,
 		@RequestParam(value = "recruitType", required = false, defaultValue = "all") String recruitType,
 		@RequestParam(value = "query", required = false, defaultValue = "") String query,
-		@RequestParam(value = "memNo", required = false) String memNo
+		@RequestParam(value = "memNo", required = false) String memNo,
+		@RequestParam(name = "page", required = false) Integer page,
+        @RequestParam(name = "size", required = false) Integer size
 	) {	
+		Integer offset = null;
+		if(page!=null) {
+			offset = (page - 1) * size;
+		}
+		
 		Map<String, Object> paramMap = new HashMap<>();
 		paramMap.put("recruitJobName", recruitJobName);
 		paramMap.put("recruitJobArea", recruitJobArea);
@@ -255,6 +294,8 @@ public class MyInfoController {
 		paramMap.put("recruitType", recruitType);
 		paramMap.put("query", query);
 		paramMap.put("memNo", memNo);
+		paramMap.put("offset", offset);
+		paramMap.put("size", size);
 
 		List<Recruit> recruitList = myInfoService.getMyRecruitList(paramMap);
 		return ResponseEntity.ok(recruitList);

@@ -5,6 +5,7 @@ import { NavLink, useLocation } from "react-router-dom";
 const SideBar = () => {
   // 주소값
   const location = useLocation();
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // 열린 메뉴
   const [expandedMenu, setExpandedMenu] = useState({
@@ -21,13 +22,39 @@ const SideBar = () => {
     }));
   };
 
+  // 페이지 상단으로 이동
+  const handleMoveToTop = () => {
+    window.scrollTo({ top: 0 });
+  };
+
+  // 사이드바 열기/닫기
+  const handleOpenSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  if (isSidebarOpen) {
+    return (
+      <div className={`${styles.sidebar} ${styles.isClose}`}>
+        <div className={styles.sidebarContent}>
+          <button onClick={handleOpenSidebar} className={styles.toggleButton}>
+            <i className="material-icons">keyboard_arrow_down</i>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className={styles.sidebar}>
+    <div className={`${styles.sidebar} ${styles.isOpen}`}>
       <div className={styles.sidebarContent}>
+        <button onClick={handleOpenSidebar} className={styles.toggleButton}>
+          <i className="material-icons">menu</i>
+        </button>
         <h2 className={styles.sidebarTitle}>마이 페이지</h2>
 
         <nav className={styles.sidebarNav}>
           <NavLink
+            onClick={handleMoveToTop}
             to="/mypage/home"
             className={`${styles.navItem} ${
               location.pathname === "/mypage/home" ||
@@ -40,6 +67,7 @@ const SideBar = () => {
           </NavLink>
 
           <NavLink
+            onClick={handleMoveToTop}
             to="/mypage/myrecruit"
             className={`${styles.navItem} ${
               location.pathname === "/mypage/myrecruit" ? styles.active : ""
@@ -66,6 +94,7 @@ const SideBar = () => {
             {expandedMenu.fav && (
               <div className={styles.subNav}>
                 <NavLink
+                  onClick={handleMoveToTop}
                   className={`${styles.subNavItem} ${
                     location.pathname === "/mypage/favrecruit"
                       ? styles.active
@@ -76,6 +105,7 @@ const SideBar = () => {
                   관심 공고
                 </NavLink>
                 <NavLink
+                  onClick={handleMoveToTop}
                   className={`${styles.subNavItem} ${
                     location.pathname === "/mypage/favcompany"
                       ? styles.active
@@ -86,6 +116,7 @@ const SideBar = () => {
                   관심 기업
                 </NavLink>
                 <NavLink
+                  onClick={handleMoveToTop}
                   className={`${styles.subNavItem} ${
                     location.pathname === "/mypage/favboard"
                       ? styles.active
@@ -117,6 +148,7 @@ const SideBar = () => {
             {expandedMenu.myContents && (
               <div className={styles.subNav}>
                 <NavLink
+                  onClick={handleMoveToTop}
                   className={`${styles.subNavItem} ${
                     location.pathname === "/mypage/myboard" ? styles.active : ""
                   }`}
@@ -125,6 +157,7 @@ const SideBar = () => {
                   내가 쓴 게시글
                 </NavLink>
                 <NavLink
+                  onClick={handleMoveToTop}
                   className={`${styles.subNavItem} ${
                     location.pathname === "/mypage/mycomment"
                       ? styles.active
@@ -139,6 +172,7 @@ const SideBar = () => {
           </div>
 
           <NavLink
+            onClick={handleMoveToTop}
             to="/mypage/membership"
             className={`${styles.navItem} ${
               location.pathname === "/mypage/membership" ? styles.active : ""
@@ -165,6 +199,7 @@ const SideBar = () => {
             {expandedMenu.account && (
               <div className={styles.subNav}>
                 <NavLink
+                  onClick={handleMoveToTop}
                   className={`${styles.subNavItem} ${
                     location.pathname === "/mypage/editmyinfo"
                       ? styles.active
@@ -175,6 +210,7 @@ const SideBar = () => {
                   내 정보 변경
                 </NavLink>
                 <NavLink
+                  onClick={handleMoveToTop}
                   className={`${styles.subNavItem} ${
                     location.pathname === "/mypage/changepw"
                       ? styles.active
@@ -185,6 +221,7 @@ const SideBar = () => {
                   비밀번호 변경
                 </NavLink>
                 <NavLink
+                  onClick={handleMoveToTop}
                   className={`${styles.subNavItem} ${
                     location.pathname === "/mypage/withdraw"
                       ? styles.active

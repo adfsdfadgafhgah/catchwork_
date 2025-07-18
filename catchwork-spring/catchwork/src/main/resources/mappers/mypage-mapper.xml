@@ -83,11 +83,13 @@
 	    CI.CORP_NAME,
 	    CI.CORP_TYPE,
 	    CI.CORP_LOGO,
-		  CI.CORP_BENEFIT,
-		  CI.CORP_BENEFIT_DETAIL,
+		CI.CORP_BENEFIT,
+		CI.CORP_BENEFIT_DETAIL,
 			
-		  <!-- 기업회원 정보 -->
-		  M.MEM_NICKNAME AS memNickname,
+		<!-- 기업회원 정보 -->
+		M.MEM_NICKNAME AS memNickname,
+		M.MEM_NAME AS memName,
+		CM.CORP_MEM_DEPT AS corpMemDept,
 	    
 	    <!-- 좋아요 수 -->
 	    (SELECT COUNT(*) FROM FAV_RECRUIT F WHERE F.RECRUIT_NO = R.RECRUIT_NO) AS likeCount,
@@ -112,6 +114,8 @@
     R.RECRUIT_STATUS IN (0)
     <!-- 현재 사용자가 좋아요한 공고만 -->
     AND FR.MEM_NO = #{memNo}
+    <!-- 탈퇴한 회원의 공고는 제외 -->
+    AND R.MEM_NO NOT IN (SELECT MEM_NO FROM MEMBER WHERE MEM_STATUS IN (1, 2))
 
     <!-- 검색어 필터 -->
     <if test="query != null and query != ''">
@@ -170,6 +174,15 @@
     </where>
 
     ORDER BY R.RECRUIT_NO DESC
+   
+	<choose>
+	  <when test="offset != null and size != null">
+	    OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	  </when>
+	  <when test="limit != null">
+	    FETCH FIRST #{limit} ROWS ONLY
+	  </when>
+	</choose>
   </select>
 
   <!-- 즐겨찾기 기업 목록 조회 -->
@@ -212,6 +225,8 @@
       WHERE MEM_NO = #{memNo}
     )
     AND ci.CORP_STATUS = 0
+    <!-- 탈퇴한 회원의 공고는 제외 -->
+    AND ci.MEM_NO NOT IN (SELECT MEM_NO FROM MEMBER WHERE MEM_STATUS IN (1, 2))
 		<if test="query != null and query != ''">
 			AND 
       (
@@ -226,6 +241,11 @@
 		</if>
 		
 		ORDER BY ci.CORP_NAME ASC
+    <choose>
+		  <when test="offset != null and size != null">
+		    OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+		  </when>
+		</choose>
 	</select>
 
   <!-- 즐겨찾기 게시글 목록 조회 -->
@@ -263,6 +283,8 @@
     JOIN FAV_BOARD FB ON B.BOARD_NO = FB.BOARD_NO
     WHERE B.BOARD_STATUS IN (0, 3)
     AND FB.MEM_NO = #{memNo}
+    <!-- 탈퇴한 회원의 게시글은 제외 -->
+    AND B.MEM_NO NOT IN (SELECT MEM_NO FROM MEMBER WHERE MEM_STATUS IN (1, 2))
 	  <if test="query != null and query != ''">
 	    AND (B.BOARD_TITLE LIKE '%' || #{query} || '%'
 	    OR B.BOARD_CONTENT LIKE '%' || #{query} || '%')
@@ -286,6 +308,11 @@
 	      ORDER BY B.BOARD_WRITE_DATE DESC
 	    </otherwise>
 	  </choose>
+    <choose>
+		  <when test="offset != null and size != null">
+		    OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+		  </when>
+		</choose>
   </select>
 
   <!-- 내가 쓴 게시글 목록 조회 -->
@@ -345,6 +372,11 @@
         ORDER BY B.BOARD_WRITE_DATE DESC
       </otherwise>
     </choose>
+    <choose>
+		  <when test="offset != null and size != null">
+		    OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+		  </when>
+		</choose>
   </select> 
 
   <resultMap id="MyCommentDto" type="map">
@@ -395,6 +427,11 @@
       OR (B.BOARD_TITLE LIKE '%' || #{query} || '%'))
     </if>
     ORDER BY C.COMMENT_NO DESC
+    <choose>
+		  <when test="offset != null and size != null">
+		    OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+		  </when>
+		</choose>
   </select>
 
   <!-- 내가 지원한 채용공고 목록 조회 -->
@@ -427,11 +464,13 @@
 	    CI.CORP_NAME,
 	    CI.CORP_TYPE,
 	    CI.CORP_LOGO,
-		  CI.CORP_BENEFIT,
-		  CI.CORP_BENEFIT_DETAIL,
+		CI.CORP_BENEFIT,
+		CI.CORP_BENEFIT_DETAIL,
 			
-		  <!-- 기업회원 정보 -->
-		  M.MEM_NICKNAME AS memNickname,
+		<!-- 기업회원 정보 -->
+		M.MEM_NICKNAME AS memNickname,
+		M.MEM_NAME AS memName,
+		CM.CORP_MEM_DEPT AS corpMemDept,
 	    
 	    <!-- 좋아요 수 -->
 	    (SELECT COUNT(*) FROM FAV_RECRUIT F WHERE F.RECRUIT_NO = R.RECRUIT_NO) AS likeCount,
@@ -455,6 +494,8 @@
     R.RECRUIT_STATUS IN (0, 3)
     <!-- 현재 사용자가 지원한 공고만 -->
     AND RC.MEM_NO = #{memNo}
+    <!-- 탈퇴한 회원의 공고는 제외 -->
+    AND R.MEM_NO NOT IN (SELECT MEM_NO FROM MEMBER WHERE MEM_STATUS IN (1, 2))
 
     <!-- 검색어 필터 -->
     <if test="query != null and query != ''">
@@ -513,5 +554,14 @@
     </where>
 
     ORDER BY R.RECRUIT_NO DESC
+    
+    <choose>
+	  <when test="offset != null and size != null">
+	    OFFSET #{offset} ROWS FETCH NEXT #{size} ROWS ONLY
+	  </when>
+	  <when test="limit != null">
+	    FETCH FIRST #{limit} ROWS ONLY
+	  </when>
+	</choose>
   </select>
 </mapper>

@@ -1,19 +1,41 @@
 import icon from "../../assets/icon.png";
 import styles from "./Footer.module.css";
 
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 const Footer = () => {
+  const handleMoveToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <footer className={styles.footer}>
       <div className={styles.footerLinks}>
-        <Link to="/policyprivacy">개인정보처리방침</Link>
-        <Link to="/termsofservice">이용약관</Link>
+        <NavLink
+          to="/policyprivacy"
+          className={({ isActive }) =>
+            isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+          }
+          onClick={handleMoveToTop}
+        >
+          개인정보처리방침
+        </NavLink>
+        <NavLink
+          to="/termsofservice"
+          className={({ isActive }) =>
+            isActive ? `${styles.navLink} ${styles.active}` : styles.navLink
+          }
+          onClick={handleMoveToTop}
+        >
+          이용약관
+        </NavLink>
         <span>Copyright © CATCH. All rights reserved.</span>
-        <Link to="/supportlist" className={styles.highlight}>
+        <Link to="/supportlist" onClick={handleMoveToTop}>
           문의하기
         </Link>
-        <Link to="/corpregister">기업제휴</Link>
+        <Link to="/corpregister" onClick={handleMoveToTop}>
+          기업제휴
+        </Link>
       </div>
       <div className={styles.footerBottom}>
         <div className={styles.footerLogo}>

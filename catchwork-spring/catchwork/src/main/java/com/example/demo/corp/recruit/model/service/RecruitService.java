@@ -30,7 +30,7 @@ public interface RecruitService {
 	 * @param memNo
 	 * @return
 	 */
-	List<Recruit> getRecruitList(String status, String sort, String writer, String query, String memNo, Integer corpNo, String corpMemRoleCheck);
+	List<Recruit> getRecruitList(String status, String sort, String writer, String query, String memNo, Integer corpNo, String corpMemRoleCheck, int page, int size);
 
 	/** 채용공고 좋아요
 	 * @author BAEBAE

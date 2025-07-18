@@ -11,7 +11,7 @@
   font-size: 28px;
   font-weight: 700;
   margin-bottom: 24px;
-  color: var(--deep-gray); /* 수정: 제목용 색상 변수(--deep-gray)로 변경 */
+  color: var(--deep-gray); /* 제목용 색상 변수(--deep-gray)로 변경 */
 }
 
 /* Section for filter, sort, and search controls */
@@ -23,8 +23,8 @@
   padding: 16px;
   background-color: var(
     --input-color
-  ); /* 수정: 입력창 배경색 변수(--input-color)로 변경 */
-  border: 1px solid var(--stroke-color1); /* 수정: 테두리색 변수(--stroke-color1)로 변경 */
+  ); /* 입력창 배경색 변수(--input-color)로 변경 */
+  border: 1px solid var(--stroke-color1); /* 테두리색 변수(--stroke-color1)로 변경 */
   border-radius: 8px;
   margin-bottom: 24px;
 }
@@ -35,6 +35,35 @@
 .searchGroup {
   display: flex;
   align-items: center;
+  gap: 8px;
+}
+
+.searchGroup {
+  margin-left: auto; /* 이 한 줄을 추가하여 검색창을 오른쪽으로 보냅니다. */
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 8px;
+}
+
+.searchButton,
+.resetButton {
+  padding: 8px 20px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.searchButton {
+  background-color: var(--main-color);
+  color: var(--white);
+}
+
+.resetButton {
+  background-color: var(--gray01);
+  color: var(--white);
   gap: 8px;
 }
 
@@ -49,9 +78,9 @@
 .controlsSection input[type="text"] {
   padding: 8px 12px;
   font-size: 14px;
-  border: 1.5px solid var(--stroke-color1); /* 수정: 테두리색 변수(--stroke-color1)로 변경 */
+  border: 1.5px solid var(--stroke-color1); /* 테두리색 변수(--stroke-color1)로 변경 */
   border-radius: 6px;
-  background-color: var(--white); /* 수정: 흰색 변수(--white)로 변경 */
+  background-color: var(--white); /* 흰색 변수(--white)로 변경 */
   transition: border-color 0.2s ease;
 }
 
@@ -75,7 +104,7 @@
 /* Table header and cell styling */
 .supportTable th,
 .supportTable td {
-  border-bottom: 1px solid var(--stroke-color2); /* 수정: 상세 항목용 테두리색 변수(--stroke-color2)로 변경 */
+  border-bottom: 1px solid var(--stroke-color2); /* 상세 항목용 테두리색 변수(--stroke-color2)로 변경 */
   padding: 14px 12px;
   text-align: center;
   vertical-align: middle;
@@ -84,15 +113,15 @@
 .supportTable th {
   background-color: var(
     --input-color
-  ); /* 수정: 입력창 배경색 변수(--input-color)와 통일 */
+  ); /* 입력창 배경색 변수(--input-color)와 통일 */
   font-weight: 600;
   font-size: 14px;
-  color: var(--text); /* 수정: 기본 텍스트 색상 변수로 변경 */
+  color: var(--text); /* 기본 텍스트 색상 변수로 변경 */
 }
 
 /* Clickable title cell */
 .title {
-  color: var(--text); /* 수정: 기본 텍스트 색상 변수로 변경 */
+  color: var(--text); /* 기본 텍스트 색상 변수로 변경 */
   cursor: pointer;
   text-align: left;
   width: 40%;
@@ -110,14 +139,14 @@
 }
 
 .statusPending {
-  color: var(--gray01); /* 수정: 대기 상태는 회색 변수(--gray01)로 변경 */
+  color: var(--gray01); /* 대기 상태는 회색 변수(--gray01)로 변경 */
 }
 
 /* Message for when no items are found */
 .noItems {
   padding: 60px 0;
   text-align: center;
-  color: var(--gray01); /* 수정: 회색 변수(--gray01)로 변경 */
+  color: var(--gray01); /* 회색 변수(--gray01)로 변경 */
   font-size: 16px;
 }
 
@@ -127,10 +156,10 @@
   text-align: center;
   padding: 60px 0;
   font-size: 16px;
-  color: var(--deep-gray); /* 수정: 진한 회색 변수(--deep-gray)로 변경 */
+  color: var(--deep-gray); /* 진한 회색 변수(--deep-gray)로 변경 */
 }
 
 .errorMessage {
-  color: var(--red); /* 수정: 오류 메시지는 빨간색 변수(--red)로 변경 */
+  color: var(--red); /* 오류 메시지는 빨간색 변수(--red)로 변경 */
   font-weight: 500;
 }
