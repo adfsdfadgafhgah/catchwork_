@@ -11,12 +11,8 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AdminRestore {
 
-    /** 복구 대상 고유 번호 */
-    private String targetNo;
-
-    /** 복구 대상 타입 (MEMBER, CORP_MEMBER, COMPANY, RECRUIT, BOARD, COMMENT) */
-    private String targetType;
-
-    /** 복구 대상 대표 이름/제목/내용 */
-    private String target;
+    private String targetType;      // 테이블 구분용 (MEMBER, COMPANY, RECRUIT, BOARD, COMMENT)
+    private String targetNo;        // 고유 번호
+    private String title;			// 글인 경우 제목 또는 내용
+    private String content;         // 닉네임, 이름
 }

@@ -1,23 +1,43 @@
 import React from "react";
 import styles from "./RestoreTableRow.module.css";
 
-const RestoreTableRow = ({ item, onRestore, onRowClick }) => {
-  const handleClickRow = () => {
-    onRowClick(item.targetNo);
-  };
-
+const RestoreTableRow = ({ item, onRestore, currentType }) => {
   const handleRestore = (e) => {
     e.stopPropagation();
     onRestore(item.targetNo, item.targetType);
   };
 
   return (
-    <tr onClick={handleClickRow}>
+    <tr>
       <td>{item.targetType}</td>
-      <td>{item.target || "-"}</td>
-      <td>
-        <button onClick={handleRestore}>복구</button>
-      </td>
+
+      {currentType === "MEMBER" && (
+        <>
+          <td>{item.content}</td>
+          <td>
+            <button onClick={handleRestore}>복구</button>
+          </td>
+        </>
+      )}
+
+      {currentType === "COMPANY" && (
+        <>
+          <td>{item.title}</td>
+          <td>
+            <button onClick={handleRestore}>복구</button>
+          </td>
+        </>
+      )}
+
+      {currentType !== "MEMBER" && currentType !== "COMPANY" && (
+        <>
+          <td>{item.title}</td>
+          <td>{item.content || "-"}</td>
+          <td>
+            <button onClick={handleRestore}>복구</button>
+          </td>
+        </>
+      )}
     </tr>
   );
 };

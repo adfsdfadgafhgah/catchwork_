@@ -1,33 +1,46 @@
 import React, { useEffect, useState } from "react";
 import RestoreTable from "../../components/admin/restore/RestoreTable";
-import Pagination from "../../components/common/Pagination"; 
+import Pagination from "../../components/common/Pagination";
+import RestoreSearchBox from "../../components/admin/restore/RestoreSearchBox";
 import useRestoreUtils from "../../hooks/admin/useRestoreUtils";
 import styles from "./AdminRestorePage.module.css";
 
 const AdminRestorePage = () => {
-  const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태
-  const limit = 10; // 한 페이지당 보여줄 항목 수
-  const { restoreList, totalCount, getRestoreList, restoreItem } = useRestoreUtils(); // totalCount 포함
+  const [category, setCategory] = useState("BOARD");
+  const [keyword, setKeyword] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const { restoreList, totalCount, getRestoreList, restoreItem } = useRestoreUtils();
 
   useEffect(() => {
-    getRestoreList(currentPage); // 페이지 번호 기반 요청
-  }, [currentPage]);
+    getRestoreList(category, keyword, currentPage);
+  }, [category, keyword, currentPage]);
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
+  const handleSearch = () => {
+    setCurrentPage(1);
+    getRestoreList(category, keyword, 1);
   };
 
-  const totalPages = Math.ceil(totalCount / limit);
+  const totalPages = Math.ceil(totalCount / 10);
 
   return (
     <div className={styles.container}>
       <h2 className={styles.pageTitle}>복구 대상 관리</h2>
-      <RestoreTable restoreList={restoreList} onRestore={restoreItem} />
-      <Pagination
-        currentPage={currentPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-      />
+      <div className={styles.card}>
+        <RestoreSearchBox
+          category={category}
+          setCategory={setCategory}
+          keyword={keyword}
+          setKeyword={setKeyword}
+          onSearch={handleSearch}
+        />
+        <RestoreTable restoreList={restoreList} onRestore={restoreItem} />
+        <Pagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+        />
+      </div>
     </div>
   );
 };

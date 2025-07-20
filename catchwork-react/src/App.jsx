@@ -113,8 +113,8 @@ import AdminReportDetailPage from "./pages/admin/AdminReportDetailPage"; // 신�
 import AdminBanPage from "./pages/admin/AdminBanPage"; // 정지 리스트
 import AdminBanDetailPage from "./pages/admin/AdminBanDetailPage"; // 정지 상세
 import AdminRestorePage from "./pages/admin/AdminRestorePage"; // 복구 리스트
-import AdminAuthPage from "./pages/admin/AdminAuthPage"; // 복구 리스트
-import AdminRegisterPage from "./pages/admin/AdminRegisterPage"; // 복구 리스트
+import AdminAuthPage from "./pages/admin/AdminAuthPage"; // 로그인
+import AdminRegisterPage from "./pages/admin/AdminRegisterPage"; // 회원가입
 
 //푸터
 import PolicyPrivacy from "./pages/footer/PolicyPrivacy"; //개인정보처리방침
@@ -350,7 +350,7 @@ const router = createBrowserRouter([
   {
     // 상세 페이지 경로 미리 추가(주석)
     path: "/admin",
-    element: <AdminPage />,
+    element: <AdminRoute />,
     children: [
       { index: true, element: <AdminMainPage /> },
       { path: "*", element: <NotFound /> },
@@ -382,7 +382,6 @@ const router = createBrowserRouter([
         path: "restore",
         children: [
           { index: true, element: <AdminRestorePage /> },
-          // { path: ":id", element: <AdminRestoreDetailPage /> },
         ],
       },
     ],

@@ -7,7 +7,7 @@ const BanSearchBox = ({ searchParams, onChange, onSearch }) => {
       {/* 왼쪽: 필터 + 검색어 */}
       <div className={styles.leftGroup}>
         <div className={styles.filterGroup}>
-          <label htmlFor="banTargetType">대상 구분:</label>
+          <label htmlFor="banTargetType">대상 </label>
           <select
             id="banTargetType"
             name="banTargetType"
@@ -24,7 +24,7 @@ const BanSearchBox = ({ searchParams, onChange, onSearch }) => {
         </div>
 
         <div className={styles.searchGroup}>
-          <label htmlFor="keyword">검색어:</label>
+          <label htmlFor="keyword">검색 </label>
           <input
             id="keyword"
             type="text"
