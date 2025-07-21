@@ -11,11 +11,26 @@ const AdminInfo = () => {
   return (
     <div className={styles.infoWrapper}>
       <h2 className={styles.title}>관리자 정보</h2>
-      <p>번호: {adminInfo.adminNo}</p>
-      <p>이름: {adminInfo.adminName}</p>
-      <p>닉네임: {adminInfo.adminNickname}</p>
-      <p>이메일: {adminInfo.adminEmail}</p>
-      <p>전화번호: {adminInfo.adminTel}</p>
+      <div className={styles.infoItem}>
+        <span className={styles.label}>번호</span>
+        <span className={styles.value}>{adminInfo.adminNo}</span>
+      </div>
+      <div className={styles.infoItem}>
+        <span className={styles.label}>이름</span>
+        <span className={styles.value}>{adminInfo.adminName}</span>
+      </div>
+      <div className={styles.infoItem}>
+        <span className={styles.label}>닉네임</span>
+        <span className={styles.value}>{adminInfo.adminNickname}</span>
+      </div>
+      <div className={styles.infoItem}>
+        <span className={styles.label}>이메일</span>
+        <span className={styles.value}>{adminInfo.adminEmail}</span>
+      </div>
+      <div className={styles.infoItem}>
+        <span className={styles.label}>전화번호</span>
+        <span className={styles.value}>{adminInfo.adminTel}</span>
+      </div>
     </div>
   );
 };
