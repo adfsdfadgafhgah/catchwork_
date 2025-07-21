@@ -1,14 +1,14 @@
 /* 전체 컨테이너 */
 .detailWrapper {
-  max-width: 1000px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 20px 20px;
+  padding: 20px;
   background-color: var(--white);
   font-family: sans-serif;
   position: relative;
 }
 
-/* ✅ 제목 + 수정/삭제 버튼 묶음 */
+/* 제목 + 수정/삭제 버튼 묶음 */
 .headerRow {
   display: flex;
   justify-content: space-between;
@@ -21,7 +21,7 @@
 .title {
   font-size: 22px;
   font-weight: 600;
-  color: #222;
+  color: var(--deep-gray);
   white-space: nowrap; /* 줄바꿈 방지 */
   overflow: hidden; /* 넘치는 글자 숨김 */
   text-overflow: ellipsis; /* 말줄임(...) 처리 */
@@ -62,7 +62,7 @@
   background-color: #f5f5f5;
 }
 
-/* ✅ 작성자 정보 + 우측 메타 정보 */
+/* 작성자 정보 + 우측 메타 정보 */
 .metaRow {
   display: flex;
   justify-content: space-between;
@@ -94,16 +94,6 @@
   color: var(--deep-gray);
 }
 
-.fas.red {
-  color: var(--red);
-  cursor: pointer;
-}
-
-.far {
-  color: gray;
-  cursor: pointer;
-}
-
 /* 하트 아이콘 스타일 클래스명 단순화 */
 .likeIcon {
   cursor: pointer;
@@ -114,12 +104,12 @@
   transform: scale(1.2); /* 마우스 오버 시 아이콘이 살짝 커지는 효과 */
 }
 
-/* ✅ 본문 내용 박스 */
+/* 본문 내용 박스 */
 .contentBox {
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--stroke-color1);
   border-radius: 8px;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: var(--input-color);
   font-size: 15px;
   color: var(--deep-gray);
   min-height: 180px;
