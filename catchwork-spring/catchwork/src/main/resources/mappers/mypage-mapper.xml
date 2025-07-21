@@ -226,7 +226,6 @@
     )
     AND ci.CORP_STATUS = 0
     <!-- 탈퇴한 회원의 공고는 제외 -->
-    AND ci.MEM_NO NOT IN (SELECT MEM_NO FROM MEMBER WHERE MEM_STATUS IN (1, 2))
 		<if test="query != null and query != ''">
 			AND 
       (

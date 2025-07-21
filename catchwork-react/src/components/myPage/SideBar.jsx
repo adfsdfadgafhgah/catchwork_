@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "./SideBar.module.css";
 import { NavLink, useLocation } from "react-router-dom";
+import logo from "../../assets/favicon.png";
 
 const SideBar = () => {
   // 주소값
@@ -47,6 +48,12 @@ const SideBar = () => {
   return (
     <div className={`${styles.sidebar} ${styles.isOpen}`}>
       <div className={styles.sidebarContent}>
+        <img
+          src={logo}
+          alt="logo"
+          className={styles.logo}
+          style={{ width: "100%", height: "200px", objectFit: "contain" }}
+        />
         <button onClick={handleOpenSidebar} className={styles.toggleButton}>
           <i className="material-icons">menu</i>
         </button>
@@ -124,7 +131,7 @@ const SideBar = () => {
                   }`}
                   to="/mypage/favboard"
                 >
-                  관심 후기
+                  관심 게시글
                 </NavLink>
               </div>
             )}
