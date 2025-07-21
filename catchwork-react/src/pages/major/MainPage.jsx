@@ -5,6 +5,7 @@ import { axiosApi } from "../../api/axiosAPI";
 import { useAuthStore } from "../../stores/authStore";
 import styles from "./MainPage.module.css";
 import MainBoardItem from "../../components/board/MainBoardItem";
+import FloatingNavBar from "../../components/common/FloatingNavBar";
 
 const MainPage = () => {
   const { memType, memNo } = useAuthStore(); // memType: 0(개인), 1(기업)
@@ -128,11 +129,13 @@ const MainPage = () => {
 
   return (
     <div className={styles.mainPage}>
+      {/* 네비게이션 바: 개인 사용자일 때만 표시 */}
+      {!isCorp && <FloatingNavBar />}
       {/* 개인 사용자 대시보드 */}
       {!isCorp && (
         <>
           {/* 인기 채용공고 섹션 */}
-          <section className={styles.section}>
+          <section className={styles.section} id="popular-recruits">
             <div className={styles.sectionHeader}>
               <h2>인기 채용공고</h2>
             </div>
@@ -155,7 +158,7 @@ const MainPage = () => {
           </section>
 
           {/* 최신 채용공고 섹션 */}
-          <section className={styles.section}>
+          <section className={styles.section} id="latest-recruits">
             <div className={styles.sectionHeader}>
               <h2>최신 채용공고</h2>
             </div>
@@ -178,7 +181,7 @@ const MainPage = () => {
           </section>
 
           {/* 인기 기업정보 섹션 */}
-          <section className={styles.section}>
+          <section className={styles.section} id="popular-companies">
             <div className={styles.sectionHeader}>
               <h2>인기 기업정보</h2>
             </div>
@@ -202,7 +205,7 @@ const MainPage = () => {
           </section>
 
           {/* 인기 게시글 섹션 */}
-          <section className={styles.section}>
+          <section className={styles.section} id="popular-boards">
             <div className={styles.sectionHeader}>
               <h2>인기 게시글</h2>
             </div>

@@ -1,0 +1,48 @@
+.floatingNavBar {
+  position: fixed;
+  top: 50%;
+  right: 200px;
+  transform: translateY(-50%);
+  background: var(--stroke-color);
+  box-shadow: var(--box-shadow);
+  border-radius: 12px;
+  padding: 16px 20px;
+  z-index: 1000;
+}
+
+.floatingNavBar ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.floatingNavBar li {
+  margin-bottom: 12px;
+}
+
+.floatingNavBar li:last-child {
+  margin-bottom: 0;
+}
+
+.floatingNavBar button {
+  background: var(--stroke-color);
+  border: none;
+  color: #333;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 6px 0;
+  transition: color 0.2s;
+}
+
+.floatingNavBar button:hover {
+  color: var(--main-color);
+  background: var(--stroke-color);
+  text-decoration: underline;
+}
+
+/* 모바일(태블릿 이하)에서는 네비게이션 바 숨김 */
+@media (max-width: 1680px) {
+  .floatingNavBar {
+    display: none;
+  }
+}
