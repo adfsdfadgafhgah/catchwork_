@@ -163,24 +163,21 @@ const EditMyInfoPage = () => {
   // 프로필 이미지 업로드 핸들러
   const handleFileUpload = async () => {
     try {
-      // 프로필 이미지 업로드
-      const resp = await axiosApi.post(
-        "/myPage/uploadProfileImg",
-        { imgFile, memNo: loginMember?.memNo },
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        }
-      );
+      const formData = new FormData();
+      formData.append("imgFile", imgFile); // File 객체
+      formData.append("memNo", loginMember?.memNo); // 일반 값
 
-      // 업로드 성공 시
+      const resp = await axiosApi.post("/myPage/uploadProfileImg", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
       if (resp.status === 200) {
-        setMemNickname(formData.memNickname);
+        setMemNickname(formData.get("memNickname"));
         navigate("/myPage/home");
       }
     } catch (error) {
       console.error("프로필 이미지 업로드 실패", error);
       alert("프로필 이미지 업로드 중 오류 발생");
-      return false;
     }
   };
 
