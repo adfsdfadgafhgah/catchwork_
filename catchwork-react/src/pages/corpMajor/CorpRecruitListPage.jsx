@@ -113,7 +113,7 @@ export default function CorpRecruitListPage() {
       return;
     }
 
-    // [수정] 새로운 검색일 경우에만 전체 페이지 로딩 상태를 활성화합니다.
+    // 새로운 검색일 경우에만 전체 페이지 로딩 상태를 활성화합니다.
     if (isNewSearch) {
       setIsLoading(true);
     }
@@ -128,8 +128,8 @@ export default function CorpRecruitListPage() {
           query: confirmedSearchTerm,
           memNo: memNo,
           corpNo: corpNo,
-          page: pageNum, // [추가] 페이지 번호 파라미터
-          size: pageSize, // [추가] 페이지 크기 파라미터
+          page: pageNum, // 페이지 번호 파라미터
+          size: pageSize, // 페이지 크기 파라미터
         },
       });
 
@@ -148,15 +148,15 @@ export default function CorpRecruitListPage() {
           });
         }
 
-        // [수정] 데이터를 덮어쓰거나 추가하도록 변경
+        // 데이터를 덮어쓰거나 추가하도록 변경
         setRecruits(isNewSearch ? list : (prev) => [...prev, ...list]);
-        // [수정] 불러온 데이터가 페이지 크기보다 작으면 더 이상 데이터가 없는 것으로 간주
+        // 불러온 데이터가 페이지 크기보다 작으면 더 이상 데이터가 없는 것으로 간주
         setHasMore(list.length === pageSize);
       }
     } catch (err) {
       console.error("채용공고 목록 조회 실패:", err);
     } finally {
-      // [수정] 새로운 검색일 경우에만 전체 페이지 로딩 상태를 비활성화합니다.
+      // 새로운 검색일 경우에만 전체 페이지 로딩 상태를 비활성화합니다.
       // 이 로직은 기존과 동일하지만, 위의 setIsLoading(true)가 조건부로 바뀌면서 함께 올바르게 동작하게 됩니다.
       if (isNewSearch) {
         setIsLoading(false);
@@ -195,7 +195,7 @@ export default function CorpRecruitListPage() {
     memType,
   ]);
 
-  // #region ===== 핸들러 함수 (수정 및 추가) =====
+  // 핸들러 함수
   const handleSearchKeyDown = (e) => {
     if (e.key === "Enter") {
       setConfirmedSearchTerm(searchTerm.trim());

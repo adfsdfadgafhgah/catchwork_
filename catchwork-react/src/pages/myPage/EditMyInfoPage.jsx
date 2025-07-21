@@ -5,6 +5,7 @@ import styles from "./EditMyInfoPage.module.css";
 import { axiosApi } from "../../api/axiosAPI";
 import ConfirmPwModal from "../../components/myPage/ConfirmPwModal";
 import defaultImg from "../../assets/icon.png";
+import { useAuthStore } from "../../stores/authStore";
 
 const EditMyInfoPage = () => {
   const imgUrl = import.meta.env.VITE_FILE_PROFILE_IMG_URL;
@@ -15,6 +16,8 @@ const EditMyInfoPage = () => {
   const [loginMember, setLoginMember] = useState(null);
   const fileInputRef = useRef(null);
   const isDeleted = useRef(false);
+  // header의 authStore 업데이트
+  const { setMemNickname } = useAuthStore((state) => state.setMemNickname);
 
   // 로그인 유저 정보 조회
   const getLoginMember = async () => {
@@ -171,6 +174,7 @@ const EditMyInfoPage = () => {
 
       // 업로드 성공 시
       if (resp.status === 200) {
+        setMemNickname(formData.memNickname);
         navigate("/myPage/home");
       }
     } catch (error) {

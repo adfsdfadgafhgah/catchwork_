@@ -1,37 +1,28 @@
 import React from "react";
-import styles from "./BanSearchBox.module.css";
+import styles from "./RestoreSearchBox.module.css";
 
-const BanSearchBox = ({ searchParams, onChange, onSearch }) => {
+const RestoreSearchBox = ({ category, setCategory, keyword, setKeyword, onSearch }) => {
   return (
     <div className={styles.controlsSection}>
-      {/* 왼쪽: 필터 + 검색어 */}
       <div className={styles.leftGroup}>
         <div className={styles.filterGroup}>
-          <label htmlFor="banTargetType">대상 </label>
-          <select
-            id="banTargetType"
-            name="banTargetType"
-            value={searchParams.banTargetType}
-            onChange={onChange}
-          >
-            <option value="">전체</option>
+          <label>대상 </label>
+          <select value={category} onChange={(e) => setCategory(e.target.value)}>
             <option value="MEMBER">회원</option>
+            <option value="COMPANY">기업</option>
+            <option value="RECRUIT">채용공고</option>
             <option value="BOARD">게시글</option>
             <option value="COMMENT">댓글</option>
-            <option value="RECRUIT">공고</option>
-            <option value="COMPANY">기업</option>
           </select>
         </div>
 
         <div className={styles.searchGroup}>
-          <label htmlFor="keyword">검색 </label>
+          <label>검색 </label>
           <input
-            id="keyword"
             type="text"
-            name="keyword"
-            placeholder="대상 번호 또는 이름"
-            value={searchParams.keyword}
-            onChange={onChange}
+            placeholder="닉네임, 이름, 제목 검색"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 e.preventDefault(); // 폼 제출 방지
@@ -42,7 +33,6 @@ const BanSearchBox = ({ searchParams, onChange, onSearch }) => {
         </div>
       </div>
 
-      {/* 오른쪽: 버튼 그룹 */}
       <div className={styles.rightGroup}>
         <button className={styles.searchButton} onClick={onSearch}>
           검색
@@ -52,4 +42,4 @@ const BanSearchBox = ({ searchParams, onChange, onSearch }) => {
   );
 };
 
-export default BanSearchBox;
+export default RestoreSearchBox;

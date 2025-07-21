@@ -117,6 +117,7 @@ const CorpEditMyInfoPage = () => {
       const resp = await axiosApi.post("/corp/updateMemberInfo", requestData);
       if (resp.status === 200) {
         const newInfo = await axiosApi.get("/corp/mypage");
+        window.dispatchEvent(new Event("profileUpdated"));
         setCorpInfo(newInfo.data);
         await setLoginMember();
         navigate("/corpmypage");
@@ -136,7 +137,9 @@ const CorpEditMyInfoPage = () => {
         <div className={styles.infoCard}>
           <div className={styles.infoContent}>
             <span className={styles.infoLabel}>기업명</span>
-            <span className={styles.infoValue}>{corpInfo?.corpName || "기업명 없음"}</span>
+            <span className={styles.infoValue}>
+              {corpInfo?.corpName || "기업명 없음"}
+            </span>
           </div>
 
           <div className={styles.infoContent}>
