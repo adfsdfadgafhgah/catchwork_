@@ -143,6 +143,8 @@
   margin-top: 12px;
   border-radius: 8px;
   overflow: hidden;
+  position: relative;
+  z-index: 0;
 }
 
 /* 반응형 */

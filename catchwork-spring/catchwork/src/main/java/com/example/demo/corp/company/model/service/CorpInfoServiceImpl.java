@@ -18,7 +18,6 @@ public class CorpInfoServiceImpl implements CorpInfoService {
 
 	/**
 	 * memNo에 따라서 기업 정보가 다르니 다르게 보여져야 함
-	 * 
 	 * @author JIN
 	 */
 	@Override
@@ -28,7 +27,6 @@ public class CorpInfoServiceImpl implements CorpInfoService {
 
 	/**
 	 * 기업 정보 수정
-	 * 
 	 * @author JIN
 	 */
 	@Override
@@ -38,7 +36,6 @@ public class CorpInfoServiceImpl implements CorpInfoService {
 
 	/**
 	 * 공고 작성페이지에서 기업 정보 가져오기
-	 * 
 	 * @author BAEBAE
 	 */
 	@Override

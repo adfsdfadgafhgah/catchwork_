@@ -398,6 +398,7 @@ export default function MemberRecruitDetailPage() {
       )}
 
       <FloatButton
+        className={styles.floatButtonWrapper}
         buttons={FLOAT_BUTTON_PRESETS.submitAndReport(
           handleSubmit,
           handleReport

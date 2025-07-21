@@ -47,11 +47,16 @@ public class AdminController {
 	        AdminEntity admin = adminService.auth(inputAdmin);
 	        
 	        // 쿠키에 adminId 저장
-	        Cookie cookie = new Cookie("adminId", admin.getAdminId());
-	        cookie.setPath("/");              // 모든 경로에서 접근 가능
-	        cookie.setHttpOnly(true);         // JS에서 접근 못하게 (보안)
-	        cookie.setMaxAge(60 * 60);        // 유효시간 1시간
-	        response.addCookie(cookie);       // 응답에 쿠키 추가
+
+	        // 직접 Set-Cookie 헤더로 HttpOnly + Secure + SameSite 설정
+	        String cookieValue = "adminId=" + admin.getAdminId()
+	                           + "; Path=/"
+	                           + "; HttpOnly"
+	                           + "; Secure"
+	                           + "; SameSite=None"
+	                           + "; Max-Age=" + (60 * 60); // 1시간
+
+	        response.setHeader("Set-Cookie", cookieValue);
 	        
 	        return ResponseEntity.ok(Map.of(
 	            "message", "Authentication Complete",
