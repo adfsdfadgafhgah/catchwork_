@@ -17,7 +17,7 @@ const EditMyInfoPage = () => {
   const fileInputRef = useRef(null);
   const isDeleted = useRef(false);
   // header의 authStore 업데이트
-  const { setMemNickname } = useAuthStore((state) => state.setMemNickname);
+  const setMemNickname = useAuthStore((state) => state.setMemNickname);
 
   // 로그인 유저 정보 조회
   const getLoginMember = async () => {
