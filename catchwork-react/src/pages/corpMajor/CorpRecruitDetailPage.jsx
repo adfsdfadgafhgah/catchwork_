@@ -405,6 +405,7 @@ export default function CorpRecruitDetailPage() {
         />
       ) : (
         <FloatButton
+          className={styles.floatButtonWrapper}
           buttons={FLOAT_BUTTON_PRESETS.reportOnly(handleReportClick)}
         />
       )}
