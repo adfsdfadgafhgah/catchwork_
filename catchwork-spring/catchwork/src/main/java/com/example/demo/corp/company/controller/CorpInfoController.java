@@ -40,7 +40,6 @@ public class CorpInfoController {
 
 	/**
 	 * 기업 조회 ex) /corpcompanydetail
-	 * 
 	 * @author JIN
 	 * @param memNo
 	 * @return
@@ -114,7 +113,6 @@ public class CorpInfoController {
 
 	/**
 	 * 공고 작성페이지에서 기업정보 가져오기
-	 * 
 	 * @author BAEBAE
 	 * @param memNo
 	 * @return
@@ -132,7 +130,6 @@ public class CorpInfoController {
 
 	/**
 	 * 기업회원의 같은 corpNo 공고 조회 (채용공고 목록 필터링용)
-	 * 
 	 * @author BAEBAE
 	 * @param memNo
 	 * @return corpNo
