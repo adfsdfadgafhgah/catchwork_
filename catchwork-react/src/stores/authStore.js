@@ -11,6 +11,8 @@ export const useAuthStore = create(
       memNickname: null,
       memType: null,
 
+      setMemNickname: (memNickname) => set({ memNickname }),
+
       signin: async (memId, memPw, expectedType) => {
         try {
           const res = await axiosApi.post("/signin", { memId, memPw });
@@ -60,6 +62,6 @@ export const useAuthStore = create(
     }),
     {
       name: "auth-storage", // localStorage 키
-    }
+    },
   )
 );

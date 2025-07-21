@@ -9,7 +9,7 @@ import HeaderNav from "./HeaderNav";
 import { axiosApi } from "../../api/axiosAPI";
 
 const Header = () => {
-  const { memType, memNickname, memNo, signin, signOut } = useAuthStore();
+  const { memType, memNickname, memNo, signOut } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState(""); // 검색어
   const [memName, setMemName] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // 모바일 메뉴 토글 상태
