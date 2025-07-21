@@ -1,0 +1,82 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal {
+  background: #fff;
+  border-radius: 16px;
+  padding: 2rem 2.5rem;
+  min-width: 320px;
+  max-width: 90vw;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  position: relative;
+  text-align: center;
+}
+.closeBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #888;
+  cursor: pointer;
+}
+.userTypeBtns {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  margin: 2rem 0 1rem 0;
+}
+.userTypeBtns button {
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  border: 1px solid #aaa;
+  background: #f7f7f7;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.userTypeBtns button:hover {
+  background: #e0e7ff;
+  border-color: #6366f1;
+}
+.steps {
+  margin-top: 1.5rem;
+}
+.stepBox {
+  background: #f3f4f6;
+  border-radius: 10px;
+  padding: 1.2rem 1rem;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+.stepBox strong {
+  font-size: 1.1rem;
+  color: #374151;
+}
+.stepBox p {
+  margin: 0.5rem 0 1rem 0;
+  color: #555;
+}
+.stepBox button {
+  padding: 0.5rem 1.5rem;
+  border-radius: 6px;
+  border: none;
+  background: #6366f1;
+  color: #fff;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.stepBox button:hover {
+  background: #4338ca;
+}

@@ -52,11 +52,22 @@ const Header = () => {
   };
 
   useEffect(() => {
-    if (memNo != null) {
-      axiosApi
-        .get("/auth/corpmem/name", { params: { memNo } })
-        .then((res) => setMemName(res.data));
-    }
+    const handleProfileUpdate = () => {
+      if (memNo != null) {
+        axiosApi
+          .get("/auth/corpmem/name", { params: { memNo } })
+          .then((res) => setMemName(res.data));
+      }
+    };
+
+    window.addEventListener("profileUpdated", handleProfileUpdate);
+
+    // 최초 mount 시에도 실행
+    handleProfileUpdate();
+
+    return () => {
+      window.removeEventListener("profileUpdated", handleProfileUpdate);
+    };
   }, [memNo, memName]);
 
   // 모바일 메뉴 닫기 (네비게이션 이동 시)
