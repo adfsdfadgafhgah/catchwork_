@@ -124,6 +124,16 @@ const SignUpPage = () => {
       alert("이메일을 입력해주세요");
       return;
     }
+
+    // 이메일 중복 확인
+    const isExistEmail = await axiosApi.post(`/member/existEmail`, {
+      memEmail: formData.memEmail,
+    });
+    if (isExistEmail.data.message === "true") {
+      alert("이미 존재하는 이메일입니다.");
+      return;
+    }
+
     setIsClicked(true);
     isSending.current = true;
     const isSent = await sendEmail(formData.memEmail);
