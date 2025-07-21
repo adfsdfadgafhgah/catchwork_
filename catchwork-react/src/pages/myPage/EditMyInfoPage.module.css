@@ -114,7 +114,7 @@
 }
 
 .profileImage:hover .imageOverlay {
-  opacity: 1;
+  opacity: 0.5;
 }
 
 .imageOverlay i {

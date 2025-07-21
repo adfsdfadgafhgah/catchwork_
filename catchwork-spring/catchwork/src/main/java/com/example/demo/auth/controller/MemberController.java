@@ -241,7 +241,7 @@ public class MemberController {
 	 * @param memNo
 	 * @author JAEHO
 	 */
-	@PostMapping("member/getLoginMember")
+	@PostMapping("/member/getLoginMember")
 	private ResponseEntity<Object> getLoginMember(@RequestBody Map<String, String> map) {
 		String memNo = map.get("memNo");
 //		System.out.println("memNo :" + memNo);
@@ -308,8 +308,10 @@ public class MemberController {
 		}
 	}
 	
-	@PostMapping("member/existEmail")
-	public ResponseEntity<?> existEmail(@RequestParam("memEmail") String memEmail){
+	@PostMapping("/member/existEmail")
+	public ResponseEntity<?> existEmail(@RequestBody Map<String,String> memEmailMap){
+		String memEmail = memEmailMap.get("memEmail");
+		System.out.println("existEmail controller : " + memEmail);
 		boolean existEmail = service.existEmail(memEmail);
 		if(existEmail) {			
 			return ResponseEntity.ok(Map.of("message", "true"));
