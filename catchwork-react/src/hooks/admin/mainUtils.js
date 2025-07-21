@@ -2,6 +2,17 @@ import { useEffect, useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
 
 /**
+ * 글자 길이 초과하면 ...
+ * @param {*} text 
+ * @param {*} maxLength 
+ * @returns 
+ */
+export const truncateText = (text, maxLength = 10) => {
+  if (!text) return "-";
+  return text.length > maxLength ? text.slice(0, maxLength) + "..." : text;
+};
+
+/**
  * 미처리 신고 내역 무한스크롤 Hook
  */
 export const useRecentReport = (pageSize = 5) => {

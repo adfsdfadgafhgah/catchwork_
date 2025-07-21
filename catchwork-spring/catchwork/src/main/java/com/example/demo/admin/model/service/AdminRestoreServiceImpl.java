@@ -12,17 +12,17 @@ import com.example.demo.admin.model.mapper.AdminRestoreMapper;
 @Service
 public class AdminRestoreServiceImpl implements AdminRestoreService {
 
-	@Autowired
+    @Autowired
     private AdminRestoreMapper mapper;
 
     @Override
-    public List<AdminRestore> selectRestoreList(int startRow, int endRow) {
-        return mapper.selectRestoreList(startRow, endRow);
+    public List<AdminRestore> selectRestoreList(String category, String keyword, int startRow, int fetchCount) {
+        return mapper.selectRestoreList(category, keyword, startRow, fetchCount);
     }
 
     @Override
-    public int getRestoreListCount() {
-        return mapper.getRestoreListCount();
+    public int getRestoreListCount(String category, String keyword) {
+        return mapper.getRestoreListCount(category, keyword);
     }
 
     @Override

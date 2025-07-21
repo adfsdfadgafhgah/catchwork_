@@ -86,14 +86,19 @@ const CorpWithdrawPage = () => {
   };
 
   // '탈퇴하기' 버튼 클릭 시 호출되는 함수
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // 탈퇴 확인 모달을 띄우고, '확인' 시 executeWithdraw 실행
-    openConfirmModal(
-      "정말 탈퇴하시겠습니까? \n탈퇴 후 데이터에 대한 손실을 책임지지 않습니다.",
-      executeWithdraw
-    );
-  };
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  const isConfirmed = window.confirm(
+    "정말 탈퇴하시겠습니까? \n탈퇴 후 데이터에 대한 손실을 책임지지 않습니다."
+  );
+
+  if (isConfirmed) {
+    await executeWithdraw();
+  } else {
+    alert("탈퇴를 취소하였습니다.");
+  }
+};
 
   // 약관 스크롤 시 '다 읽음' 상태 업데이트
   const handleScroll = (e) => {

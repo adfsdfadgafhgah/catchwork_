@@ -1,56 +1,44 @@
-
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
 
-
 const useRestoreUtils = () => {
-    const [totalCount, setTotalCount] = useState(0);
     const [restoreList, setRestoreList] = useState([]);
-    const [restoreDetail, setRestoreDetail] = useState(null);
+    const [totalCount, setTotalCount] = useState(0);
 
-    // 복구 리스트 가져오기
-    const getRestoreList = async (page = 1) => {
+    // 리스트
+    const getRestoreList = async (category, keyword, page = 1) => {
         try {
             const res = await axiosApi.get("/admin/restore/list", {
-                params: { page }
-            });
-
-            // 응답 형식이 { restoreList: [...], restoreCount: n } 라고 가정
-            const data = res.data;
-
-            // 목록이 배열이면 그대로 사용, 아니면 빈 배열 처리
-            setRestoreList(Array.isArray(data.list) ? data.list : []);
-            setTotalCount(typeof data.totalCount === 'number' ? data.totalCount : 0);
-
-            console.log("복구 목록", data);
-            return data;
-        } catch (err) {
-            console.error("복구 리스트 가져오기 실패", err);
-        }
-    };
-
-    // 복구 상세 정보 가져오기
-    const getRestoreDetail = async (restoreNo) => {
-        try {
-            const res = await axiosApi.get(`/admin/restore/detail/${restoreNo}`);
-            setRestoreDetail(res.data);
-        } catch (err) {
-            console.error("복구 상세 정보 실패", err);
-        }
-    };
-
-    // 복구 처리
-    const restoreItem = async (targetNo, targetType, callback) => {
-        try {
-            await axiosApi.post("/admin/restore/processing", null, {
                 params: {
-                    targetNo,
-                    targetType,
+                    category,
+                    keyword,
+                    page,
                 },
             });
 
+            setRestoreList(Array.isArray(res.data.list) ? res.data.list : []);
+            setTotalCount(typeof res.data.totalCount === 'number' ? res.data.totalCount : 0);
+        } catch (err) {
+            console.error("복구 리스트 요청 실패", err);
+        }
+    };
+
+    // 처리
+    const restoreItem = async (targetNo, targetType, callback) => {
+        try {
+            await axiosApi.post("/admin/restore/processing", { targetNo, targetType });
+
+            // 리스트에서 복구한 항목 제거
+            setRestoreList(prev =>
+                prev.filter(item => !(item.targetNo === targetNo && item.targetType === targetType))
+            );
+
+            // 총 개수도 줄이기
+            setTotalCount(prev => prev - 1);
+
             alert("복구가 완료되었습니다.");
             if (callback) callback();
+
         } catch (err) {
             console.error("복구 실패", err);
             alert("복구에 실패했습니다.");
@@ -59,9 +47,8 @@ const useRestoreUtils = () => {
 
     return {
         restoreList,
-        restoreDetail,
+        totalCount,
         getRestoreList,
-        getRestoreDetail,
         restoreItem,
     };
 };

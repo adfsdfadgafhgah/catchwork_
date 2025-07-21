@@ -9,7 +9,7 @@ import HeaderNav from "./HeaderNav";
 import { axiosApi } from "../../api/axiosAPI";
 
 const Header = () => {
-  const { memType, memNickname, memNo, signin, signOut } = useAuthStore();
+  const { memType, memNickname, memNo, signOut } = useAuthStore();
   const [searchTerm, setSearchTerm] = useState(""); // 검색어
   const [memName, setMemName] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false); // 모바일 메뉴 토글 상태
@@ -52,11 +52,22 @@ const Header = () => {
   };
 
   useEffect(() => {
-    if (memNo != null) {
-      axiosApi
-        .get("/auth/corpmem/name", { params: { memNo } })
-        .then((res) => setMemName(res.data));
-    }
+    const handleProfileUpdate = () => {
+      if (memNo != null) {
+        axiosApi
+          .get("/auth/corpmem/name", { params: { memNo } })
+          .then((res) => setMemName(res.data));
+      }
+    };
+
+    window.addEventListener("profileUpdated", handleProfileUpdate);
+
+    // 최초 mount 시에도 실행
+    handleProfileUpdate();
+
+    return () => {
+      window.removeEventListener("profileUpdated", handleProfileUpdate);
+    };
   }, [memNo, memName]);
 
   // 모바일 메뉴 닫기 (네비게이션 이동 시)

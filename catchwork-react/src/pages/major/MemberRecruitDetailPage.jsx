@@ -261,9 +261,11 @@ export default function MemberRecruitDetailPage() {
               <span>
                 <i className="fa-regular fa-eye" /> {recruit.recruitReadCount}
               </span>
-              <span>
+              <span onClick={toggleLike} style={{ cursor: "pointer" }}>
                 <i
-                  className={`fa-heart ${liked ? "fa-solid" : "fa-regular"}`}
+                  className={`fa-heart ${styles.likeIcon} ${
+                    liked ? "fa-solid" : "fa-regular"
+                  }`}
                   style={{
                     color: liked ? "var(--main-color)" : "var(--gray01)",
                   }}

@@ -89,9 +89,12 @@ export default function BoardItem({ board, memNo }) {
               </span>
               <span className={styles.metaItem} onClick={toggleLike}>
                 <i
-                  className={`fa-solid fa-heart ${styles.likeIcon} ${
-                    liked ? styles.liked : styles.unliked
+                  className={`fa-heart ${styles.likeIcon} ${
+                    liked ? "fa-solid" : "fa-regular"
                   }`}
+                  style={{
+                    color: liked ? "var(--main-color)" : "var(--gray01)",
+                  }}
                 />
                 <span>{likeCount}</span>
               </span>
