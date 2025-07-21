@@ -166,7 +166,7 @@ const EditMyInfoPage = () => {
       const formData = new FormData();
       formData.append("imgFile", imgFile); // File 객체
       formData.append("memNo", loginMember?.memNo); // 일반 값
-
+      formData.append("memNickname", formDataState.memNickname);
       const resp = await axiosApi.post("/myPage/uploadProfileImg", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
