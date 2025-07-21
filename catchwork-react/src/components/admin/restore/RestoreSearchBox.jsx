@@ -23,6 +23,12 @@ const RestoreSearchBox = ({ category, setCategory, keyword, setKeyword, onSearch
             placeholder="닉네임, 이름, 제목 검색"
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault(); // 폼 제출 방지
+                onSearch();
+              }
+            }}
           />
         </div>
       </div>

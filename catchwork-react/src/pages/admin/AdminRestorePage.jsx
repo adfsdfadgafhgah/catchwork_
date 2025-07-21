@@ -12,9 +12,9 @@ const AdminRestorePage = () => {
 
   const { restoreList, totalCount, getRestoreList, restoreItem } = useRestoreUtils();
 
-  useEffect(() => {
-    getRestoreList(category, keyword, currentPage);
-  }, [category, keyword, currentPage]);
+  // useEffect(() => {
+  //   getRestoreList(category, keyword, currentPage);
+  // }, [category, keyword, currentPage]);
 
   const handleSearch = () => {
     setCurrentPage(1);

@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./RestoreTableRow.module.css";
+import { truncateText } from "../../../hooks/admin/mainUtils";
 
 const RestoreTableRow = ({ item, onRestore, currentType }) => {
   const handleRestore = (e) => {
@@ -13,7 +13,7 @@ const RestoreTableRow = ({ item, onRestore, currentType }) => {
 
       {currentType === "MEMBER" && (
         <>
-          <td>{item.content}</td>
+          <td>{truncateText(item.content, 10)}</td>
           <td>
             <button onClick={handleRestore}>복구</button>
           </td>
@@ -22,7 +22,7 @@ const RestoreTableRow = ({ item, onRestore, currentType }) => {
 
       {currentType === "COMPANY" && (
         <>
-          <td>{item.title}</td>
+          <td>{truncateText(item.title, 10)}</td>
           <td>
             <button onClick={handleRestore}>복구</button>
           </td>
@@ -31,8 +31,8 @@ const RestoreTableRow = ({ item, onRestore, currentType }) => {
 
       {currentType !== "MEMBER" && currentType !== "COMPANY" && (
         <>
-          <td>{item.title}</td>
-          <td>{item.content || "-"}</td>
+          <td>{truncateText(item.title, 30)}</td>
+          <td>{truncateText(item.content, 10)}</td>
           <td>
             <button onClick={handleRestore}>복구</button>
           </td>
