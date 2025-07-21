@@ -182,18 +182,28 @@ const EditMyInfoPage = () => {
   };
 
   // 프로필 이미지 삭제 핸들러
-  const handleProfileImageDelete = async () => {
-    try {
-      const formData = new FormData();
-      formData.append("memNo", loginMember?.memNo);
+const handleFileUpload = async () => {
+  try {
+    const formData = new FormData();
+    formData.append("imgFile", imgFile);
+    formData.append("memNo", loginMember?.memNo);
+    formData.append("memNickname", formDataState.memNickname);
 
-      const resp = await axiosApi.post("/myPage/deleteProfileImg", formData);
-      return resp.status === 200;
-    } catch (error) {
-      console.error("프로필 이미지 삭제 실패", error);
-      return false;
+    const resp = await axiosApi.post("/myPage/uploadProfileImg", formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    if (resp.status === 200) {
+      setMemNickname(formDataState.memNickname);
+      return true; // 성공 시 true 반환
     }
-  };
+    return false; // 실패한 경우 false
+  } catch (error) {
+    console.error("프로필 이미지 업로드 실패", error);
+    return false; // 실패 시 false 반환
+  }
+};
+
 
   // 수정하기 버튼 클릭 시
   const handleSubmit = async (e) => {
