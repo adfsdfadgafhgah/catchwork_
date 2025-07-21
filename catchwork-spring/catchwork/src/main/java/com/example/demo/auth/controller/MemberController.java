@@ -241,7 +241,7 @@ public class MemberController {
 	 * @param memNo
 	 * @author JAEHO
 	 */
-	@PostMapping("member/getLoginMember")
+	@PostMapping("/member/getLoginMember")
 	private ResponseEntity<Object> getLoginMember(@RequestBody Map<String, String> map) {
 		String memNo = map.get("memNo");
 //		System.out.println("memNo :" + memNo);
@@ -308,8 +308,10 @@ public class MemberController {
 		}
 	}
 	
-	@PostMapping("member/existEmail")
-	public ResponseEntity<?> existEmail(@RequestParam("memEmail") String memEmail){
+	@PostMapping("/member/existEmail")
+	public ResponseEntity<?> existEmail(@RequestBody Map<String,String> memEmailMap){
+		String memEmail = memEmailMap.get("memEmail");
+		System.out.println("existEmail controller : " + memEmail);
 		boolean existEmail = service.existEmail(memEmail);
 		if(existEmail) {			
 			return ResponseEntity.ok(Map.of("message", "true"));
@@ -347,7 +349,7 @@ public class MemberController {
 		if(result) {
 			return ResponseEntity.ok(Map.of("message", "인증번호가 확인되었습니다."));
 		} else {
-			return ResponseEntity.status(404).body(Map.of("message", "인증번호가 확인되지 않았습니다."));
+			return ResponseEntity.status(400).body(Map.of("message", "인증번호가 확인되지 않았습니다."));
 		}
 	}
 

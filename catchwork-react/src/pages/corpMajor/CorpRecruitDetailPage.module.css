@@ -120,7 +120,7 @@
   white-space: pre-wrap;
 }
 
-/* ================== [수정] 지원 자격 그리드 ================== */
+/* ================== 지원 자격 그리드 ================== */
 .recruitConditions {
   width: 100%;
 }
@@ -169,6 +169,8 @@
   border-radius: 16px;
   overflow: hidden; /* KakaoMapPreview가 둥근 모서리를 따르도록 */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  z-index: 0;
 }
 
 .mapContainer:hover {
@@ -176,7 +178,7 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
-/* ================== [수정] 상세 정보 섹션 ================== */
+/* ================== 상세 정보 섹션 ================== */
 .detailSections {
   white-space: pre-wrap;
   line-height: 1.8; /* 줄간격 조정 */
@@ -243,7 +245,7 @@
   .recruitTitle {
     font-size: 26px;
   }
-  /* [수정] 모바일에서는 그리드 1열로 */
+  /* 모바일에서는 그리드 1열로 */
   .infoGrid {
     grid-template-columns: 1fr;
     gap: 12px;

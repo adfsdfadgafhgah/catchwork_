@@ -47,7 +47,8 @@
 }
 .userTypeBtns button:hover {
   background: #e0e7ff;
-  border-color: #6366f1;
+  border-color: var(--main-color);
+  text-decoration: none;
 }
 .steps {
   margin-top: 1.5rem;
@@ -71,12 +72,14 @@
   padding: 0.5rem 1.5rem;
   border-radius: 6px;
   border: none;
-  background: #6366f1;
+  background: var(--main-color);
   color: #fff;
   font-weight: 500;
   cursor: pointer;
   transition: background 0.2s;
 }
 .stepBox button:hover {
-  background: #4338ca;
+  background: var(--main-color-dark);
+  color: #fff;
+  text-decoration: none;
 }
