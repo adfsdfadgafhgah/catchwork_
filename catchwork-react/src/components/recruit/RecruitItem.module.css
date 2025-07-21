@@ -89,6 +89,16 @@
   margin-right: 4px;
 }
 
+/* 하트 아이콘 스타일 클래스명 단순화 */
+.likeIcon {
+  cursor: pointer;
+  transition: color 0.2s, transform 0.2s; /* 부드러운 전환 효과 추가 */
+}
+
+.likeIcon:hover {
+  transform: scale(1.2); /* 마우스 오버 시 아이콘이 살짝 커지는 효과 */
+}
+
 /* 마감여부 뱃지 */
 .recruitStatus {
   display: inline-block;
