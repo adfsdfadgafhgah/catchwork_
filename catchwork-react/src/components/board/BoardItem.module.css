@@ -144,14 +144,6 @@
   transition: color 0.2s, transform 0.2s; /* 부드러운 전환 효과 추가 */
 }
 
-.likeIcon.liked {
-  color: var(--main-color); /* 빨간색 대신 메인 컬러 사용 */
-}
-
-.likeIcon.unliked {
-  color: var(--stroke-color1);
-}
-
 .likeIcon:hover {
   transform: scale(1.2); /* 마우스 오버 시 아이콘이 살짝 커지는 효과 */
 }

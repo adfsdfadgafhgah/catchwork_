@@ -225,7 +225,7 @@ export default function BoardDetailPage() {
             <i className="fa-regular fa-eye"></i> {board.boardReadCount}{" "}
             &nbsp;&nbsp;
             <i
-              className={`fa-heart ${
+              className={`fa-heart ${styles.likeIcon} ${
                 liked ? "fa-solid liked-heart" : "fa-regular"
               }`}
               onClick={toggleLike}

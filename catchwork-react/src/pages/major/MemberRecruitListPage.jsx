@@ -209,8 +209,8 @@ export default function MemberRecruitListPage() {
 
   const toggleFilter = (filterName) => {
     setExpandedFilters((prev) => ({
-      ...prev,
-      [filterName]: !prev[filterName],
+      ...Object.keys(prev).reduce((acc, key) => ({ ...acc, [key]: false }), {}), // 모든 필터를 닫고
+      [filterName]: !prev[filterName], // 현재 클릭한 것만 토글
     }));
   };
 
