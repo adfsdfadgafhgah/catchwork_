@@ -12,7 +12,6 @@ public interface CorpInfoMapper {
 
 	/**
 	 * memNo 기반 기업회원이 본인의 기업 상세를 보는
-	 * 
 	 * @author JIN
 	 * @param memNo
 	 * @return
@@ -21,7 +20,6 @@ public interface CorpInfoMapper {
 
 	/**
 	 * 기업 정보 수정
-	 * 
 	 * @author JIN
 	 * @param corpInfo
 	 * @return

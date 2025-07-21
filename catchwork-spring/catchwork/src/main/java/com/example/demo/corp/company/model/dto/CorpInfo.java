@@ -32,7 +32,7 @@ public class CorpInfo {
     private String corpBenefit;         // 기업_복리후생_카테고리
     private String corpBenefitDetail;   // 기업_복리후생_내용
     private int corpStatus;           // 기업_정지_상태 ( 0 영업중, 1,2)
-    private Date corpStatusDate;       // 기업_정지일
+    private Date corpStatusDate;       // 기업_정지일 (String or Date????)
    
     //기업 최고 담당 인사자
     private String corpMemRoleCheck;

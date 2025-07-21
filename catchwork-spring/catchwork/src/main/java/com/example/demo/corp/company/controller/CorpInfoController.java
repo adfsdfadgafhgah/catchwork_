@@ -40,7 +40,6 @@ public class CorpInfoController {
 
 	/**
 	 * 기업 조회 ex) /corpcompanydetail
-	 * 
 	 * @author JIN
 	 * @param memNo
 	 * @return
@@ -63,7 +62,6 @@ public class CorpInfoController {
 
 	/**
 	 * 기업 정보 수정
-	 * 
 	 * @author JIN
 	 * @param corpInfo
 	 * @param corpLogoFile
@@ -72,9 +70,20 @@ public class CorpInfoController {
 	@PostMapping("update")
 	public ResponseEntity<String> updateCorpInfo(@RequestPart("corpInfo") CorpInfo corpInfo,
 			@RequestPart(value = "corpLogoFile", required = false) MultipartFile corpLogoFile) {
-		System.out.println("📌 기업 정보 수정 요청 받음: corpInfo = " + corpInfo);
-		System.out.println("📌 기업 로고 파일 전달 여부: corpLogoFile = " + (corpLogoFile != null));
+		
+		 	log.info("📌 [요청 수신] 기업 정보 수정 요청 도착");
+		    log.info("📨 corpInfo = {}", corpInfo);
+		    log.info("📷 corpLogoFile 존재 여부 = {}", (corpLogoFile != null));
 
+		    
+		    
+		    if (corpLogoFile != null) {
+		        log.info("📷 업로드된 파일 이름 = {}", corpLogoFile.getOriginalFilename());
+		        log.info("📷 파일 크기 = {} bytes", corpLogoFile.getSize());
+		        log.info("📷 Content-Type = {}", corpLogoFile.getContentType());
+		    }
+		    
+		    
 		// 1. 파일이 있을 경우 저장
 		if (corpLogoFile != null && !corpLogoFile.isEmpty()) {
 			try {
@@ -94,18 +103,26 @@ public class CorpInfoController {
 				File file = savePath.toFile();
 				
 				corpLogoFile.transferTo(file);
-
+				  log.info("✅ 파일 저장 성공: {}", savePath);
+				  
+				  
 				// DB에는 상대 경로만 저장
 				corpInfo.setCorpLogo(fileName);
+				  log.info("🗃 DB에 저장할 로고 경로 (상대): {}", fileName);
+				  
 			} catch (Exception e) {
+				 log.error("❌ 파일 저장 중 오류 발생", e);
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("파일 저장 실패");
 			}
 		}
 
 		// 2. 기업 정보 수정
+		  log.info("🛠 DB 업데이트 시작");
 		int result = corpInfoService.updateCorpInfo(corpInfo);
+		 log.info("📊 update 결과: {}", result);
 
 		if (result > 0) {
+			log.info("✅ 기업 정보 수정 성공");
 			return ResponseEntity.ok("수정 성공");
 		} else {
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("수정 실패");
@@ -114,7 +131,6 @@ public class CorpInfoController {
 
 	/**
 	 * 공고 작성페이지에서 기업정보 가져오기
-	 * 
 	 * @author BAEBAE
 	 * @param memNo
 	 * @return
@@ -132,7 +148,6 @@ public class CorpInfoController {
 
 	/**
 	 * 기업회원의 같은 corpNo 공고 조회 (채용공고 목록 필터링용)
-	 * 
 	 * @author BAEBAE
 	 * @param memNo
 	 * @return corpNo
