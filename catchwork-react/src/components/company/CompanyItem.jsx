@@ -55,7 +55,7 @@ const CompanyItem = ({ company: companyInfo }) => {
                 : defaultImg //기업 로고 없을때 넣을 이미지
             }
             alt="기업 로고"
-            className="company-logo"
+            className="company-logo-img"
           />
         </div>
 
