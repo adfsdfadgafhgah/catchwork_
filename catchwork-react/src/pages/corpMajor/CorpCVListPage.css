@@ -47,6 +47,13 @@
   justify-content: flex-end;
 }
 
+.cv-table-wrapper {
+  min-height: 700px; /* ✅ 리스트가 적어도 페이지네이션이 내려가지 않게 유지 */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
 .cv-table {
   width: 100%;
   border-collapse: collapse;
@@ -56,7 +63,7 @@
 
 .cv-table th,
 .cv-table td {
-  padding: 12px;
+  padding: 8px;
   border-bottom: 1px solid var(--stroke-color1);
   text-align: center;
   font-size: 14px;
