@@ -79,7 +79,7 @@
   padding: 1rem;
   border: 1px solid var(--stroke-color2);
   border-radius: 5px;
-  resize: vertical; /* 세로 크기만 조절 가능 */
+  resize: none;
   font-size: 1rem;
   background-color: var(--white);
 }
@@ -88,6 +88,22 @@
   outline: none;
   border-color: var(--main-color);
   box-shadow: 0 0 0 2px var(--sub-color);
+}
+
+.section textarea {
+  width: 100%;
+  min-height: 80px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: none;
+}
+
+.charCounter {
+  text-align: left;
+  font-size: 0.9rem;
+  color: var(--deep-grays);
+  margin-top: 4px;
 }
 
 /* 제재 버튼들을 감싸는 컨테이너 */

@@ -26,7 +26,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  position: relative; /* ✅ replyLine 절대 위치로 쓸 수 있게 */
+  position: relative; /* replyLine 절대 위치로 쓸 수 있게 */
 }
 
 .profileImg {
@@ -43,13 +43,16 @@
 .date {
   font-size: 13px;
   color: var(--gray01);
-  flex-shrink: 0; /* ✅ 날짜가 줄어들지 않게 */
+  flex-shrink: 0; /* 날짜가 줄어들지 않게 */
 }
 
 .content {
   font-size: 15px;
   color: var(--deep-gray);
   margin-left: 40px; /* 프로필 정렬 고려 */
+  word-break: break-all; /* 영어/숫자 강제 줄바꿈으로 레이아웃 깨짐 방지 */
+  white-space: pre-wrap; /* dangerouslySetInnerHTML의 <br> 태그와 함께 줄바꿈을 올바르게 처리 */
+  line-height: 1.6; /* 가독성을 위한 줄간격 */
 }
 
 .actions {
