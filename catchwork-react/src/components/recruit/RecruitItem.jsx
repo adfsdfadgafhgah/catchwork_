@@ -22,14 +22,9 @@ export default function RecruitItem({
   useEffect(() => {
     if (recruit?.corpLogo) {
       const imageUrl = `${logoImgUrl}/${recruit.corpLogo}`;
-      extractPixelColor(imageUrl, 1, 1)
-        .then((color) => {
-          setPixelColor(color.hex);
-        })
-        .catch((error) => {
-          console.error("색상 추출 실패:", error);
-          setPixelColor("transparent");
-        });
+      extractPixelColor(imageUrl, 1, 1).then((color) => {
+        setPixelColor(color.hex);
+      });
     }
   }, [recruit?.corpLogo, logoImgUrl]);
 
@@ -61,7 +56,8 @@ export default function RecruitItem({
         </div>
         <p className={styles.corpName}>{recruit.corpName}</p>
         <p className={styles.locationCategory}>
-          {recruit.recruitJobArea} ┃ {recruit.recruitEdu} ┃ {""}
+          {recruit.recruitJobArea} <br />
+          {recruit.recruitEdu} ┃ {""}
           {recruit.recruitCareer}
         </p>
         <p className={styles.deadline}>~{recruit.recruitEndDate}</p>

@@ -27,8 +27,7 @@ export default function WriteSupportPage() {
     }
 
     try {
-      await axiosApi.post(
-        "http://localhost:8080/support/write",
+      await axiosApi.post("/support/write",        
         {
           supportTitle: title,
           supportCategoryCode: categoryCodeMap[category],

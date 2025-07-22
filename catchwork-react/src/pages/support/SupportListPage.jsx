@@ -31,7 +31,7 @@ const SupportListPage = () => {
 
     const fetchSupportData = async () => {
       try {
-        const response = await axiosApi.get("http://localhost:8080/support/list", {
+        const response = await axiosApi.get("/support/list", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

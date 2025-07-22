@@ -49,14 +49,9 @@ const EditCompanyPage = () => {
       const imageUrl = corpLogoPreview
         ? corpLogoPreview
         : `${corpLogoUrl}/${company.corpLogo}`;
-      extractPixelColor(imageUrl, 1, 1)
-        .then((color) => {
-          setPixelColor(color.hex);
-        })
-        .catch((error) => {
-          console.error("색상 추출 실패:", error);
-          setPixelColor("transparent");
-        });
+      extractPixelColor(imageUrl, 1, 1).then((color) => {
+        setPixelColor(color.hex);
+      });
     }
   }, [corpLogoUrl, corpLogoPreview]);
 

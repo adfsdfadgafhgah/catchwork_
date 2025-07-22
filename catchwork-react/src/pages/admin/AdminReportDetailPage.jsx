@@ -122,6 +122,7 @@ export default function AdminReportDetailPage() {
         targetNo: targetType === "MEMBER" ? targetNo : targetInfo.authorNo,
         targetType: "MEMBER", // 작성자는 항상 'MEMBER' 타입
         reason: sanctionMemo,
+        adminNo: adminInfo?.adminNo,
       });
       alert("작성자 정지 처리가 완료되었습니다.");
       // 필요 시 추가 로직

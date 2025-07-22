@@ -632,7 +632,7 @@ const SignUpPage = () => {
                 </div>
                 {validity.memNickname === false && (
                   <small className={styles.errorMessage}>
-                    닉네임은 2~20자 영문/숫자/한글로 입력해주세요.
+                    닉네임은 2~10자 영문/숫자/한글로 입력해주세요.
                   </small>
                 )}
               </label>

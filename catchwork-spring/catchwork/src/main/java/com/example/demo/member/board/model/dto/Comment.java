@@ -25,5 +25,6 @@ public class Comment {
 	// 댓글 조회 시 회원 프로필, 이름
 	private String memProfilePath;
 	private String memNickname;
+	private int memStatus;
 
 }
