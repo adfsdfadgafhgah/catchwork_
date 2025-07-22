@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 import styles from "./AdminReportDetailPage.module.css";
+import useAdminInfo from "../../hooks/admin/useAdminInfo";
 
 export default function AdminReportDetailPage() {
   const { targetType, targetNo } = useParams(); // URL에서 신고 대상 타입과 ID를 가져옴
@@ -13,6 +14,7 @@ export default function AdminReportDetailPage() {
   const [sanctionMemo, setSanctionMemo] = useState(""); // 처리 메모 (제재 사유)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { adminInfo } = useAdminInfo();
   const hasUnprocessedReports = reports.some(
     (report) => report.reportStatus === "N"
   );
@@ -74,6 +76,7 @@ export default function AdminReportDetailPage() {
         targetNo: targetNo,
         targetType: targetType,
         reason: sanctionMemo,
+        adminNo: adminInfo?.adminNo,
       });
       alert("콘텐츠/기업 정지 처리가 완료되었습니다.");
       navigate("/admin/report");

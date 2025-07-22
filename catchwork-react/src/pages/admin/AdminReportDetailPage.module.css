@@ -55,6 +55,9 @@
   border: 1px solid var(--stroke-color1);
   border-radius: 8px;
   padding: 1.5rem;
+  word-break: break-word;     /* 단어 중간이라도 줄바꿈 허용 */
+  overflow-wrap: break-word;  /* 오래된 브라우저 호환용 */
+  white-space: normal;        /* 공백, 줄바꿈을 기본처럼 처리 */
 }
 
 .infoBox p {

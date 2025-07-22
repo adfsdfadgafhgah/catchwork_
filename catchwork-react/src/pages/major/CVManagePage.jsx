@@ -966,7 +966,7 @@ const CVManagePage = () => {
                 <h2 className="writeCVSection-title">{labels.title}</h2>
                 {/* 경력 섹션일 때만 렌더링되는 (최종 경력)*/}
                 {type === "experience" && (
-                  <div>총 경력 기간 : {totalExperienceMonths}개월</div>
+                  <div className="total-exp">총 경력 기간 : {totalExperienceMonths}개월</div>
                 )}
                 {components[type].length === 0 && (
                   <div className="empty-message">

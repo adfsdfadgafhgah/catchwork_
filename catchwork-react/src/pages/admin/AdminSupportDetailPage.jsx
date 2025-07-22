@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 import SectionHeader from "../../components/common/SectionHeader";
 import styles from "./AdminSupportDetailPage.module.css";
+import useAdminInfo from "../../hooks/admin/useAdminInfo";
 
 export default function AdminSupportDetailPage() {
   const { supportNo } = useParams(); // URL 파라미터에서 supportNo 가져오기
@@ -12,6 +13,8 @@ export default function AdminSupportDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [answerContent, setAnswerContent] = useState(""); // 답변 내용
+
+  const { adminInfo } = useAdminInfo();
 
   /**
    * 날짜시간 문자열에서 'T'를 공백으로 변환하는 함수
@@ -71,6 +74,7 @@ export default function AdminSupportDetailPage() {
       const payload = {
         supportNo: support.supportNo,
         supportAnswer: answerContent,
+        adminNo: adminInfo?.adminNo,
         // adminNo는 백엔드에서 현재 로그인된 관리자의 정보를 통해 자동으로 설정됩니다.
         // supportStatus는 백엔드에서 답변이 등록되면 'Y'로 자동 변경됩니다.
       };
