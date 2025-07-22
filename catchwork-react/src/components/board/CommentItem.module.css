@@ -111,3 +111,9 @@
   border-left: 2px solid var(--stroke-color1); /* 원하는 선 색상 */
   border-bottom: 2px solid var(--stroke-color1);
 }
+
+.stopped {
+  color: var(--gray01);
+  font-style: italic;
+  padding: 10px 0;
+}

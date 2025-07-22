@@ -12,7 +12,7 @@ const SupportDetailPage = () => {
   useEffect(() => {
     const fetchSupportDetail = async () => {
       try {
-        const response = await axiosApi.get(`http://localhost:8080/support/detail/${id}`);
+        const response = await axiosApi.get(`/support/detail/${id}`);
         setSupport(response.data);
       } catch (err) {
         setError(err.response?.data?.message || err.message || "데이터를 가져오는 중 오류 발생");

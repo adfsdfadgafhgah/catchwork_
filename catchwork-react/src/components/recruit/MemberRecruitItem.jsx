@@ -19,14 +19,9 @@ export default function MemberRecruitItem({ recruit, onLikeToggle, memNo }) {
     if (recruit?.corpLogo) {
       const imageUrl = `${logoImgUrl}/${recruit.corpLogo}`;
 
-      extractPixelColor(imageUrl, 1, 1)
-        .then((color) => {
-          setPixelColor(color.hex);
-        })
-        .catch((error) => {
-          console.error("색상 추출 실패:", error);
-          setPixelColor("transparent");
-        });
+      extractPixelColor(imageUrl, 1, 1).then((color) => {
+        setPixelColor(color.hex);
+      });
     }
   }, [recruit?.corpLogo, logoImgUrl]);
 
@@ -92,8 +87,8 @@ export default function MemberRecruitItem({ recruit, onLikeToggle, memNo }) {
         </div>
         <p className={styles.corpName}>{recruit.corpName}</p>
         <p className={styles.locationCategory}>
-          {recruit.recruitJobArea} ┃ {recruit.recruitCareer} ┃
-          {recruit.recruitEdu}
+          {recruit.recruitJobArea} <br />
+          {recruit.recruitCareer} ┃ {recruit.recruitEdu}
         </p>
         <p className={styles.deadline}>~{recruit.recruitEndDate}</p>
 

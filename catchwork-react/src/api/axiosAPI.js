@@ -66,7 +66,7 @@ axiosApi.interceptors.response.use(
       originalRequest._retry = true;
       try {
         // 재발급 요청 axiosAPI는 요청 인터셉터가 가로채 헤더에 token 삽입 > 기본 axios 사용
-        const res = await axios.post(`${baseUrl}/reissue`, {
+        const res = await axios.post(`${baseUrl}reissue`, {
           withCredentials: true,
         });
         const newToken = res.headers.authorization?.split(" ")[1];
