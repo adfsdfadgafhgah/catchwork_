@@ -45,9 +45,10 @@ export default function WriteSupportPage() {
     } catch (error) {
       console.error("에러 발생:", error);
       if (error.response) {
-        alert("등록 실패: " + (error.response.data?.message || "서버 오류가 발생했습니다."));
+        alert("등록 실패: " + (error.response.data?.message || "제목 글자 수가 너무 깁니다."));
       } else {
         alert("서버와의 연결에 실패했습니다.");
+        
       }
     }
   };
