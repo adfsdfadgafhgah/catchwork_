@@ -61,7 +61,7 @@ public class ImageUploadServiceImpl implements ImageUploadService {
 		// 업로드된 파일의 전체 경로
 		String fileFullPath = Paths.get(uploadPath, filename).toString();
 
-    System.out.println("fileFullPath: " + fileFullPath);
+    // System.out.println("fileFullPath: " + fileFullPath);
 
 		// 파일이 없는 경우 예외 throw
 		File uploadedFile = new File(fileFullPath);
@@ -87,9 +87,9 @@ public class ImageUploadServiceImpl implements ImageUploadService {
     String saveFilename = Utility.fileRename(orgFilename); // 이미지 저장명
     String fileFullPath = Paths.get(uploadPath, saveFilename).toString(); // 디스크에 저장할 파일의 전체 경로
 
-    System.out.println("orgFilename: " + orgFilename);
-    System.out.println("saveFilename: " + saveFilename);
-    System.out.println("fileFullPath: " + fileFullPath);
+    // System.out.println("orgFilename: " + orgFilename);
+    // System.out.println("saveFilename: " + saveFilename);
+    // System.out.println("fileFullPath: " + fileFullPath);
 
     int result = 0;
 
@@ -99,23 +99,23 @@ public class ImageUploadServiceImpl implements ImageUploadService {
         dir.mkdirs();
       }
 
-      System.out.println("fileFullPath: " + fileFullPath);
+      // System.out.println("fileFullPath: " + fileFullPath);
 
       File uploadFile = Paths.get(fileFullPath).toFile();
       imageFile.transferTo(uploadFile);
 
-      System.out.println("uploadFile: " + uploadFile);
+      // System.out.println("uploadFile: " + uploadFile);
 
       Map<String, Object> map = new HashMap<>();
       map.put("thumbnailUrl", saveFilename);
       map.put("boardNo", boardNo);
 
-      System.out.println("map: " + map);
-      System.out.println("boardNo: " + boardNo);
-      System.out.println("saveFilename: " + saveFilename);
+      // System.out.println("map: " + map);
+      // System.out.println("boardNo: " + boardNo);
+      // System.out.println("saveFilename: " + saveFilename);
 
       result = mapper.uploadBoardThumbnail(map);
-      System.out.println("수정 결과 result: " + result);
+      // System.out.println("수정 결과 result: " + result);
     } catch (Exception e) {
       e.printStackTrace();
       throw new RuntimeException("썸네일 이미지 업로드 실패");

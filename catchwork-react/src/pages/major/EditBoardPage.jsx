@@ -7,6 +7,12 @@ import styles from "./WriteBoardPage.module.css"; // 재사용 가능
 import ThumbnailUploader from "../../components/common/ThumbnailUploader";
 import { axiosApi } from "../../api/axiosAPI";
 
+// 각 필드별 최대 글자 수
+const MAX_LENGTHS = {
+  title: 50,
+  content: 4000,
+};
+
 export default function EditBoardPage() {
   const { boardNo } = useParams();
   const navigate = useNavigate();
@@ -39,6 +45,7 @@ export default function EditBoardPage() {
         });
         const data = resp.data;
         setTitle(data.boardTitle);
+        setContent(data.boardContent);
         setThumbnailUrl(data.boardThumbnailUrl || null);
         // Editor 인스턴스가 준비된 후에만 setMarkdown 호출
         if (editorRef.current) {
@@ -64,6 +71,32 @@ export default function EditBoardPage() {
       editorInstance.changeMode("markdown", true);
     }
   }, []);
+
+  // title과 content state가 변경될 때마다 유효성 검사
+  useEffect(() => {
+    setIsFormValid(title.trim() !== "" && content.trim() !== "");
+  }, [title, content]);
+
+  // 제목 입력 핸들러 (글자 수 제한 기능)
+  const handleTitleChange = (e) => {
+    const { value } = e.target;
+    if (value.length <= MAX_LENGTHS.title) {
+      setTitle(value);
+    }
+  };
+
+  // 에디터 내용 변경 핸들러 (글자 수 제한 기능)
+  const handleEditorChange = () => {
+    const editorInstance = editorRef.current.getInstance();
+    let markdown = editorInstance.getMarkdown();
+
+    if (markdown.length > MAX_LENGTHS.content) {
+      markdown = markdown.slice(0, MAX_LENGTHS.content);
+      editorInstance.setMarkdown(markdown, true);
+      alert(`내용은 ${MAX_LENGTHS.content}자를 초과하여 작성할 수 없습니다.`);
+    }
+    setContent(markdown); // 내용 state 업데이트
+  };
 
   // 썸네일 등록
   const handleThumbnailUpload = async (file) => {
@@ -137,8 +170,13 @@ export default function EditBoardPage() {
         type="text"
         className={styles.writeInputTitle}
         value={title}
-        onChange={(e) => setTitle(e.target.value)}
+        onChange={handleTitleChange}
+        maxLength={MAX_LENGTHS.title}
+        placeholder="제목을 입력하세요"
       />
+      <div className={styles.charCounter}>
+        {title.length} / {MAX_LENGTHS.title}
+      </div>
 
       <div className={styles.writeEditor}>
         <Editor
@@ -149,14 +187,7 @@ export default function EditBoardPage() {
           initialValue={content}
           placeholder="내용을 입력해주세요"
           useCommandShortcut={true}
-          onChange={() => {
-            const contentMarkdown = editorRef.current
-              .getInstance()
-              .getMarkdown();
-            setIsFormValid(
-              title.trim() !== "" && contentMarkdown.trim() !== ""
-            );
-          }}
+          onChange={handleEditorChange}
           hooks={{
             // 이미지 업로드 처리
             addImageBlobHook: async (blob, callback) => {
@@ -176,11 +207,11 @@ export default function EditBoardPage() {
 
                 // 이미지 업로드 성공 시 이미지 파일명 반환
                 const fileName = await resp.data;
-                console.log(fileName);
+                // console.log(fileName);
 
                 // 업로드한 이미지 미리보기
                 const renderUrl = `${baseUrl}board/image-print?filename=${fileName}`;
-                console.log(renderUrl);
+                // console.log(renderUrl);
                 callback(renderUrl, "업로드된 이미지");
               } catch (error) {
                 console.error("이미지 업로드 실패:", error);
@@ -189,6 +220,9 @@ export default function EditBoardPage() {
             },
           }}
         />
+        <div className={styles.charCounter}>
+          {content.length} / {MAX_LENGTHS.content}
+        </div>
       </div>
 
       <ThumbnailUploader

@@ -86,15 +86,50 @@ const CorpWithdrawPage = () => {
   };
 
   // '탈퇴하기' 버튼 클릭 시 호출되는 함수
- const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
   e.preventDefault();
 
-  const isConfirmed = window.confirm(
-    "정말 탈퇴하시겠습니까? \n탈퇴 후 데이터에 대한 손실을 책임지지 않습니다."
-  );
+  if (
+    confirm(
+      "정말 탈퇴하시겠습니까? \n탈퇴 후 데이터에 대한 손실을 책임지지 않습니다."
+    )
+  ) {
+    try {
+      // 1. 비밀번호 확인
+      const verifyResp = await axiosApi.post("/corp/verifyPassword", {
+        memPw: password,
+      });
 
-  if (isConfirmed) {
-    await executeWithdraw();
+      if (verifyResp.status === 200 && verifyResp.data === true) {
+        // 2. 탈퇴 요청
+        const withdrawResp = await axiosApi.delete("/corp/withdraw");
+
+        if (withdrawResp.status === 200) {
+          alert("회원 탈퇴가 완료되었습니다.");
+          signOut();
+          navigate("/");
+        } else {
+          alert("탈퇴 처리 중 오류가 발생했습니다. 다시 시도해주세요.");
+        }
+      } else {
+        // 비밀번호 일치하지 않음
+        alert("비밀번호가 일치하지 않습니다.");
+        signOut(); // 로그아웃
+        navigate("/");
+      }
+    } catch (error) {
+      if (error.response) {
+        if (error.response.status === 401) {
+          alert("비밀번호가 일치하지 않습니다.");
+          signOut();
+          navigate("/");
+        } else {
+          alert(`오류가 발생했습니다: ${error.response.status}`);
+        }
+      } else {
+        alert("네트워크 오류가 발생했습니다.");
+      }
+    }
   } else {
     alert("탈퇴를 취소하였습니다.");
   }

@@ -496,7 +496,7 @@ const CVManagePage = () => {
   const handleSearchAddress = () => {
     new window.daum.Postcode({
       oncomplete: function (data) {
-        console.log("선택된 주소:", data);
+        // console.log("선택된 주소:", data);
         const fullAddress = data.roadAddress || data.jibunAddress;
         handleInputChange("mainAddress", fullAddress);
       },
@@ -966,7 +966,7 @@ const CVManagePage = () => {
                 <h2 className="writeCVSection-title">{labels.title}</h2>
                 {/* 경력 섹션일 때만 렌더링되는 (최종 경력)*/}
                 {type === "experience" && (
-                  <div>총 경력 기간 : {totalExperienceMonths}개월</div>
+                  <div className="total-exp">총 경력 기간 : {totalExperienceMonths}개월</div>
                 )}
                 {components[type].length === 0 && (
                   <div className="empty-message">

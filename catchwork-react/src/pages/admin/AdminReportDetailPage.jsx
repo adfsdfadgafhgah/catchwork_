@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 import styles from "./AdminReportDetailPage.module.css";
+import useAdminInfo from "../../hooks/admin/useAdminInfo";
+
+const MAX_SANCTION_MEMO_LENGTH = 100;
 
 export default function AdminReportDetailPage() {
   const { targetType, targetNo } = useParams(); // URL에서 신고 대상 타입과 ID를 가져옴
@@ -13,6 +16,7 @@ export default function AdminReportDetailPage() {
   const [sanctionMemo, setSanctionMemo] = useState(""); // 처리 메모 (제재 사유)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { adminInfo } = useAdminInfo();
   const hasUnprocessedReports = reports.some(
     (report) => report.reportStatus === "N"
   );
@@ -36,6 +40,14 @@ export default function AdminReportDetailPage() {
 
     fetchDetails();
   }, [targetType, targetNo]);
+
+  // 제재 사유 입력 핸들러 (글자 수 제한 기능)
+  const handleMemoChange = (e) => {
+    const { value } = e.target;
+    if (value.length <= MAX_SANCTION_MEMO_LENGTH) {
+      setSanctionMemo(value);
+    }
+  };
 
   const handleProcessIndividualReport = async (reportNo) => {
     if (!window.confirm(`신고 번호 ${reportNo}번을 처리하시겠습니까?`)) return;
@@ -74,6 +86,7 @@ export default function AdminReportDetailPage() {
         targetNo: targetNo,
         targetType: targetType,
         reason: sanctionMemo,
+        adminNo: adminInfo?.adminNo,
       });
       alert("콘텐츠/기업 정지 처리가 완료되었습니다.");
       navigate("/admin/report");
@@ -152,9 +165,13 @@ export default function AdminReportDetailPage() {
         <h3>처리메모 (제재사유)</h3>
         <textarea
           value={sanctionMemo}
-          onChange={(e) => setSanctionMemo(e.target.value)}
+          onChange={handleMemoChange}
           placeholder="대상을 정지 처리할 경우, 제재 사유를 입력해주세요."
+          maxLength={MAX_SANCTION_MEMO_LENGTH}
         />
+        <div className={styles.charCounter}>
+          {sanctionMemo.length} / {MAX_SANCTION_MEMO_LENGTH}
+        </div>
       </div>
 
       <div className={styles.buttonContainer}>

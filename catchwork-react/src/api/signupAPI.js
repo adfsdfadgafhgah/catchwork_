@@ -52,6 +52,6 @@ export const searchAddress = (onComplete) => {
  * 기업대표 가입 요청
  **********************/
 export const postCEOSignUp = async (formData) => {
-  console.log("ceo signup");
+  // console.log("ceo signup");
   return await axiosApi.post("/ceosignup", formData);
 };

@@ -30,7 +30,7 @@ public class CorpMyPageController {
     public ResponseEntity<CorpMyPage> getCorpMyPage(@AuthenticationPrincipal CustomUserDetails user) {
         String memNo = user.getUsername();
         CorpMyPage corpMyPage = corpMyPageService.getCorpMyPage(memNo);
-        System.out.println("✅ 백엔드 반환값: " + corpMyPage);   // 콘솔로그 
+        // System.out.println("✅ 백엔드 반환값: " + corpMyPage);   // 콘솔로그 
         return ResponseEntity.ok(corpMyPage);
     }
     

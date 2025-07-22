@@ -59,6 +59,35 @@
   display: none !important;
 }
 
+/* -------------------------------------- */
+
+.titleContainer {
+  /* 제목 input과 카운터를 묶어주기 위한 div */
+  display: flex;
+  flex-direction: column;
+}
+
+.charCounter {
+  text-align: left; /* 카운터를 오른쪽으로 정렬 */
+  font-size: 0.9rem;
+  color: var(--deep-gray);
+  margin-top: -4px;
+  margin-left: 8px;
+  margin-bottom: 16px; /* 에디터와의 간격 */
+  z-index: 10;
+}
+
+.writeEditor {
+  /* 에디터와 카운터를 묶어주기 위한 div */
+  display: flex;
+  flex-direction: column;
+}
+
+/* 에디터 아래의 카운터는 오른쪽 정렬과 위쪽 마진만 필요 */
+.writeEditor .charCounter {
+  margin-bottom: 0; /* 다른 요소와의 간격은 이미 있으므로 초기화 */
+}
+
 /* 반응형 스타일 */
 
 @media screen and (max-width: 1023px) {

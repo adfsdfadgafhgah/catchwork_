@@ -18,9 +18,9 @@ public class SupportServiceImpl implements SupportService {
     @Override
     public List<Support> getSupportList() {
         List<Support> list = supportMapper.selectSupportList();
-        System.out.println("Support 리스트 개수: " + list.size());
+        // System.out.println("Support 리스트 개수: " + list.size());
         for (Support s : list) {
-            System.out.println("" + s);
+            // System.out.println("" + s);
         }
         return list;
     }    

@@ -59,7 +59,7 @@ const CompanyListPage = () => {
       } else if (res.status === 204) {
         setCompanyList([]);
         setHasMore(false);
-        console.log("조회된 기업 정보가 없습니다.");
+        // console.log("조회된 기업 정보가 없습니다.");
       } else {
         alert("기업 목록 조회 실패");
       }

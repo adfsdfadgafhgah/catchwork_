@@ -49,6 +49,9 @@ public class RecruitCVServiceImpl implements RecruitCVService {
 		}
 	}
 
+	/** 회원번호로 기업번호 조회하기
+	 *@author JIN
+	 */
 	@Override
 	public Integer getCorpNoByMemNo(String memNo) {
 		return mapper.getCorpNoByMemNo(memNo);
