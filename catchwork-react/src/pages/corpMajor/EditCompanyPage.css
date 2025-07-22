@@ -53,8 +53,10 @@
   object-fit: contain;
   /*border-bottom: 1px solid var(--img-color); 구분선*/
   background-color: var(--white); /*기업 로고 배경*/
-  margin-top: 8px;
+  /* margin-top: 4px; */
+  border-radius: 50%;
 }
+
 .info-row {
   display: flex;
   align-items: center; /* ✅ 모든 요소를 수직 가운데 정렬 */

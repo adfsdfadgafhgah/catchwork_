@@ -196,7 +196,7 @@
 	<!-- 정지 처리 -->
 	<insert id="insertBan" parameterType="map">
 	    INSERT INTO BAN (BAN_NO, BAN_CONTENT, BAN_TARGET_NO, BAN_TARGET_TYPE, ADMIN_NO)
-	    VALUES (SEQ_BAN_NO.NEXTVAL, #{reason}, #{targetNo}, #{targetType}, 1) </insert>
+	    VALUES (SEQ_BAN_NO.NEXTVAL, #{reason}, #{targetNo}, #{targetType}, #{adminNo}) </insert>
 	
 	<!-- 정지 처리 상태 변경 -->
 	<update id="updateTargetStatus" parameterType="map">

@@ -100,7 +100,7 @@ public class JWTUtil {
 	}
 
 	public String createRefreshToken(String memNo,Long expiredMs) {
-		System.out.println("RefreshToken created");
+		// System.out.println("RefreshToken created");
 	    return Jwts.builder()
 	        .claim("memNo", memNo)
 	        .issuedAt(new Date(System.currentTimeMillis()))

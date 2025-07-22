@@ -307,39 +307,59 @@
 	<!-- 채용공고 수정 -->
 	<update id="editRecruit" parameterType="Recruit">
 	UPDATE RECRUIT
-	SET
-	    RECRUIT_TITLE = #{recruitTitle},
-	    <if test="recruitStartDate != null and recruitStartDate != ''">
-	        RECRUIT_START_DATE = TO_DATE(SUBSTR(#{recruitStartDate}, 1, 10), 'YYYY-MM-DD'),
-	    </if>
-	    <if test="recruitStartDate == null or recruitStartDate == ''">
-	        RECRUIT_START_DATE = NULL,
-	    </if>
-	    <if test="recruitEndDate != null and recruitEndDate != ''">
-	        RECRUIT_END_DATE = TO_DATE(SUBSTR(#{recruitEndDate}, 1, 10), 'YYYY-MM-DD'),
-	    </if>
-	    <if test="recruitEndDate == null or recruitEndDate == ''">
-	        RECRUIT_END_DATE = NULL,
-	    </if>
-	    RECRUIT_JOB_NAME = #{recruitJobName},
-	    RECRUIT_JOB_DETAIL = #{recruitJobDetail},
-	    RECRUIT_EDU = #{recruitEdu},
-	    RECRUIT_CAREER = #{recruitCareer},
-	    RECRUIT_HEADCOUNT = #{recruitHeadcount},
-	    RECRUIT_TYPE = #{recruitType},
-	    RECRUIT_JOB_AREA = #{recruitJobArea},
-	    RECRUIT_SALARY = #{recruitSalary},
-	    <if test="recruitResultDate != null and recruitResultDate != ''">
-	        RECRUIT_RESULT_DATE = TO_DATE(SUBSTR(#{recruitResultDate}, 1, 10), 'YYYY-MM-DD'),
-	    </if>
-	    <if test="recruitResultDate == null or recruitResultDate == ''">
-	        RECRUIT_RESULT_DATE = NULL,
-	    </if>
-	    RECRUIT_DOCX = #{recruitDocx},
-	    RECRUIT_APPLY = #{recruitApply},
-	    RECRUIT_CORP_URL = #{recruitCorpUrl},
-	    RECRUIT_HIRE_DETAIL = #{recruitHireDetail},
-	    RECRUIT_ETC = #{recruitEtc}
+	<set>
+			<if test="recruitTitle != null and recruitTitle != ''">
+				RECRUIT_TITLE = #{recruitTitle},
+			</if>
+			<if test="recruitStartDate != null">
+				RECRUIT_START_DATE = #{recruitStartDate},
+			</if>
+			<if test="recruitEndDate != null">
+				RECRUIT_END_DATE = #{recruitEndDate},
+			</if>
+			<if test="recruitJobName != null and recruitJobName != ''">
+				RECRUIT_JOB_NAME = #{recruitJobName},
+			</if>
+			<if test="recruitJobDetail != null and recruitJobDetail != ''">
+				RECRUIT_JOB_DETAIL = #{recruitJobDetail},
+			</if>
+			<if test="recruitEdu != null and recruitEdu != ''">
+				RECRUIT_EDU = #{recruitEdu},
+			</if>
+			<if test="recruitCareer != null and recruitCareer != ''">
+				RECRUIT_CAREER = #{recruitCareer},
+			</if>
+			<if test="recruitHeadcount != null">
+				RECRUIT_HEADCOUNT = #{recruitHeadcount},
+			</if>
+			<if test="recruitType != null and recruitType != ''">
+				RECRUIT_TYPE = #{recruitType},
+			</if>
+			<if test="recruitJobArea != null and recruitJobArea != ''">
+				RECRUIT_JOB_AREA = #{recruitJobArea},
+			</if>
+			<if test="recruitSalary != null and recruitSalary != ''">
+				RECRUIT_SALARY = #{recruitSalary},
+			</if>
+			<if test="recruitResultDate != null">
+				RECRUIT_RESULT_DATE = #{recruitResultDate},
+			</if>
+			<if test="recruitDocx != null and recruitDocx != ''">
+				RECRUIT_DOCX = #{recruitDocx},
+			</if>
+			<if test="recruitApply != null and recruitApply != ''">
+				RECRUIT_APPLY = #{recruitApply},
+			</if>
+			<if test="recruitCorpUrl != null and recruitCorpUrl != ''">
+				RECRUIT_CORP_URL = #{recruitCorpUrl},
+			</if>
+			<if test="recruitHireDetail != null and recruitHireDetail != ''">
+				RECRUIT_HIRE_DETAIL = #{recruitHireDetail},
+			</if>
+			<if test="recruitEtc != null and recruitEtc != ''">
+				RECRUIT_ETC = #{recruitEtc},
+			</if>
+		</set>
 	WHERE RECRUIT_NO = #{recruitNo}
 	  AND MEM_NO = #{memNo}
 	</update>

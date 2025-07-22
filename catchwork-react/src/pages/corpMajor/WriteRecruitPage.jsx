@@ -8,6 +8,18 @@ import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import KakaoMapPreview from "../../components/common/KakaoMapPreview";
 import defaultImg from "../../assets/icon.png";
 
+// 각 필드별 최대 글자 수를 정의
+const MAX_LENGTHS = {
+  recruitTitle: 50,
+  recruitJobDetail: 500,
+  recruitSalary: 100,
+  recruitDocx: 100,
+  recruitApply: 500,
+  recruitCorpUrl: 50,
+  recruitHireDetail: 1000,
+  recruitEtc: 1000,
+};
+
 export default function WriteRecruitPage() {
   const logoImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
   const navigate = useNavigate();
@@ -113,20 +125,24 @@ export default function WriteRecruitPage() {
   // 공통 입력 핸들러
   const handleChange = (e) => {
     const { name, value } = e.target;
+    const maxLength = MAX_LENGTHS[name];
+
+    let processedValue = value;
+
     // 모집인원(recruitHeadcount) 필드에는 숫자만 입력되도록 처리
     if (name === "recruitHeadcount") {
-      const numericValue = value.replace(/\D/g, ""); // \D는 숫자가 아닌 모든 문자를 의미
-      setFormData((prev) => ({
-        ...prev,
-        [name]: numericValue,
-      }));
-    } else {
-      // 다른 필드는 기존 로직대로 처리
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
+      processedValue = value.replace(/\D/g, "");
     }
+
+    // 최대 글자 수 확인 및 초과 시 잘라내기
+    if (maxLength && processedValue.length > maxLength) {
+      processedValue = processedValue.slice(0, maxLength);
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: processedValue,
+    }));
   };
 
   // 제출 핸들러
@@ -218,7 +234,11 @@ export default function WriteRecruitPage() {
               onChange={handleChange}
               className={styles.input}
               placeholder="예: 2025년 하반기 신입/경력 공개채용"
+              maxLength={MAX_LENGTHS.recruitTitle} // HTML5 기본 속성 추가
             />
+            <div className={styles.charCounter}>
+              {formData.recruitTitle.length} / {MAX_LENGTHS.recruitTitle}
+            </div>
           </div>
 
           <div className={styles.gridContainer}>
@@ -312,7 +332,12 @@ export default function WriteRecruitPage() {
               onChange={handleChange}
               className={styles.textarea}
               placeholder="담당할 주요 업무, 자격 요건, 우대 사항 등을 상세히 기재해주세요."
+              maxLength={MAX_LENGTHS.recruitJobDetail}
             />
+            <div className={styles.charCounter}>
+              {formData.recruitJobDetail.length} /{" "}
+              {MAX_LENGTHS.recruitJobDetail}
+            </div>
           </div>
 
           <div className={styles.gridContainer}>
@@ -439,7 +464,11 @@ export default function WriteRecruitPage() {
               onChange={handleChange}
               className={styles.input}
               placeholder="예: 회사 내규에 따름, 4,000만원 이상"
+              maxLength={MAX_LENGTHS.recruitSalary}
             />
+            <div className={styles.charCounter}>
+              {formData.recruitSalary.length} / {MAX_LENGTHS.recruitSalary}
+            </div>
           </div>
 
           <div className={styles.inputGroup}>
@@ -453,7 +482,11 @@ export default function WriteRecruitPage() {
               onChange={handleChange}
               className={styles.textarea}
               placeholder="예: 이력서, 자기소개서, 포트폴리오 등"
+              maxLength={MAX_LENGTHS.recruitDocx}
             />
+            <div className={styles.charCounter}>
+              {formData.recruitDocx.length} / {MAX_LENGTHS.recruitDocx}
+            </div>
           </div>
 
           <div className={styles.inputGroup}>
@@ -467,7 +500,11 @@ export default function WriteRecruitPage() {
               onChange={handleChange}
               className={styles.textarea}
               placeholder="예: 자사 홈페이지 지원, 이메일 지원 (hr@company.com)"
+              maxLength={MAX_LENGTHS.recruitApply}
             />
+            <div className={styles.charCounter}>
+              {formData.recruitApply.length} / {MAX_LENGTHS.recruitApply}
+            </div>
           </div>
 
           <div className={styles.inputGroup}>
@@ -482,7 +519,11 @@ export default function WriteRecruitPage() {
               onChange={handleChange}
               className={styles.input}
               placeholder="채용 관련 URL을 입력하세요"
+              maxLength={MAX_LENGTHS.recruitCorpUrl}
             />
+            <div className={styles.charCounter}>
+              {formData.recruitCorpUrl.length} / {MAX_LENGTHS.recruitCorpUrl}
+            </div>
           </div>
 
           <div className={styles.inputGroup}>
@@ -496,7 +537,12 @@ export default function WriteRecruitPage() {
               onChange={handleChange}
               className={styles.textarea}
               placeholder="예: 서류전형 > 1차면접 > 2차면접 > 최종합격"
+              maxLength={MAX_LENGTHS.recruitHireDetail}
             />
+            <div className={styles.charCounter}>
+              {formData.recruitHireDetail.length} /{" "}
+              {MAX_LENGTHS.recruitHireDetail}
+            </div>
           </div>
 
           <div className={styles.inputGroup}>
@@ -510,7 +556,11 @@ export default function WriteRecruitPage() {
               onChange={handleChange}
               className={styles.textarea}
               placeholder="지원자에게 전하고 싶은 기타 정보를 자유롭게 기재해주세요."
+              maxLength={MAX_LENGTHS.recruitEtc}
             />
+            <div className={styles.charCounter}>
+              {formData.recruitEtc.length} / {MAX_LENGTHS.recruitEtc}
+            </div>
           </div>
         </div>
 

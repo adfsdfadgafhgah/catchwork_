@@ -98,7 +98,7 @@ public class RecruitController {
 	) {
 		try {
 	        List<Recruit> recruitList = recruitService.getRecruitList(status, sort, writer, query, memNo, corpNo, corpMemRoleCheck, page, size);
-	        System.out.println("corpNo = " + corpNo);
+	        // System.out.println("corpNo = " + corpNo);
 	        return ResponseEntity.ok(recruitList);
 	    } catch (Exception e) {
 	        e.printStackTrace();
@@ -166,9 +166,9 @@ public class RecruitController {
 	@PutMapping("edit/{recruitNo}")
 	public ResponseEntity<?> editRecruit(@PathVariable("recruitNo") int recruitNo, 
 										 @RequestBody Recruit recruit) {
-		System.out.println("수정 요청: recruitNo=" + recruitNo);
-		System.out.println("DTO recruitNo=" + recruit.getRecruitNo());
-		System.out.println("DTO memNo=" + recruit.getMemNo());
+		// System.out.println("수정 요청: recruitNo=" + recruitNo);
+		// System.out.println("DTO recruitNo=" + recruit.getRecruitNo());
+		// System.out.println("DTO memNo=" + recruit.getMemNo());
 	    try {
 	    	recruit.setRecruitNo(recruitNo); // 경로 변수로 넘어온 boardNo를 DTO에 주입
 	        int result = recruitService.editRecruit(recruit);

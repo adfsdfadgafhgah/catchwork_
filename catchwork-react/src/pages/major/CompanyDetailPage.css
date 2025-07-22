@@ -11,11 +11,41 @@
   margin-bottom: 30px;
 }
 
-.company-header-left .company-logo {
+/* 기업 로고 */
+.company-header-left {
+  position: relative;
   width: 300px;
   height: 300px;
-  border-radius: 50%;
-  object-fit: cover;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--box-shadow);
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+/* 기업 로고 블러 효과 */
+.company-header-image-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  /* opacity: 0.8; */
+  /* filter: brightness(70%); */
+  z-index: 0;
+}
+
+.company-detail-logo {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  padding: 20px;
+  object-fit: contain; /* 원본 이미지는 비율 유지 */
 }
 
 .company-header-right {
@@ -75,6 +105,7 @@
   height: auto; /* 원본 비율 유지 */
   object-fit: contain; /* 이미지가 짤리지 않고 비율 유지됨 */
   display: block;
+  border-radius: 50%;
 }
 
 /* ✅ 회사 기본정보 세로 정렬 + 세로선 */

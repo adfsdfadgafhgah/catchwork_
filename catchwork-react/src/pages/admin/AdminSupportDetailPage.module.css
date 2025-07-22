@@ -27,6 +27,9 @@
   border-radius: 8px;
   padding: 24px;
   margin-bottom: 32px;
+  word-break: break-word;     /* 단어 중간이라도 줄바꿈 허용 */
+  overflow-wrap: break-word;  /* 오래된 브라우저 호환용 */
+  white-space: normal;        /* 공백, 줄바꿈을 기본처럼 처리 */
 }
 
 .infoRow {
@@ -90,6 +93,9 @@
   line-height: 1.6;
   min-height: 150px;
   border: 1px solid var(--stroke-color1);
+  word-break: break-word;     /* 단어 중간이라도 줄바꿈 허용 */
+  overflow-wrap: break-word;  /* 오래된 브라우저 호환용 */
+  white-space: normal;        /* 공백, 줄바꿈을 기본처럼 처리 */
 }
 
 /* 답변 입력/표시 텍스트 영역 */
@@ -141,6 +147,18 @@
   border: none;
   cursor: pointer;
   transition: background-color 0.2s;
+}
+
+.answerSection .charCounter {
+  text-align: left;
+  font-size: 0.9rem;
+  color: var(--deep-gray);
+  margin-top: 8px;
+}
+
+/* 버튼 그룹과 카운터 사이의 간격을 위해 */
+.answerSection .buttonGroup {
+  margin-top: 16px;
 }
 
 /* 답변 등록 버튼 */

@@ -3,6 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 import SectionHeader from "../../components/common/SectionHeader";
 import styles from "./AdminSupportDetailPage.module.css";
+import useAdminInfo from "../../hooks/admin/useAdminInfo";
+
+const MAX_ANSWER_LENGTH = 4000;
 
 export default function AdminSupportDetailPage() {
   const { supportNo } = useParams(); // URL 파라미터에서 supportNo 가져오기
@@ -12,6 +15,8 @@ export default function AdminSupportDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [answerContent, setAnswerContent] = useState(""); // 답변 내용
+
+  const { adminInfo } = useAdminInfo();
 
   /**
    * 날짜시간 문자열에서 'T'를 공백으로 변환하는 함수
@@ -52,6 +57,14 @@ export default function AdminSupportDetailPage() {
     }
   };
 
+  // 답변 내용 변경 핸들러 (글자 수 제한 기능)
+  const handleAnswerChange = (e) => {
+    const { value } = e.target;
+    if (value.length <= MAX_ANSWER_LENGTH) {
+      setAnswerContent(value);
+    }
+  };
+
   // 답변 등록 핸들러 (수정 기능 없음)
   const handleAnswerSubmit = async () => {
     // 이미 답변이 완료된 상태라면 등록할 수 없습니다.
@@ -71,6 +84,7 @@ export default function AdminSupportDetailPage() {
       const payload = {
         supportNo: support.supportNo,
         supportAnswer: answerContent,
+        adminNo: adminInfo?.adminNo,
         // adminNo는 백엔드에서 현재 로그인된 관리자의 정보를 통해 자동으로 설정됩니다.
         // supportStatus는 백엔드에서 답변이 등록되면 'Y'로 자동 변경됩니다.
       };
@@ -187,7 +201,7 @@ export default function AdminSupportDetailPage() {
         <textarea
           className={styles.answerTextarea}
           value={answerContent} // answerContent 상태 사용
-          onChange={(e) => setAnswerContent(e.target.value)} // 변경 핸들러 추가
+          onChange={handleAnswerChange}
           placeholder={
             isAnswerReadOnly
               ? "답변이 등록되었습니다."
@@ -196,7 +210,12 @@ export default function AdminSupportDetailPage() {
           readOnly={isAnswerReadOnly} // 답변 완료 시 읽기 전용
           rows="5"
           style={{ whiteSpace: "pre-wrap" }}
+          maxLength={MAX_ANSWER_LENGTH}
         />
+        <div className={styles.charCounter}>
+          {answerContent.length} / {MAX_ANSWER_LENGTH}
+        </div>
+
         <div className={styles.buttonGroup}>
           {/* 답변이 없는 경우에만 "답변 등록" 버튼 표시 */}
           {!isAnswerReadOnly && (
