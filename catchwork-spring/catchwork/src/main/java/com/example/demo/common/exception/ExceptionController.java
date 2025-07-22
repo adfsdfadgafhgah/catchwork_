@@ -11,7 +11,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 
 // REST API 예외를 전역적으로 처리하는 컨트롤러 (모든 @RestController 대상)
-@RestControllerAdvice
+//@RestControllerAdvice
 public class ExceptionController {
 
 	// 요청한 리소스를 찾을 수 없을 때 (404) 처리

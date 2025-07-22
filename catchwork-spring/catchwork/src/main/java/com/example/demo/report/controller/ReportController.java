@@ -42,8 +42,8 @@ public class ReportController {
         String memNo = userDetails.getUsername();
         report.setMemNo(memNo);
 
-        System.out.println("===== 신고 데이터 확인 =====");
-        System.out.println(report);
+        // System.out.println("===== 신고 데이터 확인 =====");
+        // System.out.println(report);
 
         // 유효성 검사
         if (report.getReportTargetNo() == null || report.getReportTargetNo().isBlank()) {

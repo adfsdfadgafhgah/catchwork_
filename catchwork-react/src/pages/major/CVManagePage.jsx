@@ -496,7 +496,7 @@ const CVManagePage = () => {
   const handleSearchAddress = () => {
     new window.daum.Postcode({
       oncomplete: function (data) {
-        console.log("선택된 주소:", data);
+        // console.log("선택된 주소:", data);
         const fullAddress = data.roadAddress || data.jibunAddress;
         handleInputChange("mainAddress", fullAddress);
       },

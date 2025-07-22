@@ -45,7 +45,7 @@ public class JWTFilter extends OncePerRequestFilter{
 
         // Authorization 헤더가 없거나 "Bearer "로 시작하지 않으면 필터 건너뜀(유효성 검사)
         if (authorization == null || !authorization.startsWith("Bearer ")) {
-            System.out.println("[JWTFilter] 토큰 없음 → 다음 필터로 진행");
+            // System.out.println("[JWTFilter] 토큰 없음 → 다음 필터로 진행");
             filterChain.doFilter(request, response);
             return;
         }
@@ -78,7 +78,7 @@ public class JWTFilter extends OncePerRequestFilter{
                 return;
             }
         } catch (Exception e) {
-            System.out.println("[JWTFilter] Token parsing failed");
+            // System.out.println("[JWTFilter] Token parsing failed");
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }

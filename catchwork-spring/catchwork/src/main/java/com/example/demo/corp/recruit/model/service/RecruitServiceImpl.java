@@ -59,7 +59,7 @@ public class RecruitServiceImpl implements RecruitService {
 	    paramMap.put("pageSize", size); // 한 페이지에 보여줄 개수 (LIMIT)
 	    paramMap.put("offset", offset); // 건너뛸 데이터 개수 (OFFSET)
 	    
-	    System.out.println("파라미터 맵: " + paramMap);
+	    // System.out.println("파라미터 맵: " + paramMap);
 
 	    return recruitMapper.selectRecruitList(paramMap);
 	}

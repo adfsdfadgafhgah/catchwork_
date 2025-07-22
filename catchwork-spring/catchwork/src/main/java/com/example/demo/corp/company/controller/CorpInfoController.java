@@ -71,8 +71,8 @@ public class CorpInfoController {
 	@PostMapping("update")
 	public ResponseEntity<String> updateCorpInfo(@RequestPart("corpInfo") CorpInfo corpInfo,
 			@RequestPart(value = "corpLogoFile", required = false) MultipartFile corpLogoFile) {
-		System.out.println("📌 기업 정보 수정 요청 받음: corpInfo = " + corpInfo);
-		System.out.println("📌 기업 로고 파일 전달 여부: corpLogoFile = " + (corpLogoFile != null));
+		// System.out.println("📌 기업 정보 수정 요청 받음: corpInfo = " + corpInfo);
+		// System.out.println("📌 기업 로고 파일 전달 여부: corpLogoFile = " + (corpLogoFile != null));
 
 		// 1. 파일이 있을 경우 저장
 		if (corpLogoFile != null && !corpLogoFile.isEmpty()) {
@@ -119,9 +119,9 @@ public class CorpInfoController {
 	 */
 	@GetMapping("info/{memNo}")
 	public ResponseEntity<CorpInfo> getCorpInfo(@PathVariable("memNo") String memNo) {
-		System.out.println(" 기업 정보 요청 받음: memNo = " + memNo);
+		// System.out.println(" 기업 정보 요청 받음: memNo = " + memNo);
 		CorpInfo corpInfo = corpInfoService.getCorpInfoByMember(memNo);
-		System.out.println(" 반환할 corpInfo = " + corpInfo);
+		// System.out.println(" 반환할 corpInfo = " + corpInfo);
 		if (corpInfo == null) {
 			return ResponseEntity.notFound().build(); // 404 처리
 		}
