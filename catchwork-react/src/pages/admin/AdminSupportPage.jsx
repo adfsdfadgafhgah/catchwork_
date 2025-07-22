@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { axiosApi } from "../../api/axiosAPI";
 import Pagination from "../../components/common/Pagination";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { truncateText } from "../../hooks/admin/mainUtils";
 import styles from "./AdminSupportPage.module.css";
 
 export default function AdminSupportPage() {
@@ -210,7 +211,7 @@ export default function AdminSupportPage() {
                       onClick={() => goToDetail(item.supportNo)}
                       style={{ cursor: "pointer" }}
                     >
-                      {item.supportTitle}
+                      {truncateText(item.supportTitle, 20)}
                     </td>
                     <td>{formatDate(item.supportDate)}</td>
                     <td

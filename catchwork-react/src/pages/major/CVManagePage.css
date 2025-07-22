@@ -128,3 +128,11 @@ select {
 .pdf-section {
   padding: 10px 0px;
 }
+
+.total-exp{
+  padding-bottom: 5px;
+}
+
+.empty-message {
+  padding-bottom: 5px;
+}

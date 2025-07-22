@@ -274,8 +274,6 @@ public class AdminController {
 	public ResponseEntity<?> submitSupportAnswer(@RequestBody Support support) {
 		try {
 
-			int adminNo = 1; // 예시: 임시 관리자 번호를 1L로 설정
-			support.setAdminNo(adminNo);
 			int result = adminService.submitSupportAnswer(support);
 			if (result > 0) {
 				log.info("문의 답변 등록 성공. 문의 번호: {}", support.getSupportNo());
