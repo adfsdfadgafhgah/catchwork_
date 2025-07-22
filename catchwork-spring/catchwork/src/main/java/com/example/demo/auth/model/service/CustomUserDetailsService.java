@@ -14,16 +14,23 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.example.demo.auth.model.dto.CustomUserDetails;
+import com.example.demo.auth.model.entity.CorpMemEntity;
 import com.example.demo.auth.model.entity.MemberEntity;
+import com.example.demo.auth.model.repository.CorpInfoRepository;
+import com.example.demo.auth.model.repository.CorpMemRepository;
 import com.example.demo.auth.model.repository.MemberRepository;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
+    private final CorpMemRepository corpMemRepository;
+    private final CorpInfoRepository corpInfoRepository;
     
-    public CustomUserDetailsService(MemberRepository memberRepository) {
+    public CustomUserDetailsService(MemberRepository memberRepository, CorpMemRepository corpMemRepository, CorpInfoRepository corpInfoRepository) {
         this.memberRepository = memberRepository;
+        this.corpMemRepository = corpMemRepository;
+        this.corpInfoRepository = corpInfoRepository;
     }
     
     @Override
@@ -41,6 +48,20 @@ public class CustomUserDetailsService implements UserDetailsService {
         } else if (memberEntity.getMemStatus() == 2) {
         	// 정지
             throw new LockedException("비활성화된 계정입니다.");
+        }
+
+        if (memberEntity.getMemType() == 1) {
+            String memNo = memberEntity.getMemNo();
+            CorpMemEntity corpMem = corpMemRepository.findByMemNo(memNo);
+
+            int corpStatus = corpMemRepository.findCorpStatusByMemNo(memNo)
+            	    .orElseThrow(() -> new DisabledException("소속 기업 정보가 없습니다."));
+            
+            if (corpStatus == 1) {
+                throw new LockedException("소속 기업이 탈퇴 처리되었습니다.");
+            } else if (corpStatus == 2) {
+                throw new DisabledException("소속 기업이 정지된 상태입니다.");
+            }
         }
 
         
