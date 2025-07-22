@@ -48,6 +48,12 @@ const CompanyItem = ({ company: companyInfo }) => {
       <div className="company-item">
         {/* 로고 영역 */}
         <div className="company-item-logo-area">
+          <div
+            className="company-item-image-background"
+            style={{
+              backgroundImage: `url(${`${companyImgUrl}/${company.corpLogo}`})`,
+            }}
+          />
           <img
             src={
               company.corpLogo

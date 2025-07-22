@@ -26,6 +26,7 @@
   justify-content: center;
   align-items: center;
   overflow: hidden;
+  position: relative;
 }
 
 .company-logo {
@@ -33,8 +34,21 @@
   object-fit: contain;
 }
 
-/* 기업명 */
+/* 기업 로고 블러 효과 */
+.company-item-image-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.8;
+  filter: brightness(70%);
+  z-index: 0;
+}
 
+/* 기업명 */
 .company-item .company-name {
   font-weight: 600;
   font-size: 16px;

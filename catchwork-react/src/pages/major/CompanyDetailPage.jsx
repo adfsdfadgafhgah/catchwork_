@@ -129,6 +129,12 @@ const CompanyDetailPage = () => {
 
         <div className="company-detail-header">
           <div className="company-header-left">
+            <div
+              className="company-header-image-background"
+              style={{
+                backgroundImage: `url(${`${imgUrl}/${company.corpLogo}`})`,
+              }}
+            />
             <img
               src={
                 company.corpLogo ? `${imgUrl}/${company.corpLogo}` : defaultLogo

@@ -16,14 +16,6 @@
   /* border-top: 1px solid var(--stroke-color2); */
 }
 
-.company-header-left .company-logo {
-  width: 300px;
-  height: 300px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 1px solid var(--stroke-color2);
-}
-
 .company-header-right {
   flex: 1;
   min-width: 0;

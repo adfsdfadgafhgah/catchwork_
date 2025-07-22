@@ -190,28 +190,34 @@ const EditCompanyPage = () => {
       <SectionHeader title="기업 정보 수정" />
 
       <div className="company-detail-header">
-        <div className="company-header-left">
-          <div className="company-logo-wrapper" onClick={handleLogoClick}>
-            <img
-              src={
-                corpLogoPreview
-                  ? corpLogoPreview
-                  : `${corpLogoUrl}/${company.corpLogo}`
-              }
-              alt="기업로고"
-              className="company-logo"
-            />
-            <div className="image-overlay">
+        <div className="company-header-left" onClick={handleLogoClick}>
+          <div
+            className="company-header-image-background"
+            style={{
+              backgroundImage: `url(${
+                corpLogoPreview || `${corpLogoUrl}/${company.corpLogo}`
+              })`,
+            }}
+          />
+          <img
+            src={
+              corpLogoPreview
+                ? corpLogoPreview
+                : `${corpLogoUrl}/${company.corpLogo}`
+            }
+            alt="기업로고"
+            className="company-logo"
+          />
+          {/* <div className="image-overlay">
               <i className="fas fa-camera"></i>
-            </div>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleLogoChange}
-              ref={fileInputRef}
-              style={{ display: "none" }}
-            />
-          </div>
+            </div> */}
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleLogoChange}
+            ref={fileInputRef}
+            style={{ display: "none" }}
+          />
         </div>
 
         <div className="company-header-right">
