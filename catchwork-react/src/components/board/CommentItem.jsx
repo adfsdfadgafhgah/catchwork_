@@ -71,78 +71,126 @@ export default function CommentItem({
         />
       ) : (
         <div className={styles.commentBox}>
-          <div className={styles.header}>
-            <div className={styles.writerInfo}>
-              {/* 대댓글이면 ㄴ자 선 보이게 */}
-              {comment.parentCommentNo > 0 && (
-                <div className={styles.replyLine}></div>
-              )}
-              <img
-                src={
-                  comment?.memProfilePath
-                    ? `${imgUrl}/${comment?.memProfilePath}`
-                    : defaultImg
-                }
-                alt="기업로고"
-                className={styles.profileImg}
-              />
-              <span className={styles.nickname}>{comment.memNickname}</span>
-            </div>
-            <span className={styles.date}>
-              {formatTimeAgo(comment.commentWriteDate)}
-            </span>
-          </div>
-
-          {/*  댓글 내용 or 삭제된 댓글 표시 */}
-          {comment.commentStatus === 1 ? (
-            <div className={styles.deleted}>삭제된 댓글입니다.</div>
+          {/* CASE 0: 탈퇴(1) 또는 정지(2)된 회원의 댓글인 경우, 최우선으로 표시 */}
+          {/* 수정된 코드: memStatus가 1 또는 2인 경우를 명시적으로 확인합니다. */}
+          {comment.memStatus === 1 || comment.memStatus === 2 ? (
+            <>
+              <div className={styles.header}>
+                <div className={styles.writerInfo}>
+                  {comment.parentCommentNo > 0 && (
+                    <div className={styles.replyLine}></div>
+                  )}
+                  <img
+                    src={defaultImg}
+                    alt="프로필"
+                    className={styles.profileImg}
+                  />
+                  <span className={styles.nickname}>(알수없음)</span>
+                </div>
+                <span className={styles.date}>
+                  {formatTimeAgo(comment.commentWriteDate)}
+                </span>
+              </div>
+              {/* 탈퇴와 정지를 모두 포함하는 문구로 변경 */}
+              <div className={styles.stopped}>
+                [탈퇴 또는 정지된 회원의 댓글입니다]
+              </div>
+            </>
           ) : (
-            <div
-              className={styles.content}
-              dangerouslySetInnerHTML={{
-                __html: comment.commentContent.replace(/\n/g, "<br/>"),
-              }}
-            ></div>
+            <>
+              {/* 기존 댓글 헤더 (정상 회원일 때만 보임) */}
+              <div className={styles.header}>
+                <div className={styles.writerInfo}>
+                  {comment.parentCommentNo > 0 && (
+                    <div className={styles.replyLine}></div>
+                  )}
+                  <img
+                    src={
+                      comment?.memProfilePath
+                        ? `${imgUrl}/${comment?.memProfilePath}`
+                        : defaultImg
+                    }
+                    alt="기업로고"
+                    className={styles.profileImg}
+                  />
+                  <span className={styles.nickname}>{comment.memNickname}</span>
+                </div>
+                <span className={styles.date}>
+                  {formatTimeAgo(comment.commentWriteDate)}
+                </span>
+              </div>
+
+              {/* 댓글 내용 or 상태(삭제/정지)에 따른 메시지 표시 */}
+              {(() => {
+                switch (comment.commentStatus) {
+                  case 1:
+                    return (
+                      <div className={styles.deleted}>삭제된 댓글입니다.</div>
+                    );
+                  case 2:
+                    return (
+                      <div className={styles.stopped}>
+                        [관리자에 의해 정지된 댓글입니다]
+                      </div>
+                    );
+                  default:
+                    return (
+                      <div
+                        className={styles.content}
+                        dangerouslySetInnerHTML={{
+                          __html: comment.commentContent.replace(
+                            /\n/g,
+                            "<br/>"
+                          ),
+                        }}
+                      ></div>
+                    );
+                }
+              })()}
+
+              {/* 수정, 삭제, 신고 등 액션 버튼 */}
+              <div className={styles.actions}>
+                {comment.commentStatus === 0 &&
+                  (comment.parentCommentNo === null ||
+                    comment.parentCommentNo === 0) && (
+                    <button
+                      className={styles.actionBtn}
+                      onClick={() => setIsReplyOpen((prev) => !prev)}
+                    >
+                      <i className="fa-regular fa-comment-dots" />
+                      {childComments.length}
+                    </button>
+                  )}
+                {comment.commentStatus === 0 &&
+                  (isWriter ? (
+                    <>
+                      <button
+                        className={styles.actionBtn}
+                        onClick={() => setIsEditing(true)}
+                      >
+                        수정
+                      </button>
+                      <button
+                        className={styles.actionBtn}
+                        onClick={handleDelete}
+                      >
+                        삭제
+                      </button>
+                    </>
+                  ) : (
+                    <button className={styles.actionBtn} onClick={handleReport}>
+                      <span
+                        className={`material-symbols-outlined ${styles.iconSmall}`}
+                      >
+                        siren
+                      </span>
+                      신고
+                    </button>
+                  ))}
+              </div>
+            </>
           )}
-
-          <div className={styles.actions}>
-            {/* 말풍선: 부모 댓글에만 노출 */}
-            {comment.commentStatus === 0 &&
-              (comment.parentCommentNo === null ||
-                comment.parentCommentNo === 0) && (
-                <button
-                  className={styles.actionBtn}
-                  onClick={() => setIsReplyOpen((prev) => !prev)}
-                >
-                  <i className="fa-regular fa-comment-dots" />
-
-                  {childComments.length}
-                </button>
-              )}
-            {comment.commentStatus === 0 &&
-              (isWriter ? (
-                <>
-                  <button
-                    className={styles.actionBtn}
-                    onClick={() => setIsEditing(true)}
-                  >
-                    수정
-                  </button>
-                  <button className={styles.actionBtn} onClick={handleDelete}>
-                    삭제
-                  </button>
-                </>
-              ) : (
-                <button className={styles.actionBtn} onClick={handleReport}>
-                  <span
-                    className={`material-symbols-outlined ${styles.iconSmall}`}
-                  >
-                    siren
-                  </span>
-                  신고
-                </button>
-              ))}
-          </div>
+          {/* ----- ⬆️ 여기까지 수정된 부분 ⬆️ ----- */}
         </div>
       )}
 
