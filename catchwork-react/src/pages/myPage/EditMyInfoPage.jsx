@@ -17,7 +17,7 @@ const EditMyInfoPage = () => {
   const fileInputRef = useRef(null);
   const isDeleted = useRef(false);
   // header의 authStore 업데이트
-  const { setMemNickname } = useAuthStore((state) => state.setMemNickname);
+  const setMemNickname = useAuthStore((state) => state.setMemNickname);
 
   // 로그인 유저 정보 조회
   const getLoginMember = async () => {
@@ -172,7 +172,6 @@ const EditMyInfoPage = () => {
       });
 
       if (resp.status === 200) {
-        setMemNickname(formData.get("memNickname"));
         navigate("/myPage/home");
       }
     } catch (error) {
@@ -292,6 +291,7 @@ const EditMyInfoPage = () => {
         if (imageProcessSuccess) {
           // 스크롤 위치를 초기화
           window.scrollTo(0, 0);
+          setMemNickname(formData.memNickname);
           navigate("/myPage/home");
         }
       }

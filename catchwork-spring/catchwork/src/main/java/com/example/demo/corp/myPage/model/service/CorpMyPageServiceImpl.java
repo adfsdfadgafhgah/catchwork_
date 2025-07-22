@@ -68,6 +68,7 @@ public class CorpMyPageServiceImpl implements CorpMyPageService {
                 // 2-2. corpNo로 CORP_INFO에서 CORP_STATUS = 1로 변경 (기업 비활성화)
                 corpMyPageMapper.updateCorpInfoStatus(corpNo);
 
+                /*
                 // 2-3. corpNo로 CORP_MEM의 memNo를 LIST<STRING>으로 받아오기
                 List<String> memNosInCorp = corpMyPageMapper.getMemNosByCorpNo(corpNo);
 
@@ -75,6 +76,7 @@ public class CorpMyPageServiceImpl implements CorpMyPageService {
                 for (String memberNo : memNosInCorp) {
                     corpMyPageMapper.withdraw(memberNo);
                 }
+                */
             } else {
                 // corpNo를 찾을 수 없는 경우 (예외 처리 또는 로깅)
                 throw new RuntimeException("기업 번호를 찾을 수 없습니다: " + memNo);

@@ -1,17 +1,33 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 import "./CompanyItem.css";
 import defaultImg from "../../assets/icon.png";
 import { useAuthStore } from "../../stores/authStore";
+import { extractPixelColor } from "../../api/extractPixelColor";
 
 const CompanyItem = ({ company: companyInfo }) => {
   const companyImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
   const { memNo } = useAuthStore();
   const [company, setCompany] = useState(companyInfo);
   const [isLoading, setIsLoading] = useState(false);
-
+  const [pixelColor, setPixelColor] = useState("transparent");
   // console.log("기업 정보 확인:", company);
+
+  // 기업 로고 색상 추출
+  useEffect(() => {
+    if (company?.corpLogo) {
+      const imageUrl = `${companyImgUrl}/${company.corpLogo}`;
+      extractPixelColor(imageUrl, 1, 1)
+        .then((color) => {
+          setPixelColor(color.hex);
+        })
+        .catch((error) => {
+          console.error("색상 추출 실패:", error);
+          setPixelColor("transparent");
+        });
+    }
+  }, [company?.corpLogo, companyImgUrl]);
 
   const handleToggleBookmark = async (e) => {
     e.preventDefault(); // 링크 이동 방지
@@ -48,6 +64,12 @@ const CompanyItem = ({ company: companyInfo }) => {
       <div className="company-item">
         {/* 로고 영역 */}
         <div className="company-item-logo-area">
+          <div
+            className="company-item-image-background"
+            style={{
+              backgroundColor: pixelColor, // 추출된 색상 사용
+            }}
+          />
           <img
             src={
               company.corpLogo
@@ -55,7 +77,7 @@ const CompanyItem = ({ company: companyInfo }) => {
                 : defaultImg //기업 로고 없을때 넣을 이미지
             }
             alt="기업 로고"
-            className="company-logo-img"
+            className="company-item-logo"
           />
         </div>
 
