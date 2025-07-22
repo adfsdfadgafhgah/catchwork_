@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 import Pagination from "../../components/common/Pagination";
 import styles from "./AdminReportPage.module.css";
+import { truncateText } from "../../hooks/admin/mainUtils";
 
 export default function AdminReportPage() {
   const navigate = useNavigate();
@@ -242,7 +243,7 @@ export default function AdminReportPage() {
                       }
                       style={{ cursor: "pointer" }}
                     >
-                      {group.reportContent}
+                      {truncateText(group.reportContent, 40)}
                     </td>
                     <td>{group.reportCount}건</td>
                     <td>

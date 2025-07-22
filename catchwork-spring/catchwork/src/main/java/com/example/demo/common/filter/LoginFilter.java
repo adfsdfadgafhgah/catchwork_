@@ -47,7 +47,7 @@ public class LoginFilter extends AbstractAuthenticationProcessingFilter {
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
-	    System.out.println("LoginFilter 진입: 요청 수신");
+	    // System.out.println("LoginFilter 진입: 요청 수신");
 
 		try {
 			// Content-Type이 application/json인지 확인

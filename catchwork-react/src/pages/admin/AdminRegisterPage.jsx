@@ -92,7 +92,7 @@ const AdminRegisterPage = () => {
         alert("이미 존재하는 이메일입니다.");
         return;
       }
-      console.log(response);
+      // console.log(response);
       if (response.status === 200 && response.data) {
         setModalInfo({
           id: response.data.res.id,

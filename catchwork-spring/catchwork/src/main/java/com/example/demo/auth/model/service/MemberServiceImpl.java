@@ -94,7 +94,7 @@ public class MemberServiceImpl implements MemberService {
 	    	
 	        // 기업 정보 조회
 	    	CorpInfoEntity corpInfo = corpInfoRepository.findByCorpRegNo(inputMember.getCorpRegNo());
-	    	System.out.println(corpInfo);
+	    	// System.out.println(corpInfo);
 
 	    	if (corpInfo==null) {
 	    	    throw new Exception("해당 사업자등록번호로 등록된 기업이 없습니다.");
@@ -137,27 +137,27 @@ public class MemberServiceImpl implements MemberService {
 	 */
 	private boolean isValidInput(Member member) {
 	    if (member == null) {
-	        System.out.println("[유효성 실패] member == null");
+	        // System.out.println("[유효성 실패] member == null");
 	        return false;
 	    }
 	    if (member.getMemId() == null || member.getMemId().trim().isEmpty()) {
-	        System.out.println("[유효성 실패] memId is null or empty");
+	        // System.out.println("[유효성 실패] memId is null or empty");
 	        return false;
 	    }
 	    if (member.getMemPw() == null || member.getMemPw().trim().isEmpty()) {
-	        System.out.println("[유효성 실패] memPw is null or empty");
+	        // System.out.println("[유효성 실패] memPw is null or empty");
 	        return false;
 	    }
 	    if (member.getMemName() == null || member.getMemName().trim().isEmpty()) {
-	        System.out.println("[유효성 실패] memName is null or empty");
+	        // System.out.println("[유효성 실패] memName is null or empty");
 	        return false;
 	    }
 	    if (member.getMemEmail() == null || member.getMemEmail().trim().isEmpty()) {
-	        System.out.println("[유효성 실패] memEmail is null or empty");
+	        // System.out.println("[유효성 실패] memEmail is null or empty");
 	        return false;
 	    }
 	    if (member.getMemTel() == null || member.getMemTel().trim().isEmpty()) {
-	        System.out.println("[유효성 실패] memTel is null or empty");
+	        // System.out.println("[유효성 실패] memTel is null or empty");
 	        return false;
 	    }
 
@@ -339,14 +339,14 @@ public class MemberServiceImpl implements MemberService {
 	 */
 	@Override
 	public boolean checkAuthKey(String memEmail, String authKey) {
-		System.out.println("memEmail: " + memEmail);
-		System.out.println("authKey: " + authKey);
+		// System.out.println("memEmail: " + memEmail);
+		// System.out.println("authKey: " + authKey);
 
 		Map<String, String> paramMap = new HashMap<>();
 		paramMap.put("memEmail", memEmail);
 		paramMap.put("authKey", authKey);
 
-		System.out.println("paramMap: " + paramMap);
+		// System.out.println("paramMap: " + paramMap);
 
 		int result = mapper.checkAuthKey(paramMap);
 		if(result > 0) return true;

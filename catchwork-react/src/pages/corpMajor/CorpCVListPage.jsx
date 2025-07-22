@@ -272,78 +272,80 @@ const CorpCVListPage = () => {
         </div>
       </div>
 
-      {/* 테이블 */}
-      {filteredList.length === 0 ? (
-        <p style={{ padding: "40px", textAlign: "center", color: "#999" }}>
-          해당하는 이력서가 없습니다.
-        </p>
-      ) : (
-        <table className="cv-table">
-          <thead>
-            <tr>
-              <th style={{ width: "40px" }}>
-                {showCheckbox && (
-                  <input
-                    type="checkbox"
-                    checked={isAllSelected}
-                    onChange={handleSelectAll}
-                  />
-                )}
-              </th>
-              <th>공고 제목</th>
-              <th>제목</th>
-              <th>작성일</th>
-              <th>다운로드</th>
-              <th>저장 여부</th>
-            </tr>
-          </thead>
-
-          <tbody>
-            {currentItems.map((cv) => (
-              <tr key={cv.recruitCVNo}>
-                <td style={{ width: "40px", textAlign: "center" }}>
+      <div className="cv-table-wrapper">
+        {/* 테이블 */}
+        {filteredList.length === 0 ? (
+          <p style={{ padding: "40px", textAlign: "center", color: "#999" }}>
+            해당하는 이력서가 없습니다.
+          </p>
+        ) : (
+          <table className="cv-table">
+            <thead>
+              <tr>
+                <th style={{ width: "40px" }}>
                   {showCheckbox && (
                     <input
                       type="checkbox"
-                      value={cv.recruitCVNo}
-                      checked={selectedCVNos.includes(cv.recruitCVNo)}
-                      onChange={() => handleCheckboxChange(cv.recruitCVNo)}
+                      checked={isAllSelected}
+                      onChange={handleSelectAll}
                     />
                   )}
-                </td>
-                <td>{cv.recruitTitle}</td>
-                <td>{cv.recruitCVPdfTitle}</td>
-                <td>{cv.date}</td>
-                <td>
-                  <button
-                    className="btn btn-download"
-                    onClick={() =>
-                      handleDownload(cv.recruitCVNo, cv.recruitCVPdfTitle)
-                    }
-                  >
-                    다운로드
-                  </button>
-                </td>
-                <td className={`check-status ${cv.isDownloaded ? "y" : "n"}`}>
-                  {cv.isDownloaded ? "Y" : "N"}
-                </td>
+                </th>
+                <th>공고 제목</th>
+                <th>제목</th>
+                <th>작성일</th>
+                <th>다운로드</th>
+                <th>저장 여부</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+            </thead>
 
-      {/* 페이지네이션 */}
-      {totalPages > 1 && (
-        <Pagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={(page) => {
-            setCurrentPage(page);
-            setSelectedCVNos([]); //체크박스 다시 빈상태로
-          }}
-        />
-      )}
+            <tbody>
+              {currentItems.map((cv) => (
+                <tr key={cv.recruitCVNo}>
+                  <td style={{ width: "40px", textAlign: "center" }}>
+                    {showCheckbox && (
+                      <input
+                        type="checkbox"
+                        value={cv.recruitCVNo}
+                        checked={selectedCVNos.includes(cv.recruitCVNo)}
+                        onChange={() => handleCheckboxChange(cv.recruitCVNo)}
+                      />
+                    )}
+                  </td>
+                  <td>{cv.recruitTitle}</td>
+                  <td>{cv.recruitCVPdfTitle}</td>
+                  <td>{cv.date}</td>
+                  <td>
+                    <button
+                      className="btn btn-download"
+                      onClick={() =>
+                        handleDownload(cv.recruitCVNo, cv.recruitCVPdfTitle)
+                      }
+                    >
+                      다운로드
+                    </button>
+                  </td>
+                  <td className={`check-status ${cv.isDownloaded ? "y" : "n"}`}>
+                    {cv.isDownloaded ? "Y" : "N"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+
+        {/* 페이지네이션 */}
+        {totalPages > 1 && (
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={(page) => {
+              setCurrentPage(page);
+              setSelectedCVNos([]); //체크박스 다시 빈상태로
+            }}
+          />
+        )}
+      </div>
 
       <div className="cv-bottom-actions">
         <button className="btn btn-cancel" onClick={handleCancel}>

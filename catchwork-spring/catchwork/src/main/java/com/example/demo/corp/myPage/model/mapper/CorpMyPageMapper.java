@@ -28,8 +28,10 @@ public interface CorpMyPageMapper {
     // memNo로 CORP_NO 조회
     String getCorpNoByMemNo(String memNo);
 
+    /*
     // corpNo로 같은 기업 회원 memNo 리스트 조회
     List<String> getMemNosByCorpNo(String corpNo);
+    */
 
     // 기업 상태 업데이트 (CORP_STATUS를 1로 변경)
     void updateCorpInfoStatus(String corpNo);

@@ -48,7 +48,7 @@ axiosApi.interceptors.response.use(
 
     // 재발급 실패
     if (originalRequest.url === "/reissue") {
-      console.log("refresh failed");
+      // console.log("refresh failed");
       // localStorage 초기화
       localStorage.removeItem("auth-storage");
       localStorage.removeItem("accessToken");
@@ -66,11 +66,9 @@ axiosApi.interceptors.response.use(
       originalRequest._retry = true;
       try {
         // 재발급 요청 axiosAPI는 요청 인터셉터가 가로채 헤더에 token 삽입 > 기본 axios 사용
-        const res = await axios.post(
-          `${baseUrl}reissue`,
-          {},
-          { withCredentials: true }
-        );
+        const res = await axios.post(`${baseUrl}/reissue`, {
+          withCredentials: true,
+        });
         const newToken = res.headers.authorization?.split(" ")[1];
         if (newToken) {
           const decoded = getDecodedToken(newToken);
@@ -103,9 +101,3 @@ axiosApi.interceptors.response.use(
     return Promise.reject(error);
   }
 );
-
-// http only 쿠키로 하면 못 읽음
-// const getRefreshTokenFromCookie = () => {
-//   const match = document.cookie.match(new RegExp("(^| )refreshToken=([^;]+)"));
-//   return match ? match[2] : null;
-// };

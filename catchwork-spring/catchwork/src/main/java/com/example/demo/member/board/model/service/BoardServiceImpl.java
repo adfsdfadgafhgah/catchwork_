@@ -99,13 +99,13 @@ public class BoardServiceImpl implements BoardService {
 	public int editBoard(Board board, MultipartFile thumbnailFile, Boolean isDelete) {
 
 		if (thumbnailFile != null) {
-			System.out.println("이미지 있음 thumbnailFile: " + thumbnailFile);
-			System.out.println("board.getBoardNo(): " + board.getBoardNo());
+			// System.out.println("이미지 있음 thumbnailFile: " + thumbnailFile);
+			// System.out.println("board.getBoardNo(): " + board.getBoardNo());
 			int result = imageUploadService.uploadBoardThumbnail(thumbnailFile, board.getBoardNo());
 			if (result <= 0) { // 썸네일 이미지 업로드 실패
 				throw new RuntimeException("썸네일 이미지 업로드 실패");
 			}
-			System.out.println("이미지 업로드 성공 result: " + result);
+			// System.out.println("이미지 업로드 성공 result: " + result);
 		}
 
 		if (isDelete) {

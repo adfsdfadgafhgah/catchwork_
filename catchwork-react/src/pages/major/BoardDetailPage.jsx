@@ -87,7 +87,7 @@ export default function BoardDetailPage() {
       axiosApi
         .get(`/board/readCount/${boardNo}`)
         .then(() => {
-          console.log("조회수 증가");
+          // console.log("조회수 증가");
         })
         .catch((err) => console.error("조회수 증가 실패:", err));
     } else {
@@ -164,7 +164,7 @@ export default function BoardDetailPage() {
 
   // 신고하기
   const handleReportClick = (targetNo, targetType, targetNickname) => {
-    console.log("신고 대상 이름:", targetNickname);
+    // console.log("신고 대상 이름:", targetNickname);
 
     if (!memNo) {
       alert("로그인 후 이용해주세요.");

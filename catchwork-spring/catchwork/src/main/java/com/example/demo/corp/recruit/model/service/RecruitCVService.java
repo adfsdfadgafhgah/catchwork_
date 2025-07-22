@@ -35,13 +35,11 @@ public interface RecruitCVService {
 	  */
 	String getCVPDFPath(int cvNo);
 	
-	
 	 /** 이력서 PDF 다운 체크
 	 * @author JIN
 	 * @param cvNo
 	 */
 	void markCVAsDownloaded(int cvNo);
-	
 	
 	 /** 이력서 삭제
 	 * @author JIN
