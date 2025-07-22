@@ -46,7 +46,7 @@
   height: 240px; /* 크기 변경 */
   border-radius: 16px;
   overflow: hidden;
-  border: 1px solid var(--sub-color);
+  /* border: 1px solid var(--sub-color); */
   box-shadow: var(--box-shadow);
   flex-shrink: 0;
   position: relative;
