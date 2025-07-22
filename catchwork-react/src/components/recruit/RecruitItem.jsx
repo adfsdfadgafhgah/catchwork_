@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import styles from "./RecruitItem.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import defaultImg from "../../assets/icon.png";
+import { extractPixelColor } from "../../api/extractPixelColor";
 
 export default function RecruitItem({
   recruit,
@@ -15,6 +16,22 @@ export default function RecruitItem({
   const [liked, setLiked] = useState(
     recruit.likedByCurrentUser === true || recruit.likedByCurrentUser === 1
   );
+  const [pixelColor, setPixelColor] = useState("transparent");
+
+  // 기업 로고 색상 추출
+  useEffect(() => {
+    if (recruit?.corpLogo) {
+      const imageUrl = `${logoImgUrl}/${recruit.corpLogo}`;
+      extractPixelColor(imageUrl, 1, 1)
+        .then((color) => {
+          setPixelColor(color.hex);
+        })
+        .catch((error) => {
+          console.error("색상 추출 실패:", error);
+          setPixelColor("transparent");
+        });
+    }
+  }, [recruit?.corpLogo, logoImgUrl]);
 
   // 마감 여부 판단
   const isClosed =
@@ -24,6 +41,12 @@ export default function RecruitItem({
   return (
     <Link to={`/corpRecruit/${recruit.recruitNo}`} className={styles.card}>
       <div className={styles.logoArea}>
+        <div
+          className={styles.recruitItemImageBackground}
+          style={{
+            backgroundColor: pixelColor, // 추출된 색상 사용
+          }}
+        />
         <img
           src={
             recruit?.corpLogo ? `${logoImgUrl}/${recruit.corpLogo}` : defaultImg

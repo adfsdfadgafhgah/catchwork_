@@ -6,6 +6,7 @@ import "./CorpCompanyDetailPage.css";
 import { axiosApi } from "../../api/axiosAPI";
 import useLoginMember from "../../stores/loginMember";
 import defaultLogo from "../../assets/icon.png";
+import { extractPixelColor } from "../../api/extractPixelColor";
 
 const CorpCompanyDetailPage = () => {
   const logoImgUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
@@ -22,6 +23,22 @@ const CorpCompanyDetailPage = () => {
 
   const [company, setCompany] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [pixelColor, setPixelColor] = useState("transparent");
+
+  // 기업 로고 색상 추출
+  useEffect(() => {
+    if (company?.corpLogo) {
+      const imageUrl = `${logoImgUrl}/${company.corpLogo}`;
+      extractPixelColor(imageUrl, 1, 1)
+        .then((color) => {
+          setPixelColor(color.hex);
+        })
+        .catch((error) => {
+          console.error("색상 추출 실패:", error);
+          setPixelColor("transparent");
+        });
+    }
+  }, [company?.corpLogo, logoImgUrl]);
 
   useEffect(() => {
     //console.log("[4] loginMember useEffect 진입, loginMember:", loginMember);
@@ -89,7 +106,7 @@ const CorpCompanyDetailPage = () => {
             <div
               className="company-header-image-background"
               style={{
-                backgroundImage: `url(${`${logoImgUrl}/${company.corpLogo}`})`,
+                backgroundColor: pixelColor, // 추출된 색상 사용
               }}
             />
             <img
@@ -99,7 +116,7 @@ const CorpCompanyDetailPage = () => {
                   : defaultLogo
               }
               alt="기업로고"
-              className="company-logo"
+              className="company-detail-logo"
             />
           </div>
 

@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { axiosApi } from "../../api/axiosAPI";
 import useLoginMember from "../../stores/loginMember";
 import defaultLogo from "../../assets/icon.png";
+import { extractPixelColor } from "../../api/extractPixelColor";
 
 //명하 신고하기모달창
 import ReportModalPage from "../support/ReportModalPage";
@@ -19,11 +20,27 @@ const CompanyDetailPage = () => {
   const [company, setCompany] = useState(null);
   const [showReportModal, setShowReportModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [pixelColor, setPixelColor] = useState("transparent");
 
   // 최초 마운트 시 정보 fetch
   useEffect(() => {
     setLoginMember();
   }, []);
+
+  // 기업 로고 색상 추출
+  useEffect(() => {
+    if (company?.corpLogo) {
+      const imageUrl = `${imgUrl}/${company.corpLogo}`;
+      extractPixelColor(imageUrl, 1, 1)
+        .then((color) => {
+          setPixelColor(color.hex);
+        })
+        .catch((error) => {
+          console.error("색상 추출 실패:", error);
+          setPixelColor("transparent");
+        });
+    }
+  }, [company?.corpLogo, imgUrl]);
 
   const handleOpenReport = () => {
     if (!loginMember || !loginMember.memNo) {
@@ -132,7 +149,7 @@ const CompanyDetailPage = () => {
             <div
               className="company-header-image-background"
               style={{
-                backgroundImage: `url(${`${imgUrl}/${company.corpLogo}`})`,
+                backgroundColor: pixelColor, // 추출된 색상 사용
               }}
             />
             <img
@@ -140,7 +157,7 @@ const CompanyDetailPage = () => {
                 company.corpLogo ? `${imgUrl}/${company.corpLogo}` : defaultLogo
               }
               alt="기업로고"
-              className="company-logo"
+              className="company-detail-logo"
             />
           </div>
 

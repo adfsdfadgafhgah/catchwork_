@@ -6,6 +6,7 @@ import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import useLoginMember from "../../stores/loginMember";
 import { axiosApi } from "../../api/axiosAPI";
 import "./EditCompanyPage.css";
+import { extractPixelColor } from "../../api/extractPixelColor";
 
 const EditCompanyPage = () => {
   const corpLogoUrl = import.meta.env.VITE_FILE_COMPANY_IMG_URL;
@@ -29,9 +30,35 @@ const EditCompanyPage = () => {
   const [corpLogoFile, setCorpLogoFile] = useState(null); // 업로드할 새 파일
   const [corpLogoPreview, setCorpLogoPreview] = useState(company?.corpLogo); // 미리보기 URL
   const fileInputRef = useRef(null);
+  const [pixelColor, setPixelColor] = useState("transparent");
+
   useEffect(() => {
     setLoginMember(); // 로그인 정보 설정
   }, []);
+
+  // company 로딩 후 corpLogoPreview 초기화
+  useEffect(() => {
+    if (company?.corpLogo && !corpLogoPreview) {
+      setCorpLogoPreview(`${corpLogoUrl}/${company.corpLogo}`);
+    }
+  }, [company, corpLogoUrl]);
+
+  // 기업 로고 색상 추출
+  useEffect(() => {
+    if (corpLogoPreview || company?.corpLogo) {
+      const imageUrl = corpLogoPreview
+        ? corpLogoPreview
+        : `${corpLogoUrl}/${company.corpLogo}`;
+      extractPixelColor(imageUrl, 1, 1)
+        .then((color) => {
+          setPixelColor(color.hex);
+        })
+        .catch((error) => {
+          console.error("색상 추출 실패:", error);
+          setPixelColor("transparent");
+        });
+    }
+  }, [corpLogoUrl, corpLogoPreview]);
 
   //기업 정보
   useEffect(() => {
@@ -194,9 +221,7 @@ const EditCompanyPage = () => {
           <div
             className="company-header-image-background"
             style={{
-              backgroundImage: `url(${
-                corpLogoPreview || `${corpLogoUrl}/${company.corpLogo}`
-              })`,
+              backgroundColor: pixelColor, // 추출된 색상 사용
             }}
           />
           <img
@@ -206,7 +231,7 @@ const EditCompanyPage = () => {
                 : `${corpLogoUrl}/${company.corpLogo}`
             }
             alt="기업로고"
-            className="company-logo"
+            className="company-detail-logo"
           />
           {/* <div className="image-overlay">
               <i className="fas fa-camera"></i>
