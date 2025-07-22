@@ -29,13 +29,9 @@ function CorpMyInfo() {
         ? `${logoImgUrl}/${detailLogo}`
         : `${logoImgUrl}/${company.corpLogo}`;
 
-      extractPixelColor(imageUrl, 1, 1)
-        .then((color) => {
-          setPixelColor(color.hex);
-        })
-        .catch((error) => {
-          setPixelColor("transparent");
-        });
+      extractPixelColor(imageUrl, 1, 1).then((color) => {
+        setPixelColor(color.hex);
+      });
     }
   }, [company?.corpLogo, logoImgUrl, detailLogo]); // detailLogo 의존성 유지
 

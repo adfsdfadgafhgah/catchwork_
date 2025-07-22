@@ -12,7 +12,7 @@ const defaultRegex = {
   memEmail: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
   memTel: /^(\d{2,3})-(\d{3,4})-(\d{4})$/,
   memName: /^[가-힣a-zA-Z]{2,}( [가-힣a-zA-Z]{1,})*$/,
-  memNickname: /^[a-zA-Z0-9가-힣_]{2,20}$/,
+  memNickname: /^[a-zA-Z0-9가-힣_]{2,10}$/,
   memBirthday: /.+/,
   memGender: /^(M|F)$/,
   memAddr: /.+/,
