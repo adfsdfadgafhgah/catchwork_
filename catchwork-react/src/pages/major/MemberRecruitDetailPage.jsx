@@ -391,7 +391,7 @@ export default function MemberRecruitDetailPage() {
         <ReportModalPage
           targetNo={recruit.recruitNo}
           targetType="RECRUIT"
-          targetNickname={`[${recruit.corpName}] ${recruit.recruitTitle}`}
+          targetNickname={`[${recruit.corpMemDept}] ${recruit.recruitTitle}`}
           memberNo={memNo}
           onClose={handleCloseReport}
         />
