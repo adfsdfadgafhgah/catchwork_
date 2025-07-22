@@ -7,10 +7,17 @@ import { useNavigate, useOutletContext } from "react-router-dom";
 import ThumbnailUploader from "../../components/common/ThumbnailUploader";
 import { axiosApi } from "../../api/axiosAPI";
 
+// 각 필드별 최대 글자 수
+const MAX_LENGTHS = {
+  title: 50,
+  content: 4000,
+};
+
 export default function WriteBoardPage() {
   const baseUrl = import.meta.env.VITE_BASE_URL;
   const editorRef = useRef();
   const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
   const navigate = useNavigate();
   const { memNo } = useOutletContext();
   const [isFormValid, setIsFormValid] = useState(false);
@@ -26,11 +33,32 @@ export default function WriteBoardPage() {
     }
   }, []);
 
+  // title과 content state가 변경될 때마다 유효성 검사
   useEffect(() => {
-    const contentMarkdown =
-      editorRef.current?.getInstance()?.getMarkdown() || "";
-    setIsFormValid(title.trim() !== "" && contentMarkdown.trim() !== "");
-  }, [title]);
+    setIsFormValid(title.trim() !== "" && content.trim() !== "");
+  }, [title, content]);
+
+  // 제목 입력 핸들러 (글자 수 제한 기능 추가)
+  const handleTitleChange = (e) => {
+    const { value } = e.target;
+    if (value.length <= MAX_LENGTHS.title) {
+      setTitle(value);
+    }
+  };
+
+  // 에디터 내용 변경 핸들러 (글자 수 제한 기능 추가)
+  const handleEditorChange = () => {
+    const editorInstance = editorRef.current.getInstance();
+    let markdown = editorInstance.getMarkdown();
+
+    if (markdown.length > MAX_LENGTHS.content) {
+      // 글자 수 제한 초과 시 내용 자르기
+      markdown = markdown.slice(0, MAX_LENGTHS.content);
+      editorInstance.setMarkdown(markdown, true); // 두 번째 인자로 true를 주어 커서를 맨 뒤로 이동
+      alert(`내용은 ${MAX_LENGTHS.content}자를 초과하여 작성할 수 없습니다.`);
+    }
+    setContent(markdown);
+  };
 
   // 글 등록 버튼 클릭 시
   const handleSubmit = async () => {
@@ -39,10 +67,16 @@ export default function WriteBoardPage() {
       return;
     }
 
+    // 최종 유효성 검사
+    if (!isFormValid) {
+      alert("제목과 내용을 모두 입력해주세요.");
+      return;
+    }
+
     const contentMarkdown = editorRef.current.getInstance().getMarkdown();
     const formData = new FormData();
     formData.append("boardTitle", title);
-    formData.append("boardContent", contentMarkdown);
+    formData.append("boardContent", content);
     formData.append("memNo", memNo);
     if (thumbnailUploaderRef.current.getImageFile()) {
       formData.append(
@@ -81,7 +115,11 @@ export default function WriteBoardPage() {
         placeholder="제목을 입력하세요"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
+        maxLength={MAX_LENGTHS.title}
       />
+      <div className={styles.charCounter}>
+        {title.length} / {MAX_LENGTHS.title}
+      </div>
 
       {/* Toast UI 에디터 */}
       <div className={styles.writeEditor}>
@@ -93,14 +131,7 @@ export default function WriteBoardPage() {
           initialValue=" "
           placeholder="내용을 입력해주세요"
           useCommandShortcut={true}
-          onChange={() => {
-            const contentMarkdown = editorRef.current
-              .getInstance()
-              .getMarkdown();
-            setIsFormValid(
-              title.trim() !== "" && contentMarkdown.trim() !== ""
-            );
-          }}
+          onChange={handleEditorChange}
           hooks={{
             // 이미지 업로드 처리
             addImageBlobHook: async (blob, callback) => {
@@ -133,6 +164,9 @@ export default function WriteBoardPage() {
             },
           }}
         />
+        <div className={styles.charCounter}>
+          {content.length} / {MAX_LENGTHS.content}
+        </div>
       </div>
 
       {/* 썸네일 업로더 */}

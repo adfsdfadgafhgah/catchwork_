@@ -4,6 +4,8 @@ import { axiosApi } from "../../api/axiosAPI";
 import SectionHeader from "../../components/common/SectionHeader";
 import styles from "./AdminSupportDetailPage.module.css";
 
+const MAX_ANSWER_LENGTH = 4000;
+
 export default function AdminSupportDetailPage() {
   const { supportNo } = useParams(); // URL 파라미터에서 supportNo 가져오기
   const navigate = useNavigate();
@@ -49,6 +51,14 @@ export default function AdminSupportDetailPage() {
       navigate("/admin/supportlist");
     } finally {
       setLoading(false);
+    }
+  };
+
+  // 답변 내용 변경 핸들러 (글자 수 제한 기능)
+  const handleAnswerChange = (e) => {
+    const { value } = e.target;
+    if (value.length <= MAX_ANSWER_LENGTH) {
+      setAnswerContent(value);
     }
   };
 
@@ -187,7 +197,7 @@ export default function AdminSupportDetailPage() {
         <textarea
           className={styles.answerTextarea}
           value={answerContent} // answerContent 상태 사용
-          onChange={(e) => setAnswerContent(e.target.value)} // 변경 핸들러 추가
+          onChange={handleAnswerChange}
           placeholder={
             isAnswerReadOnly
               ? "답변이 등록되었습니다."
@@ -196,7 +206,12 @@ export default function AdminSupportDetailPage() {
           readOnly={isAnswerReadOnly} // 답변 완료 시 읽기 전용
           rows="5"
           style={{ whiteSpace: "pre-wrap" }}
+          maxLength={MAX_ANSWER_LENGTH}
         />
+        <div className={styles.charCounter}>
+          {answerContent.length} / {MAX_ANSWER_LENGTH}
+        </div>
+
         <div className={styles.buttonGroup}>
           {/* 답변이 없는 경우에만 "답변 등록" 버튼 표시 */}
           {!isAnswerReadOnly && (

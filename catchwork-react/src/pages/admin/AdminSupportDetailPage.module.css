@@ -143,6 +143,18 @@
   transition: background-color 0.2s;
 }
 
+.answerSection .charCounter {
+  text-align: left;
+  font-size: 0.9rem;
+  color: var(--deep-gray);
+  margin-top: 8px;
+}
+
+/* 버튼 그룹과 카운터 사이의 간격을 위해 */
+.answerSection .buttonGroup {
+  margin-top: 16px;
+}
+
 /* 답변 등록 버튼 */
 .submitButton {
   background-color: var(--main-color);
