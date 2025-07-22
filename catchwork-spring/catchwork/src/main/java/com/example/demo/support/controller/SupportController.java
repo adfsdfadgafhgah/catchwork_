@@ -35,7 +35,7 @@ public class SupportController {
         }
 
         String memNo = userDetails.getUsername(); // 또는 getMemNo() 확인
-        System.out.println("로그인된 사용자 memNo = " + memNo);
+        // System.out.println("로그인된 사용자 memNo = " + memNo);
 
         List<Support> list = supportService.getSupportListByMemNo(memNo);
         return ResponseEntity.ok(list);

@@ -57,7 +57,6 @@ public class BoardController {
             @RequestParam(name = "size", required = false) Integer size,
             @RequestParam(name = "limit", required = false) Integer limit
         ) {
-    	System.out.println();
         try {
             List<Board> boards = boardService.selectBoardList(sort, query.trim(), memNo, page, size, limit);
             return ResponseEntity.ok(boards);

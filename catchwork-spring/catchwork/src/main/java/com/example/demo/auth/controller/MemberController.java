@@ -55,7 +55,7 @@ public class MemberController {
 	 */
 	@PostMapping("/signup")
 	public ResponseEntity<?> signup(@RequestBody Member inputMember) {
-		System.out.println("signup controller");
+		// System.out.println("signup controller");
 	    try {
 	        Object result = service.signup(inputMember);
 //	        System.out.println(result);
@@ -112,7 +112,7 @@ public class MemberController {
 	 */
 	@PostMapping("/reissue")
 	public ResponseEntity<?> reissueToken(HttpServletRequest request, HttpServletResponse response) {
-		System.out.println("reissue controller");
+		// System.out.println("reissue controller");
 		
 	    // 쿠키에서 refreshToken 추출
 	    String refreshToken = null;
@@ -135,11 +135,11 @@ public class MemberController {
 	    
 	    // DB에서 저장된 refreshToken 조회 및 비교
 	    Optional<RefreshTokenEntity> savedTokenOpt = refreshTokenRepository.findByMemNo(memNo);
-	    System.out.println("DB refreshToken : "+savedTokenOpt);
+	    // System.out.println("DB refreshToken : "+savedTokenOpt);
 
 	    // debug
-	    System.out.println(savedTokenOpt.get().getRefreshToken());
-	    System.out.println(refreshToken);
+	    // System.out.println(savedTokenOpt.get().getRefreshToken());
+	    // System.out.println(refreshToken);
 	    
 	    // 뭐라고 해야할 까
 	    if (savedTokenOpt.isEmpty() || !savedTokenOpt.get().getRefreshToken().equals(refreshToken)) {
@@ -299,7 +299,7 @@ public class MemberController {
 			if(isVerified) {
 				return ResponseEntity.ok(true);
 			} else {
-				System.out.println("비밀번호 찾기 실패");
+				// System.out.println("비밀번호 찾기 실패");
 				return ResponseEntity.status(404).body(Map.of("message", "비밀번호 찾기 실패"));
 			}
 		} catch (Exception e) {
@@ -311,7 +311,7 @@ public class MemberController {
 	@PostMapping("/member/existEmail")
 	public ResponseEntity<?> existEmail(@RequestBody Map<String,String> memEmailMap){
 		String memEmail = memEmailMap.get("memEmail");
-		System.out.println("existEmail controller : " + memEmail);
+		// System.out.println("existEmail controller : " + memEmail);
 		boolean existEmail = service.existEmail(memEmail);
 		if(existEmail) {			
 			return ResponseEntity.ok(Map.of("message", "true"));

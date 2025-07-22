@@ -162,7 +162,7 @@ const CeoSignUpPage = () => {
 
     const isValid = validateForm();
     if (!isValid) {
-      console.log(isValid);
+      // console.log(isValid);
       alert("모든 필드를 입력해주세요.");
       return;
     }

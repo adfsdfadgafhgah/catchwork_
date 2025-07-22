@@ -262,7 +262,7 @@ public class MyInfoController {
 		paramMap.put("size", size);
 
 		List<Map<String, Object>> commentList = myInfoService.getMyCommentList(paramMap);
-		System.out.println("commentList : " + commentList);
+		// System.out.println("commentList : " + commentList);
 		return ResponseEntity.ok(commentList);
 	}
 

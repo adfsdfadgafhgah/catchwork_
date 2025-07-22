@@ -48,7 +48,7 @@ public class CorpMyPageServiceImpl implements CorpMyPageService {
         if (passwordEncoder != null) {
             return passwordEncoder.matches(inputPassword, storedEncodedPassword);
         } else {
-            System.out.println("경고: PasswordEncoder가 설정되지 않아 비밀번호를 평문으로 비교합니다.");
+            // System.out.println("경고: PasswordEncoder가 설정되지 않아 비밀번호를 평문으로 비교합니다.");
             return storedEncodedPassword != null && storedEncodedPassword.equals(inputPassword);
         }
     }   

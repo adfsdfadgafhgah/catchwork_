@@ -176,11 +176,11 @@ export default function EditBoardPage() {
 
                 // 이미지 업로드 성공 시 이미지 파일명 반환
                 const fileName = await resp.data;
-                console.log(fileName);
+                // console.log(fileName);
 
                 // 업로드한 이미지 미리보기
                 const renderUrl = `${baseUrl}board/image-print?filename=${fileName}`;
-                console.log(renderUrl);
+                // console.log(renderUrl);
                 callback(renderUrl, "업로드된 이미지");
               } catch (error) {
                 console.error("이미지 업로드 실패:", error);
