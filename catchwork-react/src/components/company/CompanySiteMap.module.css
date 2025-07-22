@@ -1,0 +1,291 @@
+/* 플로팅 버튼 */
+.floatingButton {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  background-color: var(--main-color);
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.floatingButton:hover {
+  background-color: var(--main-color-dark);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+}
+
+.floatingIcon {
+  transition: transform 0.2s ease;
+}
+
+.floatingButton:hover .floatingIcon {
+  transform: scale(1.1);
+}
+
+/* 모달 오버레이 */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1050;
+  padding: 16px;
+}
+
+/* 모달 컨테이너 */
+.modalContainer {
+  background-color: white;
+  border-radius: 12px;
+  max-width: 672px;
+  width: 100%;
+  max-height: 90vh;
+  overflow: auto;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  transform: scale(1);
+  transition: all 0.3s ease;
+}
+
+/* 모달 헤더 */
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modalTitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.2s ease;
+}
+
+.closeButton:hover {
+  color: #6b7280;
+}
+
+/* 모달 본문 */
+.modalBody {
+  padding: 24px;
+}
+
+/* 섹션 공통 스타일 */
+.sectionTitle {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 16px 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sectionDescription {
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* 소개 섹션 */
+.introSection {
+  margin-bottom: 32px;
+}
+
+/* 온보딩 섹션 */
+.onboardingSection {
+  margin-bottom: 32px;
+}
+
+.stepsContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* 단계 카드 */
+.stepCard {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  transition: box-shadow 0.2s ease;
+}
+
+.stepCard:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.stepContent {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.stepNumber {
+  width: 32px;
+  height: 32px;
+  background-color: var(--main-color);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.stepInfo {
+  flex-grow: 1;
+}
+
+.stepTitleWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.stepIcon {
+  color: var(--main-color);
+}
+
+.stepTitle {
+  font-weight: 600;
+  margin: 0;
+  font-size: 16px;
+}
+
+.stepDescription {
+  color: #6b7280;
+  line-height: 1.6;
+  margin: 0 0 16px 0;
+}
+
+.stepButton {
+  background-color: var(--main-color);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.stepButton:hover {
+  background-color: var(--main-color-dark);
+}
+
+/* 지원 섹션 */
+.supportSection {
+  background-color: #f9fafb;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.supportTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 12px 0;
+}
+
+.supportDescription {
+  color: #6b7280;
+  margin: 0 0 16px 0;
+}
+
+.supportButtons {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.supportButton {
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: white;
+}
+
+.supportButton.green {
+  background-color: #059669;
+}
+
+.supportButton.green:hover {
+  background-color: #047857;
+}
+
+.supportButton.gray {
+  background-color: #6b7280;
+}
+
+.supportButton.gray:hover {
+  background-color: #4b5563;
+}
+
+/* 반응형 */
+@media (max-width: 768px) {
+  .modalContainer {
+    margin: 8px;
+    max-height: calc(100vh - 16px);
+  }
+
+  .modalHeader {
+    padding: 16px;
+  }
+
+  .modalBody {
+    padding: 16px;
+  }
+
+  .stepCard {
+    padding: 16px;
+  }
+
+  .stepContent {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .stepNumber {
+    align-self: flex-start;
+  }
+
+  .supportButtons {
+    flex-direction: column;
+  }
+
+  .supportButton {
+    justify-content: center;
+  }
+}
