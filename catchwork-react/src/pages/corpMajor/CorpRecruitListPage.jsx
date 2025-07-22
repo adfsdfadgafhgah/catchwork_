@@ -8,6 +8,7 @@ import FloatButton from "../../components/common/FloatButton";
 import { FLOAT_BUTTON_PRESETS } from "../../components/common/ButtonConfigs";
 import ScrollToTopButton from "../../components/common/ScrollToTopButton";
 import InfiniteScroll from "react-infinite-scroll-component";
+import CompanyStieMap from "../../components/company/CompanySiteMap";
 
 export default function CorpRecruitListPage() {
   const [recruits, setRecruits] = useState([]);
@@ -357,7 +358,7 @@ export default function CorpRecruitListPage() {
   return (
     <div className={styles.recruitListPage}>
       <SectionHeader title="채용공고" />
-
+      <CompanyStieMap />
       {/* 검색 및 필터 컨트롤 영역 */}
       <div className={styles.controlSection}>
         <div className={styles.searchSection}>
