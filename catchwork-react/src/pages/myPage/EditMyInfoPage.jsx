@@ -143,7 +143,7 @@ const EditMyInfoPage = () => {
       }
     };
   }, [previewSrc]);
-
+  
   // 프로필 이미지 업로드 핸들러
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -154,19 +154,19 @@ const EditMyInfoPage = () => {
       setImgFile(file);
     }
   };
-
+  
   // 프로필 이미지 업로드 버튼 클릭 시
   const handleClick = () => {
     fileInputRef.current.click();
   };
-
+  
   // 프로필 이미지 업로드 핸들러
   const handleFileUpload = async () => {
     try {
       const formData = new FormData();
       formData.append("imgFile", imgFile); // File 객체
       formData.append("memNo", loginMember?.memNo); // 일반 값
-
+      formData.append("memNickname", formData.memNickname);
       const resp = await axiosApi.post("/myPage/uploadProfileImg", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
@@ -193,6 +193,7 @@ const EditMyInfoPage = () => {
       return false;
     }
   };
+
 
   // 수정하기 버튼 클릭 시
   const handleSubmit = async (e) => {
