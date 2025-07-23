@@ -69,9 +69,11 @@
 .sidebarTitle {
   font-size: 24px;
   font-weight: 700;
+  margin-bottom: 30px;
   color: var(--main-color);
-  margin: 0;
   text-align: center;
+  border-bottom: 2px solid var(--main-color); /* 기존보다 두껍게 */
+  padding-bottom: 15px;
 }
 
 .sidebarNav {
