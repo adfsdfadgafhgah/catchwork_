@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { postCEOSignUp } from "../../api/signupAPI";
 import { useAuthStore } from "../../stores/authStore";
 import useConfirmEmail from "../../hooks/useConfirmEmail";
+import { axiosApi } from "../../api/axiosAPI";
 
 const CeoSignUpPage = () => {
   const location = useLocation();
