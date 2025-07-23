@@ -417,13 +417,15 @@ const EditMyInfoPage = () => {
           imageProcessSuccess = await handleFileUpload();
         }
 
-        // 3. 모든 처리가 성공하면 홈으로 이동
-        if (imageProcessSuccess) {
-          // 스크롤 위치를 초기화
-          window.scrollTo(0, 0);
-          setMemNickname(formData.memNickname);
-          navigate("/myPage/home");
+        if (!imageProcessSuccess) {
+          alert("이미지 처리 중 오류가 발생했습니다.");
+          return;
         }
+
+        // 3. 모든 처리가 성공하면 홈으로 이동
+        window.scrollTo(0, 0);
+        setMemNickname(formData.memNickname);
+        navigate("/myPage/home");
       }
     } catch (error) {
       console.error("회원 정보 수정 실패", error);
