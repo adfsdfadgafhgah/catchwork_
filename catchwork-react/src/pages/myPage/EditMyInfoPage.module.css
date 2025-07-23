@@ -200,10 +200,36 @@
   border-color: #dc3545 !important;
 }
 
+.inputSuccess {
+  border-color: #28a745 !important;
+}
+
 .errorMessage {
   color: #dc3545;
   font-size: 0.875rem;
   margin-top: 0.25rem;
+}
+
+.successMessage {
+  color: #28a745;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.infoMessage {
+  color: #17a2b8;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.timerMessage {
+  color: #ffc107;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+.statusMessage {
+  margin-top: 0.5rem;
 }
 
 /* 닉네임 중복확인 */
