@@ -92,7 +92,7 @@ public class RecruitCVController {
 
 	    		File file = new File(filePath);
 	    		if (!file.exists()) {
-	    			// System.out.println("파일 없음: " + filePath); // 디버깅용 출력
+	    			System.out.println("파일 없음: " + filePath); // 디버깅용 출력
 	    			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 	    		}
 
@@ -137,8 +137,6 @@ public class RecruitCVController {
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("삭제 실패: " + e.getMessage());
 	        }
 	    }
-
-
 
 
 }
