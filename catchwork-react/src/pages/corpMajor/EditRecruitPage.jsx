@@ -104,8 +104,21 @@ export default function EditRecruitPage() {
           return;
         }
 
-        // 받아온 데이터로 formData 상태 업데이트
-        setFormData(data);
+        setFormData((prevFormData) => {
+          // API에서 받은 데이터의 복사본을 만듭니다.
+          const sanitizedData = { ...data };
+
+          // 데이터의 각 필드를 순회하며 null 값을 빈 문자열 ""로 바꿉니다.
+          for (const key in sanitizedData) {
+            if (sanitizedData[key] === null) {
+              sanitizedData[key] = "";
+            }
+          }
+
+          // 이전 상태(...prevFormData)를 기반으로, 정제된 새 데이터(...sanitizedData)를 덮어씌워 새로운 상태를 반환합니다.
+          // 이렇게 하면 API 응답에 특정 필드가 누락되어도 기본값이 유지되어 안전합니다.
+          return { ...prevFormData, ...sanitizedData };
+        });
       } catch (err) {
         console.error("공고 불러오기 실패:", err);
         alert("공고 정보를 불러오는 중 오류 발생");
