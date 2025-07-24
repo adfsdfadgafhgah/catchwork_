@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useOutletContext, useNavigate } from "react-router-dom";
 import useSignUpFormHandler from "../../hooks/useSignUpFormHandler";
+import useConfirmEmail from "../../hooks/useConfirmEmail";
 import styles from "./EditMyInfoPage.module.css";
 import { axiosApi } from "../../api/axiosAPI";
 import ConfirmPwModal from "../../components/myPage/ConfirmPwModal";
@@ -16,8 +17,13 @@ const EditMyInfoPage = () => {
   const [loginMember, setLoginMember] = useState(null);
   const fileInputRef = useRef(null);
   const isDeleted = useRef(false);
+  const isSending = useRef(false);
   // header의 authStore 업데이트
   const setMemNickname = useAuthStore((state) => state.setMemNickname);
+  const [isNickChanged, setIsNickChanged] = useState(false);
+  const [isNickConfirmed, setIsNickConfirmed] = useState(false);
+  const [isEmailChanged, setIsEmailChanged] = useState(false);
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
 
   // 로그인 유저 정보 조회
   const getLoginMember = async () => {
@@ -37,6 +43,15 @@ const EditMyInfoPage = () => {
     type: null,
     loading: false,
   });
+
+  // 이메일 인증 관련 상태
+  const [isIssued, setIsIssued] = useState(false);
+  const [authKey, setAuthKey] = useState("");
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+  const [isClicked, setIsClicked] = useState(false);
+  const { sendEmail, checkAuthKey, startTimer, stopTimer, timeLeft } =
+    useConfirmEmail();
 
   // 모달 열기
   const openModal = (type) => {
@@ -253,8 +268,123 @@ const EditMyInfoPage = () => {
     }
   };
 
+  // 닉네임 변경 여부 확인
+  useEffect(() => {
+    if (loginMember && formData.memNickname !== loginMember.memNickname) {
+      setIsNickChanged(true);
+      setIsNickConfirmed(false); // 닉네임이 변경되면 확인 상태 초기화
+    } else if (
+      loginMember &&
+      formData.memNickname === loginMember.memNickname
+    ) {
+      setIsNickChanged(false);
+      setIsNickConfirmed(true); // 기존 닉네임과 같으면 확인된 것으로 간주
+    }
+  }, [formData.memNickname, loginMember]);
+
+  // 이메일 변경 여부 확인
+  useEffect(() => {
+    if (loginMember && formData.memEmail !== loginMember.memEmail) {
+      setIsEmailChanged(true);
+      setIsEmailVerified(false); // 이메일이 변경되면 인증 상태 초기화
+    } else if (loginMember && formData.memEmail === loginMember.memEmail) {
+      setIsEmailChanged(false);
+      setIsEmailVerified(true); // 기존 이메일과 같으면 인증된 것으로 간주
+    }
+  }, [formData.memEmail, loginMember]);
+
+  // 닉네임 중복 확인 함수 (boolean 반환)
+  const checkNicknameAvailability = async () => {
+    if (!formData.memNickname?.trim()) {
+      alert("닉네임을 입력해주세요.");
+      return false;
+    }
+
+    try {
+      const response = await axiosApi.post("/auth/checkNickname", {
+        memNickname: formData.memNickname,
+      });
+      return response.data; // true: 사용 가능, false: 중복
+    } catch (error) {
+      console.error("닉네임 중복 확인 실패", error);
+      alert("닉네임 중복 확인 중 오류가 발생했습니다.");
+      return false;
+    }
+  };
+
+  // 이메일 인증번호 발송
+  const handleSendEmail = async () => {
+    if (!formData.memEmail || formData.memEmail.includes("@") === false) {
+      alert("이메일을 입력해주세요");
+      return;
+    }
+
+    // 이메일 중복 확인 (자신의 기존 이메일 제외)
+    if (formData.memEmail !== loginMember.memEmail) {
+      const isExistEmail = await axiosApi.post(`/member/existEmail`, {
+        memEmail: formData.memEmail,
+      });
+      if (isExistEmail.data.message === "true") {
+        alert("이미 존재하는 이메일입니다.");
+        return;
+      }
+    }
+
+    setIsClicked(true);
+    isSending.current = true;
+    const isSent = await sendEmail(formData.memEmail);
+    if (isSent) {
+      startTimer();
+      setIsIssued(true);
+      isSending.current = false;
+    }
+  };
+
+  // 이메일 인증번호 확인
+  const handleCheckAuthKey = async () => {
+    const isValid = await checkAuthKey(formData.memEmail, authKey);
+    if (isValid) {
+      stopTimer();
+      setIsEmailVerified(true);
+      setSuccessMsg("인증되었습니다");
+      setErrorMsg("");
+    } else {
+      stopTimer();
+      setErrorMsg("인증번호가 올바르지 않습니다");
+      setIsEmailVerified(false);
+      setSuccessMsg("");
+      setTimeout(() => {
+        setErrorMsg("");
+        startTimer();
+      }, 3000);
+    }
+  };
+
+  // 타이머 포맷
+  const timeFormat = () => {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  };
+
   // 실제 submit 로직
   const performSubmit = async () => {
+    // 닉네임 변경 시 중복 확인
+    if (isNickChanged && !isNickConfirmed) {
+      const isNicknameAvailable = await checkNicknameAvailability();
+      if (!isNicknameAvailable) {
+        alert("중복된 닉네임입니다.");
+        return;
+      }
+      setIsNickConfirmed(true);
+    }
+
+    // 이메일 변경 시 인증 확인
+    if (isEmailChanged && !isEmailVerified) {
+      alert("이메일 인증을 완료해주세요.");
+      return;
+    }
+
     // 주소 병합
     const addrData = formData.memAddr + "^^^" + formData.detailAddress;
 
@@ -287,13 +417,15 @@ const EditMyInfoPage = () => {
           imageProcessSuccess = await handleFileUpload();
         }
 
-        // 3. 모든 처리가 성공하면 홈으로 이동
-        if (imageProcessSuccess) {
-          // 스크롤 위치를 초기화
-          window.scrollTo(0, 0);
-          setMemNickname(formData.memNickname);
-          navigate("/myPage/home");
+        if (!imageProcessSuccess) {
+          alert("이미지 처리 중 오류가 발생했습니다.");
+          return;
         }
+
+        // 3. 모든 처리가 성공하면 홈으로 이동
+        window.scrollTo(0, 0);
+        setMemNickname(formData.memNickname);
+        navigate("/myPage/home");
       }
     } catch (error) {
       console.error("회원 정보 수정 실패", error);
@@ -377,24 +509,106 @@ const EditMyInfoPage = () => {
 
             <div className={styles.infoContent}>
               <span className={styles.infoLabel}>이메일</span>
-              <div className={styles.inputWrapper}>
-                <input
-                  name="memEmail"
-                  value={formData.memEmail}
-                  onChange={handleInputChange}
-                  required
-                  className={
-                    validity.memEmail === false ? styles.inputError : ""
-                  }
-                  placeholder="이메일을 입력해주세요"
-                />
-                {validity.memEmail === false && (
-                  <small className={styles.errorMessage}>
-                    이메일 형식이 올바르지 않습니다.
-                  </small>
+              <div className={styles.inputWithButton}>
+                <div className={styles.inputWrapper}>
+                  <input
+                    name="memEmail"
+                    value={formData.memEmail}
+                    onChange={handleInputChange}
+                    required
+                    // disabled={isEmailVerified}
+                    className={
+                      validity.memEmail === false ? styles.inputError : ""
+                    }
+                    placeholder="이메일을 입력해주세요"
+                  />
+                  {validity.memEmail === false && (
+                    <small className={styles.errorMessage}>
+                      이메일 형식이 올바르지 않습니다.
+                    </small>
+                  )}
+                </div>
+                {isEmailChanged && (
+                  <button
+                    type="button"
+                    onClick={handleSendEmail}
+                    disabled={isEmailVerified}
+                    className={styles.checkButton}
+                  >
+                    인증번호 발송
+                  </button>
                 )}
               </div>
+              {isEmailChanged && (
+                <div className={styles.statusMessage}>
+                  {isIssued ? (
+                    <small className={styles.infoMessage}>
+                      이메일이 발송되었습니다.
+                    </small>
+                  ) : isClicked ? (
+                    <small className={styles.infoMessage}>
+                      이메일 발송 중입니다.
+                    </small>
+                  ) : (
+                    <small className={styles.infoMessage}>
+                      이메일을 입력해주세요
+                    </small>
+                  )}
+                </div>
+              )}
             </div>
+
+            {/* 이메일 인증번호 입력 필드 */}
+            {isEmailChanged && isIssued && (
+              <div className={styles.infoContent}>
+                <span className={styles.infoLabel}>인증번호</span>
+                <div className={styles.inputWithButton}>
+                  <div className={styles.inputWrapper}>
+                    <input
+                      type="text"
+                      value={authKey}
+                      onChange={(e) => setAuthKey(e.target.value)}
+                      placeholder="인증번호를 입력해주세요"
+                      disabled={isEmailVerified}
+                      className={
+                        isEmailVerified
+                          ? styles.inputSuccess
+                          : errorMsg
+                          ? styles.inputError
+                          : ""
+                      }
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleCheckAuthKey}
+                    disabled={!isIssued || isEmailVerified}
+                    className={styles.checkButton}
+                  >
+                    인증번호 확인
+                  </button>
+                </div>
+                <div className={styles.statusMessage}>
+                  {isEmailVerified && successMsg ? (
+                    <small className={styles.successMessage}>
+                      {successMsg}
+                    </small>
+                  ) : errorMsg ? (
+                    <small className={styles.errorMessage}>{errorMsg}</small>
+                  ) : timeLeft > 0 ? (
+                    <small className={styles.timerMessage}>
+                      남은 시간: {timeFormat()}
+                    </small>
+                  ) : isIssued ? (
+                    <small className={styles.errorMessage}>인증번호 만료</small>
+                  ) : (
+                    <small className={styles.infoMessage}>
+                      인증번호 발송을 클릭해주세요
+                    </small>
+                  )}
+                </div>
+              </div>
+            )}
 
             <div className={styles.infoContent}>
               <span className={styles.infoLabel}>전화번호</span>
@@ -474,7 +688,12 @@ const EditMyInfoPage = () => {
                 </div>
                 <button
                   type="button"
-                  onClick={handleCheckNickname}
+                  onClick={async () => {
+                    const isAvailable = await checkNicknameAvailability();
+                    if (isAvailable) {
+                      setIsNickConfirmed(true);
+                    }
+                  }}
                   disabled={!formData.memNickname}
                   className={styles.checkButton}
                 >
